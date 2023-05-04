@@ -3,6 +3,8 @@
 ## Team Members
 
 1. P2234878 Kaung Si Phyo
+2. P2201014 Thinzar Hnin Yu
+
 <!-- # BED Recap - Module Management
 
 ## Setup
