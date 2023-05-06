@@ -1,7 +1,6 @@
-const bcrypt = require("bcrypt");
-const util = require("util");
+const client = require("../config/client");
+const chalk = require("chalk");
 const productManager = require("../services/product.service");
-const E = require("../errors");
 
 // Get details of all products
 exports.processGetAllProducts = async (req, res, next) => {
