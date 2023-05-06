@@ -1,16 +1,16 @@
-var mysql = require("mysql");
+const mysql2 = require('mysql2');
+const config = require('./config');
 
-var dbConnect = {
-  getConnection: function () {
-    var conn = mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "pa$$woRD123",
-      database: "ades_ca1",
-      dateStrings: true,
-    });
+const pool = mysql2.createPool({
+    user: config.user,
+    password: config.password,
+    host: config.host,
+    database: config.database,
+    connectionLimit: config.connectionLimit,
+    multipleStatements: true,
+    ssl: {
+        rejectUnauthorized: false,
+    },
+});
 
-    return conn;
-  },
-};
-module.exports = dbConnect;
+module.exports = pool;
