@@ -1,3 +1,4 @@
+const { builtinModules } = require("module");
 const client = require("../config/client");
 const chalk = require("chalk");
 
@@ -24,7 +25,7 @@ module.exports.getProductByID = async (product_id) => {
 module.exports.deleteProductByID = async (product_id) => {
   console.log(chalk.blue("deleteProductByID is called"));
   try {
-    await client.get(`product:${product_id}`, (err, reply) => {
+    await client.del(`product:${product_id}`, (err, reply) => {
       if (err)
         console.error(chalk.red("Error in deleting product data: ", err));
       else {
@@ -42,7 +43,7 @@ module.exports.deleteProductByID = async (product_id) => {
 
 // // Get all products details
 // module.exports.processGetAllProducts = async function () {
-//   console.log("GetAllProducts method is called...");
+//   console.log("GetAllProducts method is called...");'
 
 //   const promisePool = pool.promise();
 //   const connection = await promisePool.getConnection();
