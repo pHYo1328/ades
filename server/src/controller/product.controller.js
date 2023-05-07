@@ -120,58 +120,6 @@ exports.processDeleteProductByID = async (req, res, next) => {
 //   }
 // };
 
-// // Get details of the product by ID
-// exports.processGetProductByID = async (req, res, next) => {
-//   console.log("processGetProductByID running...");
-
-//   const { productID } = req.body;
-//   const uuid = productID;
-
-//   let errors = [];
-
-//   if (uuid == "") {
-//     // check if the uuid exists
-//     errors = [
-//       ...errors,
-//       new E.BadRequestError({
-//         parameter: "uuid",
-//         value: "Empty uuid",
-//         message: "Uuid is empty",
-//       }),
-//     ];
-//   }
-
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getProductByID(uuid);
-//     if (results.length == 1) {
-//       console.log(results);
-//       const data = {
-//         name: results[0].name,
-//         email: results[0].email,
-//         last_updated: results[0].last_updated,
-//         created_at: results[0].created_at,
-//       };
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read product details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No such product exists" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
 // // Get products by category
 // exports.processGetProductsByCategoryID = async (req, res, next) => {
 //   console.log("processGetProductsByCategoryID running...");
