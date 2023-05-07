@@ -1,4 +1,3 @@
-const client = require("../config/client");
 const chalk = require("chalk");
 const productManager = require("../services/product.service");
 
@@ -22,7 +21,7 @@ exports.processGetProductByID = async (req, res, next) => {
   try {
     const productData = await productManager.getProductByID(product_id);
     if (productData) {
-      console.log(chalk.green("Product data: ", productData));
+      console.log(chalk.yellow("Product data: ", productData));
       const data = {
         name: productData.name,
         price: productData.price,
@@ -43,7 +42,14 @@ exports.processGetProductByID = async (req, res, next) => {
       message: "No such product exists",
     });
   } catch (error) {
-    console.log(chalk.red("Error in getProductByID: ", error));
+    if (error.message == "product_id is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in getProductByID: ", error));
     return next(error);
   }
 };
@@ -70,6 +76,13 @@ exports.processDeleteProductByID = async (req, res, next) => {
       product_id
     );
 
+    if (deletedProductData.affectedRows == 0) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: "No such product exists",
+      });
+    }
     return res.status(200).json({
       statusCode: 200,
       ok: true,
@@ -77,328 +90,308 @@ exports.processDeleteProductByID = async (req, res, next) => {
       data: deletedProductData,
     });
   } catch (error) {
-    console.log(chalk.red("Error in deleteProductByID: ", error));
-    if (error.message === "Product not found") {
+    if (error.message == "product_id is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in deleteProductByID: ", error));
+    return next(error);
+  }
+};
+
+// get all products
+exports.processGetAllProducts = async (req, res, next) => {
+  console.log(chalk.blue("processGetAllProducts running"));
+  try {
+    const productData = await productManager.getAllProducts();
+    if (productData) {
+      console.log(chalk.yellow("Product data: ", productData));
+      const data = {
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        category: productData.category,
+        image_url: productData.image_url,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read product details successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No products exists",
+    });
+  } catch (error) {
+    console.error(chalk.red("Error in getProductByID: ", error));
+    return next(error);
+  }
+};
+
+// get products by category
+exports.processGetProductsByCategoryID = async (req, res, next) => {
+  console.log(chalk.blue("processGetProductsByCategoryID running"));
+  const { categoryID } = req.body;
+  const category_id = categoryID;
+
+  let errors = [];
+  if (category_id == "") {
+    errors.push({
+      parameter: "category_id",
+      value: "Empty category_id",
+      message: "category_id is empty",
+    });
+  }
+
+  try {
+    const productData = await productManager.getProductsByCategoryID(
+      category_id
+    );
+    if (productData) {
+      console.log(chalk.yellow("Product data: ", productData));
+      const data = {
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        category: productData.category,
+        image_url: productData.image_url,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read product details successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such category exists",
+    });
+  } catch (error) {
+    if (error.message == "category_id is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Category ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in getProductsByCategoryID: ", error));
+    return next(error);
+  }
+};
+
+// get products by brand
+exports.processGetProductsByBrandID = async (req, res, next) => {
+  console.log(chalk.blue("processGetProductsByBrandID running"));
+  const { brandID } = req.body;
+  const brand_id = brandID;
+
+  let errors = [];
+  if (brand_id == "") {
+    errors.push({
+      parameter: "brand_id",
+      value: "Empty brand_id",
+      message: "brand_id is empty",
+    });
+  }
+
+  try {
+    const productData = await productManager.getProductsByBrandID(brand_id);
+    if (productData) {
+      console.log(chalk.yellow("Product data: ", productData));
+      const data = {
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        category: productData.category,
+        image_url: productData.image_url,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read product details successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such brand exists",
+    });
+  } catch (error) {
+    if (error.message == "brand_id is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Brand ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in getProductsByBrandID: ", error));
+    return next(error);
+  }
+};
+
+// get 3 newest product arrivals
+exports.processGetNewArrivals = async (req, res, next) => {
+  console.log(chalk.blue("processGetNewArrivals running"));
+  try {
+    const productData = await productManager.getNewArrivals();
+    if (productData) {
+      console.log(chalk.yellow("Product data: ", productData));
+      const data = {
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        category: productData.category,
+        image_url: productData.image_url,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read product details successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No products exists",
+    });
+  } catch (error) {
+    console.error(chalk.red("Error in getNewArrivals: ", error));
+    return next(error);
+  }
+};
+
+// update product by ID
+exports.processUpdateProductByID = async (req, res, next) => {
+  console.log(chalk.blue("processUpdateProductByID running"));
+  const { productID } = req.body;
+  const product_id = productID;
+  const { name } = req.body;
+  const { price } = req.body;
+  const { description } = req.body;
+  const { category_id } = req.body;
+  const { brand_id } = req.body;
+  const { image_url } = req.body;
+  let errors = [];
+  if (product_id == "") {
+    errors.push({
+      parameter: "product_id",
+      value: "Empty product_id",
+      message: "product_id is empty",
+    });
+  } else if (
+    name == "" ||
+    price == "" ||
+    description == "" ||
+    category_id == "" ||
+    brand_id == "" ||
+    image_url == ""
+  ) {
+    errors.push({
+      parameter: "Input fields",
+      value: "Empty input fields",
+      message: "All input fields is required to be filled.",
+    });
+  }
+  try {
+    const updatedProductData = await productManager.updateProductByID(
+      name,
+      price,
+      description,
+      category_id,
+      brand_id,
+      image_url,
+      product_id
+    );
+    if (updatedProductData.affectedRows == 0) {
       return res.status(404).json({
         statusCode: 404,
         ok: true,
         message: "No such product exists",
       });
     }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: "Update product details successful",
+    });
+  } catch (error) {
+    if (error.message == "product_id is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product ID is missing",
+      });
+    } else if ((error.message = "All input fields is required to be filled.")) {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product data is missing",
+      });
+    }
+    console.error(chalk.red("Error in updateProductByID: ", error));
     return next(error);
   }
 };
 
-// // Get details of all products
-// exports.processGetAllProducts = async (req, res, next) => {
-//   console.log("processGetAllProducts running...");
-
-//   let errors = [];
-
-//   // check if there are errors
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getAllProducts();
-//     if (results.length > 0) {
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read products details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No products found" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Get products by category
-// exports.processGetProductsByCategoryID = async (req, res, next) => {
-//   console.log("processGetProductsByCategoryID running...");
-
-//   const { categoryID } = req.body;
-//   const uuid = categoryID;
-
-//   let errors = [];
-
-//   if (uuid == "") {
-//     // check if the uuid exists
-//     errors = [
-//       ...errors,
-//       new E.BadRequestError({
-//         parameter: "uuid",
-//         value: "Empty uuid",
-//         message: "Uuid is empty",
-//       }),
-//     ];
-//   }
-
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getProductsByCategoryID(uuid);
-//     if (results.length > 0) {
-//       console.log(results);
-//       const data = {
-//         name: results[0].name,
-//         email: results[0].email,
-//         last_updated: results[0].last_updated,
-//         created_at: results[0].created_at,
-//       };
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read products details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No such category exists" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Get products by brand
-// exports.processGetProductsByBrandID = async (req, res, next) => {
-//   console.log("processGetProductsByBrandID running...");
-
-//   const { brandID } = req.body;
-//   const uuid = brandID;
-
-//   let errors = [];
-
-//   if (uuid == "") {
-//     // check if the uuid exists
-//     errors = [
-//       ...errors,
-//       new E.BadRequestError({
-//         parameter: "uuid",
-//         value: "Empty uuid",
-//         message: "Uuid is empty",
-//       }),
-//     ];
-//   }
-
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getProductsByBrandID(uuid);
-//     if (results.length > 0) {
-//       console.log(results);
-//       const data = {
-//         name: results[0].name,
-//         email: results[0].email,
-//         last_updated: results[0].last_updated,
-//         created_at: results[0].created_at,
-//       };
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read products details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No such brand exists" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Update product by ID
-// exports.processUpdateProduct = async (req, res, next) => {
-//   console.log("processUpdateProduct running...");
-
-//   const { productID } = req.body;
-//   const { name } = req.body;
-//   const uuid = productID;
-
-//   let errors = [];
-
-//   if (uuid === "") {
-//     // Check if uuid exists
-//     errors = [
-//       ...errors,
-//       new E.BadRequestError({
-//         parameter: "uuid",
-//         value: "Empty uuid",
-//         message: "Uuid is empty.",
-//       }),
-//     ];
-//   } else if (name == "") {
-//     errors = [
-//       ...errors,
-//       new E.ParameterError({
-//         parameter: "Input fields",
-//         value: "Empty input fields",
-//         message: "All input fields is required to be filled.",
-//       }),
-//     ];
-//   }
-
-//   // Check if there are errors
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.updateProduct(name, uuid);
-//     if (results.affectedRows === 1) {
-//       console.log(results);
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Update product details successful",
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No such product exists" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Delete product by ID
-// exports.processDeleteProductByID = async (req, res, next) => {
-//   console.log("processDeleteProductByID is running...");
-//   console.log(req.body);
-//   const { product_id } = req.body;
-//   try {
-//     const results = await productManager.deleteProductByID(product_id);
-//     console.log(results);
-//     return res.status(200).send({
-//       statusCode: 200,
-//       ok: true,
-//       message: "Deletion completed!",
-//       data: "",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return next(error);
-//   }
-// };
-
-// // Upload new product by brand or category
-// exports.processAddProduct = async (req, res, next) => {
-//   console.log("processAddProduct is running...");
-
-//   const { productName } = req.body;
-//   const { address } = req.body;
-
-//   let errors = [];
-
-//   if (productName == "" || address == "") {
-//     errors = [
-//       ...errors,
-//       new E.ParameterError({
-//         parameter: "Input fields",
-//         value: "Empty input fields",
-//         message: "All input fields is required to be filled.",
-//       }),
-//     ];
-//   }
-
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.addProduct(productName, address);
-//     if (results.affectedRows == 1) {
-//       console.log(results);
-//       return res.status(201).json({
-//         statusCode: 201,
-//         ok: true,
-//         message: "Product creation successful",
-//       });
-//     }
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Get best sale products
-// exports.processGetBestSaleProducts = async (req, res, next) => {
-//   console.log("processGetBestSaleProducts running...");
-
-//   let errors = [];
-
-//   // check if there are errors
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getBestSaleProducts();
-//     if (results.length > 0) {
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read products details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No products found" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
-
-// // Get new arrivals
-// exports.processGetNewArrivals = async (req, res, next) => {
-//   console.log("processGetNewArrivals running...");
-
-//   let errors = [];
-
-//   // check if there are errors
-//   if (errors.length > 0) {
-//     const dataError = new E.DataError({ errors });
-//     console.log(util.inspect(dataError));
-//     return next(dataError);
-//   }
-
-//   try {
-//     const results = await productManager.getNewArrivals();
-//     if (results.length > 0) {
-//       return res.status(200).json({
-//         statusCode: 200,
-//         ok: true,
-//         message: "Read products details successful",
-//         data,
-//       });
-//     }
-//     return res
-//       .status(404)
-//       .json({ statusCode: 404, ok: true, message: "No products found" });
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
+// create new product
+exports.processCreateProduct = async (req, res, next) => {
+  console.log(chalk.blue("processCreateProduct running"));
+  const { name } = req.body;
+  const { price } = req.body;
+  const { description } = req.body;
+  const { category_id } = req.body;
+  const { brand_id } = req.body;
+  const { image_url } = req.body;
+  let errors = [];
+  if (
+    name == "" ||
+    price == "" ||
+    description == "" ||
+    category_id == "" ||
+    brand_id == "" ||
+    image_url == ""
+  ) {
+    errors.push({
+      parameter: "Input fields",
+      value: "Empty input fields",
+      message: "All input fields is required to be filled.",
+    });
+  }
+  try {
+    const createdProductData = await productManager.updateProductByID(
+      name,
+      price,
+      description,
+      category_id,
+      brand_id,
+      image_url
+    );
+    if (createdProductData.affectedRows == 1) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Create product successful",
+      });
+    }
+  } catch (error) {
+    if ((error.message = "All input fields is required to be filled.")) {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product data is missing",
+      });
+    }
+    console.error(chalk.red("Error in updateProductByID: ", error));
+    return next(error);
+  }
+};
