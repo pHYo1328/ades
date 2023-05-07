@@ -1,23 +1,22 @@
 const { builtinModules } = require("module");
+const pool = require("../config/database");
 const client = require("../config/client");
 const chalk = require("chalk");
 
 // get product by ID
 module.exports.getProductByID = async (product_id) => {
   console.log(chalk.blue("getProductByID is called"));
+  const promisePool = pool.promise();
+  const connection = await promisePool.getConnection();
   try {
-    await client.get(`product:${product_id}`, (err, productData) => {
-      if (err) console.error(chalk.red("Error in getting product data: ", err));
-      else {
-        console.log(chalk.green("Product data: ", productData));
-        return productData;
-      }
-    });
+    const productDataQuery = "SELECT name FROM product where product_id=?;";
+    const results = await connection.query(productDataQuery, [product_id]);
+    return results[0];
   } catch (error) {
     console.error(chalk.red("Error in getProductByID: ", error));
     throw error;
   } finally {
-    client.quit();
+    connection.release();
   }
 };
 
