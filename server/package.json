@@ -12,14 +12,18 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "test": "jest"
   },
   "devDependencies": {
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
-    "nodemon": "^2.0.19"
+    "ioredis-mock": "^8.7.0",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.19",
+    "supertest": "^6.3.3"
   },
   "name": "server",
   "version": "1.0.0",

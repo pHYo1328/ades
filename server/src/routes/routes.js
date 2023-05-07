@@ -1,4 +1,5 @@
 const productController = require("../controllers/product.controller");
+const cartController = require("../controller/cart.controller");
 const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -31,5 +32,23 @@ module.exports = (app, router) => {
     "./api/product:id",
     verifyAccessToken.verifyToken,
     productController.processEditProductByID
+  );
+
+  router.post(
+    "./api/cart/:userID",
+    verifyAccessToken.verifyToken,
+    cartController.processAddCartData
+  );
+
+  router.get(
+    "./api/cart/:userID",
+    verifyAccessToken.verifyToken,
+    cartController.processGetCartData
+  );
+
+  router.delete(
+    "./api/cart/:userID",
+    verifyAccessToken.verifyToken,
+    cartController.processDeleteCartData
   );
 };
