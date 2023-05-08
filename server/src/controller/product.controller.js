@@ -341,17 +341,17 @@ exports.processUpdateProductByID = async (req, res, next) => {
 
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
-  console.log(chalk.blue("processCreateProduct running"));
+  console.log(chalk.blue('processCreateProduct running'));
   const { name, price, description, category_id, brand_id, image } = req.body;
 
   let errors = [];
   if (
-    name == "" ||
-    price == "" ||
-    description == "" ||
-    category_id == "" ||
-    brand_id == "" ||
-    image_url == ""
+    name == '' ||
+    price == '' ||
+    description == '' ||
+    category_id == '' ||
+    brand_id == '' ||
+    image_url == ''
   ) {
     errors.push({
       parameter: 'Input fields',
@@ -383,7 +383,7 @@ exports.processCreateProduct = async (req, res, next) => {
         message: 'Product data is missing',
       });
     }
-    console.error(chalk.red("Error in createProduct: ", error));
+    console.error(chalk.red('Error in createProduct: ', error));
     return next(error);
   }
 };
