@@ -3,9 +3,9 @@ const chalk = require('chalk');
 
 // get product by ID
 module.exports.getProductByID = async (product_id) => {
-  console.log(chalk.blue("getProductByID is called"));
+  console.log(chalk.blue('getProductByID is called'));
   try {
-    const productDataQuery = "SELECT name FROM product where product_id=?;";
+    const productDataQuery = 'SELECT name FROM product where product_id=?;';
     const results = await connection.query(productDataQuery, [product_id]);
     console.log(chalk.green(results));
     return results[0];
@@ -17,11 +17,11 @@ module.exports.getProductByID = async (product_id) => {
 
 // delete product by ID
 module.exports.deleteProductByID = async (product_id) => {
-  console.log(chalk.blue("deleteProductByID is called"));
+  console.log(chalk.blue('deleteProductByID is called'));
   const promisePool = pool.promise();
   const connection = await promisePool.getConnection();
   try {
-    const productDeleteQuery = "DELETE FROM product where product_id =?";
+    const productDeleteQuery = 'DELETE FROM product where product_id =?';
     const results = await pool.query(productDeleteQuery, [product_id]);
     console.log(chalk.green(results));
     return results.affectedRows > 0;
@@ -33,9 +33,9 @@ module.exports.deleteProductByID = async (product_id) => {
 
 // get all products
 module.exports.getAllProducts = async () => {
-  console.log(chalk.blue("getAllProducts is called"));
+  console.log(chalk.blue('getAllProducts is called'));
   try {
-    const productsDataQuery = "SELECT * FROM product";
+    const productsDataQuery = 'SELECT * FROM product';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results));
     return results;
@@ -47,9 +47,9 @@ module.exports.getAllProducts = async () => {
 
 // get products by category
 module.exports.getProductsByCategoryID = async (category_id) => {
-  console.log(chalk.blue("getProductsByCategoryID is called"));
+  console.log(chalk.blue('getProductsByCategoryID is called'));
   try {
-    const productsDataQuery = "SELECT * FROM product where category_id = ?";
+    const productsDataQuery = 'SELECT * FROM product where category_id = ?';
     const results = await pool.query(productsDataQuery, [category_id]);
     console.log(chalk.green(results));
     return results;
@@ -61,9 +61,9 @@ module.exports.getProductsByCategoryID = async (category_id) => {
 
 // get products by brand
 module.exports.getProductsByBrandID = async (brand_id) => {
-  console.log(chalk.blue("getProductsByBrandID is called"));
+  console.log(chalk.blue('getProductsByBrandID is called'));
   try {
-    const productsDataQuery = "SELECT * FROM product where brand_id = ?";
+    const productsDataQuery = 'SELECT * FROM product where brand_id = ?';
     const results = await pool.query(productsDataQuery, [brand_id]);
     console.log(chalk.green(results));
     return results;
@@ -75,10 +75,10 @@ module.exports.getProductsByBrandID = async (brand_id) => {
 
 // get 3 newest product arrivals
 module.exports.getNewArrivals = async () => {
-  console.log(chalk.blue("getProductsByBrandID is called"));
+  console.log(chalk.blue('getProductsByBrandID is called'));
   try {
     const productsDataQuery =
-      "SELECT * FROM product order by created_at desc limit 3";
+      'SELECT * FROM product order by created_at desc limit 3';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results));
     return results;
