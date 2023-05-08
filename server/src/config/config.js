@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
-const path = require("path");
+const dotenv = require('dotenv');
+const path = require('path');
 // to access the env file in root dir, we must add path for that file
 //use path.join to help avoiding error for platform syntax (window \, unix-based /)
-dotenv.config({ path: path.join(__dirname, "../../.env") });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 module.exports = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

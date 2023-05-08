@@ -1,20 +1,20 @@
-const productController = require("../controller/product.controller");
-const cartController = require("../controller/cart.controller");
+const productController = require('../controller/product.controller');
+const cartController = require('../controller/cart.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
   router.get(
-    "./api/products",
+    './api/products',
     //verifyAccessToken.verifyToken,
     productController.processGetAllProducts
   );
   router.get(
-    "./api/product:id",
-   // verifyAccessToken.verifyToken,
+    './api/product:id',
+    // verifyAccessToken.verifyToken,
     productController.processGetProductByID
   );
   router.get(
-    "./api/products:category_id",
+    './api/products:category_id',
     //verifyAccessToken.verifyToken,
     productController.processGetProductsByCategoryID
   );
@@ -24,7 +24,7 @@ module.exports = (app, router) => {
   //   productController.processAddProduct
   // );
   router.delete(
-    "./api/product:id",
+    './api/product:id',
     //verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
@@ -34,19 +34,19 @@ module.exports = (app, router) => {
   //   productController.processEditProductByID
   // );
   router.post(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processAddCartData
   );
 
   router.get(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartData
   );
 
   router.delete(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processDeleteCartData
   );

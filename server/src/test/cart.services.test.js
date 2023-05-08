@@ -39,7 +39,7 @@ describe('Cart services', () => {
     const userID = '1';
     const cartData = JSON.stringify([{ productID: '101', quantity: 2 }]);
     const errorMessage = 'Redis command error';
-  
+
     // Create a mock implementation of cartServices that throws an error
     const errorCartServices = {
       ...cartServices,
@@ -47,9 +47,15 @@ describe('Cart services', () => {
       getCartData: jest.fn().mockRejectedValue(new Error(errorMessage)),
       deleteCartData: jest.fn().mockRejectedValue(new Error(errorMessage)),
     };
-  
-    await expect(errorCartServices.addCartData(userID, cartData)).rejects.toThrow(errorMessage);
-    await expect(errorCartServices.getCartData(userID)).rejects.toThrow(errorMessage);
-    await expect(errorCartServices.deleteCartData(userID)).rejects.toThrow(errorMessage);
+
+    await expect(
+      errorCartServices.addCartData(userID, cartData)
+    ).rejects.toThrow(errorMessage);
+    await expect(errorCartServices.getCartData(userID)).rejects.toThrow(
+      errorMessage
+    );
+    await expect(errorCartServices.deleteCartData(userID)).rejects.toThrow(
+      errorMessage
+    );
   });
 });
