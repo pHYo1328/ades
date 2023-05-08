@@ -10,7 +10,7 @@ module.exports = (app, router) => {
   );
   router.get(
     "./api/product:id",
-   // verifyAccessToken.verifyToken,
+    // verifyAccessToken.verifyToken,
     productController.processGetProductByID
   );
   router.get(
@@ -18,21 +18,22 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     productController.processGetProductsByCategoryID
   );
-  // router.post(
-  //   "./api/products",
-  //   //verifyAccessToken.verifyToken,
-  //   productController.processAddProduct
-  // );
+  router.post(
+    "./api/products",
+    verifyAccessToken.verifyToken,
+    productController.processAddProduct
+  );
   router.delete(
     "./api/product:id",
     //verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
-  // router.put(
-  //   "./api/product:id",
-  //   //verifyAccessToken.verifyToken,
-  //   productController.processEditProductByID
-  // );
+  router.put(
+    "./api/product/:product_id",
+    verifyAccessToken.verifyToken,
+    productController.processEditProductByID
+  );
+
   router.post(
     "./api/cart/:userID",
     //verifyAccessToken.verifyToken,
