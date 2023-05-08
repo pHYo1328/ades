@@ -342,8 +342,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
   console.log(chalk.blue("processCreateProduct running"));
-  const { name, price, description, category_id, brand_id, image_url } =
-    req.body;
+  const { name, price, description, category_id, brand_id, image } = req.body;
 
   let errors = [];
   if (
@@ -352,7 +351,7 @@ exports.processCreateProduct = async (req, res, next) => {
     description == "" ||
     category_id == "" ||
     brand_id == "" ||
-    image_url == ""
+    image == ""
   ) {
     errors.push({
       parameter: "Input fields",
@@ -361,7 +360,7 @@ exports.processCreateProduct = async (req, res, next) => {
     });
   }
   try {
-    const createdProductData = await productManager.updateProductByID(
+    const createdProductData = await productManager.createProduct(
       name,
       price,
       description,
@@ -384,7 +383,7 @@ exports.processCreateProduct = async (req, res, next) => {
         message: "Product data is missing",
       });
     }
-    console.error(chalk.red("Error in updateProductByID: ", error));
+    console.error(chalk.red("Error in createProduct: ", error));
     return next(error);
   }
 };
