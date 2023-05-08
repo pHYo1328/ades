@@ -1,4 +1,4 @@
-const cartManagement = require('../services/cart.services')
+const cartServices = require('../services/cart.services')
 const chalk = require('chalk')
 exports.processAddCartData = async (req, res, next) => {
     console.log(chalk.blue('processAddCartData is running'))
@@ -8,34 +8,26 @@ exports.processAddCartData = async (req, res, next) => {
     const {
         cartData
     } = req.body
-    if (
-        !userID ||
-        typeof userID !== 'string' ||
-        isNaN(parseInt(userID)) ||
-        userID.trim() === ''
-    ) {
-        return res.status(400).send({
-            statusCode: 400,
-            ok: false,
-            message: 'Invalid userID parameter',
-            data: '',
-        });
-    }
-
-    if (
-        !cartData ||
-        !Array.isArray(cartData) ||
-        cartData.length <= 0 ||
-        !cartData.every((item => typeof item === "object"))) {
-        return res.status(400).send({
-            statusCode: 400,
-            ok: false,
-            message: "Invalid cartData parameter",
-            data: "",
-        });
-    }
     try {
-        const result = await cartManagement.addCartData(userID, cartData)
+        if (
+            !userID ||
+            isNaN(parseInt(userID)) ||
+            userID.trim() === ''
+        ) {
+            const error = new Error('Invalid userID parameter');
+            error.status = 400;
+            throw error;
+        }
+        if (
+            !cartData ||
+            !Array.isArray(cartData) ||
+            cartData.length <= 0 ||
+            !cartData.every((item => typeof item === "object"))) {
+            const error = new Error('Invalid cartData parameter');
+            error.status = 400;
+            throw error;
+        }
+        const result = await cartServices.addCartData(userID, cartData)
         console.log(
             chalk.yellow('Inspect result variable from addCartData service\n'),
             result
@@ -47,13 +39,12 @@ exports.processAddCartData = async (req, res, next) => {
             data: ''
         })
     } catch (error) {
-        console.error(chalk.red('Error in processAddCartData:', error))
-        return res.status(500).send({
-            statusCode: 500,
-            ok: false,
-            message: 'Internal server error',
-            data: ''
-        })
+        if (!error.status) {
+            // If there's no custom status set, it's an internal server error
+            error.status = 500;
+            error.message= "Internal server error"
+        }
+        next(error);
     }
 }
 
@@ -62,24 +53,20 @@ exports.processGetCartData = async (req, res, next) => {
     const {
         userID
     } = req.params
-    if (
-        !userID ||
-        typeof userID !== 'string' ||
-        isNaN(parseInt(userID)) ||
-        userID.trim() === ''
-    ) {
-        return res.status(400).send({
-            statusCode: 400,
-            ok: false,
-            message: 'Invalid userID parameter',
-            data: '',
-        });
-    }
     try {
+        if (
+            !userID ||
+            isNaN(parseInt(userID)) ||
+            userID.trim() === ''
+        ) {
+            const error = new Error('Invalid userID parameter');
+            error.status = 400;
+            throw error;
+        }
         console.log(
             chalk.yellow("Inspect userID variable\n"), userID
         )
-        const result = await cartManagement.getCartData(userID)
+        const result = await cartServices.getCartData(userID)
         console.log(
             chalk.yellow('Inspect result variable from getCartData service\n'),
             result
@@ -92,12 +79,11 @@ exports.processGetCartData = async (req, res, next) => {
         })
     } catch (error) {
         console.error(chalk.red('Error in processAddCartData:', error))
-        return res.status(500).send({
-            statusCode: 500,
-            ok: false,
-            message: 'Internal server error',
-            data: ''
-        })
+        if (!error.status) {
+            error.status = 500;
+            error.message= "Internal server error"
+        }
+        next(error);
     }
 }
 
@@ -106,24 +92,21 @@ exports.processDeleteCartData = async (req, res, next) => {
     const {
         userID
     } = req.params
-    if (
-        !userID ||
-        typeof userID !== 'string' ||
-        isNaN(parseInt(userID)) ||
-        userID.trim() === ''
-    ) {
-        return res.status(400).send({
-            statusCode: 400,
-            ok: false,
-            message: 'Invalid userID parameter',
-            data: '',
-        });
-    }
+    
     try {
+        if (
+            !userID ||
+            isNaN(parseInt(userID)) ||
+            userID.trim() === ''
+        ) {
+            const error = new Error('Invalid userID parameter');
+            error.status = 400;
+            throw error;
+        }
         console.log(
             chalk.yellow("Inspect userID variable\n"), userID
         );
-        const result = await cartManagement.deleteCartData(userID)
+        const result = await cartServices.deleteCartData(userID)
         console.log(
             chalk.yellow('Inspect result variable from deleteCartData service\n'),
             result
@@ -136,11 +119,10 @@ exports.processDeleteCartData = async (req, res, next) => {
         })
     } catch (error) {
         console.error(chalk.red('Error in processAddCartData:', error))
-        return res.status(500).send({
-            statusCode: 500,
-            ok: false,
-            message: 'Internal server error',
-            data: ''
-        })
+        if (!error.status) {
+            error.status = 500;
+            error.message= "Internal server error"
+        }
+        next(error);
     }
 }
