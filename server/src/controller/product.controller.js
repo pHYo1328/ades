@@ -5,7 +5,7 @@ const productManager = require("../services/product.service");
 exports.processGetProductByID = async (req, res, next) => {
   console.log(chalk.blue("processGetProductByID running"));
 
-  const { productID } = req.body;
+  const { productID } = req.params;
   const product_id = productID;
 
   let errors = [];
@@ -42,7 +42,7 @@ exports.processGetProductByID = async (req, res, next) => {
       message: "No such product exists",
     });
   } catch (error) {
-    if (error.message == "product_id is empty") {
+    if (error.message === "product_id is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -58,7 +58,7 @@ exports.processGetProductByID = async (req, res, next) => {
 exports.processDeleteProductByID = async (req, res, next) => {
   console.log(chalk.blue("processDeleteProductByID running"));
 
-  const { productID } = req.body;
+  const { productID } = req.params;
   const product_id = productID;
 
   let errors = [];
@@ -76,21 +76,21 @@ exports.processDeleteProductByID = async (req, res, next) => {
       product_id
     );
 
-    if (deletedProductData.affectedRows == 0) {
-      return res.status(404).json({
-        statusCode: 404,
+    if (deletedProductData) {
+      return res.status(200).json({
+        statusCode: 200,
         ok: true,
-        message: "No such product exists",
+        message: "Product Deletion successful",
+        data: deletedProductData,
       });
     }
-    return res.status(200).json({
-      statusCode: 200,
+    return res.status(404).json({
+      statusCode: 404,
       ok: true,
-      message: "Product Deletion successful",
-      data: deletedProductData,
+      message: "No such product exists",
     });
   } catch (error) {
-    if (error.message == "product_id is empty") {
+    if (error.message === "product_id is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -137,7 +137,7 @@ exports.processGetAllProducts = async (req, res, next) => {
 // get products by category
 exports.processGetProductsByCategoryID = async (req, res, next) => {
   console.log(chalk.blue("processGetProductsByCategoryID running"));
-  const { categoryID } = req.body;
+  const { categoryID } = req.params;
   const category_id = categoryID;
 
   let errors = [];
@@ -175,7 +175,7 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
       message: "No such category exists",
     });
   } catch (error) {
-    if (error.message == "category_id is empty") {
+    if (error.message === "category_id is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -190,7 +190,7 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
 // get products by brand
 exports.processGetProductsByBrandID = async (req, res, next) => {
   console.log(chalk.blue("processGetProductsByBrandID running"));
-  const { brandID } = req.body;
+  const { brandID } = req.params;
   const brand_id = brandID;
 
   let errors = [];
@@ -226,7 +226,7 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
       message: "No such brand exists",
     });
   } catch (error) {
-    if (error.message == "brand_id is empty") {
+    if (error.message === "brand_id is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -273,14 +273,10 @@ exports.processGetNewArrivals = async (req, res, next) => {
 // update product by ID
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue("processUpdateProductByID running"));
-  const { productID } = req.body;
+  const { productID } = req.params;
   const product_id = productID;
-  const { name } = req.body;
-  const { price } = req.body;
-  const { description } = req.body;
-  const { category_id } = req.body;
-  const { brand_id } = req.body;
-  const { image_url } = req.body;
+  const { name, price, description, category_id, brand_id, image_url } =
+    req.body;
   let errors = [];
   if (product_id == "") {
     errors.push({
@@ -312,26 +308,26 @@ exports.processUpdateProductByID = async (req, res, next) => {
       image_url,
       product_id
     );
-    if (updatedProductData.affectedRows == 0) {
-      return res.status(404).json({
-        statusCode: 404,
+    if (updatedProductData) {
+      return res.status(200).json({
+        statusCode: 200,
         ok: true,
-        message: "No such product exists",
+        message: "Update product details successful",
       });
     }
-    return res.status(200).json({
-      statusCode: 200,
+    return res.status(404).json({
+      statusCode: 404,
       ok: true,
-      message: "Update product details successful",
+      message: "No such product exists",
     });
   } catch (error) {
-    if (error.message == "product_id is empty") {
+    if (error.message === "product_id is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
         message: "Product ID is missing",
       });
-    } else if ((error.message = "All input fields is required to be filled.")) {
+    } else if (error.message === "All input fields is required to be filled.") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -346,12 +342,9 @@ exports.processUpdateProductByID = async (req, res, next) => {
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
   console.log(chalk.blue("processCreateProduct running"));
-  const { name } = req.body;
-  const { price } = req.body;
-  const { description } = req.body;
-  const { category_id } = req.body;
-  const { brand_id } = req.body;
-  const { image_url } = req.body;
+  const { name, price, description, category_id, brand_id, image_url } =
+    req.body;
+
   let errors = [];
   if (
     name == "" ||
@@ -374,9 +367,9 @@ exports.processCreateProduct = async (req, res, next) => {
       description,
       category_id,
       brand_id,
-      image_url
+      image
     );
-    if (createdProductData.affectedRows == 1) {
+    if (createdProductData) {
       return res.status(200).json({
         statusCode: 200,
         ok: true,
@@ -384,7 +377,7 @@ exports.processCreateProduct = async (req, res, next) => {
       });
     }
   } catch (error) {
-    if ((error.message = "All input fields is required to be filled.")) {
+    if (error.message === "All input fields is required to be filled.") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,

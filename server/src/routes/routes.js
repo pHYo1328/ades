@@ -9,12 +9,12 @@ module.exports = (app, router) => {
     productController.processGetAllProducts
   );
   router.get(
-    "./api/product:id",
+    "./api/product/:product_id",
     verifyAccessToken.verifyToken,
     productController.processGetProductByID
   );
   router.get(
-    "./api/products:category_id",
+    "./api/products/:category_id",
     verifyAccessToken.verifyToken,
     productController.processGetProductsByCategoryID
   );
@@ -24,12 +24,12 @@ module.exports = (app, router) => {
     productController.processAddProduct
   );
   router.delete(
-    "./api/product:id",
+    "./api/product/:product_id",
     verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
   router.put(
-    "./api/product:id",
+    "./api/product/:product_id",
     verifyAccessToken.verifyToken,
     productController.processEditProductByID
   );
