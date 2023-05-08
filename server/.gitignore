@@ -3,5 +3,5 @@ node_modules
 # ESLint
 .eslintcache
 .eslintrc.js
-
+# prettier
 .prettierrc
