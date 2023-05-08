@@ -28,7 +28,7 @@ module.exports.deleteProductByID = async (product_id) => {
     const productDeleteQuery = "DELETE FROM product where product_id =?";
     const results = await connection.query(productDeleteQuery, [product_id]);
     console.log(chalk.green(results));
-    return results[0];
+    return results.affectedRows > 0;
   } catch (error) {
     console.error(chalk.red("Error in deleteProductByID: ", error));
     throw error;
@@ -136,7 +136,7 @@ module.exports.updateProductByID = async (
       product_id,
     ]);
     console.log(chalk.green(results));
-    return results;
+    return results.affectedRows > 0;
   } catch (error) {
     console.error(chalk.red("Error in updateProductByID: ", error));
     throw error;
@@ -152,12 +152,15 @@ module.exports.createProduct = async (
   description,
   category_id,
   brand_id,
-  image_url
+  image
 ) => {
   console.log(chalk.blue("createProduct is called"));
   const promisePool = pool.promise();
   const connection = await promisePool.getConnection();
   try {
+    const cloudinaryResult = await cloudinary_api_key.uploader.upload(
+      image.path
+    );
     const productCreateQuery =
       "INSERT into product (name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?,?)";
     const results = await connection.query(productCreateQuery, [
@@ -169,7 +172,7 @@ module.exports.createProduct = async (
       image_url,
     ]);
     console.log(chalk.green(results));
-    return results;
+    return results.affectedRows > 0;
   } catch (error) {
     console.error(chalk.red("Error in createProduct: ", error));
     throw error;
