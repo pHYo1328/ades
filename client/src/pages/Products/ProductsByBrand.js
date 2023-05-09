@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ProductsPage() {
+export default function ProductsByBrand() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const baseUrl = "http://localhost:8081";
+  const brandID = 2;
   useEffect(() => {
     axios
-      .get(`${baseUrl}/api/products`)
+      .get(`${baseUrl}/api/products/brand/${brandID}`)
       .then((response) => {
         console.log(response);
         setProducts(response.data.data);
@@ -21,7 +22,9 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <h1 class="text-3xl font-bold underline">Products</h1>
+      <a href="/products">
+        <h1 class="text-3xl font-bold underline">Products</h1>
+      </a>
       <div id="products">
         {products ? (
           products.map((product) => (
