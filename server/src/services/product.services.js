@@ -27,8 +27,6 @@ module.exports.deleteProductByID = async (productID) => {
     console.log(chalk.green(results));
     console.log(chalk.yellow(results[0].affectedRows));
     return results[0].affectedRows > 0;
-    console.log(chalk.yellow(results[0].affectedRows));
-    return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red("Error in deleteProductByID: ", error));
     throw error;
@@ -42,8 +40,6 @@ module.exports.getAllProducts = async () => {
     const productsDataQuery =
       "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id;";
     const results = await pool.query(productsDataQuery);
-    console.log(chalk.green(results[0]));
-    return results[0];
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {

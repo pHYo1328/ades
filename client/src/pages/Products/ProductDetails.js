@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-ShowProductDetails = () => {
+export default ShowProductDetails = () => {
   const navigate = useNavigate();
 };
 
@@ -10,5 +10,3 @@ return (
     <h1 class="text-3xl font-bold underline">Hello world!</h1>
   </div>
 );
-
-export default ShowProductDetails;

@@ -57,7 +57,6 @@ exports.processGetProductByID = async (req, res, next) => {
 // Delete product by ID (done)
 exports.processDeleteProductByID = async (req, res, next) => {
   console.log(chalk.blue("processDeleteProductByID running"));
-  console.log(chalk.blue("processDeleteProductByID running"));
 
   const { productID } = req.params;
 
