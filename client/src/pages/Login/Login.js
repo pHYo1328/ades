@@ -8,26 +8,26 @@ function Login() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:3000/auth';
-    
+    const url = "http://localhost:3000/auth";
+
     const body = {
       user: username,
-      pwd : password
+      pwd: password,
     };
 
     fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         console.log(data);
-        navigate('/');
+        navigate("/");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
     console.log(username, password);
@@ -37,11 +37,15 @@ function Login() {
     <div className="h-screen flex items-center justify-center">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800">Log in to your account</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Log in to your account
+          </h2>
         </div>
         <form onSubmit={onHandleSubmit} className="mt-8 space-y-6">
           <div>
-            <label className="text-sm font-medium text-gray-700">Username</label>
+            <label className="text-sm font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               placeholder="Enter your username"
@@ -51,7 +55,9 @@ function Login() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">Password</label>
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -75,7 +81,9 @@ function Login() {
           </div>
         </form>
         <div className="flex justify-center items-center mt-4">
-          <span className="text-sm text-gray-600 mr-2">Don't have an account?</span>
+          <span className="text-sm text-gray-600 mr-2">
+            Don't have an account?
+          </span>
           <button
             className="text-sm text-indigo-500 hover:text-indigo-600 focus:outline-none focus:underline"
             onClick={() => navigate("/register")}
