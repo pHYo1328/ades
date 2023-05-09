@@ -1,2 +1,7 @@
 node_modules
 .env
+# ESLint
+.eslintcache
+.eslintrc.js
+# prettier
+.prettierrc
