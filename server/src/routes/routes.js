@@ -4,19 +4,29 @@ const cartController = require('../controller/cart.controller');
 
 module.exports = (app, router) => {
   router.get(
-    './api/products',
+    '/api/products',
     //verifyAccessToken.verifyToken,
     productController.processGetAllProducts
   );
   router.get(
-    './api/product:id',
+    '/api/product/:product_id',
     // verifyAccessToken.verifyToken,
     productController.processGetProductByID
   );
   router.get(
-    './api/products:category_id',
+    '/api/products_category/:category_id',
     //verifyAccessToken.verifyToken,
     productController.processGetProductsByCategoryID
+  );
+  router.get(
+    '/api/products_brand/:brand_id',
+    //verifyAccessToken.verifyToken,
+    productController.processGetProductsByBrandID
+  );
+  router.get(
+    '/api/products/new_arrivals',
+    //verifyAccessToken.verifyToken,
+    productController.processGetNewArrivals
   );
   // router.post(
   //   "./api/products",
@@ -24,14 +34,14 @@ module.exports = (app, router) => {
   //   productController.processAddProduct
   // );
   router.delete(
-    './api/product:id',
-    //verifyAccessToken.verifyToken,
+    '/api/product/:product_id',
+    // verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
   // router.put(
   //   "./api/product/:product_id",
   //   //verifyAccessToken.verifyToken,
-  //   productController.processEditProductByID
+  //   productController.processUpdateProductByID
   // );
 
   router.post(
