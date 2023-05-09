@@ -74,19 +74,13 @@ module.exports.getProductsByBrandID = async (brand_id) => {
 };
 
 // get 3 newest product arrivals
-module.exports.getNewArrivals = async () => {
-  console.log(chalk.blue('getProductsByBrandID is called'));
-  try {
-    const productsDataQuery =
-      'SELECT * FROM product order by created_at desc limit 3';
-    const results = await pool.query(productsDataQuery);
-    console.log(chalk.green(results));
-    return results;
-  } catch (error) {
-    console.error(chalk.red('Error in getNewArrivals: ', error));
-    throw error;
-  }
-};
+
+  
+module.exports.getNewArrivals = asyncLog(async function getNewArrivals () {
+    console.log(chalk.blue("getNewArrivals is called"));
+    const productsDataQuery = 'SELECT * FROM product order by created_at desc limit 3';
+    return pool.query(productsDataQuery);
+});
 
 // update product by ID
 module.exports.updateProductByID = async (

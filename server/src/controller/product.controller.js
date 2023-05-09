@@ -1,5 +1,5 @@
-const chalk = require('chalk');
-const productManager = require('../services/product.services');
+const chalk = require("chalk");
+const productServices = require("../services/product.services");
 
 // Get product by ID
 exports.processGetProductByID = async (req, res, next) => {
@@ -19,7 +19,7 @@ exports.processGetProductByID = async (req, res, next) => {
   }
 
   try {
-    const productData = await productManager.getProductByID(product_id);
+    const productData = await productServices.getProductByID(product_id);
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const data = {
@@ -72,7 +72,7 @@ exports.processDeleteProductByID = async (req, res, next) => {
   }
 
   try {
-    const deletedProductData = await productManager.deleteProductByID(
+    const deletedProductData = await productServices.deleteProductByID(
       product_id
     );
 
@@ -106,7 +106,7 @@ exports.processDeleteProductByID = async (req, res, next) => {
 exports.processGetAllProducts = async (req, res, next) => {
   console.log(chalk.blue('processGetAllProducts running'));
   try {
-    const productData = await productManager.getAllProducts();
+    const productData = await productServices.getAllProducts();
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const data = {
@@ -150,7 +150,7 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
   }
 
   try {
-    const productData = await productManager.getProductsByCategoryID(
+    const productData = await productServices.getProductsByCategoryID(
       category_id
     );
     if (productData) {
@@ -203,7 +203,7 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
   }
 
   try {
-    const productData = await productManager.getProductsByBrandID(brand_id);
+    const productData = await productServices.getProductsByBrandID(brand_id);
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const data = {
@@ -242,7 +242,7 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
 exports.processGetNewArrivals = async (req, res, next) => {
   console.log(chalk.blue('processGetNewArrivals running'));
   try {
-    const productData = await productManager.getNewArrivals();
+    const productData = await productServices.getNewArrivals();
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const data = {
@@ -299,7 +299,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
     });
   }
   try {
-    const updatedProductData = await productManager.updateProductByID(
+    const updatedProductData = await productServices.updateProductByID(
       name,
       price,
       description,
@@ -360,7 +360,7 @@ exports.processCreateProduct = async (req, res, next) => {
     });
   }
   try {
-    const createdProductData = await productManager.createProduct(
+    const createdProductData = await productServices.createProduct(
       name,
       price,
       description,
