@@ -42,7 +42,7 @@ module.exports = (app, router) => {
   // router.put(
   //   "./api/product/:product_id",
   //   //verifyAccessToken.verifyToken,
-  //   productController.processEditProductByID
+  //   productController.processUpdateProductByID
   // );
 
   router.post(
