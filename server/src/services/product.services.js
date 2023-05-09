@@ -169,3 +169,32 @@ module.exports.createProduct = async (
     connection.release();
   }
 };
+
+// get brand name by brand ID
+module.exports.getBrandByID = async (brandID) => {
+  console.log(chalk.blue("getBrandByID is called"));
+  try {
+    const productDataQuery = "SELECT brand_name from brand where brand_id = ?;";
+    const results = await pool.query(productDataQuery, [brandID]);
+    console.log(chalk.green(results));
+    return results[0][0];
+  } catch (error) {
+    console.error(chalk.red("Error in getBrandByID: ", error));
+    throw error;
+  }
+};
+
+// get category name by category ID
+module.exports.getCategoryByID = async (categoryID) => {
+  console.log(chalk.blue("getCategoryByID is called"));
+  try {
+    const productDataQuery =
+      "SELECT category_name from category where category_id = ?;";
+    const results = await pool.query(productDataQuery, [categoryID]);
+    console.log(chalk.green(results));
+    return results[0][0];
+  } catch (error) {
+    console.error(chalk.red("Error in getCategoryByID: ", error));
+    throw error;
+  }
+};

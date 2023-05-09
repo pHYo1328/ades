@@ -409,3 +409,99 @@ exports.processCreateProduct = async (req, res, next) => {
     return next(error);
   }
 };
+
+// get brand name by brand ID (done)
+exports.processGetBrandByID = async (req, res, next) => {
+  console.log(chalk.blue("processGetBrandByID running"));
+
+  const { brandID } = req.params;
+
+  let errors = [];
+
+  if (brandID == "") {
+    errors.push({
+      parameter: "brandID",
+      value: "Empty brandID",
+      message: "brandID is empty",
+    });
+  }
+
+  try {
+    const brandData = await productServices.getBrandByID(brandID);
+    if (brandData) {
+      console.log(chalk.yellow("Brand data: ", brandData));
+      const data = {
+        brand_name: brandData.brand_name,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read brand name successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such brand exists",
+    });
+  } catch (error) {
+    if (error.message === "brandID is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Brand ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in getBrandByID: ", error));
+    return next(error);
+  }
+};
+
+// get category name by category ID (done)
+exports.processGetCategoryByID = async (req, res, next) => {
+  console.log(chalk.blue("processGetCategoryByID running"));
+
+  const { categoryID } = req.params;
+
+  let errors = [];
+
+  if (categoryID == "") {
+    errors.push({
+      parameter: "categoryID",
+      value: "Empty categoryID",
+      message: "categoryID is empty",
+    });
+  }
+
+  try {
+    const categoryData = await productServices.getCategoryByID(categoryID);
+    if (categoryID) {
+      console.log(chalk.yellow("Category data: ", categoryID));
+      const data = {
+        category_name: categoryData.category_name,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read category name successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such category exists",
+    });
+  } catch (error) {
+    if (error.message === "categoryID is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Category ID is missing",
+      });
+    }
+    console.error(chalk.red("Error in getCategoryByID: ", error));
+    return next(error);
+  }
+};
