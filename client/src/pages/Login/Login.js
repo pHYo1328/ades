@@ -8,7 +8,7 @@ function Login() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/auth';
+    const url = 'http://localhost:3000/auth';
     
     const body = {
       user: username,
@@ -35,51 +35,55 @@ function Login() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <form
-        className="card w-1/3 bg-neutral text-neutral-content"
-        onSubmit={onHandleSubmit}
-      >
-        <div className="card-body items-center text-center">
-          <h2 className="card-title">Login</h2>
-
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Username</span>
-            </label>
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800">Log in to your account</h2>
+        </div>
+        <form onSubmit={onHandleSubmit} className="mt-8 space-y-6">
+          <div>
+            <label className="text-sm font-medium text-gray-700">Username</label>
             <input
               type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs"
+              placeholder="Enter your username"
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
+          <div>
+            <label className="text-sm font-medium text-gray-700">Password</label>
             <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs mb-5"
+              type="password"
+              placeholder="Enter your password"
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
-          <div className="card-actions w-full justify-center">
-            <button className="btn btn-primary w-2/3">Login</button>
+          <div className="flex justify-end">
+            <a href="/" className="text-sm text-gray-500 hover:text-gray-700">
+              Forgot your password?
+            </a>
           </div>
-          <div className="divider"></div>
-
+          <div>
+            <button
+              type="submit"
+              className="mt-4 w-full px-4 py-2 rounded-md shadow-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+            >
+              Log in
+            </button>
+          </div>
+        </form>
+        <div className="flex justify-center items-center mt-4">
+          <span className="text-sm text-gray-600 mr-2">Don't have an account?</span>
           <button
-            className="btn btn-info w-2/3"
+            className="text-sm text-indigo-500 hover:text-indigo-600 focus:outline-none focus:underline"
             onClick={() => navigate("/register")}
           >
-            Register
+            Sign up
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

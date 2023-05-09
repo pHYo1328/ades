@@ -9,7 +9,7 @@ function Register() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/register';
+    const url = 'http://localhost:3000/register';
     
     const body = {
       user: username,
@@ -35,79 +35,93 @@ function Register() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <form
-        className="card w-1/3 bg-neutral text-neutral-content"
-        onSubmit={onHandleSubmit}
+    <div className="min-h-screen flex items-center justify-center">
+  <form
+    className="max-w-lg w-full space-y-8 bg-white p-8 rounded-lg shadow-md"
+    onSubmit={onHandleSubmit}
+  >
+    <div className="flex items-center mb-8">
+      <button
+        className="text-gray-600 rounded-full p-2 mr-4"
+        onClick={() => navigate("/login")}
       >
-        <div className="card-body items-center text-center">
-          <div className="card-actions">
-            <button
-              className="btn btn-square btn-sm absolute top-8 left-8"
-              onClick={() => navigate("/login")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            <h2 className="card-title">Register</h2>
-          </div>
-
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Username</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Confirm Password</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs mb-10"
-              value={cfmPassword}
-              onChange={(e) => setCfmPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="card-actions w-full justify-center">
-            <button className="btn btn-info w-2/3">Register</button>
-          </div>
-        </div>
-      </form>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <h2 className="text-2xl font-bold text-gray-800">Register</h2>
     </div>
+
+    <div className="mb-6">
+      <label
+        className="text-sm font-medium text-gray-700"
+        htmlFor="username"
+      >
+        Username
+      </label>
+      <input
+        id="username"
+        type="text"
+        placeholder="Type here"
+        className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+    </div>
+
+    <div className="mb-6">
+      <label
+        className="text-sm font-medium text-gray-700"
+        htmlFor="password"
+      >
+        Password
+      </label>
+      <input
+        id="password"
+        type="password"
+        placeholder="Type here"
+        className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </div>
+
+    <div className="mb-6">
+      <label
+        className="text-sm font-medium text-gray-700"
+        htmlFor="cfmPassword"
+      >
+        Confirm Password
+      </label>
+      <input
+        id="cfmPassword"
+        type="password"
+        placeholder="Type here"
+        className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-10"
+        value={cfmPassword}
+        onChange={(e) => setCfmPassword(e.target.value)}
+      />
+    </div>
+
+    <div className="flex justify-center">
+      <button className="bg-blue-500 text-white py-2 px-4 rounded-full w-2/3 hover:bg-blue-700">
+        Register
+      </button>
+    </div>
+  </form>
+</div>
+
   );
 }
 
