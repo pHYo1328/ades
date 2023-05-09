@@ -95,7 +95,7 @@ module.exports.getNewArrivals = async () => {
 
 // update product by ID
 module.exports.updateProductByID = async (
-  name,
+  product_name,
   price,
   description,
   category_id,
@@ -104,13 +104,14 @@ module.exports.updateProductByID = async (
   product_id
 ) => {
   console.log(chalk.blue("updateProductByID is called"));
-  const promisePool = pool.promise();
-  const connection = await promisePool.getConnection();
+  // const promisePool = pool.promise();
+  // const connection = await promisePool.getConnection();
+  const connection = await pool.getConnection();
   try {
     const productUpdateQuery =
-      "UPDATE product SET name=COALESCE(?,name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url=COALESCE(?,image_url) where product_id = ?";
+      "UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url=COALESCE(?,image_url) where product_id = ?";
     const results = await connection.query(productUpdateQuery, [
-      name,
+      product_name,
       price,
       description,
       category_id,
@@ -118,8 +119,8 @@ module.exports.updateProductByID = async (
       image_url,
       product_id,
     ]);
-    console.log(chalk.green(results));
-    return results.affectedRows > 0;
+    console.log(chalk.green(results[0]));
+    return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red("Error in updateProductByID: ", error));
     throw error;
@@ -135,28 +136,33 @@ module.exports.createProduct = async (
   description,
   category_id,
   brand_id,
-  image
+  image_url
 ) => {
   console.log(chalk.blue("createProduct is called"));
-  const promisePool = pool.promise();
-  const connection = await promisePool.getConnection();
+  // const promisePool = pool.promise();
+  const connection = await pool.getConnection();
   try {
-    const cloudinaryResult = await cloudinary_api_key.uploader.upload(
-      image.path
-    );
+    // const cloudinaryResult = await cloudinary_api_key.uploader.upload(
+    //   image.path
+    // );
     const productCreateQuery =
-      "INSERT into product (name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?,?)";
+      "INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?,?)";
     const results = await connection.query(productCreateQuery, [
       name,
       price,
       description,
       category_id,
       brand_id,
-      cloudinaryResult.secure_url,
+      // cloudinaryResult.secure_url,
+      image_url,
     ]);
-    console.log(chalk.green(results));
-    return results.affectedRows > 0;
+    console.log(chalk.green(results[0]));
+    return results[0].affectedRows > 0;
   } catch (error) {
+    console.error(chalk.red(error.code));
+    if (error.code == "ER_BAD_FIELD_ERROR") {
+      return error.code;
+    }
     console.error(chalk.red("Error in createProduct: ", error));
     throw error;
   } finally {

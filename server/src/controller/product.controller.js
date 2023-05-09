@@ -1,5 +1,5 @@
-const chalk = require('chalk');
-const productServices = require('../services/product.services');
+const chalk = require("chalk");
+const productServices = require("../services/product.services");
 
 // Get product by ID (done)
 exports.processGetProductByID = async (req, res, next) => {
@@ -290,15 +290,19 @@ exports.processGetNewArrivals = async (req, res, next) => {
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue("processUpdateProductByID running"));
   const { productID } = req.params;
-  const product_id = productID;
   const { name, price, description, category_id, brand_id, image_url } =
     req.body;
+  var floatPrice, intCategoryID, intBrandID;
   let errors = [];
-  if (product_id == "") {
+  floatPrice = price ? parseFloat(price) : null;
+  intCategoryID = category_id ? parseInt(category_id) : null;
+  intBrandID = brand_id ? parseInt(brand_id) : null;
+
+  if (productID == "") {
     errors.push({
-      parameter: "product_id",
-      value: "Empty product_id",
-      message: "product_id is empty",
+      parameter: "productID",
+      value: "Empty productID",
+      message: "productID is empty",
     });
   } else if (
     name == "" ||
@@ -317,12 +321,12 @@ exports.processUpdateProductByID = async (req, res, next) => {
   try {
     const updatedProductData = await productServices.updateProductByID(
       name,
-      price,
+      floatPrice,
       description,
-      category_id,
-      brand_id,
+      intCategoryID,
+      intBrandID,
       image_url,
-      product_id
+      parseInt(productID)
     );
     if (updatedProductData) {
       return res.status(200).json({
@@ -337,7 +341,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
       message: "No such product exists",
     });
   } catch (error) {
-    if (error.message === "product_id is empty") {
+    if (error.message === "productID is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -358,7 +362,8 @@ exports.processUpdateProductByID = async (req, res, next) => {
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
   console.log(chalk.blue("processCreateProduct running"));
-  const { name, price, description, category_id, brand_id, image } = req.body;
+  const { name, price, description, category_id, brand_id, image_url } =
+    req.body;
 
   let errors = [];
   if (
@@ -378,13 +383,20 @@ exports.processCreateProduct = async (req, res, next) => {
   try {
     const createdProductData = await productServices.createProduct(
       name,
-      price,
+      parseFloat(price),
       description,
-      category_id,
-      brand_id,
-      image
+      parseInt(category_id),
+      parseInt(brand_id),
+      image_url
     );
-    if (createdProductData) {
+    console.log(chalk.yellow(createdProductData));
+    if (createdProductData == "ER_BAD_FIELD_ERROR") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product data is missing",
+      });
+    } else {
       return res.status(200).json({
         statusCode: 200,
         ok: true,
@@ -392,13 +404,7 @@ exports.processCreateProduct = async (req, res, next) => {
       });
     }
   } catch (error) {
-    if (error.message === "All input fields is required to be filled.") {
-      return res.status(400).json({
-        statusCode: 400,
-        ok: true,
-        message: "Product data is missing",
-      });
-    }
+    console.error(chalk.red(error.code));
     console.error(chalk.red("Error in createProduct: ", error));
     return next(error);
   }
