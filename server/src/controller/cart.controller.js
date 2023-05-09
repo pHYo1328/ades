@@ -6,7 +6,7 @@ exports.processAddCartData = async (req, res, next) => {
   const { userID } = req.params;
   const { cartData } = req.body;
   try {
-    if (!userID || isNaN(parseInt(userID)) || userID.trim() === '') {
+    if (isNaN(parseInt(userID))) {
       const error = new Error('Invalid userID parameter');
       error.status = 400;
       throw error;
@@ -27,17 +27,10 @@ exports.processAddCartData = async (req, res, next) => {
       result
     );
     return res.status(201).send({
-      statusCode: 201,
-      ok: true,
       message: 'cartData added successfully.',
       data: '',
     });
   } catch (error) {
-    if (!error.status) {
-      // If there's no custom status set, it's an internal server error
-      error.status = 500;
-      error.message = 'Internal server error';
-    }
     next(error);
   }
 };
@@ -46,7 +39,7 @@ exports.processGetCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
   const { userID } = req.params;
   try {
-    if (!userID || isNaN(parseInt(userID)) || userID.trim() === '') {
+    if (isNaN(parseInt(userID))) {
       const error = new Error('Invalid userID parameter');
       error.status = 400;
       throw error;
@@ -64,11 +57,7 @@ exports.processGetCartData = async (req, res, next) => {
       data: JSON.stringify(result),
     });
   } catch (error) {
-    console.error(chalk.red('Error in processAddCartData:', error));
-    if (!error.status) {
-      error.status = 500;
-      error.message = 'Internal server error';
-    }
+    console.error(chalk.red('Error in processGetCartData:', error));
     next(error);
   }
 };
@@ -78,7 +67,7 @@ exports.processDeleteCartData = async (req, res, next) => {
   const { userID } = req.params;
 
   try {
-    if (!userID || isNaN(parseInt(userID)) || userID.trim() === '') {
+    if (sNaN(parseInt(userID))) {
       const error = new Error('Invalid userID parameter');
       error.status = 400;
       throw error;
@@ -96,11 +85,7 @@ exports.processDeleteCartData = async (req, res, next) => {
       data: '',
     });
   } catch (error) {
-    console.error(chalk.red('Error in processAddCartData:', error));
-    if (!error.status) {
-      error.status = 500;
-      error.message = 'Internal server error';
-    }
+    console.error(chalk.red('Error in processDeleteCartData:', error));
     next(error);
   }
 };

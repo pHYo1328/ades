@@ -1,5 +1,5 @@
-const chalk = require("chalk");
-const productServices = require("../services/product.services");
+const chalk = require('chalk');
+const productServices = require('../services/product.services');
 
 // Get product by ID
 exports.processGetProductByID = async (req, res, next) => {
