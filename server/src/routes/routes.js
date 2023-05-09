@@ -1,5 +1,6 @@
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
+const orderController = require('../controller/order.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -50,5 +51,11 @@ module.exports = (app, router) => {
     './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processDeleteCartData
+  );
+
+  router.post(
+    '/api/order/:customerId',
+    //verifyAccessToken.verifyToken,
+    orderController.processAddCustomerOrder
   );
 };
