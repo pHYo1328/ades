@@ -25,6 +25,16 @@ module.exports = (app, router) => {
     productController.processGetProductByID
   );
   router.get(
+    "/api/category/:categoryID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetCategoryByID
+  );
+  router.get(
+    "/api/brand/:brandID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetBrandByID
+  );
+  router.get(
     "/api/products/new",
     //verifyAccessToken.verifyToken,
     productController.processGetNewArrivals
