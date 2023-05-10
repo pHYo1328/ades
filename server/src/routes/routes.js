@@ -1,12 +1,12 @@
-const productController = require("../controller/product.controller");
-const cartController = require("../controller/cart.controller");
+const productController = require('../controller/product.controller');
+const cartController = require('../controller/cart.controller');
 const orderController = require("../controller/order.controller");
 const paymentController = require('../controller/payment.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
   router.get(
-    "/api/products",
+    '/api/products',
     //verifyAccessToken.verifyToken,
     productController.processGetAllProducts
   );
@@ -22,26 +22,20 @@ module.exports = (app, router) => {
     productController.processGetAllCategory
   );
   router.get(
-    "/api/products/category/:categoryID",
+    '/api/products/category/:categoryID',
     //verifyAccessToken.verifyToken,
     productController.processGetProductsByCategoryID
   );
 
   router.get(
-    "/api/products/brand/:brandID",
+    '/api/products/brand/:brandID',
     //verifyAccessToken.verifyToken,
     productController.processGetProductsByBrandID
   );
   router.get(
-    "/api/product/:productID",
+    '/api/product/:productID',
     // verifyAccessToken.verifyToken,
     productController.processGetProductByID
-  );
-
-  router.get(
-    "/api/products/rating/:productID",
-    //verifyAccessToken.verifyToken,
-    productController.processGetAllRatingsByProductID
   );
   router.get(
     "/api/category/:categoryID",
@@ -64,7 +58,7 @@ module.exports = (app, router) => {
     productController.processCreateProduct
   );
   router.delete(
-    "/api/products/:productID",
+    '/api/products/:productID',
     //verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
@@ -75,19 +69,19 @@ module.exports = (app, router) => {
   );
 
   router.post(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processAddCartData
   );
 
   router.get(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartData
   );
 
   router.delete(
-    "./api/cart/:userID",
+    './api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processDeleteCartData
   );
@@ -106,5 +100,29 @@ module.exports = (app, router) => {
     "/api/payment_received/getListsByDeliStatus/",
     // verifyAccessToken.verifyToken,
     paymentController.processGetListsByDeliStatus
+  );
+
+  router.get(
+    'api/order/getOrderDetailBeforePickUp/:customerID',
+    //verifyAccessToken.verifyToken,
+    orderController.processGetOrderDetailsBeforePickUp
+  );
+
+  router.get(
+    'api/order/getOrderDetailsByDeliverStatus/:customerID',
+    //verifyAccessToken.verifyToken,
+    orderController.processGetOrderDetailsByDeliverStatus
+  );
+
+  router.put(
+    'api/order/updateShippingDetails/:customerID',
+    //verifyAccessToken.verifyToken,
+    orderController.processUpdateShippingDetails
+  );
+
+  router.delete(
+    'api/order',
+    //verifyAccessToken.verifyToken,
+    orderController.processCancelOrder
   );
 };
