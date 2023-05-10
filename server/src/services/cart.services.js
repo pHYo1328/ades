@@ -7,8 +7,6 @@ module.exports.addCartData = async (userId, cartData) => {
   try {
     const reply = await client.set(`cart:${userId}`, cartData);
     console.log(chalk.green('Key Added', reply));
-    await client.expire(`cart:${userId}`, 86400);
-    console.log(chalk.green('Expiration set'));
     return reply;
   } catch (error) {
     console.error(chalk.red('Error in adding cart data:', error));

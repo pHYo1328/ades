@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const cartServices = require('../services/cart.services');
+const productServices = require('../services/product.services');
 
 exports.processAddCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
@@ -31,6 +32,7 @@ exports.processAddCartData = async (req, res, next) => {
       data: '',
     });
   } catch (error) {
+    console.error(chalk.red('Error in processAddCartData:', error));
     next(error);
   }
 };
@@ -50,11 +52,14 @@ exports.processGetCartData = async (req, res, next) => {
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result
     );
+    if (result.length == 0) {
+      const error = new Error('userID not founded');
+      error.status = 404;
+      throw error;
+    }
     return res.status(200).send({
-      statusCode: 200,
-      ok: true,
       message: 'cartData founded successfully.',
-      data: JSON.stringify(result),
+      data: result,
     });
   } catch (error) {
     console.error(chalk.red('Error in processGetCartData:', error));
@@ -67,7 +72,7 @@ exports.processDeleteCartData = async (req, res, next) => {
   const { userID } = req.params;
 
   try {
-    if (sNaN(parseInt(userID))) {
+    if (isNaN(parseInt(userID))) {
       const error = new Error('Invalid userID parameter');
       error.status = 400;
       throw error;
@@ -86,6 +91,47 @@ exports.processDeleteCartData = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in processDeleteCartData:', error));
+    next(error);
+  }
+};
+
+exports.processGetCartProductData = async (req, res, next) => {
+  console.log(chalk.blue('processGetCartProductData is running'));
+  const { requests } = req.body;
+  try {
+    const response = await Promise.all(
+      requests.map(async (request) => {
+        if (
+          request.method === 'GET' &&
+          request.endpoint.startsWith('/api/getCartItemData/')
+        ) {
+          const { productID } = request.endpoint.split(
+            '/api/getCartItemData/'
+          )[1];
+          const cartItemData = await productServices.getProductByID(productID);
+          if (cartItemData.length == 0) {
+            const error = new Error('product not found');
+            error.status = 404;
+            throw error;
+          }
+          return {
+            status: 200,
+            message: 'cart item data found',
+            data: cartItemData,
+          };
+        } else {
+          const error = new Error('Invalid request');
+          error.status = 400;
+          throw error;
+        }
+      })
+    );
+    return res.status(200).send({
+      message: 'all fetch successfully',
+      data: response,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in processGetCartProductData:', error));
     next(error);
   }
 };
