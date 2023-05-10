@@ -1,0 +1,6 @@
+projectKey=ades-project
+serverUrl=http://localhost:9000
+serverVersion=10.0.0.68432
+dashboardUrl=http://localhost:9000/dashboard?id=ades-project
+ceTaskId=AYf9GYD5Ae2KV5mBmfkF
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYf9GYD5Ae2KV5mBmfkF
