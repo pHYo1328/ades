@@ -14,8 +14,8 @@ module.exports.addCustomerOrder = async (data) => {
     orderItems,
   } = data;
   const addOrderQuery = `
-                    INSERT INTO order 
-                    (customer_id,shipping_address,billing_address,total_price,payment_method,shipping_method) 
+                    INSERT INTO orders
+                    (customer_id,shipping_address,billing_address,total_price,payment_method,shipping_id) 
                     VALUES ?
                     `;
   const addOrderItemsQuery = `
@@ -23,15 +23,14 @@ module.exports.addCustomerOrder = async (data) => {
                     (order_id,product_id,quantity) 
                     VALUES ?
                     `;
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected in order.services.js addCustomOrder function'
+    )
+  );
   try {
-    console.log(chalk.blue('Creating connection...'));
-    const promisePool = pool.promise();
-    const connection = await promisePool.getConnection();
-    console.log(
-      chalk.blue(
-        'database is connected in order.services.js addCustomOrder function'
-      )
-    );
     console.log(chalk.blue('Starting transaction'));
     await connection.beginTransaction();
     const orderData = [
@@ -49,7 +48,7 @@ module.exports.addCustomerOrder = async (data) => {
     const orderID = orderResult.insertId;
     const orderItemsData = orderItems.map((item) => [
       orderID,
-      item.product_id,
+      item.productId,
       item.quantity,
     ]);
     await connection.query(addOrderItemsQuery, [orderItemsData]);
@@ -67,17 +66,13 @@ module.exports.addCustomerOrder = async (data) => {
   }
 };
 
-// tmw start from here
-// module.exports.getOrderDetailsForToShip = async (data) => {
-//     console.log(chalk.blue("getOrderDetailsForToShip is called"));
-//     const {
-//         customerID
-//     } = data;
-//     const getOrderDetailsForToShipQuery = `
-//                     select product.product_name,product.image_url,product.price, order_items.quantity FROM product
-//                     inner join order_items on order_items.product_id=product.product_id
-//                     inner join  orders on orders.order_id= order_items.order_id
-//                     where orders.customer_id=? and orders.order_status="order_received";
-//                     `;
-
-// };
+module.exports.getOrderDetailsForToShip = async (data) => {
+  console.log(chalk.blue('getOrderDetailsForToShip is called'));
+  const { customerID } = data;
+  const getOrderDetailsForToShipQuery = `
+                    select product.product_name,product.image_url,product.price, order_items.quantity FROM product
+                    inner join order_items on order_items.product_id=product.product_id
+                    inner join  orders on orders.order_id= order_items.order_id
+                    where orders.customer_id=? and orders.order_status="order_received";
+                    `;
+};

@@ -16,6 +16,8 @@ const router = express.Router();
 app.use(router);
 
 // Centralized temporary error handling
+// will use morgan and winston for customized error handling
+// still testing with ah tan's concept
 app.use((err, req, res, next) => {
   console.error(err); // for debugging
   const status = err.status || 500;
