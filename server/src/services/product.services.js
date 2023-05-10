@@ -38,7 +38,7 @@ module.exports.getAllProducts = async () => {
   console.log(chalk.blue('getAllProducts is called'));
   try {
     const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id;';
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by b.brand_id;';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -190,6 +190,127 @@ module.exports.getCategoryByID = async (categoryID) => {
     return results[0][0];
   } catch (error) {
     console.error(chalk.red("Error in getCategoryByID: ", error));
+    throw error;
+  }
+};
+
+// get all ratings (done)
+module.exports.getAllRatingsByProductID = async (productID) => {
+  console.log(chalk.blue("getAllRatingsByProductID is called"));
+  try {
+    const productsDataQuery = "SELECT * from rating where product_id = ?;";
+    const results = await pool.query(productsDataQuery, [productID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
+    throw error;
+  }
+};
+
+// get all brands (done)
+module.exports.getAllBrands = async () => {
+  console.log(chalk.blue("getAllBrands is called"));
+  try {
+    const brandsDataQuery = "SELECT * from brand;";
+    const results = await pool.query(brandsDataQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red("Error in getAllBrands: ", error));
+    throw error;
+  }
+};
+
+// get all category (done)
+module.exports.getAllCategory = async () => {
+  console.log(chalk.blue("getAllCategory is called"));
+  try {
+    const categoryDataQuery = "SELECT * from category;";
+    const results = await pool.query(categoryDataQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red("Error in getAllCategory: ", error));
+    throw error;
+  }
+};
+
+// search results
+module.exports.getSearchResults = async (
+  product_name,
+  category_id,
+  brand_id,
+  max_price,
+  min_price
+) => {
+  console.log(chalk.blue("getSearchResults is called"));
+  try {
+    let searchResultsDataQuery =
+      "SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id";
+
+    let queryInput = [];
+    if (
+      product_name != "" &&
+      product_name != undefined &&
+      product_name != "null"
+    ) {
+      searchResultsDataQuery += ` AND p.product_name RLIKE ?`;
+      queryInput.push(product_name);
+    }
+    if (
+      category_id != "" &&
+      category_id != undefined &&
+      category_id != "null" &&
+      category_id != 0
+    ) {
+      searchResultsDataQuery += ` AND p.category_id = ?`;
+      queryInput.push(category_id);
+    }
+    if (
+      brand_id != "" &&
+      brand_id != undefined &&
+      brand_id != "null" &&
+      brand_id != 0
+    ) {
+      searchResultsDataQuery += ` AND p.brand_id = ?`;
+      queryInput.push(brand_id);
+    }
+    if (
+      max_price != "" &&
+      max_price != undefined &&
+      max_price != "null" &&
+      max_price != 0
+    ) {
+      if (
+        min_price != "" &&
+        min_price != undefined &&
+        min_price != "null" &&
+        min_price != 0
+      ) {
+        searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`;
+        queryInput.push(max_price);
+        queryInput.push(min_price);
+      } else {
+        searchResultsDataQuery += ` AND p.price < ?`;
+        queryInput.push(max_price);
+      }
+    } else {
+      if (
+        min_price != "" &&
+        min_price != undefined &&
+        min_price != "null" &&
+        min_price != 0
+      ) {
+        searchResultsDataQuery += ` AND p.price > ?`;
+        queryInput.push(min_price);
+      }
+    }
+    const results = await pool.query(searchResultsDataQuery, queryInput);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red("Error in getSearchResults: ", error));
     throw error;
   }
 };

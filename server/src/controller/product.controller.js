@@ -111,6 +111,7 @@ exports.processGetAllProducts = async (req, res, next) => {
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const products = productData.map((product) => ({
+        product_id: product.product_id,
         product_name: product.product_name,
         price: product.price,
         description: product.description,
@@ -505,6 +506,145 @@ exports.processGetCategoryByID = async (req, res, next) => {
       });
     }
     console.error(chalk.red('Error in getCategoryByID: ', error));
+    return next(error);
+  }
+};
+
+// get all ratings (done)
+exports.processGetAllRatingsByProductID = async (req, res, next) => {
+  console.log(chalk.blue("processGetAllRatingsByProductID running"));
+  const { productID } = req.params;
+  try {
+    const ratingData = await productServices.getAllRatingsByProductID(
+      productID
+    );
+    if (ratingData) {
+      console.log(chalk.yellow("Rating data: ", ratingData));
+      const ratings = ratingData.map((rating) => ({
+        rating_id: rating.rating_id,
+        product_id: rating.product_id,
+        rating_score: rating.rating_score,
+        comment: rating.comment,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read rating details successful",
+        data: ratings,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: "No ratings exists",
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
+    return next(error);
+  }
+};
+
+// get all brands (done)
+exports.processGetAllBrands = async (req, res, next) => {
+  console.log(chalk.blue("processGetAllBrands running"));
+  try {
+    const brandData = await productServices.getAllBrands();
+    if (brandData) {
+      console.log(chalk.yellow("Brand data: ", brandData));
+      const brands = brandData.map((brand) => ({
+        brand_id: brand.brand_id,
+        brand_name: brand.brand_name,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read brand details successful",
+        data: brands,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: "No brands exists",
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red("Error in getAllBrands: ", error));
+    return next(error);
+  }
+};
+
+// get all category (done)
+exports.processGetAllCategory = async (req, res, next) => {
+  console.log(chalk.blue("processGetAllCategory running"));
+  try {
+    const categoryData = await productServices.getAllCategory();
+    if (categoryData) {
+      console.log(chalk.yellow("Category data: ", categoryData));
+      const categories = categoryData.map((category) => ({
+        category_id: category.category_id,
+        category_name: category.category_name,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read category details successful",
+        data: categories,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: "No categories exists",
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red("Error in getAllCategory: ", error));
+    return next(error);
+  }
+};
+
+// search results
+exports.processGetSearchResults = async (req, res, next) => {
+  console.log(chalk.blue("processGetSearchResults running"));
+  const { product_name, category_id, brand_id, max_price, min_price } =
+    req.query;
+
+  try {
+    const searchResultData = await productServices.getSearchResults(
+      product_name,
+      category_id,
+      brand_id,
+      max_price,
+      min_price
+    );
+    if (searchResultData && searchResultData.length > 0) {
+      console.log(chalk.yellow("Search result data: ", searchResultData));
+      const searchResults = searchResultData.map((searchResult) => ({
+        product_id: searchResult.product_id,
+        product_name: searchResult.product_name,
+        price: searchResult.price,
+        description: searchResult.description,
+        category_name: searchResult.category_name,
+        brand_name: searchResult.brand_name,
+        image_url: searchResult.image_url,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read search results details successful",
+        data: searchResults,
+      });
+    } else {
+      res.status(204).json({
+        statusCode: 204,
+        ok: true,
+        message: "No products exists",
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red("Error in getSearchResults: ", error));
     return next(error);
   }
 };
