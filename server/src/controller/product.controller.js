@@ -28,6 +28,8 @@ exports.processGetProductByID = async (req, res, next) => {
         category_name: productData.category_name,
         brand_name: productData.brand_name,
         image_url: productData.image_url,
+        average_rating: productData.average_rating,
+        rating_count: productData.rating_count,
       };
       return res.status(200).json({
         statusCode: 200,
@@ -266,6 +268,7 @@ exports.processGetNewArrivals = async (req, res, next) => {
         category_name: product.category_name,
         brand_name: product.brand_name,
         image_url: product.image_url,
+        product_id: product.product_id,
       }));
       res.status(200).json({
         statusCode: 200,
