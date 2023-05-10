@@ -1,6 +1,6 @@
 const productController = require("../controller/product.controller");
 const cartController = require("../controller/cart.controller");
-const orderController = require('../controller/order.controller');
+const orderController = require("../controller/order.controller");
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -8,6 +8,17 @@ module.exports = (app, router) => {
     "/api/products",
     //verifyAccessToken.verifyToken,
     productController.processGetAllProducts
+  );
+  router.get("/api/search", productController.processGetSearchResults);
+  router.get(
+    "/api/brands",
+    //verifyAccessToken.verifyToken,
+    productController.processGetAllBrands
+  );
+  router.get(
+    "/api/category",
+    //verifyAccessToken.verifyToken,
+    productController.processGetAllCategory
   );
   router.get(
     "/api/products/category/:categoryID",
@@ -81,7 +92,7 @@ module.exports = (app, router) => {
   );
 
   router.post(
-    '/api/order/:customerId',
+    "/api/order/:customerId",
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
