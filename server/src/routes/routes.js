@@ -1,6 +1,7 @@
 const productController = require("../controller/product.controller");
 const cartController = require("../controller/cart.controller");
 const orderController = require('../controller/order.controller');
+const paymentController = require('../controller/payment.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -84,5 +85,15 @@ module.exports = (app, router) => {
     '/api/order/:customerId',
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
+  );
+  router.get(
+    "/api/payment/:paymentID",
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByID
+  );
+  router.get(
+    "/api/payment_received/getListsByDeliStatus/",
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetListsByDeliStatus
   );
 };
