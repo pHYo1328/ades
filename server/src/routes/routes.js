@@ -26,25 +26,45 @@ module.exports = (app, router) => {
     productController.processGetProductByID
   );
   router.get(
+    "/api/category/:categoryID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetCategoryByID
+  );
+  router.get(
+    "/api/brand/:brandID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetBrandByID
+  );
+  router.get(
+    "/api/category/:categoryID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetCategoryByID
+  );
+  router.get(
+    "/api/brand/:brandID",
+    // verifyAccessToken.verifyToken,
+    productController.processGetBrandByID
+  );
+  router.get(
     '/api/products/new',
     //verifyAccessToken.verifyToken,
     productController.processGetNewArrivals
   );
-  // router.post(
-  //   "./api/products",
-  //   //verifyAccessToken.verifyToken,
-  //   productController.processAddProduct
-  // );
+  router.post(
+    "/api/products",
+    //verifyAccessToken.verifyToken,
+    productController.processCreateProduct
+  );
   router.delete(
     '/api/products/:productID',
     //verifyAccessToken.verifyToken,
     productController.processDeleteProductByID
   );
-  // router.put(
-  //   "./api/product/:product_id",
-  //   //verifyAccessToken.verifyToken,
-  //   productController.processUpdateProductByID
-  // );
+  router.put(
+    "/api/products/:productID",
+    //verifyAccessToken.verifyToken,
+    productController.processUpdateProductByID
+  );
 
   router.post(
     './api/cart/:userID',

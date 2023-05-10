@@ -1,5 +1,5 @@
-const chalk = require('chalk');
-const productServices = require('../services/product.services');
+const chalk = require("chalk");
+const productServices = require("../services/product.services");
 
 // Get product by ID (done)
 exports.processGetProductByID = async (req, res, next) => {
@@ -28,6 +28,8 @@ exports.processGetProductByID = async (req, res, next) => {
         category_name: productData.category_name,
         brand_name: productData.brand_name,
         image_url: productData.image_url,
+        average_rating: productData.average_rating,
+        rating_count: productData.rating_count,
       };
       return res.status(200).json({
         statusCode: 200,
@@ -56,8 +58,7 @@ exports.processGetProductByID = async (req, res, next) => {
 
 // Delete product by ID (done)
 exports.processDeleteProductByID = async (req, res, next) => {
-  console.log(chalk.blue('processDeleteProductByID running'));
-  console.log(chalk.blue('processDeleteProductByID running'));
+  console.log(chalk.blue("processDeleteProductByID running"));
 
   const { productID } = req.params;
 
@@ -267,6 +268,7 @@ exports.processGetNewArrivals = async (req, res, next) => {
         category_name: product.category_name,
         brand_name: product.brand_name,
         image_url: product.image_url,
+        product_id: product.product_id,
       }));
       res.status(200).json({
         statusCode: 200,
@@ -291,15 +293,19 @@ exports.processGetNewArrivals = async (req, res, next) => {
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
-  const product_id = productID;
   const { name, price, description, category_id, brand_id, image_url } =
     req.body;
+  var floatPrice, intCategoryID, intBrandID;
   let errors = [];
-  if (product_id == '') {
+  floatPrice = price ? parseFloat(price) : null;
+  intCategoryID = category_id ? parseInt(category_id) : null;
+  intBrandID = brand_id ? parseInt(brand_id) : null;
+
+  if (productID == '') {
     errors.push({
-      parameter: 'product_id',
-      value: 'Empty product_id',
-      message: 'product_id is empty',
+      parameter: 'productID',
+      value: 'Empty productID',
+      message: 'productID is empty',
     });
   } else if (
     name == '' ||
@@ -318,12 +324,12 @@ exports.processUpdateProductByID = async (req, res, next) => {
   try {
     const updatedProductData = await productServices.updateProductByID(
       name,
-      price,
+      floatPrice,
       description,
-      category_id,
-      brand_id,
+      intCategoryID,
+      intBrandID,
       image_url,
-      product_id
+      parseInt(productID)
     );
     if (updatedProductData) {
       return res.status(200).json({
@@ -338,7 +344,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
       message: 'No such product exists',
     });
   } catch (error) {
-    if (error.message === 'product_id is empty') {
+    if (error.message === 'productID is empty') {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -359,7 +365,8 @@ exports.processUpdateProductByID = async (req, res, next) => {
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
   console.log(chalk.blue('processCreateProduct running'));
-  const { name, price, description, category_id, brand_id, image } = req.body;
+  const { name, price, description, category_id, brand_id, image_url } =
+    req.body;
 
   let errors = [];
   if (
@@ -379,13 +386,20 @@ exports.processCreateProduct = async (req, res, next) => {
   try {
     const createdProductData = await productServices.createProduct(
       name,
-      price,
+      parseFloat(price),
       description,
-      category_id,
-      brand_id,
-      image
+      parseInt(category_id),
+      parseInt(brand_id),
+      image_url
     );
-    if (createdProductData) {
+    console.log(chalk.yellow(createdProductData));
+    if (createdProductData == "ER_BAD_FIELD_ERROR") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: "Product data is missing",
+      });
+    } else {
       return res.status(200).json({
         statusCode: 200,
         ok: true,
@@ -393,14 +407,104 @@ exports.processCreateProduct = async (req, res, next) => {
       });
     }
   } catch (error) {
-    if (error.message === 'All input fields is required to be filled.') {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red("Error in createProduct: ", error));
+    return next(error);
+  }
+};
+
+// get brand name by brand ID (done)
+exports.processGetBrandByID = async (req, res, next) => {
+  console.log(chalk.blue("processGetBrandByID running"));
+
+  const { brandID } = req.params;
+
+  let errors = [];
+
+  if (brandID == "") {
+    errors.push({
+      parameter: "brandID",
+      value: "Empty brandID",
+      message: "brandID is empty",
+    });
+  }
+
+  try {
+    const brandData = await productServices.getBrandByID(brandID);
+    if (brandData) {
+      console.log(chalk.yellow("Brand data: ", brandData));
+      const data = {
+        brand_name: brandData.brand_name,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read brand name successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such brand exists",
+    });
+  } catch (error) {
+    if (error.message === "brandID is empty") {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
-        message: 'Product data is missing',
+        message: "Brand ID is missing",
       });
     }
-    console.error(chalk.red('Error in createProduct: ', error));
+    console.error(chalk.red("Error in getBrandByID: ", error));
+    return next(error);
+  }
+};
+
+// get category name by category ID (done)
+exports.processGetCategoryByID = async (req, res, next) => {
+  console.log(chalk.blue("processGetCategoryByID running"));
+
+  const { categoryID } = req.params;
+
+  let errors = [];
+
+  if (categoryID == "") {
+    errors.push({
+      parameter: "categoryID",
+      value: "Empty categoryID",
+      message: "categoryID is empty",
+    });
+  }
+
+  try {
+    const categoryData = await productServices.getCategoryByID(categoryID);
+    if (categoryID) {
+      console.log(chalk.yellow("Category data: ", categoryID));
+      const data = {
+        category_name: categoryData.category_name,
+      };
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read category name successful",
+        data,
+      });
+    }
+    return res.status(404).json({
+      statusCode: 404,
+      ok: true,
+      message: "No such category exists",
+    });
+  } catch (error) {
+    if (error.message === "categoryID is empty") {
+      return res.status(400).json({
+        statusCode: 400,
+        ok: true,
+        message: 'Category ID is missing',
+      });
+    }
+    console.error(chalk.red('Error in getCategoryByID: ', error));
     return next(error);
   }
 };

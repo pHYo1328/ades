@@ -1,0 +1,19 @@
+{
+  "name": "assignment-ay2324s1-classs-2b21-team-3",
+  "version": "1.0.0",
+  "description": "1. P2234878 Kaung Si Phyo\r 2. P2201014 Thinzar Hnin Yu\r 3. P2227902 Koh Han Ming\r 4. P2235064 Aye Chan Paing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3/issues"
+  },
+  "homepage": "https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3#readme"
+}
