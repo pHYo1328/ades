@@ -5,6 +5,8 @@ import axios from "axios";
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
+  const [brands, setBrands] = useState(null);
+  const [categories, setCategories] = useState(null);
   const baseUrl = "http://localhost:8081";
   useEffect(() => {
     axios
@@ -19,13 +21,114 @@ export default function ProductsPage() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/brands`)
+      .then((response) => {
+        console.log(response);
+        setBrands(response.data.data);
+        console.log(brands);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/category`)
+      .then((response) => {
+        console.log(response);
+        setCategories(response.data.data);
+        console.log(categories);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <h3 class="text-center text-black font-weight-bold mb-3">
+          WELCOME TO TECHZERO
+        </h3>
+
+        <div class="row col-10">
+          <div class="input-wrap first col-lg-10 col-md-8 col-sm-12">
+            <div class="mb-3 text-dark">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter search..."
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row col-10">
+          <div class="input-wrap first col-lg-4 col-md-8 col-sm-12 row">
+            <div class="mb-3 text-dark col-lg-6">
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Min price"
+              />
+            </div>
+            <div class="mb-3 text-dark col-lg-6">
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Max price"
+              />
+            </div>
+          </div>
+          <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
+            <div class="input-field first w-100">
+              {/* <label>CATEGORY</label> */}
+              <select class="form-select" id="categoryOptions">
+                <option disabled selected value>
+                  -- CATEGORY --
+                </option>
+                {categories ? (
+                  categories.map((category) => (
+                    <option value={category.category_id}>
+                      {category.category_name}
+                    </option>
+                  ))
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </select>
+            </div>
+          </div>
+          <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
+            <div class="input-field first w-100">
+              {/* <label>BRAND</label> */}
+              <select class="form-select" id="brandOptions">
+                <option disabled selected value>
+                  -- BRAND --
+                </option>
+                {brands ? (
+                  brands.map((brand) => (
+                    <option value={brand.brand_id}>{brand.brand_name}</option>
+                  ))
+                ) : (
+                  <p>Loading...</p>
+                )}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row col-3 text-black">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-50 h-50">
+            Search
+          </button>
+        </div>
+
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           New Arrivals
         </h2>
-
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
