@@ -6,7 +6,7 @@ module.exports.getProductByID = async (productID) => {
   console.log(chalk.blue("getProductByID is called"));
   try {
     const productDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where p.product_id=? and c.category_id = p.category_id and p.brand_id = b.brand_id;";
+      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url, COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating, COUNT(r.rating_score) as rating_count FROM product p INNER JOIN category c ON c.category_id = p.category_id INNER JOIN brand b ON b.brand_id = p.brand_id LEFT JOIN rating r ON r.product_id = p.product_id WHERE p.product_id = ? GROUP BY p.product_id;";
     const results = await pool.query(productDataQuery, [productID]);
     console.log(chalk.green(results));
     return results[0][0];
@@ -78,12 +78,12 @@ module.exports.getProductsByBrandID = async (brandID) => {
   }
 };
 
-// get 3 newest product arrivals (done)
+// get 5 newest product arrivals (done)
 module.exports.getNewArrivals = async () => {
   console.log(chalk.blue("getNewArrivals is called"));
   try {
     const productsDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 3";
+      "SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 5";
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];

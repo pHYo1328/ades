@@ -6,6 +6,7 @@ import ProductDetails from "./pages/Products/ProductDetails";
 import ProductsPage from "./pages/Products/ProductsPage";
 import ProductsByBrand from "./pages/Products/ProductsByBrand";
 import ProductsByCategory from "./pages/Products/ProductsByCategory";
+import LandingPage from "./pages/Home/LandingPage";
 import "./App.css";
 import "./input.css";
 
@@ -29,9 +30,10 @@ function App() {
                 path="/products/category/:categoryID"
                 element={<ProductsByCategory />}
               />
+              <Route path="/home" element={<LandingPage />} />
             </Routes>
           </>
-          Hello, we are ready to develop our ades project.
+          {/* Hello, we are ready to develop our ades project. */}
         </header>
       </div>
     </>
