@@ -29,7 +29,7 @@ export default function ProductsPage() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div key={product.id} className="group relative">
+              <div key={product.product_id} className="group relative">
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <img
                     src="https://images.samsung.com/ca/smartphones/galaxy-s22/buy/S22_S22plus_ProductKV_White_MO.jpg"

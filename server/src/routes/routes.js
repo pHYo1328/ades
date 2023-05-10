@@ -25,6 +25,12 @@ module.exports = (app, router) => {
     // verifyAccessToken.verifyToken,
     productController.processGetProductByID
   );
+
+  router.get(
+    "/api/products/rating/:productID",
+    //verifyAccessToken.verifyToken,
+    productController.processGetAllRatingsByProductID
+  );
   router.get(
     "/api/category/:categoryID",
     // verifyAccessToken.verifyToken,

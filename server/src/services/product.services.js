@@ -38,7 +38,7 @@ module.exports.getAllProducts = async () => {
   console.log(chalk.blue("getAllProducts is called"));
   try {
     const productsDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id;";
+      "SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by b.brand_id;";
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -195,6 +195,20 @@ module.exports.getCategoryByID = async (categoryID) => {
     return results[0][0];
   } catch (error) {
     console.error(chalk.red("Error in getCategoryByID: ", error));
+    throw error;
+  }
+};
+
+// get all ratings (done)
+module.exports.getAllRatingsByProductID = async (productID) => {
+  console.log(chalk.blue("getAllRatingsByProductID is called"));
+  try {
+    const productsDataQuery = "SELECT * from rating where product_id = ?;";
+    const results = await pool.query(productsDataQuery, [productID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
     throw error;
   }
 };

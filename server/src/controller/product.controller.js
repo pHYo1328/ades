@@ -111,6 +111,7 @@ exports.processGetAllProducts = async (req, res, next) => {
     if (productData) {
       console.log(chalk.yellow("Product data: ", productData));
       const products = productData.map((product) => ({
+        product_id: product.product_id,
         product_name: product.product_name,
         price: product.price,
         description: product.description,
@@ -505,6 +506,41 @@ exports.processGetCategoryByID = async (req, res, next) => {
       });
     }
     console.error(chalk.red("Error in getCategoryByID: ", error));
+    return next(error);
+  }
+};
+
+// get all ratings (done)
+exports.processGetAllRatingsByProductID = async (req, res, next) => {
+  console.log(chalk.blue("processGetAllRatingsByProductID running"));
+  const { productID } = req.params;
+  try {
+    const ratingData = await productServices.getAllRatingsByProductID(
+      productID
+    );
+    if (ratingData) {
+      console.log(chalk.yellow("Rating data: ", ratingData));
+      const ratings = ratingData.map((rating) => ({
+        rating_id: rating.rating_id,
+        product_id: rating.product_id,
+        rating_score: rating.rating_score,
+        comment: rating.comment,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: "Read rating details successful",
+        data: ratings,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: "No ratings exists",
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
     return next(error);
   }
 };
