@@ -2,6 +2,7 @@ const loginServices = require("../services/login.services");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { password } = require("../config/config");
+const chalk = require("chalk");
 
 const handleLogin = async (req, res) => {
     const cookies = req.cookies;
