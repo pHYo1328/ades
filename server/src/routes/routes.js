@@ -1,6 +1,6 @@
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
-const orderController = require("../controller/order.controller");
+const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
@@ -10,14 +10,14 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     productController.processGetAllProducts
   );
-  router.get("/api/search", productController.processGetSearchResults);
+  router.get('/api/search', productController.processGetSearchResults);
   router.get(
-    "/api/brands",
+    '/api/brands',
     //verifyAccessToken.verifyToken,
     productController.processGetAllBrands
   );
   router.get(
-    "/api/category",
+    '/api/category',
     //verifyAccessToken.verifyToken,
     productController.processGetAllCategory
   );
@@ -38,22 +38,22 @@ module.exports = (app, router) => {
     productController.processGetProductByID
   );
   router.get(
-    "/api/category/:categoryID",
+    '/api/category/:categoryID',
     // verifyAccessToken.verifyToken,
     productController.processGetCategoryByID
   );
   router.get(
-    "/api/brand/:brandID",
+    '/api/brand/:brandID',
     // verifyAccessToken.verifyToken,
     productController.processGetBrandByID
   );
   router.get(
-    "/api/products/new",
+    '/api/products/new',
     //verifyAccessToken.verifyToken,
     productController.processGetNewArrivals
   );
   router.post(
-    "/api/products",
+    '/api/products',
     //verifyAccessToken.verifyToken,
     productController.processCreateProduct
   );
@@ -63,7 +63,7 @@ module.exports = (app, router) => {
     productController.processDeleteProductByID
   );
   router.put(
-    "/api/products/:productID",
+    '/api/products/:productID',
     //verifyAccessToken.verifyToken,
     productController.processUpdateProductByID
   );
@@ -87,41 +87,41 @@ module.exports = (app, router) => {
   );
 
   router.post(
-    "/api/order/:customerId",
+    '/api/order/:customerId',
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
   router.get(
-    "/api/payment/:paymentID",
+    '/api/payment/:paymentID',
     // verifyAccessToken.verifyToken,
     paymentController.processGetPaymentByID
   );
   router.get(
-    "/api/payment_received/getListsByDeliStatus/",
+    '/api/payment_received/getListsByDeliStatus/',
     // verifyAccessToken.verifyToken,
     paymentController.processGetListsByDeliStatus
   );
 
   router.get(
-    'api/order/getOrderDetailBeforePickUp/:customerID',
+    '/api/order/getOrderDetailBeforePickUp/:customerID',
     //verifyAccessToken.verifyToken,
     orderController.processGetOrderDetailsBeforePickUp
   );
 
   router.get(
-    'api/order/getOrderDetailsByDeliverStatus/:customerID',
+    '/api/order/getOrderDetailsByDeliverStatus/:customerID',
     //verifyAccessToken.verifyToken,
     orderController.processGetOrderDetailsByDeliverStatus
   );
 
   router.put(
-    'api/order/updateShippingDetails/:customerID',
+    '/api/order/updateShippingDetails/:customerID',
     //verifyAccessToken.verifyToken,
     orderController.processUpdateShippingDetails
   );
 
   router.delete(
-    'api/order',
+    '/api/order',
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
   );

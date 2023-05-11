@@ -1,8 +1,9 @@
 const loginServices = require("../services/login.services");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { password } = require("../config/config");
+const { access_token_secret,refresh_token_secret } = require("../config/config");
 const chalk = require("chalk");
+
 
 const handleLogin = async (req, res) => {
     const cookies = req.cookies;
@@ -15,7 +16,7 @@ const handleLogin = async (req, res) => {
   
     try {
       // call loginUser API from loginServices.js
-      const results = await loginServices.loginUser(username, password);
+      const results = await loginServices.loginUser(username);
       console.log(chalk.green(results));
       
       // evaluate password
@@ -31,18 +32,20 @@ const handleLogin = async (req, res) => {
               roles: roles,
             },
           },
-          process.env.ACCESS_TOKEN_SECRET,
+          access_token_secret,
           { expiresIn: "10s" }
         );
         const newRefreshToken = jwt.sign(
           { username: foundUser.username },
-          process.env.REFRESH_TOKEN_SECRET,
+          refresh_token_secret,
           { expiresIn: "20s" }
         );
 
     // Changed to let keyword
     let newRefreshTokenArray = !cookies?.jwt
-      ? foundUser.refreshToken
+    // I changed to check is array or not cuz inside database no refreshToken
+    // There is something to change feel free to change
+      ? (Array.isArray(foundUser.refreshToken)? foundUser.refreshToken : []) 
       : foundUser.refreshToken.filter((rt) => rt !== cookies.jwt);
 
     if (cookies?.jwt) {
@@ -71,9 +74,10 @@ const handleLogin = async (req, res) => {
 
     // Saving refreshToken with current user
     foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
-    const result = await foundUser.save();
-    console.log(result);
-    console.log(roles);
+    // here I don't know what is foundUser.save();
+    // const result = await foundUser.save();
+    // console.log(result);
+    // console.log(roles);
 
     // Creates Secure Cookie with refresh token
     res.cookie("jwt", newRefreshToken, {
