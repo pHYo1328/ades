@@ -97,7 +97,7 @@ module.exports.getOrderDetailsBeforePickUp = async (data) => {
     console.log(
       chalk.green('Fetched Data according to order status >>>', result)
     );
-    return result;
+    return result[0];
   } catch (error) {
     console.error(
       chalk.red('Errors in getting order details before pickup', error)
@@ -134,7 +134,7 @@ module.exports.getOrderDetailsByDeliverStatus = async (data) => {
     console.log(
       chalk.green('Fetched Data according to deliver status >>>', result)
     );
-    return result;
+    return result[0];
   } catch (error) {
     console.error(
       chalk.red('Errors in getting order details by deliver status', error)
@@ -165,7 +165,7 @@ module.exports.updateShippingDetails = async (data) => {
     );
     const result = await pool.query(updateShippingDetailsQuery, dataRequired);
     console.log(chalk.green('updated order details'));
-    return result;
+    return result[0].affectedRows;
   } catch (error) {
     console.error(chalk.red('Errors in updating details', error));
     throw error;

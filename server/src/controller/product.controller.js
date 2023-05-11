@@ -1,5 +1,5 @@
-const chalk = require("chalk");
-const productServices = require("../services/product.services");
+const chalk = require('chalk');
+const productServices = require('../services/product.services');
 
 // Get product by ID (done)
 exports.processGetProductByID = async (req, res, next) => {
@@ -58,7 +58,7 @@ exports.processGetProductByID = async (req, res, next) => {
 
 // Delete product by ID (done)
 exports.processDeleteProductByID = async (req, res, next) => {
-  console.log(chalk.blue("processDeleteProductByID running"));
+  console.log(chalk.blue('processDeleteProductByID running'));
 
   const { productID } = req.params;
 
@@ -394,11 +394,11 @@ exports.processCreateProduct = async (req, res, next) => {
       image_url
     );
     console.log(chalk.yellow(createdProductData));
-    if (createdProductData == "ER_BAD_FIELD_ERROR") {
+    if (createdProductData == 'ER_BAD_FIELD_ERROR') {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
-        message: "Product data is missing",
+        message: 'Product data is missing',
       });
     } else {
       return res.status(200).json({
@@ -409,96 +409,96 @@ exports.processCreateProduct = async (req, res, next) => {
     }
   } catch (error) {
     console.error(chalk.red(error.code));
-    console.error(chalk.red("Error in createProduct: ", error));
+    console.error(chalk.red('Error in createProduct: ', error));
     return next(error);
   }
 };
 
 // get brand name by brand ID (done)
 exports.processGetBrandByID = async (req, res, next) => {
-  console.log(chalk.blue("processGetBrandByID running"));
+  console.log(chalk.blue('processGetBrandByID running'));
 
   const { brandID } = req.params;
 
   let errors = [];
 
-  if (brandID == "") {
+  if (brandID == '') {
     errors.push({
-      parameter: "brandID",
-      value: "Empty brandID",
-      message: "brandID is empty",
+      parameter: 'brandID',
+      value: 'Empty brandID',
+      message: 'brandID is empty',
     });
   }
 
   try {
     const brandData = await productServices.getBrandByID(brandID);
     if (brandData) {
-      console.log(chalk.yellow("Brand data: ", brandData));
+      console.log(chalk.yellow('Brand data: ', brandData));
       const data = {
         brand_name: brandData.brand_name,
       };
       return res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read brand name successful",
+        message: 'Read brand name successful',
         data,
       });
     }
     return res.status(404).json({
       statusCode: 404,
       ok: true,
-      message: "No such brand exists",
+      message: 'No such brand exists',
     });
   } catch (error) {
-    if (error.message === "brandID is empty") {
+    if (error.message === 'brandID is empty') {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
-        message: "Brand ID is missing",
+        message: 'Brand ID is missing',
       });
     }
-    console.error(chalk.red("Error in getBrandByID: ", error));
+    console.error(chalk.red('Error in getBrandByID: ', error));
     return next(error);
   }
 };
 
 // get category name by category ID (done)
 exports.processGetCategoryByID = async (req, res, next) => {
-  console.log(chalk.blue("processGetCategoryByID running"));
+  console.log(chalk.blue('processGetCategoryByID running'));
 
   const { categoryID } = req.params;
 
   let errors = [];
 
-  if (categoryID == "") {
+  if (categoryID == '') {
     errors.push({
-      parameter: "categoryID",
-      value: "Empty categoryID",
-      message: "categoryID is empty",
+      parameter: 'categoryID',
+      value: 'Empty categoryID',
+      message: 'categoryID is empty',
     });
   }
 
   try {
     const categoryData = await productServices.getCategoryByID(categoryID);
     if (categoryID) {
-      console.log(chalk.yellow("Category data: ", categoryID));
+      console.log(chalk.yellow('Category data: ', categoryID));
       const data = {
         category_name: categoryData.category_name,
       };
       return res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read category name successful",
+        message: 'Read category name successful',
         data,
       });
     }
     return res.status(404).json({
       statusCode: 404,
       ok: true,
-      message: "No such category exists",
+      message: 'No such category exists',
     });
   } catch (error) {
-    if (error.message === "categoryID is empty") {
+    if (error.message === 'categoryID is empty') {
       return res.status(400).json({
         statusCode: 400,
         ok: true,
@@ -512,14 +512,14 @@ exports.processGetCategoryByID = async (req, res, next) => {
 
 // get all ratings (done)
 exports.processGetAllRatingsByProductID = async (req, res, next) => {
-  console.log(chalk.blue("processGetAllRatingsByProductID running"));
+  console.log(chalk.blue('processGetAllRatingsByProductID running'));
   const { productID } = req.params;
   try {
     const ratingData = await productServices.getAllRatingsByProductID(
       productID
     );
     if (ratingData) {
-      console.log(chalk.yellow("Rating data: ", ratingData));
+      console.log(chalk.yellow('Rating data: ', ratingData));
       const ratings = ratingData.map((rating) => ({
         rating_id: rating.rating_id,
         product_id: rating.product_id,
@@ -529,29 +529,29 @@ exports.processGetAllRatingsByProductID = async (req, res, next) => {
       res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read rating details successful",
+        message: 'Read rating details successful',
         data: ratings,
       });
     } else {
       res.status(404).json({
         statusCode: 404,
         ok: true,
-        message: "No ratings exists",
+        message: 'No ratings exists',
       });
     }
   } catch (error) {
-    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
+    console.error(chalk.red('Error in getAllRatingsByProductID: ', error));
     return next(error);
   }
 };
 
 // get all brands (done)
 exports.processGetAllBrands = async (req, res, next) => {
-  console.log(chalk.blue("processGetAllBrands running"));
+  console.log(chalk.blue('processGetAllBrands running'));
   try {
     const brandData = await productServices.getAllBrands();
     if (brandData) {
-      console.log(chalk.yellow("Brand data: ", brandData));
+      console.log(chalk.yellow('Brand data: ', brandData));
       const brands = brandData.map((brand) => ({
         brand_id: brand.brand_id,
         brand_name: brand.brand_name,
@@ -559,29 +559,29 @@ exports.processGetAllBrands = async (req, res, next) => {
       res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read brand details successful",
+        message: 'Read brand details successful',
         data: brands,
       });
     } else {
       res.status(404).json({
         statusCode: 404,
         ok: true,
-        message: "No brands exists",
+        message: 'No brands exists',
       });
     }
   } catch (error) {
-    console.error(chalk.red("Error in getAllBrands: ", error));
+    console.error(chalk.red('Error in getAllBrands: ', error));
     return next(error);
   }
 };
 
 // get all category (done)
 exports.processGetAllCategory = async (req, res, next) => {
-  console.log(chalk.blue("processGetAllCategory running"));
+  console.log(chalk.blue('processGetAllCategory running'));
   try {
     const categoryData = await productServices.getAllCategory();
     if (categoryData) {
-      console.log(chalk.yellow("Category data: ", categoryData));
+      console.log(chalk.yellow('Category data: ', categoryData));
       const categories = categoryData.map((category) => ({
         category_id: category.category_id,
         category_name: category.category_name,
@@ -589,25 +589,25 @@ exports.processGetAllCategory = async (req, res, next) => {
       res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read category details successful",
+        message: 'Read category details successful',
         data: categories,
       });
     } else {
       res.status(404).json({
         statusCode: 404,
         ok: true,
-        message: "No categories exists",
+        message: 'No categories exists',
       });
     }
   } catch (error) {
-    console.error(chalk.red("Error in getAllCategory: ", error));
+    console.error(chalk.red('Error in getAllCategory: ', error));
     return next(error);
   }
 };
 
 // search results
 exports.processGetSearchResults = async (req, res, next) => {
-  console.log(chalk.blue("processGetSearchResults running"));
+  console.log(chalk.blue('processGetSearchResults running'));
   const { product_name, category_id, brand_id, max_price, min_price } =
     req.query;
 
@@ -620,7 +620,7 @@ exports.processGetSearchResults = async (req, res, next) => {
       min_price
     );
     if (searchResultData && searchResultData.length > 0) {
-      console.log(chalk.yellow("Search result data: ", searchResultData));
+      console.log(chalk.yellow('Search result data: ', searchResultData));
       const searchResults = searchResultData.map((searchResult) => ({
         product_id: searchResult.product_id,
         product_name: searchResult.product_name,
@@ -633,18 +633,18 @@ exports.processGetSearchResults = async (req, res, next) => {
       res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: "Read search results details successful",
+        message: 'Read search results details successful',
         data: searchResults,
       });
     } else {
       res.status(204).json({
         statusCode: 204,
         ok: true,
-        message: "No products exists",
+        message: 'No products exists',
       });
     }
   } catch (error) {
-    console.error(chalk.red("Error in getSearchResults: ", error));
+    console.error(chalk.red('Error in getSearchResults: ', error));
     return next(error);
   }
 };
