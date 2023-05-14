@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
-import { StarIcon } from '@heroicons/react/20/solid';
+// import { StarIcon } from '@heroicons/react/20/solid';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage } from "@cloudinary/react";
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "ddoajstil",
+  },
+});
 
 export default function ProductDetails() {
   // const navigate = useNavigate();
@@ -41,6 +50,12 @@ export default function ProductDetails() {
       <div className="pt-6">
         {product ? (
           <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
+            {/* <AdvancedImage cldImg={cld.image(product.image_url)} /> */}
+
+            {product.image_url.split(", ").map((url, index) => (
+              <AdvancedImage key={index} cldImg={cld.image(url)} />
+            ))}
+
             <div className="text-left lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
                 {product.product_name}
