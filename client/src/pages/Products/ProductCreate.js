@@ -44,14 +44,6 @@ export default function ProductCreate() {
       });
   }, []);
 
-  // document.getElementById("upload_widget").addEventListener(
-  //   "click",
-  //   function () {
-  //     myWidget.open();
-  //   },
-  //   false
-  // );
-
   const handleSubmit = async (event) => {
     console.log(chalk.yellow("submit button is clicked!"));
     event.preventDefault();
@@ -79,6 +71,7 @@ export default function ProductCreate() {
         console.log(response);
         setProduct(response.data.data);
         console.log(product);
+        // window.location.reload();
       });
   };
   return (
