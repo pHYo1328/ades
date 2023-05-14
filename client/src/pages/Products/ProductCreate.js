@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import chalk from "chalk";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import chalk from 'chalk';
 // import { Cloudinary } from "cloudinary-core";
 // import { Helmet } from "react-helmet";
-import UploadWidget from "../../components/cloudinary/UploadWidget";
+import UploadWidget from '../../components/cloudinary/UploadWidget';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   const [product, setProduct] = useState(null);
 
-  const [imagePath, setImagePath] = useState("");
+  const [imagePath, setImagePath] = useState('');
 
   const handleImageChange = (path) => {
-    console.log("Selected image path:", path);
+    console.log('Selected image path:', path);
     setImagePath(path);
   };
   useEffect(() => {
@@ -53,26 +53,26 @@ export default function ProductCreate() {
   // );
 
   const handleSubmit = async (event) => {
-    console.log(chalk.yellow("submit button is clicked!"));
+    console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
     const requestBody = {
-      name: document.getElementById("create-product-name").value,
-      description: document.getElementById("create-product-description").value,
-      price: document.getElementById("create-product-price").value,
-      category_id: document.getElementById("create-product-category").value,
-      brand_id: document.getElementById("create-product-brand").value,
+      name: document.getElementById('create-product-name').value,
+      description: document.getElementById('create-product-description').value,
+      price: document.getElementById('create-product-price').value,
+      category_id: document.getElementById('create-product-category').value,
+      brand_id: document.getElementById('create-product-brand').value,
       image: imagePath,
     };
 
-    console.log("path test");
+    console.log('path test');
     console.log(imagePath);
 
     console.log(requestBody);
     axios
       .post(`${baseUrl}/api/products`, requestBody, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       })
       .then((response) => {
