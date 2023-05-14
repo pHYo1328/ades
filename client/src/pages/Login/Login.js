@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = "http://localhost:3000/auth";
+    const url = 'http://localhost:3000/auth';
 
     const body = {
       user: username,
@@ -16,16 +16,16 @@ function Login() {
     };
 
     fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        navigate("/");
+        navigate('/');
       })
       .catch((error) => {
         console.error(error);
@@ -86,7 +86,7 @@ function Login() {
           </span>
           <button
             className="text-sm text-indigo-500 hover:text-indigo-600 focus:outline-none focus:underline"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate('/register')}
           >
             Sign up
           </button>

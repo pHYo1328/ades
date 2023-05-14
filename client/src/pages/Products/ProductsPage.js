@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
 
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from "@cloudinary/react";
@@ -14,7 +14,7 @@ const cld = new Cloudinary({
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   // const productImage = cld.image(product.image_url);
 
   useEffect(() => {

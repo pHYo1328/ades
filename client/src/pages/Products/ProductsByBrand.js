@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
 
 export default function ProductsByBrand() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   const brandID = 2;
   useEffect(() => {
     axios

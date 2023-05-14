@@ -4,7 +4,9 @@
   "description": "1. P2234878 Kaung Si Phyo\r 2. P2201014 Thinzar Hnin Yu\r 3. P2227902 Koh Han Ming\r 4. P2235064 Aye Chan Paing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write .",
+    "postinstall": "cd server && npm install && cd .. && cd client && npm install"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3/issues"
   },
-  "homepage": "https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3#readme"
+  "homepage": "https://github.com/pHYo1328/assignment-ay2324s1-classs-2b21-team-3#readme",
+  "dependencies": {
+    "prettier": "^2.8.8"
+  }
 }
