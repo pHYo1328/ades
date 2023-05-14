@@ -19,4 +19,6 @@ module.exports = {
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
   access_token_secret: process.env.ACCESS_TOKEN_SECRET,
   refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
+  stripe_secret_key: process.env.STRIPE_SECRETKEY,
+  stripe_publishable_key: process.env.STRIPE_PUBLISHABLE_KEY
 };

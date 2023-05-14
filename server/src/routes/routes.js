@@ -2,6 +2,7 @@ const productController = require("../controller/product.controller");
 const cartController = require("../controller/cart.controller");
 const orderController = require("../controller/order.controller");
 const paymentController = require("../controller/payment.controller");
+const checkoutController = require('../controller/checkout.controller')
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -131,5 +132,15 @@ module.exports = (app, router) => {
     "/api/order",
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
+  );
+
+  router.get(
+    "/config", 
+    checkoutController.getConfig
+    );
+  
+  router.post(
+  "/create-payment-intent", 
+  checkoutController.createPaymentIntent
   );
 };
