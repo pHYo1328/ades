@@ -7,6 +7,8 @@ import ProductsPage from "./pages/Products/ProductsPage";
 import ProductsByBrand from "./pages/Products/ProductsByBrand";
 import ProductsByCategory from "./pages/Products/ProductsByCategory";
 import LandingPage from "./pages/Home/LandingPage";
+import ProductCreate from "./pages/Products/ProductCreate";
+import ProductEdit from "./pages/Products/ProductEdit";
 import "./App.css";
 import "./input.css";
 
@@ -31,6 +33,11 @@ function App() {
                 element={<ProductsByCategory />}
               />
               <Route path="/home" element={<LandingPage />} />
+              <Route path="/products/create" element={<ProductCreate />} />
+              <Route
+                path="/products/edit/:productID"
+                element={<ProductEdit />}
+              />
             </Routes>
           </>
           {/* Hello, we are ready to develop our ades project. */}

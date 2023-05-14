@@ -2,10 +2,21 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage } from "@cloudinary/react";
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "ddoajstil",
+  },
+});
+
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const baseUrl = "http://localhost:8081";
+  // const productImage = cld.image(product.image_url);
+
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products`)
@@ -31,11 +42,16 @@ export default function ProductsPage() {
             products.map((product) => (
               <div key={product.product_id} className="group relative">
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                  <img
-                    src="https://images.samsung.com/ca/smartphones/galaxy-s22/buy/S22_S22plus_ProductKV_White_MO.jpg"
-                    alt=""
+                  {/* <img
+                    src={cld.image(product.image_url)}
+                    alt={product.image_url}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                  /> */}
+
+                  <AdvancedImage
+                    cldImg={cld.image(product.image_url.split(",")[0])}
                   />
+                  {/* {product.image_url} */}
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
