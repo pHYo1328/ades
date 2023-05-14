@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import chalk from "chalk";
-// import { Cloudinary } from "cloudinary-core";
-// import { Helmet } from "react-helmet";
 import UploadWidget from "../../components/cloudinary/UploadWidget";
 
 export default function ProductCreate() {
@@ -54,6 +52,7 @@ export default function ProductCreate() {
       price: document.getElementById("create-product-price").value,
       category_id: document.getElementById("create-product-category").value,
       brand_id: document.getElementById("create-product-brand").value,
+      quantity: document.getElementById("create-product-quantity").value,
       image: imagePath,
     };
 
@@ -71,7 +70,7 @@ export default function ProductCreate() {
         console.log(response);
         setProduct(response.data.data);
         console.log(product);
-        // window.location.reload();
+        window.location.reload();
       });
   };
   return (
@@ -114,6 +113,17 @@ export default function ProductCreate() {
           class="form-control"
           id="create-product-description"
           placeholder="Description"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">
+          Inventory (Quantity)
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="create-product-quantity"
+          placeholder="Inventory (Quantity)"
         />
       </div>
       <div class="mb-3">
