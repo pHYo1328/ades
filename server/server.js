@@ -1,17 +1,17 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
-const routes = require("./src/routes/routes");
-const path = require("path");
-const corsOptions = require("../server/src/config/corsOptions");
-const { logger } = require("../server/src/middlewares/logEvents");
-const errorHandler = require("../server/src/middlewares/errorHandler");
-const verifyJWT = require("../server/src/middlewares/verifyJWT");
-const cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
-const credentials = require("../server/src/middlewares/credentials");
+const routes = require('./src/routes/routes');
+const path = require('path');
+const corsOptions = require('../server/src/config/corsOptions');
+const { logger } = require('../server/src/middlewares/logEvents');
+const errorHandler = require('../server/src/middlewares/errorHandler');
+const verifyJWT = require('../server/src/middlewares/verifyJWT');
+const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
+const credentials = require('../server/src/middlewares/credentials');
 
 // custom middleware logger
 app.use(logger);
@@ -35,13 +35,13 @@ app.use(cookieParser());
 app.use(fileUpload());
 
 //serve static files
-app.use("/", express.static(path.join(__dirname, "/public")));
+app.use('/', express.static(path.join(__dirname, '/public')));
 
 // routes
 
 // app.use('/', require('../server/src/routes/root'));
 // app.use('/register', require('../server/src/routes/register'));
-app.use("/auth", require("../server/src/routes/auth"));
+app.use('/auth', require('../server/src/routes/auth'));
 // // app.use('/refresh', require('../server/src/routes/refresh'));
 // // app.use('/logout', require('../server/src/routes/logout'));
 
@@ -85,8 +85,8 @@ app.use((err, req, res, next) => {
   return res.status(status).send({
     statusCode: status,
     ok: false,
-    message: err.message || "Unknown server error",
-    data: "",
+    message: err.message || 'Unknown server error',
+    data: '',
   });
 });
 

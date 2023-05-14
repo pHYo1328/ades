@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 // import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import chalk from "chalk";
+import axios from 'axios';
+import chalk from 'chalk';
 
 export default function ProductEdit() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
   const [oldProduct, setOldProduct] = useState(null);
 
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
 
@@ -54,16 +54,16 @@ export default function ProductEdit() {
   }, []);
 
   const handleSubmit = async (event) => {
-    console.log(chalk.yellow("submit button is clicked!"));
+    console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
     const requestBody = {
-      name: document.getElementById("create-product-name").value,
-      description: document.getElementById("create-product-description").value,
-      price: document.getElementById("create-product-price").value,
-      category_id: document.getElementById("create-product-category").value,
-      brand_id: document.getElementById("create-product-brand").value,
-      image: document.getElementById("create-product-image").files[0],
+      name: document.getElementById('create-product-name').value,
+      description: document.getElementById('create-product-description').value,
+      price: document.getElementById('create-product-price').value,
+      category_id: document.getElementById('create-product-category').value,
+      brand_id: document.getElementById('create-product-brand').value,
+      image: document.getElementById('create-product-image').files[0],
     };
 
     // console.log(requestBody.image);

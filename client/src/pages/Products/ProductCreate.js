@@ -7,13 +7,13 @@ export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   const [product, setProduct] = useState(null);
 
-  const [imagePath, setImagePath] = useState("");
+  const [imagePath, setImagePath] = useState('');
 
   const handleImageChange = (path) => {
-    console.log("Selected image path:", path);
+    console.log('Selected image path:', path);
     setImagePath(path);
   };
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function ProductCreate() {
   }, []);
 
   const handleSubmit = async (event) => {
-    console.log(chalk.yellow("submit button is clicked!"));
+    console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
     const requestBody = {
@@ -56,14 +56,14 @@ export default function ProductCreate() {
       image: imagePath,
     };
 
-    console.log("path test");
+    console.log('path test');
     console.log(imagePath);
 
     console.log(requestBody);
     axios
       .post(`${baseUrl}/api/products`, requestBody, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       })
       .then((response) => {

@@ -601,6 +601,7 @@ exports.processGetSearchResults = async (req, res, next) => {
         statusCode: 204,
         ok: true,
         message: 'No products exists',
+        message: 'No products exists',
       });
     }
   } catch (error) {

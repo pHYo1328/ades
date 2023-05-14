@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary } from '@cloudinary/url-gen';
+import { AdvancedImage } from '@cloudinary/react';
 
 const cld = new Cloudinary({
   cloud: {
-    cloudName: "ddoajstil",
+    cloudName: 'ddoajstil',
   },
 });
 
@@ -52,7 +52,7 @@ export default function ProductDetails() {
           <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
             {/* <AdvancedImage cldImg={cld.image(product.image_url)} /> */}
 
-            {product.image_url.split(", ").map((url, index) => (
+            {product.image_url.split(', ').map((url, index) => (
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}
 
