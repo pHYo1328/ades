@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary } from '@cloudinary/url-gen';
+import { AdvancedImage } from '@cloudinary/react';
 
 const cld = new Cloudinary({
   cloud: {
-    cloudName: "ddoajstil",
+    cloudName: 'ddoajstil',
   },
 });
 
@@ -47,9 +47,9 @@ export default function ProductsPage() {
                     alt={product.image_url}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                   /> */}
-
+                  <p>{product.image_url}</p>
                   <AdvancedImage
-                    cldImg={cld.image(product.image_url.split(",")[0])}
+                    cldImg={cld.image(product.image_url.split(',')[0])}
                   />
                   {/* {product.image_url} */}
                 </div>

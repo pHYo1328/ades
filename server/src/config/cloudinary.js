@@ -1,7 +1,7 @@
-const config = require("./config");
-const cloudinary = require("cloudinary").v2;
-const streamifier = require("streamifier");
-const chalk = require("chalk");
+const config = require('./config');
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
+const chalk = require('chalk');
 
 cloudinary.config({
   cloud_name: config.cloudinary_cloud_name,
@@ -11,7 +11,7 @@ cloudinary.config({
 
 module.exports.destroyFromCloudinary = async (publicID) => {
   console.log(chalk.yellow(publicID));
-  console.log(chalk.blue("destroyFromCloudinary called"));
+  console.log(chalk.blue('destroyFromCloudinary called'));
   // return new Promise(async (resolve, reject) => {
   //   console.log(chalk.blue('async running'));
   //   const result = await cloudinary.uploader.destroy(publicID);
@@ -23,13 +23,13 @@ module.exports.destroyFromCloudinary = async (publicID) => {
   //   }
   // });
   try {
-    console.log(chalk.blue("async running"));
+    console.log(chalk.blue('async running'));
     const result = await cloudinary.uploader.destroy(publicID);
     console.log(chalk.yellow(result));
-    if (result.result === "not found") {
-      return { status: "fail", data: result };
+    if (result.result === 'not found') {
+      return { status: 'fail', data: result };
     } else {
-      return { status: "success", data: result };
+      return { status: 'success', data: result };
     }
   } catch (error) {
     throw error;
@@ -47,10 +47,10 @@ module.exports.uploadImage = (imagePath) => {
     try {
       const result = await cloudinary.uploader.upload(imagePath, options);
       console.log(result);
-      console.log("Cloudinary upload result:", result);
+      console.log('Cloudinary upload result:', result);
       return resolve(result.public_id);
     } catch (error) {
-      console.error("Cloudinary upload error: ", error);
+      console.error('Cloudinary upload error: ', error);
       return reject(error);
     }
   });

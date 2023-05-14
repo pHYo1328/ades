@@ -1,11 +1,11 @@
 //const fs = require('fs');
-const pool = require("../config/database");
-const chalk = require("chalk");
-const cloudinary = require("../config/cloudinary");
+const pool = require('../config/database');
+const chalk = require('chalk');
+const cloudinary = require('../config/cloudinary');
 
 // get product by ID (done) (done)
 module.exports.getProductByID = async (productID) => {
-  console.log(chalk.blue("getProductByID is called"));
+  console.log(chalk.blue('getProductByID is called'));
   try {
     const productDataQuery =
       'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url, COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating, COUNT(r.rating_score) as rating_count FROM product p INNER JOIN category c ON c.category_id = p.category_id INNER JOIN brand b ON b.brand_id = p.brand_id LEFT JOIN rating r ON r.product_id = p.product_id WHERE p.product_id = ? GROUP BY p.product_id;';
@@ -13,84 +13,84 @@ module.exports.getProductByID = async (productID) => {
     console.log(chalk.green(results));
     return results[0][0];
   } catch (error) {
-    console.error(chalk.red("Error in getProductByID: ", error));
+    console.error(chalk.red('Error in getProductByID: ', error));
     throw error;
   }
 };
 
 // delete product by ID (done, but still need to delete from order)
 module.exports.deleteProductByID = async (productID) => {
-  console.log(chalk.blue("deleteProductByID is called"));
+  console.log(chalk.blue('deleteProductByID is called'));
   try {
-    const productDeleteQuery = "DELETE FROM product where product_id=?;";
-    const orderItemsDeleteQuery = "DELETE from order where product_id = ?;";
-    const ratingDeleteQuery = "DELETE from rating where product_id =?;";
+    const productDeleteQuery = 'DELETE FROM product where product_id=?;';
+    const orderItemsDeleteQuery = 'DELETE from order where product_id = ?;';
+    const ratingDeleteQuery = 'DELETE from rating where product_id =?;';
     const results = await pool.query(productDeleteQuery, [productID]);
     console.log(chalk.green(results));
     console.log(chalk.yellow(results[0].affectedRows));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red("Error in deleteProductByID: ", error));
+    console.error(chalk.red('Error in deleteProductByID: ', error));
     throw error;
   }
 };
 
 // get all products (done)
 module.exports.getAllProducts = async () => {
-  console.log(chalk.blue("getAllProducts is called"));
+  console.log(chalk.blue('getAllProducts is called'));
   try {
     const productsDataQuery =
-      "SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by b.brand_id;";
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by b.brand_id;';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getAllProducts: ", error));
+    console.error(chalk.red('Error in getAllProducts: ', error));
     throw error;
   }
 };
 
 // get products by category (done)
 module.exports.getProductsByCategoryID = async (categoryID) => {
-  console.log(chalk.blue("getProductsByCategoryID is called"));
+  console.log(chalk.blue('getProductsByCategoryID is called'));
   try {
     const productsDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and c.category_id =?;";
+      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and c.category_id =?;';
     const results = await pool.query(productsDataQuery, [categoryID]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getProductsByCategoryID: ", error));
+    console.error(chalk.red('Error in getProductsByCategoryID: ', error));
     throw error;
   }
 };
 
 // get products by brand (done)
 module.exports.getProductsByBrandID = async (brandID) => {
-  console.log(chalk.blue("getProductsByBrandID is called"));
+  console.log(chalk.blue('getProductsByBrandID is called'));
   try {
     const productsDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and b.brand_id =?;";
+      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and b.brand_id =?;';
     const results = await pool.query(productsDataQuery, [brandID]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getProductsByBrandID: ", error));
+    console.error(chalk.red('Error in getProductsByBrandID: ', error));
     throw error;
   }
 };
 
 // get 5 newest product arrivals (done)
 module.exports.getNewArrivals = async () => {
-  console.log(chalk.blue("getNewArrivals is called"));
+  console.log(chalk.blue('getNewArrivals is called'));
   try {
     const productsDataQuery =
-      "SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 3";
+      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 3';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getNewArrivals: ", error));
+    console.error(chalk.red('Error in getNewArrivals: ', error));
     throw error;
   }
 };
@@ -105,12 +105,12 @@ module.exports.updateProductByID = async (
   image_url,
   product_id
 ) => {
-  console.log(chalk.blue("updateProductByID is called"));
+  console.log(chalk.blue('updateProductByID is called'));
   // const promisePool = pool.promise();
   // const connection = await promisePool.getConnection();
   try {
     const productUpdateQuery =
-      "UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url=COALESCE(?,image_url) where product_id = ?";
+      'UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url=COALESCE(?,image_url) where product_id = ?';
     const results = await pool.query(productUpdateQuery, [
       product_name,
       price,
@@ -123,7 +123,7 @@ module.exports.updateProductByID = async (
     console.log(chalk.green(results[0]));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red("Error in updateProductByID: ", error));
+    console.error(chalk.red('Error in updateProductByID: ', error));
     throw error;
   }
 };
@@ -137,10 +137,10 @@ module.exports.createProduct = async (
   brand_id,
   image
 ) => {
-  console.log(chalk.blue("createProduct is called"));
+  console.log(chalk.blue('createProduct is called'));
   try {
     const productCreateQuery =
-      "INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?, ?)";
+      'INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?, ?)';
     const results = await pool.query(productCreateQuery, [
       name,
       price,
@@ -152,78 +152,78 @@ module.exports.createProduct = async (
     console.log(chalk.green(results[0]));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red("Error in createProduct: ", error));
+    console.error(chalk.red('Error in createProduct: ', error));
     throw error;
   }
 };
 
 // get brand name by brand ID
 module.exports.getBrandByID = async (brandID) => {
-  console.log(chalk.blue("getBrandByID is called"));
+  console.log(chalk.blue('getBrandByID is called'));
   try {
-    const productDataQuery = "SELECT brand_name from brand where brand_id = ?;";
+    const productDataQuery = 'SELECT brand_name from brand where brand_id = ?;';
     const results = await pool.query(productDataQuery, [brandID]);
     console.log(chalk.green(results));
     return results[0][0];
   } catch (error) {
-    console.error(chalk.red("Error in getBrandByID: ", error));
+    console.error(chalk.red('Error in getBrandByID: ', error));
     throw error;
   }
 };
 
 // get category name by category ID
 module.exports.getCategoryByID = async (categoryID) => {
-  console.log(chalk.blue("getCategoryByID is called"));
+  console.log(chalk.blue('getCategoryByID is called'));
   try {
     const productDataQuery =
-      "SELECT category_name from category where category_id = ?;";
+      'SELECT category_name from category where category_id = ?;';
     const results = await pool.query(productDataQuery, [categoryID]);
     console.log(chalk.green(results));
     return results[0][0];
   } catch (error) {
-    console.error(chalk.red("Error in getCategoryByID: ", error));
+    console.error(chalk.red('Error in getCategoryByID: ', error));
     throw error;
   }
 };
 
 // get all ratings (done)
 module.exports.getAllRatingsByProductID = async (productID) => {
-  console.log(chalk.blue("getAllRatingsByProductID is called"));
+  console.log(chalk.blue('getAllRatingsByProductID is called'));
   try {
-    const productsDataQuery = "SELECT * from rating where product_id = ?;";
+    const productsDataQuery = 'SELECT * from rating where product_id = ?;';
     const results = await pool.query(productsDataQuery, [productID]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getAllRatingsByProductID: ", error));
+    console.error(chalk.red('Error in getAllRatingsByProductID: ', error));
     throw error;
   }
 };
 
 // get all brands (done)
 module.exports.getAllBrands = async () => {
-  console.log(chalk.blue("getAllBrands is called"));
+  console.log(chalk.blue('getAllBrands is called'));
   try {
-    const brandsDataQuery = "SELECT * from brand;";
+    const brandsDataQuery = 'SELECT * from brand;';
     const results = await pool.query(brandsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getAllBrands: ", error));
+    console.error(chalk.red('Error in getAllBrands: ', error));
     throw error;
   }
 };
 
 // get all category (done)
 module.exports.getAllCategory = async () => {
-  console.log(chalk.blue("getAllCategory is called"));
+  console.log(chalk.blue('getAllCategory is called'));
   try {
-    const categoryDataQuery = "SELECT * from category;";
+    const categoryDataQuery = 'SELECT * from category;';
     const results = await pool.query(categoryDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getAllCategory: ", error));
+    console.error(chalk.red('Error in getAllCategory: ', error));
     throw error;
   }
 };
@@ -236,10 +236,10 @@ module.exports.getSearchResults = async (
   max_price,
   min_price
 ) => {
-  console.log(chalk.blue("getSearchResults is called"));
+  console.log(chalk.blue('getSearchResults is called'));
   try {
     let searchResultsDataQuery =
-      "SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id";
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
     let queryInput = [];
 
     if (product_name)
@@ -267,7 +267,7 @@ module.exports.getSearchResults = async (
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red("Error in getSearchResults: ", error));
+    console.error(chalk.red('Error in getSearchResults: ', error));
     throw error;
   }
 };
