@@ -1,3 +1,4 @@
 .vscode/
 sonar-project.properties
 .scannerwork/
+/node_modules

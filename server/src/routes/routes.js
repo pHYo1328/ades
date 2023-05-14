@@ -69,21 +69,27 @@ module.exports = (app, router) => {
   );
 
   router.post(
-    './api/cart/:userID',
+    '/api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processAddCartData
   );
 
   router.get(
-    './api/cart/:userID',
+    '/api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartData
   );
 
   router.delete(
-    './api/cart/:userID',
+    '/api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processDeleteCartData
+  );
+
+  router.post(
+    '/api/cartdetails/getCartProductData',
+    //verifyAccessToken.verifyToken,
+    cartController.processGetCartProductData
   );
 
   router.post(

@@ -14,7 +14,6 @@ exports.processAddCartData = async (req, res, next) => {
     }
     if (
       !cartData ||
-      !Array.isArray(cartData) ||
       cartData.length <= 0 ||
       !cartData.every((item) => typeof item === 'object')
     ) {
@@ -105,11 +104,9 @@ exports.processGetCartProductData = async (req, res, next) => {
           request.method === 'GET' &&
           request.endpoint.startsWith('/api/getCartItemData/')
         ) {
-          const { productID } = request.endpoint.split(
-            '/api/getCartItemData/'
-          )[1];
+          const productID = request.endpoint.split('/').pop();
           const cartItemData = await productServices.getProductByID(productID);
-          if (cartItemData.length == 0) {
+          if (!cartItemData || cartItemData.length == 0) {
             const error = new Error('product not found');
             error.status = 404;
             throw error;

@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
-import { StarIcon } from "@heroicons/react/20/solid";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { StarIcon } from '@heroicons/react/20/solid';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export default function ProductDetails() {
   // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   const { productID } = useParams();
 
   useEffect(() => {
