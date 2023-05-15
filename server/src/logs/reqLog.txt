@@ -8136,3 +8136,8 @@
 20230515	01:44:33	5fcb9953-ae0e-4618-9383-8696cbcbc0dd	GET	http://localhost:3000	/api/cart/3
 20230515	01:44:33	e4387882-1f40-441b-a240-9dd16c55ffcb	POST	http://localhost:3000	/api/cartdetails/getCartProductData
 20230515	01:44:33	6ade2409-18ed-4a98-bd5f-177eff820aab	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230515	13:28:43	fa0fded9-3741-4c40-a1e3-835f75be7861	GET	http://localhost:3000	/api/cart/3
+20230515	13:28:44	44538ae9-bc22-4c14-8c4f-8de74000067c	GET	http://localhost:3000	/api/cart/3
+20230515	13:28:44	513218a7-ba85-4ae7-a510-7834adb37160	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230515	13:28:44	6f287f63-36bf-437c-af88-cfff1f33c69e	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230515	13:48:40	adc2370b-9489-4397-8f80-e11c44569de2	POST	undefined	/auth/login
