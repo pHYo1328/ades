@@ -1,5 +1,5 @@
-const stripe = require("../config/stripe");
-const config = require("../config/config");
+const stripe = require('../config/stripe');
+const config = require('../config/config');
 
 exports.getConfig = (req, res) => {
   res.send({
@@ -7,11 +7,10 @@ exports.getConfig = (req, res) => {
   });
 };
 
-
 exports.createPaymentIntent = async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      currency: "EUR",
+      currency: 'EUR',
       amount: 1999,
       automatic_payment_methods: { enabled: true },
     });
@@ -28,5 +27,3 @@ exports.createPaymentIntent = async (req, res) => {
     });
   }
 };
-
-
