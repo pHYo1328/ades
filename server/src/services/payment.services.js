@@ -32,50 +32,45 @@ module.exports.getListsByDeliStatus = async () => {
 };
 
 //updating delivery_status
-module.exports.updateDeliByID = async (delivery_status, order_id) => {
+module.exports.updateDeliByID = async (delivery_status, payment_id) => {
   console.log(chalk.blue('updateDeliByID is called'));
-  const promisePool = pool.promise();
-  const connection = await promisePool.getConnection();
+  // const promisePool = pool.promise();
+  // const connection = await promisePool.getConnection();
   try {
-    const productUpdateQuery =
-      'UPDATE payment SET delivery_status=? where order_id = ?';
-    const results = await connection.query(productUpdateQuery, [
+    const deliveryUpdateQuery =
+      'UPDATE payment SET delivery_status=? where payment_id = ?';
+    const results = await pool.query(deliveryUpdateQuery, [
       delivery_status,
-      order_id,
+      payment_id,
     ]);
     console.log(chalk.green(results));
-    return results.affectedRows > 0;
+    return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in updateDeliByID: ', error));
     throw error;
-  } finally {
-    connection.release();
-  }
+  } 
 };
 
 //payment data
-module.exports.addPayment = async (order_id, shipping_id, payment_total) => {
+module.exports.addPayment = async (order_id) => {
   console.log(chalk.blue('addPayment is called'));
-  const promisePool = pool.promise();
-  const connection = await promisePool.getConnection();
+ 
   try {
-    const productCreateQuery = `INSERT INTO payment(order_id,shipping_id,payment_total) 
-            VALUES (?,?,(SELECT SUM(subQuery1.total_price+subQuery2.fee) as payment_total FROM
+    const paymentCreateQuery = `INSERT INTO payment(order_id,payment_total) 
+            VALUES (?,(SELECT SUM(subQuery1.total_price+subQuery2.fee) as payment_total FROM
             (SELECT total_price FROM orders where order_id=? ) subQuery1 ,
             (SELECT fee FROM shipping where shipping_id= (select shipping_id from orders where order_id=?)) subQuery2));`;
-    const results = await connection.query(productCreateQuery, [
+    const results = await pool.query(paymentCreateQuery, [
       order_id,
-      shipping_id,
-      payment_total,
+      order_id,
+      order_id,
     ]);
     console.log(chalk.green(results));
-    return results.affectedRows > 0;
+    return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in addPayment: ', error));
     throw error;
-  } finally {
-    connection.release();
-  }
+  } 
 };
 
 //shipping

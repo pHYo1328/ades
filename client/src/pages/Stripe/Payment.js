@@ -25,7 +25,7 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .post(`${baseUrl}/create-payment-intent`, {})
+      .post(`${baseUrl}/createPaymentIntent`, {})
       .then(async (result) => {
         const { clientSecret } = await result.data;
         setClientSecret(clientSecret);

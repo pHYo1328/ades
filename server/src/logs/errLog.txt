@@ -1,3 +1,15 @@
 20230511	15:54:14	9bf2b532-71c6-4e21-b334-2555aca205b6	Error: ENOENT: no such file or directory, stat 'C:\Users\Han Ming\Documents\Y2-S1\ADES\assignment-ay2324s1-classs-2b21-team-3\server\views\404.html'
 20230511	15:58:35	41e45c26-508b-473d-84f7-e32e261f203c	Error: ENOENT: no such file or directory, stat 'C:\Users\Han Ming\Documents\Y2-S1\ADES\assignment-ay2324s1-classs-2b21-team-3\server\views\404.html'
 20230511	18:00:00	b41b3b10-fb7c-4b81-ad1a-0768292bafeb	Error: ENOENT: no such file or directory, stat 'C:\Users\23575\Documents\ADES\assignment-ay2324s1-classs-2b21-team-3\server\views\404.html'
+20230515	16:01:16	c4585ff1-0d10-412a-b5ec-73fa2c48aec5	Error: Not allowed by CORS
+20230515	16:01:16	8a9b55cc-43c5-46de-b0a8-afea1fecba40	Error: Not allowed by CORS
+20230515	16:01:16	7658b91f-e461-4724-8d0e-0f7ecffa1a45	Error: Not allowed by CORS
+20230515	16:01:16	f483eb38-b9ea-4f82-96e7-1c10e524e3b3	Error: Not allowed by CORS
+20230515	16:08:40	cd94283e-ff03-4367-b757-85e2c19a7b82	Error: Not allowed by CORS
+20230515	16:08:40	ea84da30-c5be-4d53-8146-803c6c2d0d89	Error: Not allowed by CORS
+20230515	16:08:40	cc48bf7d-0ce1-4379-8421-956e4068e1dc	Error: Not allowed by CORS
+20230515	16:08:40	af8afd18-9d86-4966-8dfc-1a06c12630d5	Error: Not allowed by CORS
+20230515	16:09:04	fc0f6454-064b-4da9-8949-c572ff2c7fc9	Error: Not allowed by CORS
+20230515	16:09:04	4bcaff78-617a-4f02-be00-288970a956f3	Error: Not allowed by CORS
+20230515	16:09:04	741c8274-e8aa-4f35-ab35-732d6ba06610	Error: Not allowed by CORS
+20230515	16:09:04	a94d6121-ad9f-4763-9011-da93327bd787	Error: Not allowed by CORS
