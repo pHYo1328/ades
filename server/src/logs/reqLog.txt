@@ -8154,3 +8154,8 @@
 20230515	01:44:33	e4387882-1f40-441b-a240-9dd16c55ffcb	POST	http://localhost:3000	/api/cartdetails/getCartProductData
 20230515	01:44:33	6ade2409-18ed-4a98-bd5f-177eff820aab	POST	http://localhost:3000	/api/cartdetails/getCartProductData
 >>>>>>> 492df82977da6a1753c1dd5e1ae15d0f35ae8d10
+20230515	13:42:58	55e05270-0538-43bc-b361-2ac5ba55a037	POST	undefined	/auth/login
+20230515	13:43:04	2c86c7e9-b604-4614-8ab9-4af98d968695	POST	undefined	/auth/login
+20230515	13:43:09	769ce0e8-9c2e-4d41-881f-94a56ee11481	POST	undefined	/login
+20230515	13:43:14	c0cb94aa-b13f-4b20-9ef2-27d2685c9ff4	POST	undefined	/login
+20230515	13:43:20	e587244f-2206-4b9e-9006-dc527070c3b5	POST	undefined	/auth/login
