@@ -13,10 +13,8 @@ exports.processAddCartData = async (req, res, next) => {
       throw error;
     }
     if (
-      !cartData ||
-      cartData.length <= 0 ||
-      !cartData.every((item) => typeof item === 'object')
-    ) {
+      !cartData)
+      {
       const error = new Error('Invalid cartData parameter');
       error.status = 400;
       throw error;
