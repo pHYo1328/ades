@@ -36,22 +36,14 @@ module.exports.loginUser = async (username, password) => {
     if (userResult.length === 0) {
       console.log(chalk.red("User not found"));
       return null;
-    }
-    console.log(password)
-    const hashedPassword = userResult[0].password;
-    
-    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
-    console.log("im here")
-    if (!isPasswordValid) {
-      console.log(chalk.red("Invalid password"));
-      return null;
-    }
+    } 
+    const hashedPassword = userResult[0][0].password;
 
     console.log(chalk.blue("executing query >>>>"));
-    const loginUserQuery = "SELECT * FROM users WHERE username = ?;";
-    const results = await pool.query(loginUserQuery, [username]);
-    console.log(chalk.green(JSON.stringify(results[0])));
-    return results[0];
+    const loginUserQuery = "SELECT * FROM users WHERE username = ? AND password = ?;";
+    const results = await pool.query(loginUserQuery, [username, hashedPassword]);
+    console.log(chalk.green(JSON.stringify(results[0][0])));
+    return results[0][0];
   } catch (error) {
     console.error(chalk.red("Error in logging user in: ", error));
     throw error;
