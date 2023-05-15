@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
 
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
-  const baseUrl = "http://localhost:8081";
+  const baseUrl = 'http://localhost:8081';
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/new`)

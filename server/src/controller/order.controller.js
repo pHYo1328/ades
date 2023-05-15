@@ -30,10 +30,13 @@ exports.processAddCustomerOrder = async (req, res, next) => {
       throw error;
     }
     if (
-      shippingAddr.trim() === ' ' ||
-      billingAddr.trim() === ' ' ||
+      !shippingAddr ||
+      !shippingAddr.trim() ||
+      !billingAddr ||
+      !billingAddr.trim() ||
       isNaN(parseInt(totalPrice)) ||
-      paymentMethod.trim() === ' ' ||
+      !paymentMethod ||
+      !paymentMethod.trim() ||
       isNaN(parseInt(shippingMethod))
     ) {
       const error = new Error('Invalid Information parameters');
@@ -118,7 +121,7 @@ exports.processGetOrderDetailsByDeliverStatus = async (req, res, next) => {
       throw error;
     }
     const data = { customerID: customerID };
-    const result = await orderServices.getOrderDetailsBeforePickUp(data);
+    const result = await orderServices.getOrderDetailsByDeliverStatus(data);
     console.log(
       chalk.yellow(
         'Inspect result variable from processGetOrderDetailsByDeliverStatus service',
@@ -180,7 +183,7 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
         result
       )
     );
-    if (result.affectedRows == 0) {
+    if (result == 0) {
       const error = new Error('there is no such order');
       error.status = 404;
       throw error;
