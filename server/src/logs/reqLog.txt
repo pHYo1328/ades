@@ -126,6 +126,23 @@
 20230511	17:43:58	6decfe0d-ea59-4d92-acc5-f1de50d5820c	POST	undefined	/auth/login
 20230511	17:44:10	b83a45a1-59f4-466c-ab08-699be9bcf787	POST	undefined	/auth/login
 20230511	17:44:39	23bfcb96-7dc5-4c57-b028-3338fe800e80	POST	undefined	/auth/login
+<<<<<<< HEAD
+20230511	17:48:43	c97a9f71-e1fe-4f06-88f5-a36607e18290	POST	undefined	/auth/login
+20230511	17:48:57	33cd213e-b993-47d0-a898-10bd27a08bcc	POST	undefined	/auth/login
+20230511	17:49:31	31fa16f1-53f1-4716-b417-cff97511faf5	POST	undefined	/auth/login
+20230511	17:49:45	1a2ad7a5-c245-4aba-8783-995fd0690303	POST	undefined	/auth/login
+20230511	17:49:59	5362daff-dbdd-4e88-a8c9-cddfa3d2ee77	POST	undefined	/auth/login
+20230511	17:50:23	605a9a41-aa0d-45ed-8750-2601153d5a55	POST	undefined	/auth/login
+20230511	17:56:36	a706f859-b5c1-4664-ab53-7a8575accc50	POST	undefined	/auth/login
+20230511	17:57:00	802aa0a9-d46e-4d84-9be0-4a959b91033b	POST	undefined	/auth/login
+20230511	17:57:26	5c8d8be3-2c0b-4041-8ba5-abf4a1a379e1	POST	undefined	/auth/login
+20230511	17:58:03	ee231c5d-f1b8-4a85-8d8c-994aa9e6cc18	POST	undefined	/auth/login
+20230515	13:27:40	8d83bb8d-7970-4472-bf8d-67165ffb1983	POST	undefined	/register
+20230515	13:28:28	a3e3d006-71d9-403f-addb-ca5f955c9fa5	POST	undefined	/auth/login
+20230515	13:28:33	04f07db7-d966-4622-a8f5-d828fab8a4df	POST	undefined	/login
+20230515	13:29:03	5ac750a8-10cd-4fec-8074-dae6c0d1101d	POST	undefined	/login
+20230515	13:29:10	4793533a-d6cf-4a3e-b20e-37da4e6be6e7	POST	undefined	/auth/login
+=======
 20230511	17:50:55	fd121ab3-98e5-42de-84e6-0e2b3cea3b24	GET	undefined	/api/products
 20230511	17:51:03	37ffdfde-3b36-432d-aad8-5f85f9b83c19	GET	undefined	/api/products
 20230511	17:51:11	f989b4ec-0595-499b-9e15-982ac9bf0f26	GET	undefined	/api/product
@@ -8136,3 +8153,4 @@
 20230515	01:44:33	5fcb9953-ae0e-4618-9383-8696cbcbc0dd	GET	http://localhost:3000	/api/cart/3
 20230515	01:44:33	e4387882-1f40-441b-a240-9dd16c55ffcb	POST	http://localhost:3000	/api/cartdetails/getCartProductData
 20230515	01:44:33	6ade2409-18ed-4a98-bd5f-177eff820aab	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+>>>>>>> 492df82977da6a1753c1dd5e1ae15d0f35ae8d10
