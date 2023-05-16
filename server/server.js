@@ -12,7 +12,8 @@ const verifyJWT = require('../server/src/middlewares/verifyJWT');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const credentials = require('../server/src/middlewares/credentials');
-
+const bookmarkEmailServices = require('./src/services/bookmarkEmail.services');
+const cron = require('node-cron');
 // custom middleware logger
 app.use(logger);
 
@@ -85,10 +86,12 @@ app.use((err, req, res, next) => {
   return res.status(status).send({
     statusCode: status,
     ok: false,
-    message: err.message || 'Unknown server error',
+    message: err.message || 'Unknown server error', 
     data: '',
   });
 });
+
+cron.schedule('* * * * * *', bookmarkEmailServices.updateProductsEmailSender);
 
 routes(app, router);
 const port = process.env.PORT || 8081;

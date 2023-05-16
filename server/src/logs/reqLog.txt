@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 20230510	14:08:38	f1aae8f5-ccfd-42af-9084-44e55032e8b6	POST	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
 20230510	14:09:26	f1cba17f-93a4-4db6-9eea-d2199edb0ccc	GET	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
 20230510	14:10:22	806573ed-019c-4c7a-b1d1-74688f53933f	POST	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
@@ -9000,3 +9001,5 @@
 20230516	22:33:12	2aa5b56a-2125-47a7-8bce-4e9bc2da2e79	POST	http://localhost:3000	/createPaymentIntent
 20230516	22:33:12	5279e4ee-83af-4e82-aedc-36c5a88ff7cd	POST	http://localhost:3000	/createPaymentIntent
 20230516	22:33:12	74986035-6660-4e97-b486-572182a925c5	GET	http://localhost:3000	/config
+=======
+>>>>>>> 44bed3f69d097264e6ea70c5e654cba97d2c0ca0
