@@ -2,7 +2,7 @@ const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
-const checkoutController = require('../controller/checkout.controller')
+const checkoutController = require('../controller/checkout.controller');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {

@@ -8,7 +8,6 @@ exports.getConfig = (req, res) => {
   });
 };
 
-
 exports.createPaymentIntent = async (req, res) => {
   console.log(chalk.blue("create payment intent"));
   try {
@@ -31,5 +30,3 @@ exports.createPaymentIntent = async (req, res) => {
     });
   }
 };
-
-

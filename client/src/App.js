@@ -11,7 +11,7 @@ import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/ProductCreate';
 import ProductEdit from './pages/Products/ProductEdit';
 import { CartProvider } from './context/CartContext';
-import Payment from "./pages/Stripe/Payment";
+import Payment from './pages/Stripe/Payment';
 import './App.css';
 import './input.css';
 
