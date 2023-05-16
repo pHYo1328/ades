@@ -51,7 +51,7 @@ const leavePageHandler = (cartData, customerID) => {
     });
 };
 const Cart = () => {
-  const [cartData, updateCartData] = useContext(CartContext);
+  const [cartData, setCartData] = useContext(CartContext);
   const [cartProductData, setCartProductData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
@@ -71,7 +71,7 @@ const Cart = () => {
         .get(`${baseUrl}/api/cart/${customerID}`)
         .then((response) => {
           console.log(response.data.data);
-          updateCartData(response.data.data);
+          setCartData(response.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -171,7 +171,7 @@ const Cart = () => {
                         minusButtonHandler(
                           cartData,
                           cartItem.product_id,
-                          updateCartData
+                          setCartData
                         )
                       }
                     >
@@ -184,7 +184,7 @@ const Cart = () => {
                         plusButtonHandler(
                           cartData,
                           cartItem.product_id,
-                          updateCartData
+                          setCartData
                         )
                       }
                     >
@@ -205,7 +205,7 @@ const Cart = () => {
                       deleteButtonHandler(
                         cartData,
                         cartItem.product_id,
-                        updateCartData
+                        setCartData
                       )
                     }
                   >

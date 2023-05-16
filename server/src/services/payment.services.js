@@ -48,26 +48,26 @@ module.exports.updateDeliByID = async (delivery_status, payment_id) => {
   } catch (error) {
     console.error(chalk.red('Error in updateDeliByID: ', error));
     throw error;
-  } 
+  }
 };
 
 //paymentTotal
 module.exports.getPaymentTotal = async (order_id) => {
   console.log(chalk.blue('getPaymentTotal is called'));
- 
+
   try {
     const paymentTotalQuery = `SELECT SUM(subQuery1.total_price+subQuery2.fee) as payment_total FROM
             (SELECT total_price FROM orders where order_id=1 ) subQuery1 ,
             (SELECT fee FROM shipping where shipping_id= (select shipping_id from orders where order_id=1)) subQuery2;`;
-            
-            const results = await pool.query(paymentTotalQuery, [order_id,order_id]);
-            console.log(chalk.green(results[0]));
-            return results[0];
-          } catch (error) {
-            console.error(chalk.red('Error in getPaymentTotal: ', error));
-            throw error;
-          }
-        };
+
+    const results = await pool.query(paymentTotalQuery, [order_id, order_id]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getPaymentTotal: ', error));
+    throw error;
+  }
+};
 
 //shipping
 module.exports.addShipping = async (shipping_method, fee) => {

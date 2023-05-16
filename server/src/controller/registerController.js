@@ -12,7 +12,12 @@ const handleNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
 
     // register the new user
-    const result = await loginServices.registerUser(username, email, hashedPwd, roles);
+    const result = await loginServices.registerUser(
+      username,
+      email,
+      hashedPwd,
+      roles
+    );
 
     console.log(result);
 

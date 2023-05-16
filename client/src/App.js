@@ -42,7 +42,7 @@ function App() {
                 path="/products/edit/:productID"
                 element={<ProductEdit />}
               />
-              <Route path="/payment" element = {<Payment/>} />
+              <Route path="/payment" element={<Payment />} />
             </Routes>
           </CartProvider>
           {/* Hello, we are ready to develop our ades project. */}

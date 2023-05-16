@@ -15,6 +15,7 @@ function Payment() {
     axios
       .get(`${baseUrl}/config`)
       .then(async (result) => {
+        console.log(result);
         const { stripe_publishable_key } = await result.data;
         setStripePromise(loadStripe(stripe_publishable_key));
       })
@@ -22,12 +23,12 @@ function Payment() {
         console.error(error);
       });
   }, []);
- 
-  
+
   useEffect(() => {
     axios
       .post(`${baseUrl}/createPaymentIntent`, {})
       .then(async (result) => {
+        console.log(result);
         const { clientSecret } = await result.data;
         setClientSecret(clientSecret);
       })
