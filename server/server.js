@@ -86,7 +86,7 @@ app.use((err, req, res, next) => {
   return res.status(status).send({
     statusCode: status,
     ok: false,
-    message: err.message || 'Unknown server error',
+    message: err.message || 'Unknown server error', 
     data: '',
   });
 });
