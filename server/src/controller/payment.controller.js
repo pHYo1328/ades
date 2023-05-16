@@ -61,41 +61,73 @@ exports.processGetListsByDeliStatus = async (req, res, next) => {
 
 //updating delivery_status
 
-// exports.processUpdateDeliByID = async (req, res, next) => {
-//     console.log(chalk.blue("processUpdateDeliByID running"));
-//     const { orderID } = req.params;
-//     const{delivery_status} = req.body;
+exports.processUpdateDeliByID = async (req, res, next) => {
+  console.log(chalk.blue('processUpdateDeliByID running'));
+  const { paymentID } = req.params;
+  const { delivery_status } = req.body;
 
-//     try {
-//         if(isNaN(parseInt(orderID))){
-//             const error = new Error("invalid orderID")
-//             error.status = 400
-//             throw error
-//          }
-//       const updateDeliveryStatus = await paymentServices.updateDeliByID(
-//         delivery_status,
-//         orderID
-//       );
+  try {
+    if (isNaN(parseInt(paymentID))) {
+      const error = new Error('invalid orderID');
+      error.status = 400;
+      throw error;
+    }
+    const updateDeliveryStatus = await paymentServices.updateDeliByID(
+      delivery_status,
+      paymentID
+    );
 
-//       if(updateDeliveryStatus.length == 0){
-//         const error = new Error("No order exists")
-//         error.status = 404
-//         throw error
-//       }
-//       if (updateDeliveryStatus) {
-//         console.log(chalk.yellow("Delivery data: ", updateDeliveryStatus));
+    if (!updateDeliveryStatus) {
+      const error = new Error('No order exists');
+      error.status = 404;
+      throw error;
+    }
+    if (updateDeliveryStatus) {
+      console.log(chalk.yellow('Delivery data: ', updateDeliveryStatus));
 
-//         return res.status(200).json({
-//           statusCode: 200,
-//           ok: true,
-//           message: "Update delivery status successful",
-//           updateDeliveryStatus,
-//         });
-//       }
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'Update delivery status successful',
+        updateDeliveryStatus,
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red('Error in updateDeliByID: ', error));
+    return next(error);
+  }
+};
 
-//     } catch (error) {
+//payment data
 
-//       console.error(chalk.red("Error in updateDeliByID: ", error));
-//       return next(error);
-//     }
-//   };
+exports.processGetPaymentTotal = async (req, res, next) => {
+  console.log(chalk.blue('processGetPaymentTotal running'));
+  const { orderID } = req.params;
+
+  try {
+    if (isNaN(parseInt(orderID))) {
+      const error = new Error('invalid orderID');
+      error.status = 400;
+      throw error;
+    }
+
+    const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
+    if (!createdPaymentTotal || createdPaymentTotal[0].payment_total === null) {
+      const error = new Error('No payment exists');
+      error.status = 404;
+      throw error;
+    }
+
+    console.log(chalk.yellow('Payment_total data: ', createdPaymentTotal));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read payment total successful',
+      createdPaymentTotal,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getPaymentTotal: ', error));
+    return next(error);
+  }
+};

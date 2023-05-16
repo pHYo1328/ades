@@ -8,7 +8,7 @@ function Login() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:3000/auth';
+    const url = 'http://localhost:8081/login';
 
     const body = {
       user: username,
@@ -24,6 +24,8 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
+        localStorage.setItem('accessToken', data.accessToken);
         console.log(data);
         navigate('/');
       })

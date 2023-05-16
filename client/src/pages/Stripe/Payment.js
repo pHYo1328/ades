@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
-import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from './CheckoutForm';
+import { loadStripe } from '@stripe/stripe-js';
 
-const baseUrl = "http://localhost:8081";
+const baseUrl = 'http://localhost:8081';
 
 function Payment() {
   const [stripePromise, setStripePromise] = useState(null);
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState('');
 
   useEffect(() => {
     axios
       .get(`${baseUrl}/config`)
-      .then(async (r) => {
-        const { stripe_publishable_key } = await r.data;
+      .then(async (result) => {
+        console.log(result);
+        const { stripe_publishable_key } = await result.data;
         setStripePromise(loadStripe(stripe_publishable_key));
       })
       .catch((error) => {
@@ -25,8 +26,9 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .post(`${baseUrl}/create-payment-intent`, {})
+      .post(`${baseUrl}/createPaymentIntent`, {})
       .then(async (result) => {
+        console.log(result);
         const { clientSecret } = await result.data;
         setClientSecret(clientSecret);
       })

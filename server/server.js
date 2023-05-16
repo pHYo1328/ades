@@ -12,7 +12,8 @@ const verifyJWT = require('../server/src/middlewares/verifyJWT');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const credentials = require('../server/src/middlewares/credentials');
-
+const bookmarkEmailServices = require('./src/services/bookmarkEmail.services');
+const cron = require('node-cron');
 // custom middleware logger
 app.use(logger);
 
@@ -41,7 +42,7 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 
 // app.use('/', require('../server/src/routes/root'));
 // app.use('/register', require('../server/src/routes/register'));
-app.use('/auth', require('../server/src/routes/auth'));
+// app.use('/login', require('../server/src/routes/login'));
 // // app.use('/refresh', require('../server/src/routes/refresh'));
 // // app.use('/logout', require('../server/src/routes/logout'));
 
@@ -89,6 +90,8 @@ app.use((err, req, res, next) => {
     data: '',
   });
 });
+
+cron.schedule('0 * * * *', bookmarkEmailServices.updateProductsEmailSender);
 
 routes(app, router);
 const port = process.env.PORT || 8081;

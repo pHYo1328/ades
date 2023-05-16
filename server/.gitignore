@@ -5,3 +5,5 @@ node_modules
 .eslintrc.js
 # prettier
 .prettierrc
+
+/log/reqLog.txt

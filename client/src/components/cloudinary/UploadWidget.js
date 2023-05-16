@@ -40,8 +40,8 @@ const UploadWidget = ({ onImageChange }) => {
 
   useEffect(() => {
     console.log(images);
-    console.log(images.join(", "));
-    onImageChange(images.join(", "));
+    console.log(images.join(', '));
+    onImageChange(images.join(', '));
   }, [images]);
 
   return (

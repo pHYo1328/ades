@@ -124,6 +124,17 @@ module.exports = (app, router) => {
     // verifyAccessToken.verifyToken,
     paymentController.processGetListsByDeliStatus
   );
+  router.put(
+    '/api/admin/updateDeliByID/:paymentID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processUpdateDeliByID
+  );
+
+  router.get(
+    '/api/paymentTotal/:orderID',
+    //verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentTotal
+  );
 
   router.get(
     '/api/order/getOrderDetailBeforePickUp/:customerID',

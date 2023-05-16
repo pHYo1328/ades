@@ -1,8 +1,8 @@
-import { PaymentElement } from "@stripe/react-stripe-js";
-import { useState } from "react";
-import { useStripe, useElements } from "@stripe/react-stripe-js";
+import { PaymentElement } from '@stripe/react-stripe-js';
+import { useState } from 'react';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -28,10 +28,10 @@ export default function CheckoutForm() {
       },
     });
 
-    if (error.type === "card_error" || error.type === "validation_error") {
+    if (error.type === 'card_error' || error.type === 'validation_error') {
       setMessage(error.message);
     } else {
-      setMessage("An unexpected error occured.");
+      setMessage('An unexpected error occured.');
     }
 
     setIsProcessing(false);
@@ -42,7 +42,7 @@ export default function CheckoutForm() {
       <PaymentElement id="payment-element" />
       <button disabled={isProcessing || !stripe || !elements} id="submit">
         <span id="button-text">
-          {isProcessing ? "Processing ... " : "Pay now"}
+          {isProcessing ? 'Processing ... ' : 'Pay now'}
         </span>
       </button>
       {/* Show any error or success messages */}
