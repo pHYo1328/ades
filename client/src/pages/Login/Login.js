@@ -25,9 +25,9 @@ function Login() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem('accessToken', data.accessToken);
         console.log(data);
-        navigate("/");
+        navigate('/');
       })
       .catch((error) => {
         console.error(error);
