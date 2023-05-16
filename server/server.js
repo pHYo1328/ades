@@ -41,7 +41,7 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 
 // app.use('/', require('../server/src/routes/root'));
 // app.use('/register', require('../server/src/routes/register'));
-app.use('/auth', require('../server/src/routes/auth'));
+// app.use('/login', require('../server/src/routes/login'));
 // // app.use('/refresh', require('../server/src/routes/refresh'));
 // // app.use('/logout', require('../server/src/routes/logout'));
 
