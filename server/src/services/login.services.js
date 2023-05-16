@@ -2,7 +2,6 @@ const pool = require('../config/database');
 const chalk = require('chalk');
 const jwt = require('jsonwebtoken');
 
-
 // create new user
 module.exports.registerUser = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
@@ -23,7 +22,7 @@ module.exports.registerUser = async (username, email, password, roles) => {
       username,
       email,
       password,
-      roles
+      roles,
     ]);
     console.log(chalk.green(results));
     return results;
@@ -50,10 +49,10 @@ module.exports.loginUser = async (username) => {
 
 // check if refreshToken is reused
 module.exports.checkRefreshTokenReuse = async (refreshToken) => {
-  const sql = "SELECT * FROM users WHERE refreshToken = ?";
-  console.log("rt is reused");
+  const sql = 'SELECT * FROM users WHERE refreshToken = ?';
+  console.log('rt is reused');
   return pool.query(sql, [refreshToken]);
-}
+};
 
 // update refreshToken
 module.exports.saveRefreshToken = async (userId, refreshToken) => {
@@ -63,7 +62,7 @@ module.exports.saveRefreshToken = async (userId, refreshToken) => {
     await pool.query(saveRefreshTokenQuery, [refreshToken, userId]);
     console.log('Refresh token saved in the database');
     return [refreshToken]; // Return the updated refresh token array
-  } catch (error) { 
+  } catch (error) {
     console.error('Error saving refresh token in the database:', error);
     throw error;
   }
@@ -73,7 +72,7 @@ module.exports.saveRefreshToken = async (userId, refreshToken) => {
 module.exports.findUserByRefreshToken = async (refreshToken) => {
   const query = 'SELECT * FROM users WHERE refreshToken = ?';
   const [foundUser] = await pool.query(query, [refreshToken]);
-  console.log("user found by rt");
+  console.log('user found by rt');
   return foundUser;
 };
 
@@ -81,12 +80,16 @@ module.exports.findUserByRefreshToken = async (refreshToken) => {
 module.exports.findUserByUsername = async (username) => {
   const query = 'SELECT * FROM users WHERE username = ?';
   const [foundUser] = await pool.query(query, [username]);
-  console.log("find user by username found!");
+  console.log('find user by username found!');
   return foundUser;
 };
 
 // Update refreshToken for a user
-module.exports.updateRefreshToken = async (newRefreshTokenArray, newRefreshToken, userId) => {
+module.exports.updateRefreshToken = async (
+  newRefreshTokenArray,
+  newRefreshToken,
+  userId
+) => {
   const updateQuery = 'UPDATE users SET refreshToken = ? WHERE userid = ?';
   const values = [...newRefreshTokenArray, newRefreshToken, userId];
 
@@ -101,9 +104,10 @@ module.exports.updateRefreshToken = async (newRefreshTokenArray, newRefreshToken
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
-  const logoutQuery = 'UPDATE users SET refreshToken = NULL WHERE refreshToken = ?';
+  const logoutQuery =
+    'UPDATE users SET refreshToken = NULL WHERE refreshToken = ?';
   try {
-    const updateResult = await pool.query(logoutQuery,[refreshToken]);
+    const updateResult = await pool.query(logoutQuery, [refreshToken]);
 
     if (updateResult.affectedRows === 0) {
       return false;
@@ -115,8 +119,6 @@ module.exports.logoutUser = async (refreshToken) => {
     throw error;
   }
 };
-
-
 
 // // delete product by ID (done, but still need to delete from order)
 // module.exports.deleteProductByID = async (productID) => {

@@ -9003,3 +9003,37 @@
 20230516	22:33:12	74986035-6660-4e97-b486-572182a925c5	GET	http://localhost:3000	/config
 =======
 >>>>>>> 44bed3f69d097264e6ea70c5e654cba97d2c0ca0
+20230517	00:22:57	7d75ccb5-aeba-48b7-bf1f-09f2ef55fb9e	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:22:57	e4e25b1a-9e18-4445-936a-74b2f9d8d081	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:22:57	ffd1ae3f-76d8-4a9a-95fa-1082f7877158	GET	http://localhost:3000	/config
+20230517	00:22:57	3aab81e4-59f4-440b-8f79-c126315e7073	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:22:57	9797478f-9a62-4f1b-babe-2dfb9c085083	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:22:57	45d3bdb8-1d44-42f1-85ea-9a719f9c3e19	GET	http://localhost:3000	/config
+20230517	00:25:19	a3e94411-3a21-443a-a53d-5d9ff3997471	GET	http://localhost:3000	/config
+20230517	00:25:19	e025fbea-a0b7-47f7-a8ef-19412fae6784	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:25:19	0e29ec81-1223-4d94-8bba-2e41ecc40dca	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:25:19	8a8fdd5e-dd6b-4e11-8105-f8a716dbd438	GET	http://localhost:3000	/config
+20230517	00:25:19	b585e055-df15-40cd-ab92-9661ab3e86ae	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:25:19	97988f80-10db-4504-a3b0-4f4a68a17c30	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:26:26	0cb23e57-849a-4af0-b2b7-a72a926562e1	GET	http://localhost:3000	/config
+20230517	00:26:26	83d61d20-536d-40b6-bb27-27c16a1ca887	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:26:26	1281a2d0-015d-4459-9864-493e71cf05cc	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:26:36	86a7480a-0fab-4175-9c6c-758c580be455	GET	http://localhost:3000	/config
+20230517	00:26:36	e1cf55fa-cf5f-4c36-802e-1b9642310e5f	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:26:36	f88fdfff-6b3c-4d61-bf5a-112aab1f604e	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:26:40	801b07ee-c3c4-4985-b462-89e68462a028	GET	http://localhost:3000	/config
+20230517	00:26:40	79436755-35d0-4bac-a55e-8dcf9f02f306	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:26:40	099f1753-47d1-423b-84c9-68bfa1f46b08	GET	http://localhost:3000	/config
+20230517	00:26:40	497e044f-11d9-4be4-82fa-4c0d6f7b6bde	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:32:20	25984964-9bce-4507-ab0f-2b612408ff91	GET	http://localhost:3000	/config
+20230517	00:32:20	7336785a-f80b-4a14-a228-43f145641063	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:32:20	ea1e8dd2-a86d-4f1c-9f9a-7070deafb9cc	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:32:39	72b73900-c15b-4915-8c81-b2d18e1ba1ad	GET	http://localhost:3000	/api/cart/3
+20230517	00:32:39	e391167d-b514-4935-8748-e9b5e9c4ddc6	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230517	00:32:39	11f4b959-bc2e-4ff1-9b5a-41b7d46eaa63	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230517	00:33:38	5203635f-ac65-4e68-b89d-cf8da4399a77	GET	http://localhost:3000	/config
+20230517	00:33:38	df8c7780-c388-477f-b8ef-53dc9cf32891	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:33:38	0038a09f-7784-4ef1-b5c4-47e7c6bcb2f1	POST	http://localhost:3000	/createPaymentIntent
+20230517	00:34:29	f4b6b1fc-2cf2-49d9-bb95-7ee4037ba43e	GET	http://localhost:3000	/config
+20230517	00:34:29	caaa6848-e6f2-4ff0-90fe-50b314a5bbfc	OPTIONS	http://localhost:3000	/createPaymentIntent
+20230517	00:34:29	2f8fd6ab-55b2-42d6-8c23-4a69d8059402	POST	http://localhost:3000	/createPaymentIntent
