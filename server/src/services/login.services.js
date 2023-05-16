@@ -40,7 +40,7 @@ module.exports.loginUser = async (username) => {
   console.log(chalk.blue('user is logged in'));
   try {
     const loginUserQuery =
-      'SELECT userid,password,roles FROM users WHERE username = ?';
+      'SELECT userid,username,password,roles FROM users WHERE username = ?';
     const results = await pool.query(loginUserQuery, [username]);
     console.log(chalk.red(JSON.stringify(results[0])));
     return results[0];
@@ -65,7 +65,7 @@ module.exports.saveRefreshToken = async (userId, refreshToken) => {
     await pool.query(saveRefreshTokenQuery, [refreshToken, userId]);
     console.log('Refresh token saved in the database');
     return [refreshToken]; // Return the updated refresh token array
-  } catch (error) {
+  } catch (error) { 
     console.error('Error saving refresh token in the database:', error);
     throw error;
   }
@@ -82,22 +82,26 @@ module.exports.findUserByRefreshToken = async (refreshToken) => {
 // Find username of user who does not have a refreshToken
 module.exports.findUserByUsername = async (username) => {
   const query = 'SELECT * FROM users WHERE username = ?';
-  const foundUser = await sequelize.query(query, {
-    replacements: [username],
-    type: sequelize.QueryTypes.SELECT,
-  });
+  const [foundUser] = await pool.query(query, [username]);
+  console.log("find user by username found!");
   return foundUser;
 };
 
 // Update refreshToken for a user
 module.exports.updateRefreshToken = async (newRefreshTokenArray, newRefreshToken, userId) => {
-  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE id = ?';
-  const result = await sequelize.query(updateQuery, {
-    replacements: [[...newRefreshTokenArray, newRefreshToken], userId],
-    type: QueryTypes.UPDATE,
-  });
-  return result;
+  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE userid = ?';
+  const values = [...newRefreshTokenArray, newRefreshToken, userId];
+
+  try {
+    const result = await pool.query(updateQuery, values);
+    return result;
+  } catch (error) {
+    console.error('Error updating refreshToken:', error);
+    throw error;
+  }
 };
+
+
 
 
 
