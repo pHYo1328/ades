@@ -2,8 +2,11 @@ const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
-const checkoutController = require('../controller/checkout.controller');
-//const verifyAccessToken = require("../middlewares/verifyAccessToken");
+const checkoutController = require('../controller/checkout.controller')
+const registerController = require('../controller/registerController');
+const authController = require('../controller/authController');
+const refreshTokenController = require('../controller/refreshTokenController');
+// const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
   router.get(
@@ -155,4 +158,21 @@ module.exports = (app, router) => {
   "/createPaymentIntent", 
   checkoutController.createPaymentIntent
   );
+  
+  router.get(
+  '^/$|/index(.html)?', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  });
+  
+  router.post(
+  '/register', registerController.handleNewUser
+  );
+
+  router.post(
+  '/login', authController.handleLogin
+  );
+
+  router.get(
+    '/refresh', refreshTokenController.handleRefreshToken
+    );
 };
