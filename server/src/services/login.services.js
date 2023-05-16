@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 
 // create new user
-module.exports.registerUser = async (username, email, password, roles) => {
+module.exports.registerUser = async (username, email, password) => {
   console.log(chalk.blue('User registered successfully'));
   try {
     // check for duplicates in the users table
@@ -18,12 +18,11 @@ module.exports.registerUser = async (username, email, password, roles) => {
 
     // insert the new user
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
+      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "user");';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
       password,
-      roles
     ]);
     console.log(chalk.green(results));
     return results;
@@ -101,9 +100,9 @@ module.exports.updateRefreshToken = async (newRefreshTokenArray, newRefreshToken
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
-  const logoutQuery = 'UPDATE users SET refreshToken = NULL WHERE refreshToken = ?';
+  const logoutQuery = 'UPDATE users SET refreshToken = NULL WHERE refreshToken = ? AND refreshToken IS NOT NULL';
   try {
-    const updateResult = await pool.query(logoutQuery,[refreshToken]);
+    const updateResult = await pool.query(logoutQuery, [refreshToken]);
 
     if (updateResult.affectedRows === 0) {
       return false;

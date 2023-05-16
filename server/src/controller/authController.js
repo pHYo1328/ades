@@ -93,7 +93,7 @@ const handleLogin = async (req, res) => {
       // Creates Secure Cookie with refresh token
       res.cookie('jwt', newRefreshToken);
       console.log('Cookie set successfullyyy');
-
+      console.log("this is my rt" + newRefreshToken);
       // Send authorization roles and access token to user
       res.json({ roles, accessToken });
     } else {
