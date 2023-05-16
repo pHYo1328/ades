@@ -2,7 +2,7 @@ import { PaymentElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
 

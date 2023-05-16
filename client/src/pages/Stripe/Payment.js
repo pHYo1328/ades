@@ -14,15 +14,16 @@ function Payment() {
   useEffect(() => {
     axios
       .get(`${baseUrl}/config`)
-      .then(async (r) => {
-        const { stripe_publishable_key } = await r.data;
+      .then(async (result) => {
+        const { stripe_publishable_key } = await result.data;
         setStripePromise(loadStripe(stripe_publishable_key));
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
-
+ 
+  
   useEffect(() => {
     axios
       .post(`${baseUrl}/createPaymentIntent`, {})
