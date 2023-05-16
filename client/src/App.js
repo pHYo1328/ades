@@ -11,7 +11,7 @@ import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/ProductCreate';
 import ProductEdit from './pages/Products/ProductEdit';
 import { CartProvider } from './context/CartContext';
-import Payment from "./pages/Stripe/Payment";
+import Payment from './pages/Stripe/Payment';
 import './App.css';
 import './input.css';
 
@@ -42,7 +42,7 @@ function App() {
                 path="/products/edit/:productID"
                 element={<ProductEdit />}
               />
-              <Route path="/create-payment-intent" element = {<Payment/>} />
+              <Route path="/payment" element = {<Payment/>} />
             </Routes>
           </CartProvider>
           {/* Hello, we are ready to develop our ades project. */}
