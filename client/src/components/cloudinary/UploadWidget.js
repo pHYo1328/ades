@@ -45,8 +45,8 @@ const UploadWidget = ({ onImageChange }) => {
   }, [images]);
 
   return (
-    <button id="upload_widget" className="cloudinary-button">
-      Upload
+    <button id="upload_widget" className="cloudinary-button w-100">
+      Upload Image
     </button>
   );
 };

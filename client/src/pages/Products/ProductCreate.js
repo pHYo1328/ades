@@ -45,34 +45,54 @@ export default function ProductCreate() {
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    const requestBody = {
-      name: document.getElementById("create-product-name").value,
-      description: document.getElementById("create-product-description").value,
-      price: document.getElementById("create-product-price").value,
-      category_id: document.getElementById("create-product-category").value,
-      brand_id: document.getElementById("create-product-brand").value,
-      quantity: document.getElementById("create-product-quantity").value,
-      image: imagePath,
-    };
-
-    console.log('path test');
-    console.log(imagePath);
-
-    console.log(requestBody);
-    axios
-      .post(`${baseUrl}/api/products`, requestBody, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setProduct(response.data.data);
-        console.log(product);
-        window.location.reload();
-      });
+  
+    const name = document.getElementById("create-product-name").value;
+    const description = document.getElementById("create-product-description").value;
+    const price = document.getElementById("create-product-price").value;
+    const category_id = document.getElementById("create-product-category").value;
+    const brand_id = document.getElementById("create-product-brand").value;
+    const quantity = document.getElementById("create-product-quantity").value;
+    const image = imagePath;
+  
+    if (!name || !description || !price || !category_id || !brand_id || !quantity) {
+      window.alert("Please fill in all fields.");
+    }
+    else if (isNaN(quantity) || quantity < 0) {
+      window.alert("Inventory must be a value not less than 0.");
+    }
+    else if (isNaN(price) || price <= 0) {
+      window.alert("Price must be a value not less than or equal to 0.");
+    }
+    else {
+      const requestBody = {
+        name,
+        description,
+        price,
+        category_id,
+        brand_id,
+        quantity,
+        image,
+      };
+  
+      console.log('path test');
+      console.log(imagePath);
+  
+      console.log(requestBody);
+      axios
+        .post(`${baseUrl}/api/products`, requestBody, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setProduct(response.data.data);
+          console.log(product);
+          window.location.reload();
+        });
+    }
   };
+  
   return (
     // <>
     //   <Helmet>
@@ -99,6 +119,7 @@ export default function ProductCreate() {
         </label>
         <input
           type="number"
+          min="0"
           class="form-control"
           id="create-product-price"
           placeholder="Price"
@@ -119,7 +140,7 @@ export default function ProductCreate() {
         <label for="exampleFormControlInput1" class="form-label">
           Inventory (Quantity)
         </label>
-        <input
+        <input min="0"
           type="number"
           class="form-control"
           id="create-product-quantity"

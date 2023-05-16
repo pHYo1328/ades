@@ -1,9 +1,9 @@
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
 const multer = require('multer');
-const upload = multer({ dest: 'temp/' });
+// const upload = multer({ dest: 'temp/' });
 const path = require('path');
-const uploadPath = path.join(__dirname, 'uploads');
+// const uploadPath = path.join(__dirname, 'uploads');
 
 // // Get product by ID (done)
 exports.processGetProductByID = async (req, res, next) => {
@@ -38,6 +38,7 @@ exports.processGetProductByID = async (req, res, next) => {
       image_url: productData.image_url,
       average_rating: productData.average_rating,
       rating_count: productData.rating_count,
+      quantity: productData.quantity,
     };
 
     return res.status(200).json({
@@ -112,6 +113,7 @@ exports.processGetAllProducts = async (req, res, next) => {
       category_name: product.category_name,
       brand_name: product.brand_name,
       image_url: product.image_url,
+      quantity: product.quantity,
     }));
     return res.status(200).json({
       statusCode: 200,
@@ -269,12 +271,20 @@ exports.processGetNewArrivals = async (req, res, next) => {
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
-  const { name, price, description, category_id, brand_id, image_url } =
-    req.body;
-  var floatPrice, intCategoryID, intBrandID;
+  const {
+    name,
+    price,
+    description,
+    category_id,
+    brand_id,
+    image_url,
+    quantity,
+  } = req.body;
+  var floatPrice, intCategoryID, intBrandID, intQuantity;
   floatPrice = price ? parseFloat(price) : null;
   intCategoryID = category_id ? parseInt(category_id) : null;
   intBrandID = brand_id ? parseInt(brand_id) : null;
+  intQuantity = quantity ? parseInt(quantity) : null;
 
   if (!productID) {
     return res.status(400).json({
@@ -290,7 +300,8 @@ exports.processUpdateProductByID = async (req, res, next) => {
     description == '' &&
     category_id == '' &&
     brand_id == '' &&
-    image_url == ''
+    image_url == '' &&
+    quantity == ''
   ) {
     return res.status(400).json({
       statusCode: 400,
@@ -306,6 +317,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
       intCategoryID,
       intBrandID,
       image_url,
+      quantity,
       parseInt(productID)
     );
     if (!updatedProductData) {
@@ -347,6 +359,20 @@ exports.processCreateProduct = async (req, res, next) => {
       statusCode: 400,
       ok: true,
       message: 'Product data is missing',
+    });
+  }
+  if (isNaN(price) || price <= 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Price has to be a number greater than 0',
+    });
+  }
+  if (isNaN(quantity) || quantity < 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Inventory has to be a number greater than 0',
     });
   }
   console.log(req.body);
@@ -684,6 +710,143 @@ exports.processDeleteCategoryByID = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in deleteCategoryByID: ', error));
+    return next(error);
+  }
+};
+
+// create rating
+exports.processCreateRating = async (req, res, next) => {
+  console.log(chalk.blue('processCreateRating running'));
+  const { comment, rating_score, customer_id, product_id } = req.body;
+  if (!comment || !rating_score || !customer_id || !product_id) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Rating data is missing',
+    });
+  }
+  if (isNaN(rating_score) || rating_score < 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Rating score has to be a number greater than 0',
+    });
+  }
+  // console.log(req.body)
+  console.log(chalk.yellow(req.body));
+  try {
+    const createdRatingData = await productServices.createRating(
+      comment,
+      rating_score,
+      customer_id,
+      product_id
+    );
+    console.log(chalk.yellow(createdRatingData));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Create rating successful',
+    });
+  } catch (error) {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red('Error in createRating: ', error));
+    return next(error);
+  }
+};
+
+// update inventory - increase 1
+exports.processUpdateInventoryUp = async (req, res, next) => {
+  console.log(chalk.blue('processUpdateInventoryUp running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const updatedInventoryData = await productServices.updateInventoryUp(
+      productID
+    );
+    if (!updatedInventoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in updateInventoryUp: ', error));
+    return next(error);
+  }
+};
+
+// update inventory - decrease 1
+exports.processUpdateInventoryDown = async (req, res, next) => {
+  console.log(chalk.blue('processUpdateInventoryDown running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const updatedInventoryData = await productServices.updateInventoryDown(
+      productID
+    );
+    if (!updatedInventoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in updateInventoryDown: ', error));
+    return next(error);
+  }
+};
+
+// delete product images
+exports.processDeleteProductImages = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteProductImages running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const results = await productServices.deleteProductImages(productID);
+    if (!results) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteProductImages: ', error));
     return next(error);
   }
 };
