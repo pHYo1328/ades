@@ -102,39 +102,39 @@ exports.processUpdateDeliByID = async (req, res, next) => {
 
   //payment data
   
-exports.processAddPayment = async (req, res, next) => {
-  console.log(chalk.blue('processAddPayment running'));
-  const { order_id } = req.body;
-
-  if (!order_id) {
-    return res.status(400).json({
-      statusCode: 400,
-      ok: true,
-      message: 'Payment data is missing',
-    });
-  }
+exports.processGetPaymentTotal = async (req, res, next) => {
+  console.log(chalk.blue('processGetPaymentTotal running'));
+  const { orderID } = req.params;
 
   try {
-    const createdPaymentData = await paymentServices.addPayment(
-      order_id,
-      
-    );
+    if (isNaN(parseInt(orderID))) {
+      const error = new Error('invalid orderID');
+      error.status = 400;
+      throw error;
+    }
+  
+    const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
+    if (!createdPaymentTotal || createdPaymentTotal[0].payment_total === null) {
+      const error = new Error('No payment exists');
+      error.status = 404;
+      throw error;
+    }
     
-    console.log(chalk.yellow(createdPaymentData));
-
+    console.log(chalk.yellow('Payment_total data: ', createdPaymentTotal));
+  
     return res.status(200).json({
       statusCode: 200,
       ok: true,
-      message: 'Create payment successful',
+      message: 'Read payment total successful',
+      createdPaymentTotal,
     });
   } catch (error) {
-    console.error(chalk.red(error.code));
-    console.error(chalk.red('Error in addPayment: ', error));
+    console.error(chalk.red('Error in getPaymentTotal: ', error));
     return next(error);
   }
 };
+ 
 
-//
 
 
 

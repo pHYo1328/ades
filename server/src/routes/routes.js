@@ -119,11 +119,10 @@ module.exports = (app, router) => {
     paymentController.processUpdateDeliByID
   );
 
-  router.post(
-    '/api/payments',
-
+  router.get(
+    '/api/paymentTotal/:orderID',
     //verifyAccessToken.verifyToken,
-    paymentController.processAddPayment
+    paymentController.processGetPaymentTotal
   );
 
   router.get(
