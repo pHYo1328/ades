@@ -112,6 +112,18 @@ module.exports = (app, router) => {
     // verifyAccessToken.verifyToken,
     paymentController.processGetListsByDeliStatus
   );
+  router.put(
+    '/api/admin/updateDeliByID/:paymentID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processUpdateDeliByID
+  );
+
+  router.post(
+    '/api/payments',
+
+    //verifyAccessToken.verifyToken,
+    paymentController.processAddPayment
+  );
 
   router.get(
     '/api/order/getOrderDetailBeforePickUp/:customerID',
@@ -143,7 +155,7 @@ module.exports = (app, router) => {
     );
   
   router.post(
-  "/create-payment-intent", 
+  "/createPaymentIntent", 
   checkoutController.createPaymentIntent
   );
   
