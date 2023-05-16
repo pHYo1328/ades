@@ -61,41 +61,84 @@ exports.processGetListsByDeliStatus = async (req, res, next) => {
 
 //updating delivery_status
 
-// exports.processUpdateDeliByID = async (req, res, next) => {
-//     console.log(chalk.blue("processUpdateDeliByID running"));
-//     const { orderID } = req.params;
-//     const{delivery_status} = req.body;
+exports.processUpdateDeliByID = async (req, res, next) => {
+    console.log(chalk.blue("processUpdateDeliByID running"));
+    const { paymentID } = req.params;
+    const{delivery_status} = req.body;
 
-//     try {
-//         if(isNaN(parseInt(orderID))){
-//             const error = new Error("invalid orderID")
-//             error.status = 400
-//             throw error
-//          }
-//       const updateDeliveryStatus = await paymentServices.updateDeliByID(
-//         delivery_status,
-//         orderID
-//       );
+    try {
+        if(isNaN(parseInt(paymentID))){
+            const error = new Error("invalid orderID")
+            error.status = 400
+            throw error
+         }
+      const updateDeliveryStatus = await paymentServices.updateDeliByID(
+        delivery_status, 
+        paymentID
+      );
 
-//       if(updateDeliveryStatus.length == 0){
-//         const error = new Error("No order exists")
-//         error.status = 404
-//         throw error
-//       }
-//       if (updateDeliveryStatus) {
-//         console.log(chalk.yellow("Delivery data: ", updateDeliveryStatus));
+      if(!updateDeliveryStatus){
+        const error = new Error("No order exists")
+        error.status = 404
+        throw error
+      }
+      if (updateDeliveryStatus) {
+        console.log(chalk.yellow("Delivery data: ", updateDeliveryStatus));
 
-//         return res.status(200).json({
-//           statusCode: 200,
-//           ok: true,
-//           message: "Update delivery status successful",
-//           updateDeliveryStatus,
-//         });
-//       }
+        return res.status(200).json({
+          statusCode: 200,
+          ok: true,
+          message: "Update delivery status successful",
+          updateDeliveryStatus,
+        });
+      }
 
-//     } catch (error) {
+    } catch (error) {
 
-//       console.error(chalk.red("Error in updateDeliByID: ", error));
-//       return next(error);
-//     }
-//   };
+      console.error(chalk.red("Error in updateDeliByID: ", error));
+      return next(error);
+    }
+  };
+
+  //payment data
+  
+exports.processAddPayment = async (req, res, next) => {
+  console.log(chalk.blue('processAddPayment running'));
+  const { order_id } = req.body;
+
+  if (!order_id) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Payment data is missing',
+    });
+  }
+
+  try {
+    const createdPaymentData = await paymentServices.addPayment(
+      order_id,
+      
+    );
+    
+    console.log(chalk.yellow(createdPaymentData));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Create payment successful',
+    });
+  } catch (error) {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red('Error in addPayment: ', error));
+    return next(error);
+  }
+};
+
+//
+
+
+
+
+
+
+

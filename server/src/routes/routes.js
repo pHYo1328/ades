@@ -2,8 +2,12 @@ const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
-const checkoutController = require('../controller/checkout.controller');
-//const verifyAccessToken = require("../middlewares/verifyAccessToken");
+const checkoutController = require('../controller/checkout.controller')
+const registerController = require('../controller/registerController');
+const authController = require('../controller/authController');
+const refreshTokenController = require('../controller/refreshTokenController');
+const logoutController = require('../controller/logoutController');
+// const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
   router.get(
@@ -109,6 +113,18 @@ module.exports = (app, router) => {
     // verifyAccessToken.verifyToken,
     paymentController.processGetListsByDeliStatus
   );
+  router.put(
+    '/api/admin/updateDeliByID/:paymentID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processUpdateDeliByID
+  );
+
+  router.post(
+    '/api/payments',
+
+    //verifyAccessToken.verifyToken,
+    paymentController.processAddPayment
+  );
 
   router.get(
     '/api/order/getOrderDetailBeforePickUp/:customerID',
@@ -134,7 +150,34 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  router.get('/config', checkoutController.getConfig);
+  router.get(
+    "/config", 
+    checkoutController.getConfig
+    );
+  
+  router.post(
+  "/createPaymentIntent", 
+  checkoutController.createPaymentIntent
+  );
+  
+  router.get(
+  '^/$|/index(.html)?', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  });
+  
+  router.post(
+  '/register', registerController.handleNewUser
+  );
 
-  router.post('/create-payment-intent', checkoutController.createPaymentIntent);
+  router.post(
+  '/login', authController.handleLogin
+  );
+
+  router.get(
+  '/refresh', refreshTokenController.handleRefreshToken
+  );
+
+  router.get(
+  '/logout', logoutController.handleLogout
+  );
 };
