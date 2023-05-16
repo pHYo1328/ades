@@ -30,14 +30,11 @@ module.exports.updateProductsEmailSender = async () => {
       const results = await pool.query(fetchCustomerDetailsQuery, [
         previousUpdate,
       ]);
-      console.log(results[0]);
-
       if (results[0].length > 0) {
         const products = await pool.query(fetchUpdatedProductsByBrandIDQuery, [
           previousUpdate,
           previousUpdate,
         ]);
-        console.log(products[0]);
         const response = await Promise.all(
           results[0].map((customer) => {
             let customerProducts = products[0].filter(
@@ -59,7 +56,9 @@ module.exports.updateProductsEmailSender = async () => {
                 ${customerProducts
                   .map(
                     (product) =>
-                      `<p>${product.product_name} is available for u</p>`
+                      `<p>${product.product_name} is available for u</p>
+                      <img src="https://res.cloudinary.com/ddoajstil/image/upload/${product.image_url}" alt="Product image">
+                      `
                   )
                   .join('')}
                 </body></html>`,
@@ -78,7 +77,6 @@ module.exports.updateProductsEmailSender = async () => {
         );
       }
     }
-    console.log('i m here');
     previousUpdate = latestUpdate;
     console.log(latestUpdate);
     console.log(previousUpdate);
