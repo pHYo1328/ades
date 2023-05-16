@@ -42,7 +42,7 @@ const handleLogin = async (req, res) => {
       const newRefreshToken = jwt.sign(
         { username: foundUser.username },
         refresh_token_secret,
-        { expiresIn: '20s' }
+        { expiresIn: '1m' }
       );
         console.log(newRefreshToken)
       // Changed to let keyword

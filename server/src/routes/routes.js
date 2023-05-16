@@ -6,6 +6,7 @@ const checkoutController = require('../controller/checkout.controller')
 const registerController = require('../controller/registerController');
 const authController = require('../controller/authController');
 const refreshTokenController = require('../controller/refreshTokenController');
+const logoutController = require('../controller/logoutController');
 // const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -173,6 +174,10 @@ module.exports = (app, router) => {
   );
 
   router.get(
-    '/refresh', refreshTokenController.handleRefreshToken
-    );
+  '/refresh', refreshTokenController.handleRefreshToken
+  );
+
+  router.get(
+  '/logout', logoutController.handleLogout
+  );
 };

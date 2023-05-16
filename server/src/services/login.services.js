@@ -1,8 +1,6 @@
 const pool = require('../config/database');
 const chalk = require('chalk');
 const jwt = require('jsonwebtoken');
-const sequelize = require('sequelize'); //ORM for MySQL
-const { QueryTypes } = sequelize;
 
 
 // create new user
@@ -101,8 +99,22 @@ module.exports.updateRefreshToken = async (newRefreshTokenArray, newRefreshToken
   }
 };
 
+// Logout user
+module.exports.logoutUser = async (refreshToken) => {
+  const logoutQuery = 'UPDATE users SET refreshToken = NULL WHERE refreshToken = ?';
+  try {
+    const updateResult = await pool.query(logoutQuery,[refreshToken]);
 
+    if (updateResult.affectedRows === 0) {
+      return false;
+    }
 
+    return true;
+  } catch (error) {
+    console.error('Error in logging out user: ', error);
+    throw error;
+  }
+};
 
 
 
