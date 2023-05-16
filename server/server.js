@@ -12,7 +12,8 @@ const verifyJWT = require('../server/src/middlewares/verifyJWT');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const credentials = require('../server/src/middlewares/credentials');
-
+const bookmarkEmailServices = require('./src/services/bookmarkEmail.services')
+const cron = require('node-cron');
 // custom middleware logger
 app.use(logger);
 
@@ -89,6 +90,8 @@ app.use((err, req, res, next) => {
     data: '',
   });
 });
+
+cron.schedule('* * * * * *',bookmarkEmailServices.fetchUsersDetailsByBrandId)
 
 routes(app, router);
 const port = process.env.PORT || 8081;
