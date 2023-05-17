@@ -14,7 +14,7 @@ const cld = new Cloudinary({
 
 export default function ProductModify() {
     const [products, setProducts] = useState(null);
-    const baseUrl = 'http://localhost:8081';
+    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
     // useEffect(() => {
     //     axios

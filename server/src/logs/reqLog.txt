@@ -10613,3 +10613,26 @@
 20230517	23:31:42	cb89b55a-4f86-43a2-80d9-39ab5406c009	GET	http://localhost:3000	/logout
 20230517	23:31:42	9c5aea7c-22a8-42b9-b2c0-0cc4f05c9c7d	GET	http://localhost:3000	/logout
 >>>>>>> 1972d2fe70bf1db9b7005cbef43f357d2cf3de6e
+20230518	00:43:58	657d4b1e-d897-41e7-b4b9-1ad0b22a87c9	GET	http://localhost:3000	/api/category
+20230518	00:43:58	05f5d385-dd64-4ecf-9470-4ddf7eb29444	GET	http://localhost:3000	/api/brands
+20230518	00:44:05	45981008-e430-4382-a89c-db9c43577dbe	GET	http://localhost:3000	/api/products
+20230518	00:44:38	ce22c432-4cd9-4d20-92f6-a2dfc00d62e9	GET	http://localhost:3000	/api/product/180
+20230518	00:44:38	af3745c3-9643-4574-b2bc-851465f605b2	GET	http://localhost:3000	/api/products/rating/180
+20230518	00:44:51	9891e3e0-1b63-4aea-a733-155a2f8a8f46	GET	http://localhost:3000	/api/product/180
+20230518	00:44:51	d2f6e280-306a-427a-a88c-e50c75508dc3	GET	http://localhost:3000	/api/products/rating/180
+20230518	00:50:22	ad17a518-1a9c-4d41-ab11-ebd050e34bec	POST	http://localhost:3000	/api/products
+20230518	00:50:23	18c0cde6-a909-4e47-b5d8-1a93c2e479b7	GET	http://localhost:3000	/api/category
+20230518	00:50:23	3c9bdf37-e88c-4022-8b76-e18abc7e812d	GET	http://localhost:3000	/api/brands
+20230518	00:51:18	5e28b471-89d7-477a-b20a-9e5972a34534	POST	http://localhost:3000	/api/products
+20230518	00:51:20	64dd0294-4102-4e13-9b32-89738f90e147	GET	http://localhost:3000	/api/category
+20230518	00:51:20	2a0a0510-47ea-4626-bf4b-14d7a876d143	GET	http://localhost:3000	/api/brands
+20230518	00:52:19	f8a7c346-0059-413b-938d-8bd45ea060b2	GET	http://localhost:3000	/api/category
+20230518	00:52:19	d4f51ea7-6aa0-4e17-94b7-bfb038624526	GET	http://localhost:3000	/api/brands
+20230518	00:52:45	39e41f91-2fff-47f7-b4b4-ec82f30ab9e7	OPTIONS	http://localhost:3000	/api/products
+20230518	00:52:45	a860c51e-3786-4130-b1a3-602227d1ef4c	POST	http://localhost:3000	/api/products
+20230518	00:53:20	fe0c4442-b300-46cb-8dd3-753d61d8162f	GET	http://localhost:3000	/api/category
+20230518	00:53:20	a8f4aca7-d007-4d6c-8688-39897047b0f9	GET	http://localhost:3000	/api/brands
+20230518	00:53:31	01acde28-0c48-4035-a175-4faa5a89ca45	OPTIONS	http://localhost:3000	/api/products
+20230518	00:53:31	5731532c-51af-4e3a-b8f7-cb5636d5bfe5	POST	http://localhost:3000	/api/products
+20230518	00:53:33	9acc73fb-0aeb-4dfc-b3b5-b162d91b9602	GET	http://localhost:3000	/api/category
+20230518	00:53:33	92839572-098d-4f03-841b-d31fb376ae44	GET	http://localhost:3000	/api/brands
