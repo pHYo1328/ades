@@ -6,14 +6,16 @@ function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [cfmPassword, setCfmPassword] = useState('');
+  const [email, setEmail] = useState('');
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:3000/register';
+    const url = 'http://localhost:8081/register';
 
     const body = {
-      user: username,
-      pwd: password,
+      username: username,
+      email: email,
+      password: password,
     };
 
     fetch(url, {
@@ -31,7 +33,7 @@ function Register() {
       .catch((error) => {
         console.error(error);
       });
-    console.log(username, password, cfmPassword);
+    console.log(username, password, cfmPassword, email);
   };
 
   return (
@@ -77,6 +79,23 @@ function Register() {
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <input
+            id="email"
+            type="text"
+            placeholder="Enter your email"
+            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 

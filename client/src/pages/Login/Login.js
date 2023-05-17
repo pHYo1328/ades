@@ -11,8 +11,8 @@ function Login() {
     const url = 'http://localhost:8081/login';
 
     const body = {
-      user: username,
-      pwd: password,
+      username: username,
+      password: password,
     };
 
     fetch(url, {
@@ -25,9 +25,11 @@ function Login() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.newRefreshToken);
+        //refreshToken not removed in SQL table when logged out, not going through logoutController
         console.log(data);
-        navigate('/');
+        navigate("/homepage");
       })
       .catch((error) => {
         console.error(error);
