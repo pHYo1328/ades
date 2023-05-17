@@ -5,9 +5,16 @@ function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      setErrorMessage('Incorrect username or password');
+      return errorMessage;
+    }
+
     const url = 'http://localhost:8081/login';
 
     const body = {
@@ -24,17 +31,23 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.newRefreshToken);
-        //refreshToken not removed in SQL table when logged out, not going through logoutController
-        console.log(data);
-        navigate("/homepage");
+        console.log("this is my" + data);
+        if (data.success) {
+          console.log('Login successful');
+          localStorage.setItem('accessToken', data.accessToken);
+          document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+          setErrorMessage('');
+          navigate('/homepage');
+        } else {
+          console.log('Login failed');
+          setErrorMessage('Incorrect username or password');
+        }
       })
       .catch((error) => {
         console.error(error);
+        setErrorMessage('An error occurred. Please try again.');
       });
-    console.log(username, password);
+      console.log(username, password);
   };
 
   return (
