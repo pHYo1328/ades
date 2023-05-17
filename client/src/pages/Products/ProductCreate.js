@@ -7,7 +7,7 @@ export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
   const [imagePath, setImagePath] = useState('');
@@ -81,7 +81,7 @@ export default function ProductCreate() {
       axios
         .post(`${baseUrl}/api/products`, requestBody, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         })
         .then((response) => {

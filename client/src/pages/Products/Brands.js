@@ -8,7 +8,7 @@ export default function Brands() {
 
     const [brands, setBrands] = useState(null)
     const [brand, setBrand] = useState(null)
-    const baseUrl = 'http://localhost:8081';
+    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 
     useEffect(() => {

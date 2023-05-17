@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function ProductsByBrand() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const brandID = 2;
   useEffect(() => {
     axios

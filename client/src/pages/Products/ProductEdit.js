@@ -10,7 +10,7 @@ export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
