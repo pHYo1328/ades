@@ -51,7 +51,7 @@ const leavePageHandler = (cartData, customerID) => {
     });
 };
 const Cart = () => {
-  const [cartData, updateCartData] = useContext(CartContext);
+  const [cartData, setCartData] = useContext(CartContext);
   const [cartProductData, setCartProductData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
@@ -71,7 +71,7 @@ const Cart = () => {
         .get(`${baseUrl}/api/cart/${customerID}`)
         .then((response) => {
           console.log(response.data.data);
-          updateCartData(response.data.data);
+          setCartData(response.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -129,7 +129,7 @@ const Cart = () => {
     });
   };
   return (
-    <div className='flex flex-row'>
+    <div className="flex flex-row">
       <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36">
         <thead>
           <tr>
@@ -171,7 +171,7 @@ const Cart = () => {
                         minusButtonHandler(
                           cartData,
                           cartItem.product_id,
-                          updateCartData
+                          setCartData
                         )
                       }
                     >
@@ -184,7 +184,7 @@ const Cart = () => {
                         plusButtonHandler(
                           cartData,
                           cartItem.product_id,
-                          updateCartData
+                          setCartData
                         )
                       }
                     >
@@ -205,7 +205,7 @@ const Cart = () => {
                       deleteButtonHandler(
                         cartData,
                         cartItem.product_id,
-                        updateCartData
+                        setCartData
                       )
                     }
                   >
@@ -224,108 +224,128 @@ const Cart = () => {
         </tbody>
       </table>
       <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5">
-      <form className="space-y-4 ">
-      <h1 className="text-lg font-bold text-white">Shipping Address</h1>
-      <div className='flex flex-row item-center '>
-      <label htmlFor="firstName" className="block text-base font-medium text-white w-28">
-          First Name :
-        </label>
-      <input
-        type="text"
-        name="firstName"
-        value={address.firstName}
-        onChange={handleChange}
-        className="px-3 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="First Name"
-      />
-      </div>
+        <form className="space-y-4 ">
+          <h1 className="text-lg font-bold text-white">Shipping Address</h1>
+          <div className="flex flex-row item-center ">
+            <label
+              htmlFor="firstName"
+              className="block text-base font-medium text-white w-28"
+            >
+              First Name :
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              value={address.firstName}
+              onChange={handleChange}
+              className="px-3 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="First Name"
+            />
+          </div>
 
-      <div className='flex flex-row'>
-      <label htmlFor="lastName" className="block text-base font-medium text-white w-28">
-          Last Name :
-        </label>
-      <input
-        type="text"
-        name="lastName"
-        value={address.lastName}
-        onChange={handleChange}
-        className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="Last Name"
-      />
-      </div>
-      <div className='flex flex-row'>
-      <label htmlFor="addressLine1" className="block text-base font-medium text-white w-28">
-          Address line 1 :
-        </label>
-      <input
-        type="text"
-        name="addressLine1"
-        value={address.addressLine1}
-        onChange={handleChange}
-        className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="Address Line 1"
-      />
-      </div>
-      <div className='flex flex-row'>
-      <label htmlFor="addressLine2" className="block text-base font-medium text-white w-28">
-          Address line 2:
-        </label>
-      <input
-        type="text"
-        name="addressLine2"
-        value={address.addressLine2}
-        onChange={handleChange}
-        className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="Address Line 2"
-      />
-      </div>
-      <div className='flex flex-row'>
-      <label htmlFor="state" className="block text-base font-medium text-white w-28">
-          State :
-        </label>
-      <input
-        type="text"
-        name="state"
-        value={address.state}
-        onChange={handleChange}
-        className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="State"
-      />
-      </div>
-      <div className='flex flex-row'>
-      <label htmlFor="postalCode" className="block text-base font-medium text-white w-28">
-          Postal Code :
-        </label>
-      <input
-        type="text"
-        name="postalCode"
-        value={address.postalCode}
-        onChange={handleChange}
-        className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-        placeholder="Postal Code"
-      />
-      
-      </div>
-      <button
-        type="submit"
-        className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
-      >
-        Check out
-      </button>
-    </form>
+          <div className="flex flex-row">
+            <label
+              htmlFor="lastName"
+              className="block text-base font-medium text-white w-28"
+            >
+              Last Name :
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              value={address.lastName}
+              onChange={handleChange}
+              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="Last Name"
+            />
+          </div>
+          <div className="flex flex-row">
+            <label
+              htmlFor="addressLine1"
+              className="block text-base font-medium text-white w-28"
+            >
+              Address line 1 :
+            </label>
+            <input
+              type="text"
+              name="addressLine1"
+              value={address.addressLine1}
+              onChange={handleChange}
+              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="Address Line 1"
+            />
+          </div>
+          <div className="flex flex-row">
+            <label
+              htmlFor="addressLine2"
+              className="block text-base font-medium text-white w-28"
+            >
+              Address line 2:
+            </label>
+            <input
+              type="text"
+              name="addressLine2"
+              value={address.addressLine2}
+              onChange={handleChange}
+              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="Address Line 2"
+            />
+          </div>
+          <div className="flex flex-row">
+            <label
+              htmlFor="state"
+              className="block text-base font-medium text-white w-28"
+            >
+              State :
+            </label>
+            <input
+              type="text"
+              name="state"
+              value={address.state}
+              onChange={handleChange}
+              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="State"
+            />
+          </div>
+          <div className="flex flex-row">
+            <label
+              htmlFor="postalCode"
+              className="block text-base font-medium text-white w-28"
+            >
+              Postal Code :
+            </label>
+            <input
+              type="text"
+              name="postalCode"
+              value={address.postalCode}
+              onChange={handleChange}
+              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+              placeholder="Postal Code"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
+          >
+            Check out
+          </button>
+        </form>
       </div>
       <div className="fixed bottom-0  w-3/5 h-1/5 ">
-        <div className='flex flex-row justify-between'>
-        <button
-          onClick={() => {
-            leavePageHandler(cartData, customerID);
-          }}
-        >
-          <Link to="#" className="ml-48 text-base flex flex-row text-blue-800 ">
-            <BsArrowLeft size={24} />
-            <b>Continue Shipping</b>
-          </Link>
-        </button>
+        <div className="flex flex-row justify-between">
+          <button
+            onClick={() => {
+              leavePageHandler(cartData, customerID);
+            }}
+          >
+            <Link
+              to="#"
+              className="ml-48 text-base flex flex-row text-blue-800 "
+            >
+              <BsArrowLeft size={24} />
+              <b>Continue Shipping</b>
+            </Link>
+          </button>
         </div>
       </div>
     </div>

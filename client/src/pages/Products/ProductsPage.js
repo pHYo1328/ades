@@ -33,7 +33,7 @@ export default function ProductsPage() {
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 text-center">
           Products
         </h2>
 
@@ -47,7 +47,7 @@ export default function ProductsPage() {
                     alt={product.image_url}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                   /> */}
-                  <p>{product.image_url}</p>
+                  {/* <p>{product.image_url}</p> */}
                   <AdvancedImage
                     cldImg={cld.image(product.image_url.split(',')[0])}
                   />

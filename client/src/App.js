@@ -9,8 +9,9 @@ import ProductsByBrand from './pages/Products/ProductsByBrand';
 import ProductsByCategory from './pages/Products/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
 import LandingPage from './pages/Home/LandingPage';
-import ProductCreate from './pages/Products/ProductCreate';
-import ProductEdit from './pages/Products/ProductEdit';
+import ProductCreate from "./pages/Products/ProductCreate";
+import ProductEdit from "./pages/Products/ProductEdit";
+import ProductModify from './pages/Products/ProductModify';
 import { CartProvider } from './context/CartContext';
 import Payment from './pages/Stripe/Payment';
 import './App.css';
@@ -40,11 +41,12 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/home" element={<LandingPage />} />
               <Route path="/products/create" element={<ProductCreate />} />
+              <Route path="/products/admin" element={<ProductModify />} />
               <Route
                 path="/products/edit/:productID"
                 element={<ProductEdit />}
               />
-              <Route path="/payment" element = {<Payment/>} />
+              <Route path="/payment" element={<Payment />} />
             </Routes>
           </CartProvider>
           {/* Hello, we are ready to develop our ades project. */}

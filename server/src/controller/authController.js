@@ -19,8 +19,8 @@ const handleLogin = async (req, res) => {
   try {
     // call loginUser API from loginServices.js
     const results = await loginServices.loginUser(username);
-    console.log(chalk.green(JSON.stringify(results[0]))); 
-    
+    console.log(chalk.green(JSON.stringify(results[0])));
+
     // evaluate password
     const foundUser = results[0];
     const userId = foundUser.userid;
@@ -44,13 +44,16 @@ const handleLogin = async (req, res) => {
         refresh_token_secret,
         { expiresIn: '1m' }
       );
-        console.log(newRefreshToken)
+      console.log(newRefreshToken);
       // Changed to let keyword
       // let newRefreshTokenArray = !cookies?.jwt
       // ? foundUser.refreshToken
       // : foundUser.refreshToken.filter((rt) => rt !== cookies.jwt);
-      
-      let newRefreshTokenArray = await loginServices.saveRefreshToken(userId, newRefreshToken);
+
+      let newRefreshTokenArray = await loginServices.saveRefreshToken(
+        userId,
+        newRefreshToken
+      );
 
       // let newRefreshTokenArray = !cookies?.jwt
       //   ? // I changed to check is array or not cuz inside database no refreshToken
@@ -60,14 +63,16 @@ const handleLogin = async (req, res) => {
       //     : []
       //   : foundUser.refreshToken.filter((rt) => rt !== cookies.jwt);
       if (cookies?.jwt) {
-            /* 
+        /* 
             Scenario added here: 
                 1) User logs in but never uses RT and does not logout 
                 2) RT is stolen
                 3) If 1 & 2, reuse detection is needed to clear all RTs when user logs in
             */
         const refreshToken = cookies.jwt;
-        const foundToken = await loginServices.checkRefreshTokenReuse(refreshToken);
+        const foundToken = await loginServices.checkRefreshTokenReuse(
+          refreshToken
+        );
 
         // Detected refresh token reuse!
         if (!foundToken) {

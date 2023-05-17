@@ -20,5 +20,6 @@ module.exports = {
   access_token_secret: process.env.ACCESS_TOKEN_SECRET,
   refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
   stripe_secret_key: process.env.STRIPE_SECRET_KEY,
-  stripe_publishable_key: process.env.STRIPE_PUBLISHABLE_KEY
+  stripe_publishable_key: process.env.STRIPE_PUBLISHABLE_KEY,
+  sendinblue_api: process.env.SENDINBLUE_API,
 };
