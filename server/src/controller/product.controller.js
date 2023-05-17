@@ -1,9 +1,9 @@
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
 const multer = require('multer');
-const upload = multer({ dest: 'temp/' });
+// const upload = multer({ dest: 'temp/' });
 const path = require('path');
-const uploadPath = path.join(__dirname, 'uploads');
+// const uploadPath = path.join(__dirname, 'uploads');
 
 // // Get product by ID (done)
 exports.processGetProductByID = async (req, res, next) => {
@@ -38,6 +38,7 @@ exports.processGetProductByID = async (req, res, next) => {
       image_url: productData.image_url,
       average_rating: productData.average_rating,
       rating_count: productData.rating_count,
+      quantity: productData.quantity,
     };
 
     return res.status(200).json({
@@ -68,7 +69,7 @@ exports.processDeleteProductByID = async (req, res, next) => {
 
   try {
     const deletedProductData = await productServices.deleteProductByID(
-      productID
+      parseInt(productID)
     );
 
     if (!deletedProductData) {
@@ -112,6 +113,7 @@ exports.processGetAllProducts = async (req, res, next) => {
       category_name: product.category_name,
       brand_name: product.brand_name,
       image_url: product.image_url,
+      quantity: product.quantity,
     }));
     return res.status(200).json({
       statusCode: 200,
@@ -269,12 +271,20 @@ exports.processGetNewArrivals = async (req, res, next) => {
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
-  const { name, price, description, category_id, brand_id, image_url } =
-    req.body;
-  var floatPrice, intCategoryID, intBrandID;
+  const {
+    name,
+    price,
+    description,
+    category_id,
+    brand_id,
+    image_url,
+    quantity,
+  } = req.body;
+  var floatPrice, intCategoryID, intBrandID, intQuantity;
   floatPrice = price ? parseFloat(price) : null;
   intCategoryID = category_id ? parseInt(category_id) : null;
   intBrandID = brand_id ? parseInt(brand_id) : null;
+  intQuantity = quantity ? parseInt(quantity) : null;
 
   if (!productID) {
     return res.status(400).json({
@@ -290,7 +300,8 @@ exports.processUpdateProductByID = async (req, res, next) => {
     description == '' &&
     category_id == '' &&
     brand_id == '' &&
-    image_url == ''
+    image_url == '' &&
+    quantity == ''
   ) {
     return res.status(400).json({
       statusCode: 400,
@@ -306,6 +317,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
       intCategoryID,
       intBrandID,
       image_url,
+      quantity,
       parseInt(productID)
     );
     if (!updatedProductData) {
@@ -329,13 +341,8 @@ exports.processUpdateProductByID = async (req, res, next) => {
 // create new product
 exports.processCreateProduct = async (req, res, next) => {
   console.log(chalk.blue('processCreateProduct running'));
-  const { name, price, description, category_id, brand_id, image } = req.body;
-  // const image = req.files;
-  // const { tempFilePath, mimetype } = req.files.image;
-  // console.log("req.files.image");
-  // console.log(req.files.image);
-  // console.log("tempfilepath");
-  // console.log(tempFilePath);
+  const { name, price, description, category_id, brand_id, image, quantity } =
+    req.body;
   if (
     name == '' ||
     !name ||
@@ -354,10 +361,22 @@ exports.processCreateProduct = async (req, res, next) => {
       message: 'Product data is missing',
     });
   }
+  if (isNaN(price) || price <= 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Price has to be a number greater than 0',
+    });
+  }
+  if (isNaN(quantity) || quantity < 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Inventory has to be a number greater than 0',
+    });
+  }
   console.log(req.body);
-  // console.log(req.files);
   console.log('test');
-  // console.log(image.image);
   try {
     const createdProductData = await productServices.createProduct(
       name,
@@ -365,10 +384,10 @@ exports.processCreateProduct = async (req, res, next) => {
       description,
       parseInt(category_id),
       parseInt(brand_id),
-      image
+      image,
+      quantity
     );
     console.log(chalk.yellow(createdProductData));
-    // console.log(chalk.yellow(createdProductData.cloudinary_url));
     return res.status(200).json({
       statusCode: 200,
       ok: true,
@@ -608,10 +627,226 @@ exports.processGetSearchResults = async (req, res, next) => {
         statusCode: 204,
         ok: true,
         message: 'No products exists',
+        message: 'No products exists',
       });
     }
   } catch (error) {
     console.error(chalk.red('Error in getSearchResults: ', error));
+    return next(error);
+  }
+};
+
+// Delete brand by ID (done)
+exports.processDeleteBrandByID = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteBrandByID running'));
+
+  const { brandID } = req.params;
+
+  if (!brandID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Brand ID is missing',
+    });
+  }
+
+  try {
+    const deletedBrandData = await productServices.deleteBrandByID(
+      parseInt(brandID)
+    );
+
+    if (!deletedBrandData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such brand exists',
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Brand Deletion successful',
+      data: deletedBrandData,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteBrandByID: ', error));
+    return next(error);
+  }
+};
+
+// Delete category by ID (done)
+exports.processDeleteCategoryByID = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteCategoryByID running'));
+
+  const { categoryID } = req.params;
+
+  if (!categoryID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Category ID is missing',
+    });
+  }
+
+  try {
+    const deletedCategoryData = await productServices.deleteCategoryByID(
+      parseInt(categoryID)
+    );
+
+    if (!deletedCategoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such category exists',
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Category Deletion successful',
+      data: deletedCategoryData,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteCategoryByID: ', error));
+    return next(error);
+  }
+};
+
+// create rating
+exports.processCreateRating = async (req, res, next) => {
+  console.log(chalk.blue('processCreateRating running'));
+  const { comment, rating_score, customer_id, product_id } = req.body;
+  if (!comment || !rating_score || !customer_id || !product_id) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Rating data is missing',
+    });
+  }
+  if (isNaN(rating_score) || rating_score < 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Rating score has to be a number greater than 0',
+    });
+  }
+  // console.log(req.body)
+  console.log(chalk.yellow(req.body));
+  try {
+    const createdRatingData = await productServices.createRating(
+      comment,
+      rating_score,
+      customer_id,
+      product_id
+    );
+    console.log(chalk.yellow(createdRatingData));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Create rating successful',
+    });
+  } catch (error) {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red('Error in createRating: ', error));
+    return next(error);
+  }
+};
+
+// update inventory - increase 1
+exports.processUpdateInventoryUp = async (req, res, next) => {
+  console.log(chalk.blue('processUpdateInventoryUp running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const updatedInventoryData = await productServices.updateInventoryUp(
+      productID
+    );
+    if (!updatedInventoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in updateInventoryUp: ', error));
+    return next(error);
+  }
+};
+
+// update inventory - decrease 1
+exports.processUpdateInventoryDown = async (req, res, next) => {
+  console.log(chalk.blue('processUpdateInventoryDown running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const updatedInventoryData = await productServices.updateInventoryDown(
+      productID
+    );
+    if (!updatedInventoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in updateInventoryDown: ', error));
+    return next(error);
+  }
+};
+
+// delete product images
+exports.processDeleteProductImages = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteProductImages running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+  try {
+    const results = await productServices.deleteProductImages(productID);
+    if (!results) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such product exists',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Update product details successful',
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteProductImages: ', error));
     return next(error);
   }
 };

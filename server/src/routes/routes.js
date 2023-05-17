@@ -3,11 +3,7 @@ const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
-const registerController = require('../controller/registerController');
-const authController = require('../controller/authController');
-const refreshTokenController = require('../controller/refreshTokenController');
-const logoutController = require('../controller/logoutController');
-// const verifyAccessToken = require("../middlewares/verifyAccessToken");
+//const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
   router.get(
@@ -74,10 +70,25 @@ module.exports = (app, router) => {
     productController.processUpdateProductByID
   );
 
+  router.put(
+    '/api/products/inventory/plus/:productID',
+    productController.processUpdateInventoryUp
+  );
+
+  router.put(
+    '/api/products/inventory/minus/:productID',
+    productController.processUpdateInventoryDown
+  );
+
   router.post(
     '/api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processAddCartData
+  );
+
+  router.put(
+    '/api/products/:productID/images',
+    productController.processDeleteProductImages
   );
 
   router.get(
@@ -151,17 +162,5 @@ module.exports = (app, router) => {
 
   router.get('/config', checkoutController.getConfig);
 
-  router.post('/createPaymentIntent', checkoutController.createPaymentIntent);
-
-  router.get('^/$|/index(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-  });
-
-  router.post('/register', registerController.handleNewUser);
-
-  router.post('/login', authController.handleLogin);
-
-  router.get('/refresh', refreshTokenController.handleRefreshToken);
-
-  router.get('/logout', logoutController.handleLogout);
+  router.post('/create-payment-intent', checkoutController.createPaymentIntent);
 };
