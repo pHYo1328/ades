@@ -92,7 +92,7 @@ module.exports = (app, router) => {
     cartController.processDeleteCartData
   );
 
-  router.post(
+  router.get(
     '/api/cartdetails/getCartProductData',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartProductData
