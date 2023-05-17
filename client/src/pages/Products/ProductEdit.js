@@ -62,12 +62,12 @@ export default function ProductCreate() {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
-    const name = document.getElementById("create-product-name").value;
-    const description = document.getElementById("create-product-description").value;
-    const price = document.getElementById("create-product-price").value;
-    const category_id = document.getElementById("create-product-category").value;
-    const brand_id = document.getElementById("create-product-brand").value;
-    const quantity = document.getElementById("create-product-quantity").value;
+    const name = document.getElementById("edit-product-name").value;
+    const description = document.getElementById("edit-product-description").value;
+    const price = document.getElementById("edit-product-price").value;
+    const category_id = document.getElementById("edit-product-category").value;
+    const brand_id = document.getElementById("edit-product-brand").value;
+    const quantity = document.getElementById("edit-product-quantity").value;
     const image = imagePath;
     if (isNaN(quantity) || quantity < 0) {
       window.alert("Inventory must be a value not less than 0.");
@@ -127,7 +127,7 @@ export default function ProductCreate() {
               <input
                 type="text"
                 class="form-control form-control-sm"
-                id="create-product-name"
+                id="edit-product-name"
                 // placeholder={product.product_name}
                 // value={product.product_name}
                 defaultValue={product.product_name}
@@ -141,7 +141,7 @@ export default function ProductCreate() {
               </label>
               <textarea
                 class="form-control form-control-sm"
-                id="create-product-description"
+                id="edit-product-description"
                 placeholder="Description"
                 rows={3}
                 defaultValue={product.description}
@@ -157,7 +157,7 @@ export default function ProductCreate() {
                   type="number"
                   min="0"
                   class="form-control form-control-sm"
-                  id="create-product-price"
+                  id="edit-product-price"
                   placeholder="Price"
                   defaultValue={product.price}
 
@@ -170,7 +170,7 @@ export default function ProductCreate() {
                 <input min="0"
                   type="number"
                   class="form-control form-control-sm"
-                  id="create-product-quantity"
+                  id="edit-product-quantity"
                   placeholder="Inventory (Quantity)"
                   defaultValue={product.quantity}
 
@@ -182,7 +182,7 @@ export default function ProductCreate() {
                 <label for="exampleFormControlInput1" class="form-label h6">
                   Category
                 </label>
-                <select class="form-select form-select-sm" id="create-product-category">
+                <select class="form-select form-select-sm" id="edit-product-category">
 
                   {categories ? (
                     categories.map((category) => (
@@ -203,7 +203,7 @@ export default function ProductCreate() {
                 <label for="exampleFormControlInput1" class="form-label h6">
                   Brand
                 </label>
-                <select class="form-select form-select-sm" id="create-product-brand">
+                <select class="form-select form-select-sm" id="edit-product-brand">
 
                   {brands ? (
                     brands.map((brand) => (
