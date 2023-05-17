@@ -21,6 +21,14 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     productController.processGetAllBrands
   );
+  router.delete(
+    '/api/brands/:brandID',
+    productController.processDeleteBrandByID
+  );
+  router.delete(
+    '/api/categories/:categoryID',
+    productController.processDeleteCategoryByID
+  );
   router.get(
     '/api/category',
     //verifyAccessToken.verifyToken,
@@ -62,6 +70,10 @@ module.exports = (app, router) => {
 
     //verifyAccessToken.verifyToken,
     productController.processCreateProduct
+  );
+  router.post(
+    '/api/products/admin/type',
+    productController.processCreateBrandOrCategory
   );
   router.delete(
     '/api/products/:productID',

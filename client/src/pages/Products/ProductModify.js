@@ -110,7 +110,7 @@ export default function ProductModify() {
                                              .catch((error) => {
                                                  console.error(error);
                                              });
-                                            }
+                                            } 
 
                                          }}>
                                         <i class="bi bi-dash-circle"></i>

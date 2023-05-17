@@ -14,6 +14,8 @@ import ProductEdit from "./pages/Products/ProductEdit";
 import ProductModify from './pages/Products/ProductModify';
 import { CartProvider } from './context/CartContext';
 import Payment from './pages/Stripe/Payment';
+import Brands from './pages/Products/Brands';
+import Categories from './pages/Products/Categories';
 import './App.css';
 import './input.css';
 
@@ -42,6 +44,8 @@ function App() {
               <Route path="/home" element={<LandingPage />} />
               <Route path="/products/create" element={<ProductCreate />} />
               <Route path="/products/admin" element={<ProductModify />} />
+              <Route path="/brands" element={<Brands />}/>
+              <Route path="/categories" element={<Categories />}/>
               <Route
                 path="/products/edit/:productID"
                 element={<ProductEdit />}

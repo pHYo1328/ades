@@ -130,16 +130,16 @@ module.exports.deleteCategoryByID = async (categoryID) => {
 
     // Run the delete queries concurrently
     await Promise.all([
-      pool.query(orderItemsDeleteQuery, [brandID]),
+      pool.query(orderItemsDeleteQuery, [categoryID]),
       pool.query(ordersDeleteQuery),
-      pool.query(ratingDeleteQuery, [brandID]),
-      pool.query(inventoryDeleteQuery, [brandID]),
+      pool.query(ratingDeleteQuery, [categoryID]),
+      pool.query(inventoryDeleteQuery, [categoryID]),
     ]);
 
-    await pool.query(productDeleteQuery, [brandID]);
+    await pool.query(productDeleteQuery, [categoryID]);
 
     const categoryDeleteResult = await pool.query(categoryDeleteQuery, [
-      brandID,
+      categoryID,
     ]);
     console.log(chalk.green(categoryDeleteResult));
     console.log(chalk.yellow(categoryDeleteResult[0].affectedRows));
@@ -251,9 +251,9 @@ module.exports.updateProductByID = async (
 
   try {
     const productUpdateQuery =
-      'UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url=COALESCE(?,image_url) where product_id = ?';
+      'UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url = CONCAT(image_url, COALESCE(?, "")) where product_id = ?';
     const inventoryUpdateQuery =
-      'UPDATE inventory SET quantity = ? where product_id = ?';
+      'UPDATE inventory SET quantity = COALESCE(?,quantity) where product_id = ?';
 
     const productUpdatePromise = pool.query(productUpdateQuery, [
       product_name,
@@ -511,6 +511,26 @@ module.exports.deleteProductImages = async (product_id) => {
     return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in deleteProductImages: ', error));
+    throw error;
+  }
+};
+
+// add new brand or category
+module.exports.createBrandOrCategory = async (name, type) => {
+  console.log(chalk.blue('createBrandOrCategory is called'));
+  try {
+    let createQuery;
+    if (type == 'category') {
+      createQuery = 'INSERT INTO category (category_name) VALUES (?)';
+    }
+    if (type == 'brand') {
+      createQuery = 'INSERT INTO brand (brand_name) VALUES (?)';
+    }
+    const results = await pool.query(createQuery, [name, type]);
+    console.log(chalk.green(results[0]));
+    return results[0].affectedRows > 0;
+  } catch (error) {
+    console.error(chalk.red('Error in createBrandOrCategory: ', error));
     throw error;
   }
 };
