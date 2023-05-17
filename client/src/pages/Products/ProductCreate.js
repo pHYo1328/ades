@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import chalk from "chalk";
-import UploadWidget from "../../components/cloudinary/UploadWidget";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import chalk from 'chalk';
+import UploadWidget from '../../components/cloudinary/UploadWidget';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
@@ -46,24 +46,32 @@ export default function ProductCreate() {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
-    const name = document.getElementById("create-product-name").value;
-    const description = document.getElementById("create-product-description").value;
-    const price = document.getElementById("create-product-price").value;
-    const category_id = document.getElementById("create-product-category").value;
-    const brand_id = document.getElementById("create-product-brand").value;
-    const quantity = document.getElementById("create-product-quantity").value;
+    const name = document.getElementById('create-product-name').value;
+    const description = document.getElementById(
+      'create-product-description'
+    ).value;
+    const price = document.getElementById('create-product-price').value;
+    const category_id = document.getElementById(
+      'create-product-category'
+    ).value;
+    const brand_id = document.getElementById('create-product-brand').value;
+    const quantity = document.getElementById('create-product-quantity').value;
     const image = imagePath;
 
-    if (!name || !description || !price || !category_id || !brand_id || !quantity) {
-      window.alert("Please fill in all fields.");
-    }
-    else if (isNaN(quantity) || quantity < 0) {
-      window.alert("Inventory must be a value not less than 0.");
-    }
-    else if (isNaN(price) || price <= 0) {
-      window.alert("Price must be a value not less than or equal to 0.");
-    }
-    else {
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category_id ||
+      !brand_id ||
+      !quantity
+    ) {
+      window.alert('Please fill in all fields.');
+    } else if (isNaN(quantity) || quantity < 0) {
+      window.alert('Inventory must be a value not less than 0.');
+    } else if (isNaN(price) || price <= 0) {
+      window.alert('Price must be a value not less than or equal to 0.');
+    } else {
       const requestBody = {
         name,
         description,
@@ -101,7 +109,12 @@ export default function ProductCreate() {
     //       type="text/javascript"
     //     />
     //   </Helmet>
-    <form id="create-product-form" class="w-50 mt-5" style={{ marginLeft: 'auto', marginRight: 'auto' }} enctype="multipart/form-data">
+    <form
+      id="create-product-form"
+      class="w-50 mt-5"
+      style={{ marginLeft: 'auto', marginRight: 'auto' }}
+      enctype="multipart/form-data"
+    >
       <h3 class="h3 text-center">CREATE PRODUCT</h3>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label h6">
@@ -143,7 +156,8 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Inventory (Quantity)
           </label>
-          <input min="0"
+          <input
+            min="0"
             type="number"
             class="form-control"
             id="create-product-quantity"

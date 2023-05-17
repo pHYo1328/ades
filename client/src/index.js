@@ -7,11 +7,9 @@ import reportWebVitals from './reportWebVitals';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
- 
   <BrowserRouter>
     <App />
   </BrowserRouter>
- 
 );
 
 reportWebVitals();

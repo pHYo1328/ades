@@ -16,25 +16,21 @@ const cld = new Cloudinary({
 });
 
 const plusButtonHandler = (cartData, productID, updateCartData) => {
-  const updatedCart =cartData.map((item) =>
-  item.productId === productID
-    ? { ...item, quantity: item.quantity + 1 }
-    : item
-)
-  updateCartData(
-    [...updatedCart]
+  const updatedCart = cartData.map((item) =>
+    item.productId === productID
+      ? { ...item, quantity: item.quantity + 1 }
+      : item
   );
+  updateCartData([...updatedCart]);
 };
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
-  const updatedCart =cartData.map((item) =>
-  item.productId === productID && item.quantity > 0
-    ? { ...item, quantity: item.quantity - 1 }
-    : item
-)
-  updateCartData(
-    [...updatedCart]
+  const updatedCart = cartData.map((item) =>
+    item.productId === productID && item.quantity > 0
+      ? { ...item, quantity: item.quantity - 1 }
+      : item
   );
+  updateCartData([...updatedCart]);
 };
 
 const deleteButtonHandler = (cartData, productID, updateCartData) => {
@@ -47,7 +43,7 @@ const deleteButtonHandler = (cartData, productID, updateCartData) => {
 const Cart = () => {
   const [cartData, setCartData] = useContext(CartContext);
   const [cartProductData, setCartProductData] = useState(null);
-  const [productDetails,setProductsDetails] = useState(null);
+  const [productDetails, setProductsDetails] = useState(null);
   const latestCartData = useRef(cartData);
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState({
@@ -73,12 +69,10 @@ const Cart = () => {
     });
     console.log(JSON.stringify(itemsDetailsToShow));
     setCartProductData(itemsDetailsToShow);
-  }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("i m here");
-        if (cartData.length == 0) {
           const cartResponse = await axios.get(
             `${baseUrl}/api/cart/${customerID}`
           );
@@ -95,12 +89,8 @@ const Cart = () => {
                 ','
               )}`
             );
-            setProductsDetails(productResponse.data.data)
+            setProductsDetails(productResponse.data.data);
           }
-        }
-        console.log("i m here")
-        
-
       } catch (error) {
         console.log(error);
       }
@@ -110,7 +100,9 @@ const Cart = () => {
   useEffect(() => {
     return () => {
       axios
-        .post(`${baseUrl}/api/cart/${customerID}`, { cartData: latestCartData.current })
+        .post(`${baseUrl}/api/cart/${customerID}`, {
+          cartData: latestCartData.current,
+        })
         .then((response) => {
           console.log(response);
         });
@@ -123,14 +115,16 @@ const Cart = () => {
     });
   };
   useEffect(() => {
-    setIsLoading(true);
     latestCartData.current = cartData;
-    if(productDetails){
+    if(cartData.length > 0) {
+      setIsLoading(true);
+      if (productDetails) {
       console.log(cartData);
       combineCartDataAndProductDetails();
       setIsLoading(false);
     }
-  },[cartData,productDetails]);
+  }
+  }, [cartData, productDetails]);
   return (
     <div className="flex flex-row">
       <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36">
@@ -148,7 +142,7 @@ const Cart = () => {
             <tr className="flex justify-center items-center">
               <LoadingIndicator />
             </tr>
-          ) : cartData.length > 0 ? (
+          ) :cartProductData && cartData.length > 0 ? (
             cartProductData.map((cartItem, index) => (
               <tr
                 key={`${cartItem.product_ID}-${index}`}
@@ -334,7 +328,7 @@ const Cart = () => {
           </button>
         </form>
       </div>
-      <div className="fixed bottom-0  w-3/5 h-1/5 ">
+      <div className="fixed bottom-0  w-3/5 h-1/5 z-1 bg-white ">
         <div className="flex flex-row justify-between">
           <button>
             <Link

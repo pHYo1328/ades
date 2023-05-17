@@ -91,7 +91,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-cron.schedule('0 * * * *', bookmarkEmailServices.updateProductsEmailSender);
+cron.schedule('0 */6 * * *', bookmarkEmailServices.updateProductsEmailSender);
 
 routes(app, router);
 const port = process.env.PORT || 8081;
