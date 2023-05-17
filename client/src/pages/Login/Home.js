@@ -1,5 +1,9 @@
 // import { Link } from "react-router-dom";
 import React from 'react';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+const domain_url = process.env.REACT_APP_DOMAIN_BASE_URL;
+console.log(process.env);
+console.log(baseUrl);
 function Home() {
   return (
     <div className="App">
@@ -23,6 +27,12 @@ function Home() {
                   className="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md text-lg ml-3"
                 >
                   Register
+                </a>
+                <a
+                  href="/cart"
+                  className="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md text-lg ml-3"
+                >
+                  Cart
                 </a>
               </div>
             </div>

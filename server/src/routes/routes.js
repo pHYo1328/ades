@@ -180,24 +180,15 @@ module.exports = (app, router) => {
 
   router.post('/create-payment-intent', checkoutController.createPaymentIntent);
 
-  router.get(
-    '^/$|/index(.html)?', (req, res) => {
+  router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-    });
-    
-    router.post(
-    '/register', registerController.handleNewUser
-    );
-  
-    router.post(
-    '/login', authController.handleLogin
-    );
-  
-    router.get(
-    '/refresh', refreshTokenController.handleRefreshToken
-    );
-  
-    router.get(
-    '/logout', logoutController.handleLogout
-    );
+  });
+
+  router.post('/register', registerController.handleNewUser);
+
+  router.post('/login', authController.handleLogin);
+
+  router.get('/refresh', refreshTokenController.handleRefreshToken);
+
+  router.get('/logout', logoutController.handleLogout);
 };

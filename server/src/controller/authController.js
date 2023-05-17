@@ -23,7 +23,9 @@ const handleLogin = async (req, res) => {
 
     if (results.length === 0) {
       // User not found
-      return res.status(401).json({ success: false, message: 'Incorrect username or password' });
+      return res
+        .status(401)
+        .json({ success: false, message: 'Incorrect username or password' });
     }
 
     // evaluate password
@@ -103,11 +105,18 @@ const handleLogin = async (req, res) => {
       // Creates Secure Cookie with refresh token
       res.cookie('jwt', newRefreshToken);
       console.log('Cookie set successfullyyy');
-      console.log("this is my rt" + newRefreshToken);
+      console.log('this is my rt' + newRefreshToken);
       // Send authorization roles and access token to user
-      res.json({ success: true,roles: roles,accessToken: accessToken,newRefreshToken: newRefreshToken });
+      res.json({
+        success: true,
+        roles: roles,
+        accessToken: accessToken,
+        newRefreshToken: newRefreshToken,
+      });
     } else {
-      res.status(401).json({ success: false, message: 'Incorrect username or password' });
+      res
+        .status(401)
+        .json({ success: false, message: 'Incorrect username or password' });
     }
   } catch (error) {
     console.error(error);

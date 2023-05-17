@@ -1,24 +1,22 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
-
   const navigate = useNavigate();
-
 
   //call handleResponserError function when fetching anything to run refreshAccessToken
   const refreshAccessToken = async () => {
     try {
-      const response = await fetch("http://localhost:8081/refresh", {
-        credentials: "include",
+      const response = await fetch('http://localhost:8081/refresh', {
+        credentials: 'include',
       });
       if (response.status === 403 || response.status === 401) {
-        navigate("/login");
-        localStorage.removeItem("accessToken");
+        navigate('/login');
+        localStorage.removeItem('accessToken');
         return [];
       }
       const data = await response.json();
-      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem('accessToken', data.accessToken);
       console.log(data);
       return;
     } catch (error) {
@@ -29,17 +27,16 @@ function Home() {
 
   const onHandleLogout = async () => {
     try {
-      await fetch("http://localhost:8081/logout", {
+      await fetch('http://localhost:8081/logout', {
         method: 'GET',
-        credentials: "include",
+        credentials: 'include',
       });
     } catch (error) {
       console.error(error);
     }
-    localStorage.removeItem("accessToken");
-    navigate("/login");
+    localStorage.removeItem('accessToken');
+    navigate('/login');
   };
-
 
   // const handleResponseError = (response) => {
   //   if (response.status === 403) {
