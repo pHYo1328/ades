@@ -7,7 +7,7 @@ export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
   const [imagePath, setImagePath] = useState('');
@@ -45,7 +45,7 @@ export default function ProductCreate() {
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-  
+
     const name = document.getElementById("create-product-name").value;
     const description = document.getElementById("create-product-description").value;
     const price = document.getElementById("create-product-price").value;
@@ -53,7 +53,7 @@ export default function ProductCreate() {
     const brand_id = document.getElementById("create-product-brand").value;
     const quantity = document.getElementById("create-product-quantity").value;
     const image = imagePath;
-  
+
     if (!name || !description || !price || !category_id || !brand_id || !quantity) {
       window.alert("Please fill in all fields.");
     }
@@ -73,15 +73,15 @@ export default function ProductCreate() {
         quantity,
         image,
       };
-  
+
       console.log('path test');
       console.log(imagePath);
-  
+
       console.log(requestBody);
       axios
         .post(`${baseUrl}/api/products`, requestBody, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         })
         .then((response) => {
@@ -92,7 +92,7 @@ export default function ProductCreate() {
         });
     }
   };
-  
+
   return (
     // <>
     //   <Helmet>
@@ -101,9 +101,10 @@ export default function ProductCreate() {
     //       type="text/javascript"
     //     />
     //   </Helmet>
-    <form id="create-product-form" enctype="multipart/form-data">
+    <form id="create-product-form" class="w-50 mt-5" style={{ marginLeft: 'auto', marginRight: 'auto' }} enctype="multipart/form-data">
+      <h3 class="h3 text-center">CREATE PRODUCT</h3>
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+        <label for="exampleFormControlInput1" class="form-label h6">
           Product Name
         </label>
         <input
@@ -113,20 +114,9 @@ export default function ProductCreate() {
           placeholder="Product Name"
         />
       </div>
+
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
-          Price
-        </label>
-        <input
-          type="number"
-          min="0"
-          class="form-control"
-          id="create-product-price"
-          placeholder="Price"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+        <label for="exampleFormControlInput1" class="form-label h6">
           Description
         </label>
         <input
@@ -136,66 +126,77 @@ export default function ProductCreate() {
           placeholder="Description"
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
-          Inventory (Quantity)
-        </label>
-        <input min="0"
-          type="number"
-          class="form-control"
-          id="create-product-quantity"
-          placeholder="Inventory (Quantity)"
-        />
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="exampleFormControlInput1" class="form-label h6">
+            Price
+          </label>
+          <input
+            type="number"
+            min="0"
+            class="form-control"
+            id="create-product-price"
+            placeholder="Price"
+          />
+        </div>
+        <div class="mb-3 col-6">
+          <label for="exampleFormControlInput1" class="form-label h6">
+            Inventory (Quantity)
+          </label>
+          <input min="0"
+            type="number"
+            class="form-control"
+            id="create-product-quantity"
+            placeholder="Inventory (Quantity)"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col-6">
+          <label for="exampleFormControlInput1" class="form-label h6">
+            Category
+          </label>
+          <select class="form-select" id="create-product-category">
+            <option disabled selected value>
+              -- CATEGORY --
+            </option>
+            {categories ? (
+              categories.map((category) => (
+                <option value={category.category_id}>
+                  {category.category_name}
+                </option>
+              ))
+            ) : (
+              <p>Loading...</p>
+            )}
+          </select>
+        </div>
+        <div class="mb-3 col-6">
+          <label for="exampleFormControlInput1" class="form-label h6">
+            Brand
+          </label>
+          <select class="form-select" id="create-product-brand">
+            <option disabled selected value>
+              -- BRAND --
+            </option>
+            {brands ? (
+              brands.map((brand) => (
+                <option value={brand.brand_id}>{brand.brand_name}</option>
+              ))
+            ) : (
+              <p>Loading...</p>
+            )}
+          </select>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
-          Category
-        </label>
-        <select class="form-select" id="create-product-category">
-          <option disabled selected value>
-            -- CATEGORY --
-          </option>
-          {categories ? (
-            categories.map((category) => (
-              <option value={category.category_id}>
-                {category.category_name}
-              </option>
-            ))
-          ) : (
-            <p>Loading...</p>
-          )}
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
-          Brand
-        </label>
-        <select class="form-select" id="create-product-brand">
-          <option disabled selected value>
-            -- BRAND --
-          </option>
-          {brands ? (
-            brands.map((brand) => (
-              <option value={brand.brand_id}>{brand.brand_name}</option>
-            ))
-          ) : (
-            <p>Loading...</p>
-          )}
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="formFile" class="form-label">
-          Image
-        </label>
-
-        {/* <UploadWidget onImageChange={handleImageChange} /> */}
         <UploadWidget onImageChange={handleImageChange} />
       </div>
-      <div class="col-auto">
+      <div class="col-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
         <button
           type="submit"
           id="submit"
-          class="btn btn-primary mb-3"
+          class="btn btn-outline-primary mb-3 w-100"
           onClick={handleSubmit}
         >
           Submit
