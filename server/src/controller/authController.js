@@ -21,6 +21,11 @@ const handleLogin = async (req, res) => {
     const results = await loginServices.loginUser(username);
     console.log(chalk.green(JSON.stringify(results[0])));
 
+    if (results.length === 0) {
+      // User not found
+      return res.status(401).json({ success: false, message: 'Incorrect username or password' });
+    }
+
     // evaluate password
     const foundUser = results[0];
     const userId = foundUser.userid;
@@ -100,13 +105,13 @@ const handleLogin = async (req, res) => {
       console.log('Cookie set successfullyyy');
       console.log("this is my rt" + newRefreshToken);
       // Send authorization roles and access token to user
-      res.json({ roles, accessToken });
+      res.json({ success: true,roles: roles,accessToken: accessToken,newRefreshToken: newRefreshToken });
     } else {
-      res.sendStatus(401);
+      res.status(401).json({ success: false, message: 'Incorrect username or password' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
