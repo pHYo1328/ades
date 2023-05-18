@@ -109,6 +109,7 @@ const handleLogin = async (req, res) => {
       // Send authorization roles and access token to user
       res.json({
         success: true,
+        userid: userId,
         roles: roles,
         accessToken: accessToken,
         newRefreshToken: newRefreshToken,

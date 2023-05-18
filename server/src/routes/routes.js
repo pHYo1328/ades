@@ -7,6 +7,7 @@ const registerController = require('../controller/registerController');
 const authController = require('../controller/authController');
 const refreshTokenController = require('../controller/refreshTokenController');
 const logoutController = require('../controller/logoutController');
+const forgotPasswordController = require('../controller/forgotPasswordController');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -148,9 +149,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  router.get('/config', checkoutController.getConfig);
+  router.get('/config', 
+  checkoutController.getConfig);
 
-  router.post('/create-payment-intent', checkoutController.createPaymentIntent);
+  router.post('/createPaymentIntent/:orderID', 
+  checkoutController.createPaymentIntent);
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
@@ -162,5 +165,7 @@ module.exports = (app, router) => {
 
   router.get('/refresh', refreshTokenController.handleRefreshToken);
 
-  router.get('/logout', logoutController.handleLogout);
+  router.put('/logout', logoutController.handleLogout);
+
+  router.put('/forgot', forgotPasswordController.handleForgotPassword);
 };

@@ -17,6 +17,7 @@ function Home() {
       }
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('userid', data.userid);
       console.log(data);
       return;
     } catch (error) {
@@ -28,13 +29,14 @@ function Home() {
   const onHandleLogout = async () => {
     try {
       await fetch('http://localhost:8081/logout', {
-        method: 'GET',
+        method: 'PUT',
         credentials: 'include',
       });
     } catch (error) {
       console.error(error);
     }
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('userid');
     navigate('/login');
   };
 

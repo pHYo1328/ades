@@ -73,24 +73,24 @@ const Cart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const cartResponse = await axios.get(
-            `${baseUrl}/api/cart/${customerID}`
-          );
-          const cartData = cartResponse.data.data;
-          setCartData(cartData);
+        const cartResponse = await axios.get(
+          `${baseUrl}/api/cart/${customerID}`
+        );
+        const cartData = cartResponse.data.data;
+        setCartData(cartData);
 
-          if (cartData.length > 0) {
-            var productIDs = [];
-            cartData.forEach((cartItem) => {
-              productIDs.push(cartItem.productId);
-            });
-            const productResponse = await axios.get(
-              `${baseUrl}/api/cartdetails/getCartProductData?productIDs=${productIDs.join(
-                ','
-              )}`
-            );
-            setProductsDetails(productResponse.data.data);
-          }
+        if (cartData.length > 0) {
+          var productIDs = [];
+          cartData.forEach((cartItem) => {
+            productIDs.push(cartItem.productId);
+          });
+          const productResponse = await axios.get(
+            `${baseUrl}/api/cartdetails/getCartProductData?productIDs=${productIDs.join(
+              ','
+            )}`
+          );
+          setProductsDetails(productResponse.data.data);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -116,14 +116,14 @@ const Cart = () => {
   };
   useEffect(() => {
     latestCartData.current = cartData;
-    if(cartData.length > 0) {
+    if (cartData.length > 0) {
       setIsLoading(true);
       if (productDetails) {
-      console.log(cartData);
-      combineCartDataAndProductDetails();
-      setIsLoading(false);
+        console.log(cartData);
+        combineCartDataAndProductDetails();
+        setIsLoading(false);
+      }
     }
-  }
   }, [cartData, productDetails]);
   return (
     <div className="flex flex-row">
@@ -142,7 +142,7 @@ const Cart = () => {
             <tr className="flex justify-center items-center">
               <LoadingIndicator />
             </tr>
-          ) :cartProductData && cartData.length > 0 ? (
+          ) : cartProductData && cartData.length > 0 ? (
             cartProductData.map((cartItem, index) => (
               <tr
                 key={`${cartItem.product_ID}-${index}`}

@@ -35,6 +35,7 @@ function Login() {
         if (data.success) {
           console.log('Login successful');
           localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('userid', data.userid);
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
           navigate('/homepage');
@@ -83,11 +84,20 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="flex justify-end">
+          {/* <div className="flex justify-end">
             <a href="/" className="text-sm text-gray-500 hover:text-gray-700">
               Forgot your password?
             </a>
-          </div>
+          </div> */}
+        <div className="flex justify-end">
+        <button
+            className="text-sm text-gray-500 hover:text-gray-700"
+            onClick={() => navigate('/forgot')}
+          >
+            Forgot your password?
+          </button>
+        </div>
+          
           <div>
             <button
               type="submit"

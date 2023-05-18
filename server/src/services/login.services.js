@@ -1,6 +1,7 @@
 const pool = require('../config/database');
 const chalk = require('chalk');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 // create new user
 module.exports.registerUser = async (username, email, password) => {
@@ -118,6 +119,104 @@ module.exports.logoutUser = async (refreshToken) => {
     throw error;
   }
 };
+
+
+// Forgot password
+module.exports.forgotPassword = async (email, newPassword) => {
+  const getPasswordQuery = 'SELECT password FROM users WHERE email = ?';
+  const updatePasswordQuery = 'UPDATE users SET password = ? WHERE email = ?';
+  try {
+    // Get the previous hashed password
+    const [rows] = await pool.query(getPasswordQuery, [email]);
+
+    if (rows.length === 0) {
+      // User not found
+      console.log("User not found");
+      return false;
+    }
+
+    const previousHashedPwd = rows[0].password;
+
+    console.log(previousHashedPwd);
+    console.log(newPassword);
+
+    // Compare the new hashed password with the previous hashed password
+    const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
+    if (isSamePassword) {
+      // password is the same as the previous password
+      console.log("New password is the same as the previous password");
+      return false;
+    }
+
+    // Encrypt the new password
+    const hashedPwd = await bcrypt.hash(newPassword, 10);
+
+    // Update the password
+    const updateResult = await pool.query(updatePasswordQuery, [hashedPwd, email]);
+
+    if (updateResult.affectedRows === 0) {
+      console.log('Password update failed');
+      return false; // prob due to email
+    }
+
+    console.log('Password updated successfully');
+    return true; // Password updated successfully
+  } catch (error) {
+    console.error('Error in updating password: ', error);
+    throw error;
+  }
+};
+
+// // Forgot password
+// module.exports.forgotPassword = async (email, newPassword) => {
+//   const forgotPasswordQuery = 'UPDATE users SET password = ? WHERE email = ?';
+//   try {
+//     const updateResult = await pool.query(forgotPasswordQuery, [newPassword, email]);
+//     console.log(newPassword, email);
+//     if (updateResult.affectedRows === 0) {
+//       console.log("password did not update");
+//       return false; // Password update failed, possibly due to incorrect email
+//     }
+
+//     console.log("password updated mannnn");
+//     console.log(updateResult.affectedRows);
+
+//     return true; // Password updated successfully
+//   } catch (error) {
+//     console.error('Error in updating password: ', error);
+//     throw error;
+//   }
+// };
+
+// // Check if the new password is the same as the previous password
+// module.exports.isSameAsPreviousPassword = async (email, hashedPwd) => {
+//   const getPasswordQuery = 'SELECT password FROM users WHERE email = ?';
+//   try {
+//     const [rows] = await pool.query(getPasswordQuery, [email]);
+
+//     if (rows.length === 0) {
+//       // User not found
+//       console.log("user is not found");
+//       return false;
+//     }
+
+//     const previousHashedPwd = rows[0].password;
+//     console.log(rows[0].password);
+//     console.log(hashedPwd);
+
+//     const isSamePassword = await bcrypt.compare(hashedPwd, previousHashedPwd);
+//     console.log("isSamePassword: ", isSamePassword);
+//     console.log("am i here");
+
+//     return isSamePassword;
+//   } catch (error) {
+//     console.error('Error in retrieving previous password: ', error);
+//     throw error;
+//   }
+// };
+
+
+
 
 // // delete product by ID (done, but still need to delete from order)
 // module.exports.deleteProductByID = async (productID) => {
