@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
 
-const baseUrl = 'http://localhost:8081';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Payment() {
+  const { orderID } = useParams();
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState('');
+
 
   useEffect(() => {
     axios
@@ -26,7 +29,7 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .post(`${baseUrl}/createPaymentIntent`, {})
+      .post(`${baseUrl}/createPaymentIntent/${orderID}`)
       .then(async (result) => {
         console.log(result);
         const { clientSecret } = await result.data;
