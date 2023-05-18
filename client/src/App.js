@@ -3,19 +3,22 @@ import Home from './pages/Login/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Login/Register';
 import Homepage from './pages/Login/Homepage';
-import ProductDetails from './pages/Products/ProductDetails';
-import ProductsPage from './pages/Products/ProductsPage';
-import ProductsByBrand from './pages/Products/ProductsByBrand';
-import ProductsByCategory from './pages/Products/ProductsByCategory';
+import ProductDetails from './pages/Products/Public/ProductDetails';
+import ProductsPage from './pages/Products/Public/ProductsPage';
+import ProductsByBrand from './pages/Products/Public/ProductsByBrand';
+import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
 import LandingPage from './pages/Home/LandingPage';
-import ProductCreate from './pages/Products/ProductCreate';
-import ProductEdit from './pages/Products/ProductEdit';
-import ProductModify from './pages/Products/ProductModify';
+import ProductCreate from './pages/Products/Admin/ProductCreate';
+import ProductEdit from './pages/Products/Admin/ProductEdit';
+import ProductModify from './pages/Products/Admin/ProductModify';
 import { CartProvider } from './context/CartContext';
 import Payment from './pages/Stripe/Payment';
-import Brands from './pages/Products/Brands';
-import Categories from './pages/Products/Categories';
+import Brands from './pages/Products/Admin/Brands';
+import Categories from './pages/Products/Admin/Categories';
+// import AllCategories from './pages/Products/Public/AllCategories';
+import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategories';
+import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import './App.css';
 import './input.css';
 
@@ -44,8 +47,15 @@ function App() {
               <Route path="/home" element={<LandingPage />} />
               <Route path="/products/create" element={<ProductCreate />} />
               <Route path="/products/admin" element={<ProductModify />} />
-              <Route path="/brands" element={<Brands />} />
-              <Route path="/categories" element={<Categories />} />
+              <Route path="/admin/brands" element={<Brands />} />
+              <Route path="/admin/categories" element={<Categories />} />
+              <Route path="/admin/brands" element={<Brands />} />
+              <Route path="/admin/categories" element={<Categories />} />
+              <Route path="/brands/categories" element={<AllBrandsAndCategories />}/>
+              <Route path="/brands/:brandID" element={<ProductsByBrand />}/>
+              <Route path="/categories/:categoryID" element={<ProductsByCategory />}/>
+              <Route path="/admin" element={<AdminDashboard/>}/>
+
               <Route
                 path="/products/edit/:productID"
                 element={<ProductEdit />}

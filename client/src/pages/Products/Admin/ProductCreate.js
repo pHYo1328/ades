@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
-import UploadWidget from '../../components/cloudinary/UploadWidget';
+import UploadWidget from '../../../components/cloudinary/UploadWidget';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
@@ -10,6 +10,12 @@ export default function ProductCreate() {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
+  const [productName, setProductName] = useState(null);
+  const [productPrice, setProductPrice] = useState(null);
+  const [productDescription, setProductDescription] = useState(null);
+  const [productCategory, setProductCategory] = useState(null);
+  const [productBrand, setProductBrand] = useState(null)
+  const [productQuantity, setProductQuantity] = useState(null);
   const [imagePath, setImagePath] = useState('');
 
   const handleImageChange = (path) => {
@@ -46,40 +52,47 @@ export default function ProductCreate() {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
-    const name = document.getElementById('create-product-name').value;
-    const description = document.getElementById(
-      'create-product-description'
-    ).value;
-    const price = document.getElementById('create-product-price').value;
-    const category_id = document.getElementById(
-      'create-product-category'
-    ).value;
-    const brand_id = document.getElementById('create-product-brand').value;
-    const quantity = document.getElementById('create-product-quantity').value;
-    const image = imagePath;
+    // const name = document.getElementById('create-product-name').value;
+    // const description = document.getElementById(
+    //   'create-product-description'
+    // ).value;
+    // const price = document.getElementById('create-product-price').value;
+    // const category_id = document.getElementById(
+    //   'create-product-category'
+    // ).value;
+    // const brand_id = document.getElementById('create-product-brand').value;
+    // const quantity = document.getElementById('create-product-quantity').value;
+    // const image = imagePath;
 
     if (
-      !name ||
-      !description ||
-      !price ||
-      !category_id ||
-      !brand_id ||
-      !quantity
+      !productName ||
+      !productDescription ||
+      !productBrand ||
+      !productCategory ||
+      !productPrice ||
+      !productQuantity
     ) {
       window.alert('Please fill in all fields.');
-    } else if (isNaN(quantity) || quantity < 0) {
+    } else if (isNaN(productQuantity) || productQuantity < 0) {
       window.alert('Inventory must be a value not less than 0.');
-    } else if (isNaN(price) || price <= 0) {
+    } else if (isNaN(productPrice) || productPrice <= 0) {
       window.alert('Price must be a value not less than or equal to 0.');
     } else {
       const requestBody = {
-        name,
-        description,
-        price,
-        category_id,
-        brand_id,
-        quantity,
-        image,
+        // name,
+        // description,
+        // price,
+        // category_id,
+        // brand_id,
+        // quantity,
+        // image,
+        name: productName, 
+        description: productDescription, 
+        price: productPrice, 
+        category_id: productCategory,
+        brand_id: productBrand, 
+        quantity: productQuantity,
+        image: imagePath
       };
 
       console.log('path test');
@@ -122,9 +135,10 @@ export default function ProductCreate() {
         </label>
         <input
           type="text"
-          class="form-control"
-          id="create-product-name"
+          class="form-control form-control-sm"
           placeholder="Product Name"
+          value= {productName}
+          onChange = {(e) => setProductName(e.target.value)}
         />
       </div>
 
@@ -133,10 +147,11 @@ export default function ProductCreate() {
           Description
         </label>
         <input
-          type="text"
-          class="form-control"
-          id="create-product-description"
+          class="form-control form-control-sm"
           placeholder="Description"
+          rows={3}
+          value= {productDescription}
+          onChange = {(e) => setProductDescription(e.target.value)}
         />
       </div>
       <div class="row">
@@ -147,8 +162,9 @@ export default function ProductCreate() {
           <input
             type="number"
             min="0"
-            class="form-control"
-            id="create-product-price"
+            class="form-control form-control-sm"
+            value= {productPrice}
+          onChange = {(e) => setProductPrice(e.target.value)}
             placeholder="Price"
           />
         </div>
@@ -159,8 +175,9 @@ export default function ProductCreate() {
           <input
             min="0"
             type="number"
-            class="form-control"
-            id="create-product-quantity"
+            class="form-control form-control-sm"
+            value= {productQuantity}
+          onChange = {(e) => setProductQuantity(e.target.value)}
             placeholder="Inventory (Quantity)"
           />
         </div>
@@ -170,7 +187,7 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Category
           </label>
-          <select class="form-select" id="create-product-category">
+          <select  class="form-select form-select-sm" onChange={(e) => setProductCategory(e.target.value)}>
             <option disabled selected value>
               -- CATEGORY --
             </option>
@@ -189,7 +206,7 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Brand
           </label>
-          <select class="form-select" id="create-product-brand">
+          <select class="form-select form-select-sm" onChange={(e) => setProductBrand(e.target.value)}>
             <option disabled selected value>
               -- BRAND --
             </option>
