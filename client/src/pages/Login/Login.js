@@ -31,7 +31,7 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("this is my" + data);
+        console.log('this is my' + data);
         if (data.success) {
           console.log('Login successful');
           localStorage.setItem('accessToken', data.accessToken);
@@ -48,7 +48,7 @@ function Login() {
         console.error(error);
         setErrorMessage('An error occurred. Please try again.');
       });
-      console.log(username, password);
+    console.log(username, password);
   };
 
   return (

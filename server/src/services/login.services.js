@@ -103,7 +103,8 @@ module.exports.updateRefreshToken = async (
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
-  const logoutQuery = 'UPDATE users SET refreshToken = NULL WHERE refreshToken = ? AND refreshToken IS NOT NULL';
+  const logoutQuery =
+    'UPDATE users SET refreshToken = NULL WHERE refreshToken = ? AND refreshToken IS NOT NULL';
   try {
     const updateResult = await pool.query(logoutQuery, [refreshToken]);
 

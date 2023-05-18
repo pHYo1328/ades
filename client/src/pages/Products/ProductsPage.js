@@ -14,7 +14,7 @@ const cld = new Cloudinary({
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   // const productImage = cld.image(product.image_url);
 
   useEffect(() => {

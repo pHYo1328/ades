@@ -21,6 +21,14 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     productController.processGetAllBrands
   );
+  router.delete(
+    '/api/brands/:brandID',
+    productController.processDeleteBrandByID
+  );
+  router.delete(
+    '/api/categories/:categoryID',
+    productController.processDeleteCategoryByID
+  );
   router.get(
     '/api/category',
     //verifyAccessToken.verifyToken,
@@ -62,6 +70,10 @@ module.exports = (app, router) => {
 
     //verifyAccessToken.verifyToken,
     productController.processCreateProduct
+  );
+  router.post(
+    '/api/products/admin/type',
+    productController.processCreateBrandOrCategory
   );
   router.delete(
     '/api/products/:productID',
@@ -107,7 +119,7 @@ module.exports = (app, router) => {
     cartController.processDeleteCartData
   );
 
-  router.post(
+  router.get(
     '/api/cartdetails/getCartProductData',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartProductData
@@ -168,24 +180,15 @@ module.exports = (app, router) => {
 
   router.post('/create-payment-intent', checkoutController.createPaymentIntent);
 
-  router.get(
-    '^/$|/index(.html)?', (req, res) => {
+  router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-    });
-    
-    router.post(
-    '/register', registerController.handleNewUser
-    );
-  
-    router.post(
-    '/login', authController.handleLogin
-    );
-  
-    router.get(
-    '/refresh', refreshTokenController.handleRefreshToken
-    );
-  
-    router.get(
-    '/logout', logoutController.handleLogout
-    );
+  });
+
+  router.post('/register', registerController.handleNewUser);
+
+  router.post('/login', authController.handleLogin);
+
+  router.get('/refresh', refreshTokenController.handleRefreshToken);
+
+  router.get('/logout', logoutController.handleLogout);
 };

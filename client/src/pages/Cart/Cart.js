@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useRef } from 'react';
 import CartContext from '../../context/CartContext';
 import LoadingIndicator from 'react-loading-indicator';
 import { Cloudinary } from '@cloudinary/url-gen';
@@ -16,23 +16,21 @@ const cld = new Cloudinary({
 });
 
 const plusButtonHandler = (cartData, productID, updateCartData) => {
-  updateCartData(
-    cartData.map((item) =>
-      item.productId === productID
-        ? { ...item, quantity: item.quantity + 1 }
-        : item
-    )
+  const updatedCart = cartData.map((item) =>
+    item.productId === productID
+      ? { ...item, quantity: item.quantity + 1 }
+      : item
   );
+  updateCartData([...updatedCart]);
 };
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
-  updateCartData(
-    cartData.map((item) =>
-      item.productId === productID
-        ? { ...item, quantity: item.quantity - 1 }
-        : item
-    )
+  const updatedCart = cartData.map((item) =>
+    item.productId === productID && item.quantity > 0
+      ? { ...item, quantity: item.quantity - 1 }
+      : item
   );
+  updateCartData([...updatedCart]);
 };
 
 const deleteButtonHandler = (cartData, productID, updateCartData) => {
@@ -42,20 +40,12 @@ const deleteButtonHandler = (cartData, productID, updateCartData) => {
   console.log(filteredProducts);
   updateCartData(filteredProducts);
 };
-
-const leavePageHandler = (cartData, customerID) => {
-  axios
-    .post(`${baseUrl}/api/cart/${customerID}`, { cartData: cartData })
-    .then((response) => {
-      console.log(response);
-    });
-};
 const Cart = () => {
   const [cartData, setCartData] = useContext(CartContext);
   const [cartProductData, setCartProductData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
-  const [prevLocation, setPrevLocation] = useState();
+  const [productDetails, setProductsDetails] = useState(null);
+  const latestCartData = useRef(cartData);
+  const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState({
     firstName: '',
     lastName: '',
@@ -64,70 +54,77 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
+  console.log(cartData);
   const customerID = localStorage.getItem('customerID') || 3;
+  const combineCartDataAndProductDetails = () => {
+    const itemsDetailsToShow = cartData.map((cartItem) => {
+      console.log(cartItem);
+      const cartInfo = productDetails.find(
+        (item) => cartItem.productId === item.data.product_id
+      );
+      return {
+        ...cartInfo.data,
+        quantity: cartItem.quantity,
+      };
+    });
+    console.log(JSON.stringify(itemsDetailsToShow));
+    setCartProductData(itemsDetailsToShow);
+  };
   useEffect(() => {
-    if (cartData.length == 0) {
-      axios
-        .get(`${baseUrl}/api/cart/${customerID}`)
-        .then((response) => {
-          console.log(response.data.data);
-          setCartData(response.data.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    const fetchData = async () => {
+      try {
+          const cartResponse = await axios.get(
+            `${baseUrl}/api/cart/${customerID}`
+          );
+          const cartData = cartResponse.data.data;
+          setCartData(cartData);
+
+          if (cartData.length > 0) {
+            var productIDs = [];
+            cartData.forEach((cartItem) => {
+              productIDs.push(cartItem.productId);
+            });
+            const productResponse = await axios.get(
+              `${baseUrl}/api/cartdetails/getCartProductData?productIDs=${productIDs.join(
+                ','
+              )}`
+            );
+            setProductsDetails(productResponse.data.data);
+          }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }, [customerID]);
   useEffect(() => {
-    if (cartData.length > 0) {
-      setIsLoading(true);
-      var requestArray = [];
-      cartData.forEach((cartItem) => {
-        requestArray.push({
-          method: 'GET',
-          endpoint: `/api/getCartItemData/${cartItem.productId}`,
-        });
-      });
+    return () => {
       axios
-        .post(`${baseUrl}/api/cartdetails/getCartProductData`, {
-          requests: requestArray,
+        .post(`${baseUrl}/api/cart/${customerID}`, {
+          cartData: latestCartData.current,
         })
         .then((response) => {
-          console.log(response.data.data);
-          const dataArray = response.data.data.map((item) => {
-            const cartInfo = cartData.find(
-              (cartItem) => cartItem.productId === item.data.product_id
-            );
-            return {
-              ...item.data,
-              quantity: cartInfo.quantity,
-            };
-          });
-          console.log(JSON.stringify(dataArray));
-          setCartProductData(dataArray);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
+          console.log(response);
         });
-    }
-  }, [cartData]);
-  useEffect(() => {
-    if (prevLocation && prevLocation.key < location.key) {
-      console.log('User navigated forward to this page');
-    } else if (prevLocation) {
-      console.log('User navigated back to this page');
-    }
-
-    setPrevLocation(location);
-  }, [location, prevLocation]);
-
+    };
+  }, []);
   const handleChange = (event) => {
     setAddress({
       ...address,
       [event.target.name]: event.target.value,
     });
   };
+  useEffect(() => {
+    latestCartData.current = cartData;
+    if(cartData.length > 0) {
+      setIsLoading(true);
+      if (productDetails) {
+      console.log(cartData);
+      combineCartDataAndProductDetails();
+      setIsLoading(false);
+    }
+  }
+  }, [cartData, productDetails]);
   return (
     <div className="flex flex-row">
       <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36">
@@ -145,7 +142,7 @@ const Cart = () => {
             <tr className="flex justify-center items-center">
               <LoadingIndicator />
             </tr>
-          ) : cartData.length > 0 ? (
+          ) :cartProductData && cartData.length > 0 ? (
             cartProductData.map((cartItem, index) => (
               <tr
                 key={`${cartItem.product_ID}-${index}`}
@@ -154,7 +151,7 @@ const Cart = () => {
                 <td className="flex flew-row py-6">
                   <AdvancedImage
                     cldImg={cld.image(cartItem.image_url.split(',')[0])}
-                    className="w-72 h-48 "
+                    className="w-64 h-48 "
                   />
                 </td>
                 <td>
@@ -223,7 +220,7 @@ const Cart = () => {
           )}
         </tbody>
       </table>
-      <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5">
+      <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5 rounded-lgz`">
         <form className="space-y-4 ">
           <h1 className="text-lg font-bold text-white">Shipping Address</h1>
           <div className="flex flex-row item-center ">
@@ -331,15 +328,11 @@ const Cart = () => {
           </button>
         </form>
       </div>
-      <div className="fixed bottom-0  w-3/5 h-1/5 ">
+      <div className="fixed bottom-0  w-3/5 h-1/5 z-1 bg-white ">
         <div className="flex flex-row justify-between">
-          <button
-            onClick={() => {
-              leavePageHandler(cartData, customerID);
-            }}
-          >
+          <button>
             <Link
-              to="#"
+              to="/products"
               className="ml-48 text-base flex flex-row text-blue-800 "
             >
               <BsArrowLeft size={24} />

@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -17,9 +17,8 @@ export default function ProductDetails() {
   // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-  const baseUrl = 'http://localhost:8081';
-  const { productID } = useParams();
 
+  const { productID } = useParams();
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -153,7 +152,7 @@ export default function ProductDetails() {
 
               <form className="mt-10">
                 <button
-                  type="submit"
+                  onClick={() => {}}
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Add to cart

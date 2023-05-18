@@ -83,10 +83,7 @@ function Register() {
         </div>
 
         <div className="mb-6">
-          <label
-            className="text-sm font-medium text-gray-700"
-            htmlFor="email"
-          >
+          <label className="text-sm font-medium text-gray-700" htmlFor="email">
             Email
           </label>
           <input
