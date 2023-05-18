@@ -118,6 +118,25 @@ module.exports.logoutUser = async (refreshToken) => {
   }
 };
 
+// Forgot password
+module.exports.forgotPassword = async (email, newPassword) => {
+  const forgotPasswordQuery = 'UPDATE users SET password = ? WHERE email = ?';
+  try {
+    const updateResult = await pool.query(forgotPasswordQuery, [newPassword, email]);
+
+    if (updateResult.affectedRows === 0) {
+      console.log("password did not update");
+      return false; // Password update failed, possibly due to incorrect email
+    }
+
+    console.log("password updated mannnn");
+    return true; // Password updated successfully
+  } catch (error) {
+    console.error('Error in updating password: ', error);
+    throw error;
+  }
+};
+
 // // delete product by ID (done, but still need to delete from order)
 // module.exports.deleteProductByID = async (productID) => {
 //   console.log(chalk.blue('deleteProductByID is called'));

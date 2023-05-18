@@ -19,6 +19,7 @@ function Home() {
       }
       const data = await response.json();
       localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userid", data.userid);
       console.log(data);
       return;
     } catch (error) {
@@ -37,6 +38,7 @@ function Home() {
       console.error(error);
     }
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userid");
     navigate("/login");
   };
 
