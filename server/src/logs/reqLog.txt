@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 20230510	14:08:38	f1aae8f5-ccfd-42af-9084-44e55032e8b6	POST	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
 20230510	14:09:26	f1cba17f-93a4-4db6-9eea-d2199edb0ccc	GET	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
 20230510	14:10:22	806573ed-019c-4c7a-b1d1-74688f53933f	POST	undefined	/register?username=Han%20Ming&email=hanming@gmail.com&password=12345
@@ -11406,3 +11407,25 @@
 20230518	16:49:53	a593d6ca-10cf-4b6f-9fe4-ed499582d5bc	PUT	http://localhost:3000	/forgot
 20230518	16:50:01	bb7a5dcf-f2d9-4f81-85c9-a170a6bae5c8	OPTIONS	http://localhost:3000	/forgot
 20230518	16:50:01	d77c63f3-9c40-463b-aa8c-4b7091d34e80	PUT	http://localhost:3000	/forgot
+=======
+20230517	14:38:00	c2285a88-b9e7-41d8-a7b2-580bb50d26d9	GET	http://localhost:3000	/api/cart/3
+20230517	14:38:01	343c56bd-ce8f-4588-9bcb-528701faf80e	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230517	14:38:01	f04f84e7-98b7-48e4-bd20-ce1c6ad7a8b2	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230517	14:39:50	d28e1a51-1bfe-4418-916b-b35a4421abd7	GET	http://localhost:3000	/api/cart/3
+20230517	14:39:51	c967ba9e-6805-4bd2-891d-a7e4bda48af9	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230517	14:39:51	435541f8-d2e7-4e95-a36f-0d147dfe601f	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:30:20	dc447a67-a7f6-4744-afe4-f313c9eca4cb	GET	http://localhost:3000	/api/cart/3
+20230518	15:30:21	c98573c9-1c16-44b9-a472-5c6a78db518d	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:30:21	fd7586d5-00be-4d86-9fcf-a41d720d218a	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:30:50	beaa0052-d240-4367-8173-f616c702dd2e	GET	http://localhost:3000	/api/products
+20230518	15:31:02	3cbf9011-1093-459f-aa3c-9a904abd863d	GET	http://localhost:3000	/api/product/13
+20230518	15:31:02	a2bc8752-9de7-4190-b7a9-6a3a9a1b6264	GET	http://localhost:3000	/api/products/rating/13
+20230518	15:31:05	e3c14018-b0b8-4870-a066-09f561ea7e98	GET	http://localhost:3000	/api/product/13
+20230518	15:31:05	4946f73a-96d1-46cf-bb99-68219cc0fed1	GET	http://localhost:3000	/api/products/rating/13
+20230518	15:31:13	0d62c938-7771-4f35-89a9-2eaee2cd0c02	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:31:13	6c9732c5-21c2-4a55-9d02-cccfed449488	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:36:27	a46f84ff-f39a-4b41-a665-a53a452b663b	POST	undefined	/api/cart/3
+20230518	15:37:07	f9039d25-e004-41b3-87f1-ba32f008cafb	GET	http://localhost:3000	/api/cart/3
+20230518	15:37:07	de0a032c-66e2-4131-b9e0-1f5d78c06a61	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
+20230518	15:37:07	9fcbdae9-0eb4-4f92-b167-cfd6cc439b09	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+>>>>>>> 7e622d71a76f615cb1be7016fb5cf78642248ccf

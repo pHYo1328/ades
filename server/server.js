@@ -1,4 +1,4 @@
-require('dotenv').config();
+  require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -12,8 +12,7 @@ const verifyJWT = require('../server/src/middlewares/verifyJWT');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const credentials = require('../server/src/middlewares/credentials');
-const bookmarkEmailServices = require('./src/services/bookmarkEmail.services');
-const cron = require('node-cron');
+
 // custom middleware logger
 app.use(logger);
 
@@ -91,7 +90,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-cron.schedule('0 */6 * * *', bookmarkEmailServices.updateProductsEmailSender);
+
 
 routes(app, router);
 const port = process.env.PORT || 8081;
