@@ -11428,4 +11428,9 @@
 20230518	15:37:07	f9039d25-e004-41b3-87f1-ba32f008cafb	GET	http://localhost:3000	/api/cart/3
 20230518	15:37:07	de0a032c-66e2-4131-b9e0-1f5d78c06a61	OPTIONS	http://localhost:3000	/api/cartdetails/getCartProductData
 20230518	15:37:07	9fcbdae9-0eb4-4f92-b167-cfd6cc439b09	POST	http://localhost:3000	/api/cartdetails/getCartProductData
+<<<<<<< HEAD
+20230518	22:31:12	a1bd991a-c69e-4c7b-81a2-18fdf1776c41	GET	http://localhost:3000	/api/cart/3
+20230518	22:31:12	77e90592-5cfa-46a0-95c9-83a4d395347d	GET	http://localhost:3000	/api/cartdetails/getCartProductData?productIDs=178,179,180,182,183
+=======
 >>>>>>> 7e622d71a76f615cb1be7016fb5cf78642248ccf
+>>>>>>> 5a462c7a4f4edd2917ca958fd5caad00ba4696ff
