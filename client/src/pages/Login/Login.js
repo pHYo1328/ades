@@ -35,6 +35,7 @@ function Login() {
         if (data.success) {
           console.log('Login successful');
           localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('userid', data.userid);
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
           navigate('/homepage');

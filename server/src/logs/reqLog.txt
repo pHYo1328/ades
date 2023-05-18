@@ -10613,6 +10613,17 @@
 20230517	23:30:48	89266053-047b-4730-96c1-2f9464f60c33	POST	http://localhost:3000	/login
 20230517	23:31:42	cb89b55a-4f86-43a2-80d9-39ab5406c009	GET	http://localhost:3000	/logout
 20230517	23:31:42	9c5aea7c-22a8-42b9-b2c0-0cc4f05c9c7d	GET	http://localhost:3000	/logout
+<<<<<<< HEAD
+20230518	14:27:35	cb049900-51be-4e88-bc99-922d69aa553c	OPTIONS	http://localhost:3000	/login
+20230518	14:27:35	5e4da709-9ab1-49ee-ba0f-f4e0edd55f58	POST	http://localhost:3000	/login
+20230518	14:31:45	96835588-f2bf-49fc-9d5d-92c6238936e4	GET	http://localhost:3000	/logout
+20230518	14:31:54	336d2440-f2ce-4c8c-94ca-0431a6d98a98	OPTIONS	http://localhost:3000	/login
+20230518	14:31:54	0454782d-91e0-4306-8fd8-d4a468f35043	POST	http://localhost:3000	/login
+20230518	14:32:06	8e95a4eb-d9ff-46de-9a97-58e493fbbe46	GET	http://localhost:3000	/logout
+20230518	14:33:16	b4e910fd-9698-48d8-921f-9d1b08f5f895	OPTIONS	http://localhost:3000	/login
+20230518	14:33:16	b219fcf8-1406-4ad7-b538-a4774dfc67a5	POST	http://localhost:3000	/login
+20230518	14:33:26	395e92f9-f5a6-41ee-aa55-cdd2fc1b052f	GET	http://localhost:3000	/logout
+=======
 >>>>>>> 1972d2fe70bf1db9b7005cbef43f357d2cf3de6e
 20230518	00:43:58	657d4b1e-d897-41e7-b4b9-1ad0b22a87c9	GET	http://localhost:3000	/api/category
 20230518	00:43:58	05f5d385-dd64-4ecf-9470-4ddf7eb29444	GET	http://localhost:3000	/api/brands
@@ -11333,3 +11344,4 @@
 20230518	06:51:39	70e85434-8e48-419f-9aa2-0cdc1486b779	GET	http://localhost:3000	/api/cart/3
 20230518	06:51:39	6e11e67e-6ce2-477a-9bcd-7e71bb85d1d2	GET	http://localhost:3000	/api/cartdetails/getCartProductData?productIDs=12,178,179,180,182,183,185,186
 >>>>>>> 73316bc706c4059a7e3161fe26110ebd51048a4e
+>>>>>>> c6627cce2a568d5b340efc4fdc0f5e756a17b0d5

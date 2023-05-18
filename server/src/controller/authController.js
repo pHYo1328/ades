@@ -107,12 +107,7 @@ const handleLogin = async (req, res) => {
       console.log('Cookie set successfullyyy');
       console.log('this is my rt' + newRefreshToken);
       // Send authorization roles and access token to user
-      res.json({
-        success: true,
-        roles: roles,
-        accessToken: accessToken,
-        newRefreshToken: newRefreshToken,
-      });
+      res.json({ success: true, userid: userId ,roles: roles, accessToken: accessToken, newRefreshToken: newRefreshToken });
     } else {
       res
         .status(401)
