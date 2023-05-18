@@ -7,6 +7,7 @@ import chalk from "chalk";
 export default function Brands() {
 
     const [brands, setBrands] = useState(null)
+    const [brandName, setBrandName] = useState("");
     const [brand, setBrand] = useState(null)
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -28,14 +29,15 @@ export default function Brands() {
         console.log(chalk.yellow('submit button is clicked!'))
         event.preventDefault();
 
-        const name = document.getElementById("add").value;
-        const type = "brand"
+        // const name = document.getElementById("add").value;
+        // const type = "brand"
 
-        if (!name){
+        if (!brandName){
             window.alert("Please fill in the name of the brand")
         } else{
             const requestBody = {
-                name, type
+                name: brandName,
+                type: "brand"
             }
             console.log(requestBody)
             axios.post(`${baseUrl}/api/products/admin/type`, requestBody)
@@ -58,7 +60,14 @@ export default function Brands() {
             </div>
             <div class="row col-8" style={{marginLeft: 'auto', marginRight: 'auto'}}>
                 <div class="col-10">
-                <input type="text" class="form-control" id="add" placeholder="Brand Name"/>
+                {/* <input type="text" class="form-control" id="add" placeholder="Brand Name"/> */}
+                <input
+              type="text"
+              className="form-control"
+              placeholder="Brand Name"
+              value={brandName}
+              onChange={(e) => setBrandName(e.target.value)}
+            />
                 </div>
                 <div class="col-2">
                 <button class="btn btn-outline-success w-100" onClick={handleSubmit}>Add</button></div>

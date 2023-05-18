@@ -7,6 +7,7 @@ import chalk from "chalk";
 export default function Categories() {
 
     const [categories, setCategories] = useState(null)
+    const [categoryName, setCategoryName]= useState("")
     const [category, setCategory] = useState(null)
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -28,14 +29,15 @@ export default function Categories() {
         console.log(chalk.yellow('submit button is clicked!'))
         event.preventDefault();
 
-        const name = document.getElementById("add").value;
-        const type = "category"
+        // const name = document.getElementById("add").value;
+        // const type = "category"
 
-        if (!name){
+        if (!categoryName){
             window.alert("Please fill in the name of the category")
         } else{
             const requestBody = {
-                name, type
+                name: categoryName,
+                type: "category"
             }
             console.log(requestBody)
             axios.post(`${baseUrl}/api/products/admin/type`, requestBody)
@@ -59,7 +61,14 @@ export default function Categories() {
 
             <div class="row col-8" style={{marginLeft: 'auto', marginRight: 'auto'}}>
                 <div class="col-10">
-                <input type="text" class="form-control" id="add" placeholder="Category Name"/>
+                {/* <input type="text" class="form-control" id="add" placeholder="Category Name"/> */}
+                <input
+              type="text"
+              className="form-control"
+              placeholder="Category Name"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+            />
                 </div>
                 <div class="col-2">
                 <button class="btn btn-outline-success w-100" onClick={handleSubmit}>Add</button></div>
