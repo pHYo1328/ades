@@ -2,8 +2,8 @@ const loginServices = require('../services/login.services');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
-  const { username, email, password, roles } = req.body;
-  if (!username || !email || !password || !roles) {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
 
@@ -12,12 +12,7 @@ const handleNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
 
     // register the new user
-    const result = await loginServices.registerUser(
-      username,
-      email,
-      hashedPwd,
-      roles
-    );
+    const result = await loginServices.registerUser(username, email, hashedPwd);
 
     console.log(result);
 
