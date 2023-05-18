@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import axios from "axios";
-import chalk from "chalk";
+import axios from 'axios';
+import chalk from 'chalk';
 
 export default function Categories() {
 
@@ -11,23 +11,22 @@ export default function Categories() {
     const [category, setCategory] = useState(null)
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/category`)
+      .then((response) => {
+        console.log(response);
+        setCategories(response.data.data);
+        console.log(categories);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-    useEffect(() => {
-        axios
-          .get(`${baseUrl}/api/category`)
-          .then((response) => {
-            console.log(response);
-            setCategories(response.data.data);
-            console.log(categories);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }, []);
-
-      const handleSubmit = async (event) => {
-        console.log(chalk.yellow('submit button is clicked!'))
-        event.preventDefault();
+  const handleSubmit = async (event) => {
+    console.log(chalk.yellow('submit button is clicked!'));
+    event.preventDefault();
 
         // const name = document.getElementById("add").value;
         // const type = "category"
@@ -106,5 +105,5 @@ export default function Categories() {
             </ul>
         </div>
     </div>
-    )
+  );
 }

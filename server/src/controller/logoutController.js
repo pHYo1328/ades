@@ -3,11 +3,10 @@ const loginServices = require('../services/login.services');
 const handleLogout = async (req, res) => {
   // On client, also delete the accessToken
   const cookies = req.cookies;
-console.log(req.cookies); 
+  console.log(req.cookies);
   if (!cookies?.refreshToken) return res.sendStatus(204); // No content
   const refreshToken = cookies.refreshToken;
   try {
-  
     const logoutSuccess = await loginServices.logoutUser(refreshToken);
 
     if (!logoutSuccess) {
@@ -16,7 +15,9 @@ console.log(req.cookies);
         sameSite: 'None',
         secure: true,
       });
-      console.log('Successful logout but refreshToken not found in the database.');
+      console.log(
+        'Successful logout but refreshToken not found in the database.'
+      );
       return res.sendStatus(204);
     }
 
