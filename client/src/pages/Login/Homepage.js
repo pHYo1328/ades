@@ -29,7 +29,7 @@ function Home() {
   const onHandleLogout = async () => {
     try {
       await fetch('http://localhost:8081/logout', {
-        method: 'GET',
+        method: 'PUT',
         credentials: 'include',
       });
     } catch (error) {
