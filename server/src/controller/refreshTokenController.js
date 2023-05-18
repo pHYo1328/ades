@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const handleRefreshToken = async (req, res) => {
   const cookies = req.cookies;
   console.log('cookies', cookies);
+  console.log('my cookies.jwt is ' + cookies.refreshToken);
   if (!cookies?.jwt) return res.sendStatus(401);
   const refreshToken = cookies.jwt;
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
@@ -40,6 +41,7 @@ const handleRefreshToken = async (req, res) => {
     console.log(foundUser[0].refreshToken);
     console.log(refreshToken);
     console.log(foundUser[0].refreshToken == refreshToken);
+
     const newRefreshTokenArray = foundUser.filter(
       (rt) => rt.refreshToken !== refreshToken || null
     );

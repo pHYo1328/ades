@@ -5,14 +5,21 @@ function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      setErrorMessage('Incorrect username or password');
+      return errorMessage;
+    }
+
     const url = 'http://localhost:8081/login';
 
     const body = {
-      user: username,
-      pwd: password,
+      username: username,
+      password: password,
     };
 
     fetch(url, {
@@ -24,13 +31,21 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        localStorage.setItem('accessToken', data.accessToken);
-        console.log(data);
-        navigate('/');
+        console.log('this is my' + data);
+        if (data.success) {
+          console.log('Login successful');
+          localStorage.setItem('accessToken', data.accessToken);
+          document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+          setErrorMessage('');
+          navigate('/homepage');
+        } else {
+          console.log('Login failed');
+          setErrorMessage('Incorrect username or password');
+        }
       })
       .catch((error) => {
         console.error(error);
+        setErrorMessage('An error occurred. Please try again.');
       });
     console.log(username, password);
   };

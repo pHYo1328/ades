@@ -3,6 +3,10 @@ const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
+const registerController = require('../controller/registerController');
+const authController = require('../controller/authController');
+const refreshTokenController = require('../controller/refreshTokenController');
+const logoutController = require('../controller/logoutController');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -16,6 +20,14 @@ module.exports = (app, router) => {
     '/api/brands',
     //verifyAccessToken.verifyToken,
     productController.processGetAllBrands
+  );
+  router.delete(
+    '/api/brands/:brandID',
+    productController.processDeleteBrandByID
+  );
+  router.delete(
+    '/api/categories/:categoryID',
+    productController.processDeleteCategoryByID
   );
   router.get(
     '/api/category',
@@ -58,6 +70,10 @@ module.exports = (app, router) => {
 
     //verifyAccessToken.verifyToken,
     productController.processCreateProduct
+  );
+  router.post(
+    '/api/products/admin/type',
+    productController.processCreateBrandOrCategory
   );
   router.delete(
     '/api/products/:productID',
@@ -103,7 +119,7 @@ module.exports = (app, router) => {
     cartController.processDeleteCartData
   );
 
-  router.post(
+  router.get(
     '/api/cartdetails/getCartProductData',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartProductData
@@ -163,4 +179,16 @@ module.exports = (app, router) => {
   router.get('/config', checkoutController.getConfig);
 
   router.post('/create-payment-intent', checkoutController.createPaymentIntent);
+
+  router.get('^/$|/index(.html)?', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  });
+
+  router.post('/register', registerController.handleNewUser);
+
+  router.post('/login', authController.handleLogin);
+
+  router.get('/refresh', refreshTokenController.handleRefreshToken);
+
+  router.get('/logout', logoutController.handleLogout);
 };

@@ -850,3 +850,30 @@ exports.processDeleteProductImages = async (req, res, next) => {
     return next(error);
   }
 };
+
+// create brand or category
+exports.processCreateBrandOrCategory = async (req, res, next) => {
+  console.log(chalk.blue('processCreateBrandOrCategory running'));
+  const { name, type } = req.body;
+  if (!name || !type) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Data is missing',
+    });
+  }
+  console.log(req.body);
+  try {
+    const createdData = await productServices.createBrandOrCategory(name, type);
+    console.log(chalk.yellow(createdData));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Create successful',
+    });
+  } catch (error) {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red('Error in createBrandOrCategory: ', error));
+    return next(error);
+  }
+};

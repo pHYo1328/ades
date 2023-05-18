@@ -47,11 +47,6 @@ exports.processGetCartData = async (req, res, next) => {
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result
     );
-    if (result.length == 0) {
-      const error = new Error('userID not founded');
-      error.status = 404;
-      throw error;
-    }
     return res.status(200).send({
       message: 'cartData founded successfully.',
       data: result,
@@ -92,31 +87,22 @@ exports.processDeleteCartData = async (req, res, next) => {
 
 exports.processGetCartProductData = async (req, res, next) => {
   console.log(chalk.blue('processGetCartProductData is running'));
-  const { requests } = req.body;
+  const productIDs = req.query.productIDs.split(',');
+  console.log(chalk.yellow(`Inspecting product IDs: ${productIDs}`));
   try {
     const response = await Promise.all(
-      requests.map(async (request) => {
-        if (
-          request.method === 'GET' &&
-          request.endpoint.startsWith('/api/getCartItemData/')
-        ) {
-          const productID = request.endpoint.split('/').pop();
-          const cartItemData = await productServices.getProductByID(productID);
-          if (!cartItemData || cartItemData.length == 0) {
-            const error = new Error('product not found');
-            error.status = 404;
-            throw error;
-          }
-          return {
-            status: 200,
-            message: 'cart item data found',
-            data: cartItemData,
-          };
-        } else {
-          const error = new Error('Invalid request');
-          error.status = 400;
+      productIDs.map(async (productID) => {
+        const cartItemData = await productServices.getProductByID(productID);
+        if (!cartItemData || cartItemData.length == 0) {
+          const error = new Error('product not found');
+          error.status = 404;
           throw error;
         }
+        return {
+          status: 200,
+          message: 'cart item data found',
+          data: cartItemData,
+        };
       })
     );
     return res.status(200).send({
