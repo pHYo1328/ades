@@ -15,19 +15,6 @@ export default function ProductModify() {
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-  // useEffect(() => {
-  //     axios
-  //         .get(`${baseUrl}/api/products`)
-  //         .then((response) => {
-  //             console.log(response);
-  //             setProducts(response.data.data);
-  //             console.log(products);
-  //         })
-  //         .catch((error) => {
-  //             console.error(error);
-  //         });
-  // }, []);
-
   const fetchProducts = () => {
     axios
       .get(`${baseUrl}/api/products`)
