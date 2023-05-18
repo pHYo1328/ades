@@ -177,9 +177,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  router.get('/config', checkoutController.getConfig);
+  router.get('/config', 
+  checkoutController.getConfig);
 
-  router.post('/create-payment-intent', checkoutController.createPaymentIntent);
+  router.post('/createPaymentIntent/:orderID', 
+  checkoutController.createPaymentIntent);
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
