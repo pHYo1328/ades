@@ -16,7 +16,8 @@ function Home() {
         return [];
       }
       const data = await response.json();
-      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userid", data.userid);
       console.log(data);
       return;
     } catch (error) {
@@ -34,8 +35,9 @@ function Home() {
     } catch (error) {
       console.error(error);
     }
-    localStorage.removeItem('accessToken');
-    navigate('/login');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userid");
+    navigate("/login");
   };
 
   // const handleResponseError = (response) => {
