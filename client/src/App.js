@@ -3,6 +3,7 @@ import Home from './pages/Login/Home';
 import Login from './pages/Login/Login';
 import ForgetPassword from './pages/Login/ForgetPassword';
 import Register from './pages/Login/Register';
+import OTPPage from './pages/Login/OTPPage';
 import Homepage from './pages/Login/Homepage';
 import ProductDetails from './pages/Products/ProductDetails';
 import ProductsPage from './pages/Products/ProductsPage';
@@ -19,6 +20,7 @@ import Brands from './pages/Products/Brands';
 import Categories from './pages/Products/Categories';
 import './App.css';
 import './input.css';
+import VerifyOTP from './pages/Login/OTPPage';
 
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/verify-otp" element={<OTPPage />} />
               <Route path="/forgot" element={<ForgetPassword />} />
               <Route path="/homepage" element={<Homepage />} />
               <Route path="/product/:productID" element={<ProductDetails />} />
