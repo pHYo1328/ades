@@ -3,6 +3,7 @@ const productServices = require('../services/product.services');
 const multer = require('multer');
 // const upload = multer({ dest: 'temp/' });
 const path = require('path');
+const { Stats } = require('fs');
 // const uploadPath = path.join(__dirname, 'uploads');
 
 // // Get product by ID (done)
@@ -931,6 +932,42 @@ exports.processCreateBrandOrCategory = async (req, res, next) => {
   } catch (error) {
     console.error(chalk.red(error.code));
     console.error(chalk.red('Error in createBrandOrCategory: ', error));
+    return next(error);
+  }
+};
+
+// get statistics
+exports.processGetStatistics = async (req, res, next) => {
+  console.log(chalk.blue('processGetStatistics running'));
+  try {
+    const statisticsData = await productServices.getStatistics();
+    console.log(chalk.yellow(statisticsData));
+    if (!statisticsData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No statistics exist',
+      });
+    }
+    console.log(chalk.yellow('Statistics data: ', statisticsData));
+    const data = {
+      total_sold: statisticsData.total_sold,
+      total_inventory: statisticsData.total_inventory,
+      total_payment: statisticsData.total_payment,
+      total_order: statisticsData.total_order,
+    };
+
+    console.log(chalk.green(data));
+    // console.log(chalk.green('data.total_sold: ', data.total_sold));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read statistics details successful',
+      data,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getProductByID: ', error));
     return next(error);
   }
 };
