@@ -155,11 +155,11 @@ module.exports.forgotPassword = async (email, newPassword) => {
     const updateResult = await pool.query(updatePasswordQuery, [hashedPwd, email]);
 
     if (updateResult.affectedRows === 0) {
-      console.log("Password update failed");
+      console.log('Password update failed');
       return false; // prob due to email
     }
 
-    console.log("Password updated successfully");
+    console.log('Password updated successfully');
     return true; // Password updated successfully
   } catch (error) {
     console.error('Error in updating password: ', error);

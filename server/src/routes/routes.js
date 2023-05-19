@@ -12,17 +12,35 @@ const verifyOTPController = require('../controller/verifyOTPController');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
-  router.get(
-    '/api/products',
-    //verifyAccessToken.verifyToken,
-    productController.processGetAllProducts
-  );
+  // Thinzar
+  // GET
+  router.get('/api/products', productController.processGetAllProducts);
   router.get('/api/search', productController.processGetSearchResults);
+  router.get('/api/brands', productController.processGetAllBrands);
+  router.get('/api/category', productController.processGetAllCategory);
   router.get(
-    '/api/brands',
-    //verifyAccessToken.verifyToken,
-    productController.processGetAllBrands
+    '/api/products/category/:categoryID',
+    productController.processGetProductsByCategoryID
   );
+  router.get(
+    '/api/products/brand/:brandID',
+    productController.processGetProductsByBrandID
+  );
+  router.get(
+    '/api/product/:productID',
+    productController.processGetProductByID
+  );
+  router.get(
+    '/api/category/:categoryID',
+    productController.processGetCategoryByID
+  );
+  router.get('/api/brand/:brandID', productController.processGetBrandByID);
+  router.get('/api/products/new', productController.processGetNewArrivals);
+  router.get(
+    '/api/products/:categoryID/:brandID',
+    productController.processGetProductsByCategoryOrBrand
+  );
+  // DELETE
   router.delete(
     '/api/brands/:brandID',
     productController.processDeleteBrandByID
@@ -31,83 +49,37 @@ module.exports = (app, router) => {
     '/api/categories/:categoryID',
     productController.processDeleteCategoryByID
   );
-  router.get(
-    '/api/category',
-    //verifyAccessToken.verifyToken,
-    productController.processGetAllCategory
+  router.delete(
+    '/api/products/:productID',
+    productController.processDeleteProductByID
   );
-  router.get(
-    '/api/products/category/:categoryID',
-    //verifyAccessToken.verifyToken,
-    productController.processGetProductsByCategoryID
-  );
-
-  router.get(
-    '/api/products/brand/:brandID',
-    //verifyAccessToken.verifyToken,
-    productController.processGetProductsByBrandID
-  );
-  router.get(
-    '/api/product/:productID',
-    // verifyAccessToken.verifyToken,
-    productController.processGetProductByID
-  );
-  router.get(
-    '/api/category/:categoryID',
-    // verifyAccessToken.verifyToken,
-    productController.processGetCategoryByID
-  );
-  router.get(
-    '/api/brand/:brandID',
-    // verifyAccessToken.verifyToken,
-    productController.processGetBrandByID
-  );
-  router.get(
-    '/api/products/new',
-    //verifyAccessToken.verifyToken,
-    productController.processGetNewArrivals
-  );
-  router.post(
-    '/api/products',
-
-    //verifyAccessToken.verifyToken,
-    productController.processCreateProduct
-  );
+  // POST
+  router.post('/api/products', productController.processCreateProduct);
   router.post(
     '/api/products/admin/type',
     productController.processCreateBrandOrCategory
   );
-  router.delete(
-    '/api/products/:productID',
-    //verifyAccessToken.verifyToken,
-    productController.processDeleteProductByID
-  );
+  // PUT
   router.put(
     '/api/products/:productID',
-    //verifyAccessToken.verifyToken,
     productController.processUpdateProductByID
   );
-
   router.put(
     '/api/products/inventory/plus/:productID',
     productController.processUpdateInventoryUp
   );
-
   router.put(
     '/api/products/inventory/minus/:productID',
     productController.processUpdateInventoryDown
   );
-
-  router.post(
-    '/api/cart/:userID',
-    //verifyAccessToken.verifyToken,
-    cartController.processAddCartData
-  );
-
   router.put(
     '/api/products/:productID/images',
     productController.processDeleteProductImages
   );
+
+  // PHYO
+
+  router.post('/api/cart/:userID', cartController.processAddCartData);
 
   router.get(
     '/api/cart/:userID',
@@ -178,9 +150,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  router.get('/config', checkoutController.getConfig);
+  router.get('/config', 
+  checkoutController.getConfig);
 
-  router.post('/create-payment-intent', checkoutController.createPaymentIntent);
+  router.post('/createPaymentIntent/:orderID', 
+  checkoutController.createPaymentIntent);
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

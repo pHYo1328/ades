@@ -191,12 +191,34 @@ GROUP BY
   }
 };
 
+// get products by category and brand (done)
+module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
+  console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
+  try {
+    let productsDataQuery =
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id ';
+    if (categoryID != 0) {
+      productsDataQuery += 'and c.category_id =?';
+    }
+    if (brandID != 0) {
+      productsDataQuery += 'and b.brand_id =?';
+    }
+
+    const results = await pool.query(productsDataQuery, [categoryID, brandID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getProductsByCategoryOrBrand: ', error));
+    throw error;
+  }
+};
+
 // get products by category (done)
 module.exports.getProductsByCategoryID = async (categoryID) => {
   console.log(chalk.blue('getProductsByCategoryID is called'));
   try {
     const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and c.category_id =?;';
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and c.category_id =?;';
     const results = await pool.query(productsDataQuery, [categoryID]);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -211,7 +233,7 @@ module.exports.getProductsByBrandID = async (brandID) => {
   console.log(chalk.blue('getProductsByBrandID is called'));
   try {
     const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and b.brand_id =?;';
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and b.brand_id =?;';
     const results = await pool.query(productsDataQuery, [brandID]);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -226,7 +248,7 @@ module.exports.getNewArrivals = async () => {
   console.log(chalk.blue('getNewArrivals is called'));
   try {
     const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 3';
+      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 5';
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];

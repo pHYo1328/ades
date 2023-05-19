@@ -1,4 +1,4 @@
-  require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -89,8 +89,6 @@ app.use((err, req, res, next) => {
     data: '',
   });
 });
-
-
 
 routes(app, router);
 const port = process.env.PORT || 8081;
