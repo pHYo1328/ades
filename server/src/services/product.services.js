@@ -1,7 +1,6 @@
 //const fs = require('fs');
 const pool = require('../config/database');
 const chalk = require('chalk');
-const cloudinary = require('../config/cloudinary');
 
 // get product by ID (done) (done)
 module.exports.getProductByID = async (productID) => {
@@ -321,33 +320,52 @@ module.exports.createProduct = async (
   quantity
 ) => {
   console.log(chalk.blue('createProduct is called'));
+  const productCreateQuery =
+    'INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?, ?)';
+  const inventoryCreateQuery =
+    'INSERT INTO inventory (product_id, quantity) values (?, ?);';
+
+  quantity = quantity || 0;
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js createProduct function'
+    )
+  );
   try {
-    const productCreateQuery =
-      'INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?, ?)';
-    const inventoryCreateQuery =
-      'INSERT INTO inventory (product_id, quantity) values (?, ?);';
-
-    quantity = quantity || 0;
-
-    const results = await pool.query(productCreateQuery, [
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+    const productData = [
       name,
       price,
       description,
       category_id,
       brand_id,
       image,
-    ]);
-    const productId = results[0].insertId;
-    console.log(chalk.green(results[0]));
-    const inventoryResults = await pool.query(inventoryCreateQuery, [
-      productId,
-      quantity,
-    ]);
-    console.log(chalk.green(inventoryResults[0]));
-    return results[0].affectedRows > 0;
+    ];
+    console.log(chalk.blue('Executing query: '), productCreateQuery);
+    const productResult = await connection.query(
+      productCreateQuery,
+      productData
+    );
+    const productID = productResult[0].insertId;
+    const inventoryData = [productID, quantity];
+    const result = await connection.query(inventoryCreateQuery, inventoryData);
+    await connection.commit();
+    console.log(
+      chalk.green('Product and inventory have been created successfully')
+    );
+    return result[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red('Error in createProduct: ', error));
+    await connection.rollback();
+    console.error(
+      chalk.red('Error in inserting product and inventory data: '),
+      error
+    );
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -553,6 +571,29 @@ module.exports.createBrandOrCategory = async (name, type) => {
     return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in createBrandOrCategory: ', error));
+    throw error;
+  }
+};
+
+// get stats
+module.exports.getStatistics = async () => {
+  console.log(chalk.blue('getStatistics is called'));
+  try {
+    const statisticsQuery = `
+    SELECT SUM(oi.quantity) as total_sold, 
+    SUM(i.quantity) as total_inventory, 
+    SUM(p.payment_total) as total_payment, 
+    COUNT(oi.order_id) as total_order
+FROM order_items oi
+JOIN inventory i ON oi.product_id = i.product_id
+JOIN payment p ON oi.order_id = p.order_id;
+  `;
+
+    const results = await pool.query(statisticsQuery);
+    console.log(chalk.green(results[0][0]));
+    return results[0][0];
+  } catch (error) {
+    console.error(chalk.red('Error in getStatistics: ', error));
     throw error;
   }
 };
