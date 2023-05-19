@@ -6,10 +6,12 @@ import Register from './pages/Login/Register';
 import OTPPage from './pages/Login/OTPPage';
 import Homepage from './pages/Login/Homepage';
 import ProductDetails from './pages/Products/Public/ProductDetails';
+import SearchResults from './pages/Products/Public/SearchResults';
 import ProductsPage from './pages/Products/Public/ProductsPage';
 import ProductsByBrand from './pages/Products/Public/ProductsByBrand';
 import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
+
 import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
@@ -51,6 +53,7 @@ function App() {
               />
               <Route path="/cart" element={<Cart />} />
               <Route path="/home" element={<LandingPage />} />
+              <Route path="/search" element={<SearchResults/>}/>
               <Route path="/products/create" element={<ProductCreate />} />
               {/* <Route path="/products/admin" element={<ProductModify />} /> */}
               {/* <Route path="/admin/brands" element={<Brands />} /> */}
