@@ -167,6 +167,40 @@ module.exports.forgotPassword = async (email, newPassword) => {
   }
 };
 
+// Verify OTP
+module.exports.verifyOTP = async (otp) => {
+  try {
+    console.log("am i here");
+    const result = await pool.query(
+      'SELECT otp FROM users WHERE otp = ?',
+      [otp]
+    );
+
+    const rows = result[0];
+    if (rows.length > 0) {
+      const savedOTP = rows[0].otp;
+
+      if (otp === savedOTP) {
+        // OTP verification successful
+        console.log("otp same as db otp");
+        return true;
+      } else {
+        // Invalid OTP
+        console.log("ITS WRONG");
+        return false;
+      }
+    } else {
+      // User not found or OTP not saved
+      console.log("not here LOL");
+      return false;
+    }
+  } catch (error) {
+    // Handle any error that occurred during the database query
+    throw error;
+  }
+};
+
+
 // // Forgot password
 // module.exports.forgotPassword = async (email, newPassword) => {
 //   const forgotPasswordQuery = 'UPDATE users SET password = ? WHERE email = ?';

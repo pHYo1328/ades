@@ -8,6 +8,7 @@ const authController = require('../controller/authController');
 const refreshTokenController = require('../controller/refreshTokenController');
 const logoutController = require('../controller/logoutController');
 const forgotPasswordController = require('../controller/forgotPasswordController');
+const verifyOTPController = require('../controller/verifyOTPController');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -170,4 +171,7 @@ module.exports = (app, router) => {
   router.put('/logout', logoutController.handleLogout);
 
   router.put('/forgot', forgotPasswordController.handleForgotPassword);
+
+  router.post('/verify-otp', verifyOTPController.verifyOTP);
 };
+

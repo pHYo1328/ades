@@ -38,7 +38,7 @@ function Login() {
           localStorage.setItem('userid', data.userid);
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
-          navigate('/homepage');
+          navigate('/verify-otp');
         } else {
           console.log('Login failed');
           setErrorMessage('Incorrect username or password');
