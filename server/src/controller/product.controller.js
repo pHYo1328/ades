@@ -1,9 +1,9 @@
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
-const multer = require('multer');
+// const multer = require('multer');
 // const upload = multer({ dest: 'temp/' });
-const path = require('path');
-const { Stats } = require('fs');
+// const path = require('path');
+// const { Stats } = require('fs');
 // const uploadPath = path.join(__dirname, 'uploads');
 
 // // Get product by ID (done)
