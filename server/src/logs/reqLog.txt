@@ -12009,6 +12009,3 @@
 20230518	22:31:12	77e90592-5cfa-46a0-95c9-83a4d395347d	GET	http://localhost:3000	/api/cartdetails/getCartProductData?productIDs=178,179,180,182,183
 =======
 >>>>>>> 7e622d71a76f615cb1be7016fb5cf78642248ccf
->>>>>>> 5a462c7a4f4edd2917ca958fd5caad00ba4696ff
->>>>>>> e9c7c2cdeef83ccbdd6f535aba120136d0d6268d
->>>>>>> 0fdaf291be248b11551606e8fd676db1b1887396
