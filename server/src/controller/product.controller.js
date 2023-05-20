@@ -1,8 +1,9 @@
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
-const multer = require('multer');
+// const multer = require('multer');
 // const upload = multer({ dest: 'temp/' });
-const path = require('path');
+// const path = require('path');
+// const { Stats } = require('fs');
 // const uploadPath = path.join(__dirname, 'uploads');
 
 // // Get product by ID (done)
@@ -324,12 +325,12 @@ exports.processGetNewArrivals = async (req, res, next) => {
   }
 };
 
-// update product by ID (done without cloudinary)
+// update product by ID
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
   const {
-    name,
+    product_name,
     price,
     description,
     category_id,
@@ -352,7 +353,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
   }
 
   if (
-    name == '' &&
+    product_name == '' &&
     price == '' &&
     description == '' &&
     category_id == '' &&
@@ -368,7 +369,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
   }
   try {
     const updatedProductData = await productServices.updateProductByID(
-      name,
+      product_name,
       floatPrice,
       description,
       intCategoryID,
@@ -931,6 +932,42 @@ exports.processCreateBrandOrCategory = async (req, res, next) => {
   } catch (error) {
     console.error(chalk.red(error.code));
     console.error(chalk.red('Error in createBrandOrCategory: ', error));
+    return next(error);
+  }
+};
+
+// get statistics
+exports.processGetStatistics = async (req, res, next) => {
+  console.log(chalk.blue('processGetStatistics running'));
+  try {
+    const statisticsData = await productServices.getStatistics();
+    console.log(chalk.yellow(statisticsData));
+    if (!statisticsData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No statistics exist',
+      });
+    }
+    console.log(chalk.yellow('Statistics data: ', statisticsData));
+    const data = {
+      total_sold: statisticsData.total_sold,
+      total_inventory: statisticsData.total_inventory,
+      total_payment: statisticsData.total_payment,
+      total_order: statisticsData.total_order,
+    };
+
+    console.log(chalk.green(data));
+    // console.log(chalk.green('data.total_sold: ', data.total_sold));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read statistics details successful',
+      data,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getProductByID: ', error));
     return next(error);
   }
 };

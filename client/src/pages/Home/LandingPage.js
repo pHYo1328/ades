@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/js/bootstrap.js';
-// import 'bootstrap/dist/js/bootstrap.bundle.js';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 
@@ -19,10 +15,17 @@ const cld = new Cloudinary({
 
 
 export default function LandingPage() {
-  // const navigate = useNavigate();
+
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
+
+  const [productName, setProductName] = useState()
+  const [productMinPrice, setProductMinPrice] = useState()
+  const [productMaxPrice, setProductMaxPrice] = useState()
+  const [productCategory, setProductCategory] = useState()
+  const [productBrand, setProductBrand] = useState()
+
   const baseUrl = 'http://localhost:8081';
   useEffect(() => {
     axios
@@ -77,6 +80,8 @@ export default function LandingPage() {
                 type="text"
                 class="form-control"
                 placeholder="Enter search..."
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
               />
             </div>
           </div>
@@ -88,6 +93,8 @@ export default function LandingPage() {
                 type="number"
                 class="form-control"
                 placeholder="Min price"
+                value={productMinPrice}
+                onChange={(e) => setProductMinPrice(e.target.value)}
               />
             </div>
             <div class="mb-3 text-dark col-lg-6">
@@ -95,13 +102,15 @@ export default function LandingPage() {
                 type="number"
                 class="form-control"
                 placeholder="Max price"
+                value={productMaxPrice}
+                onChange={(e) => setProductMaxPrice(e.target.value)}
               />
             </div>
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
               {/* <label>CATEGORY</label> */}
-              <select class="form-select" id="categoryOptions">
+              <select class="form-select" id="categoryOptions" onChange={(e) => setProductCategory(e.target.value)}>
                 <option disabled selected value>
                   -- CATEGORY --
                 </option>
@@ -119,8 +128,7 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              {/* <label>BRAND</label> */}
-              <select class="form-select" id="brandOptions">
+              <select class="form-select" id="brandOptions" onChange={(e) => setProductBrand(e.target.value)}>
                 <option disabled selected value>
                   -- BRAND --
                 </option>
@@ -135,7 +143,29 @@ export default function LandingPage() {
             </div>
           </div>
           <div class=" col-2 text-black">
-            <button type="button" class="btn btn-outline-primary w-100">Search</button>
+         
+            <button
+  type="button"
+  class="btn btn-outline-primary w-100"
+  onClick={() => {
+    let url = '/search';
+    const queryParams = [];
+
+    if (productName) queryParams.push(`product_name=${productName}`);
+    if (productCategory) queryParams.push(`category_id=${productCategory}`);
+    if (productBrand) queryParams.push(`brand_id=${productBrand}`);
+    if (productMaxPrice) queryParams.push(`max_price=${productMaxPrice}`);
+    if (productMinPrice) queryParams.push(`min_price=${productMinPrice}`);
+
+    if (queryParams.length > 0) {
+      url += `?${queryParams.join('&')}`;
+      window.location.href = url;
+    }
+  }}
+>
+  Search
+</button>
+
           </div>
         </div>
 
@@ -148,10 +178,8 @@ export default function LandingPage() {
             </h2>
           </div>
           <div class="col-2">
-            {/* <button type="button" class="btn btn-outline-primary w-100" onClick={() => {
-          window.location.href="http://localhost:3000/products"
-        }}>See All</button> */}
-            <Dropdown style={{width: "100%"}}>
+          
+            <Dropdown style={{ width: "100%" }}>
               <Dropdown.Toggle variant="outline-primary" id="dropdownMenuButton" className="w-100">
                 See All
               </Dropdown.Toggle>
@@ -159,7 +187,7 @@ export default function LandingPage() {
               <Dropdown.Menu>
                 <Dropdown.Item href="http://localhost:3000/products">Products</Dropdown.Item>
                 <Dropdown.Item href="http://localhost:3000/brands/categories">Brands & Categories</Dropdown.Item>
-                {/* <Dropdown.Item href="http://localhost:3000/categories">Categories</Dropdown.Item> */}
+              
               </Dropdown.Menu>
             </Dropdown>
           </div>
@@ -172,11 +200,7 @@ export default function LandingPage() {
                 window.location.href = `http://localhost:3000/products/${productID}`
               }}>
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                  {/* <img
-                    src="https://images.samsung.com/ca/smartphones/galaxy-s22/buy/S22_S22plus_ProductKV_White_MO.jpg"
-                    alt=""
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  /> */}
+
                   <AdvancedImage
                     cldImg={cld.image(product.image_url.split(',')[0])}
                   />
