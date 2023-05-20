@@ -7,18 +7,20 @@ const bcrypt = require('bcrypt');
 module.exports.registerUser = async (username, email, password) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-    // check for duplicates in the users table
-    const checkDuplicateQuery =
-      'SELECT COUNT(*) as count FROM users WHERE username = ?';
-    const duplicateResults = await pool.query(checkDuplicateQuery, [username]);
-    const count = duplicateResults[0].count;
-    if (count > 0) {
-      throw new Error('Username already exists');
-    }
-
+  //  // Check if the username already exists in the database
+  // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
+  // const usernameExists = await pool.query(checkUsernameQuery, [username]);
+  // const count = usernameExists[0].count;
+  
+  // if (count > 0) {
+  //   // Throw an error with status code 500
+  //   const error = new Error('Username already exists');
+  //   error.status = 500;
+  //   throw error;
+  // }
     // insert the new user
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "user");';
+      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "customer");';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
@@ -27,7 +29,7 @@ module.exports.registerUser = async (username, email, password) => {
     console.log(chalk.green(results));
     return results;
   } catch (error) {
-    console.error(chalk.red('Error in registering new user: ', error));
+    console.error(chalk.red('Error in registering new user: ', error)); //username prob already exists in database
     throw error;
   }
 };
@@ -199,6 +201,7 @@ module.exports.verifyOTP = async (otp) => {
     throw error;
   }
 };
+
 
 
 // // Forgot password

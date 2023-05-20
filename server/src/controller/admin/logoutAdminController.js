@@ -1,14 +1,13 @@
-const loginServices = require('../services/login.services');
+const adminLoginServices = require('../../services/adminLogin.services');
 
 const handleLogout = async (req, res) => {
   // On client, also delete the accessToken
   const cookies = req.cookies;
-  console.log("am i herE", req.cookies);
-  if (!cookies?.refreshToken) return res.sendStatus(204); // No content
-  const refreshToken = cookies.refreshToken;
+  console.log(req.cookies);
+  if (!cookies?.jwt) return res.sendStatus(204); // No content
+  const refreshToken = cookies.jwt;
   try {
-    console.log("am i logging out");
-    const logoutSuccess = await loginServices.logoutUser(refreshToken);
+    const logoutSuccess = await adminLoginServices.logoutUser(refreshToken);
 
     if (!logoutSuccess) {
       res.clearCookie('refreshToken', {
@@ -17,7 +16,7 @@ const handleLogout = async (req, res) => {
         secure: true,
       });
       console.log(
-        'Successful logout but refreshToken not found in the database.'
+        'Successful admin logout but refreshToken not found in the admin database.'
       );
       return res.sendStatus(204);
     }
@@ -27,7 +26,7 @@ const handleLogout = async (req, res) => {
       sameSite: 'None',
       secure: true,
     });
-    console.log('Successful logout! RefreshToken removed from the database.');
+    console.log('Successful admin logout! RefreshToken removed from the admin database.');
     res.sendStatus(204);
   } catch (error) {
     console.error('Error in handling logout: ', error);
