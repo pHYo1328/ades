@@ -325,12 +325,12 @@ exports.processGetNewArrivals = async (req, res, next) => {
   }
 };
 
-// update product by ID (done without cloudinary)
+// update product by ID
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
   const {
-    name,
+    product_name,
     price,
     description,
     category_id,
@@ -353,7 +353,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
   }
 
   if (
-    name == '' &&
+    product_name == '' &&
     price == '' &&
     description == '' &&
     category_id == '' &&
@@ -369,7 +369,7 @@ exports.processUpdateProductByID = async (req, res, next) => {
   }
   try {
     const updatedProductData = await productServices.updateProductByID(
-      name,
+      product_name,
       floatPrice,
       description,
       intCategoryID,

@@ -11,31 +11,39 @@ export default function ProductCreate() {
   const [categories, setCategories] = useState(null);
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState();
 
-  const [productName, setProductName] = useState(null);
-  const [productPrice, setProductPrice] = useState(null);
-  const [productDescription, setProductDescription] = useState(null);
-  const [productCategory, setProductCategory] = useState(null);
-  const [productBrand, setProductBrand] = useState(null)
-  const [productQuantity, setProductQuantity] = useState(null);
+  const [productName, setProductName] = useState();
+  const [productPrice, setProductPrice] = useState();
+  const [productDescription, setProductDescription] = useState();
+  const [productCategory, setProductCategory] = useState();
+  const [productBrand, setProductBrand] = useState()
+  const [productQuantity, setProductQuantity] = useState();
   const [imagePath, setImagePath] = useState('');
 
-  // const [imagePath, setImagePath] = useState('');
-
-  useEffect(() => {
+  const fetchProducts = () => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
       .then((response) => {
         console.log(response);
         setProduct(response.data.data);
         console.log(product);
+        setProductName(product.name);
+        setProductPrice(product.price);
+        setProductDescription(product.description);
+        setProductCategory(product.category);
+        setProductBrand(product.brand);
+        setProductQuantity(product.quantity);
+        setImagePath(product.imagePath);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleImageChange = (path) => {
     console.log('Selected image path:', path);
@@ -70,27 +78,18 @@ export default function ProductCreate() {
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    // const name = document.getElementById('edit-product-name').value;
-    // const description = document.getElementById(
-    //   'edit-product-description'
-    // ).value;
-    // const price = document.getElementById('edit-product-price').value;
-    // const category_id = document.getElementById('edit-product-category').value;
-    // const brand_id = document.getElementById('edit-product-brand').value;
-    // const quantity = document.getElementById('edit-product-quantity').value;
-    // const image = imagePath;
-    if (isNaN(productQuantity) || productQuantity < 0) {
+    if (isNaN((productQuantity)) || productQuantity < 0) {
       window.alert('Inventory must be a value not less than 0.');
-    } else if (isNaN(productPrice) || productPrice <= 0) {
+    } else if (isNaN(parseFloat(productPrice)) || parseFloat(productPrice) <= 0) {
       window.alert('Price must be a value not less than or equal to 0.');
-    } else {
+    }
+    else {
       const requestBody = {
-        name: productName, 
-        description: productDescription, 
-        price: productPrice, 
+        product_name: productName,
+        description: productDescription,
+        price: productPrice,
         category_id: productCategory,
-        brand_id: productBrand, 
+        brand_id: productBrand,
         quantity: productQuantity,
         image: imagePath
       };
@@ -102,27 +101,32 @@ export default function ProductCreate() {
       axios
         .put(`${baseUrl}/api/products/${productID}`, requestBody, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         })
         .then((response) => {
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
-          // window.location.reload();
-          // window.location.href = `http://localhost:3000/products/admin`;
+          fetchProducts();
         });
     }
   };
 
+  const handleDeleteImage = async (event) => {
+    event.preventDefault();
+    axios
+      .put(`${baseUrl}/api/products/${productID}/images`)
+      .then((response) => {
+        console.log('Delete images button is clicked');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   return (
-    // <>
-    //   <Helmet>
-    //     <script
-    //       src="https://widget.cloudinary.com/v2.0/global/all.js"
-    //       type="text/javascript"
-    //     />
-    //   </Helmet>
+
     <div>
       <form
         id="create-product-form"
@@ -140,11 +144,9 @@ export default function ProductCreate() {
               <input
                 type="text"
                 class="form-control form-control-sm"
-                // placeholder={product.product_name}
-                // value={product.product_name}
                 defaultValue={product.product_name}
-                value= {productName}
-          onChange = {(e) => setProductName(e.target.value)}
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
               />
             </div>
 
@@ -157,8 +159,8 @@ export default function ProductCreate() {
                 placeholder="Description"
                 rows={3}
                 defaultValue={product.description}
-                value= {productDescription}
-                onChange = {(e) => setProductDescription(e.target.value)}
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
               />
             </div>
             <div class="row">
@@ -170,10 +172,10 @@ export default function ProductCreate() {
                   type="number"
                   min="0"
                   class="form-control form-control-sm"
-                  value= {productPrice}
-          onChange = {(e) => setProductPrice(e.target.value)}
+                  defaultValue={productPrice}
+                  value={product.price}
+                  onChange={(e) => setProductPrice(e.target.value)}
                   placeholder="Price"
-                  defaultValue={product.price}
                 />
               </div>
               <div class="mb-3 col-6">
@@ -185,10 +187,10 @@ export default function ProductCreate() {
                   type="number"
                   class="form-control form-control-sm"
                   placeholder="Inventory (Quantity)"
-                  defaultValue={product.quantity}
-                  value= {productQuantity}
-                  onChange = {(e) => setProductQuantity(e.target.value)}
-                   
+                  defaultValue={productQuantity}
+                  value={product.quantity}
+                  onChange={(e) => setProductQuantity(e.target.value)}
+
                 />
               </div>
             </div>
@@ -203,9 +205,6 @@ export default function ProductCreate() {
                 >
                   {categories ? (
                     categories.map((category) => (
-                      // <option value={category.category_id}>
-                      //   {category.category_name}
-                      // </option>
 
                       <option
                         value={category.category_id}
@@ -248,18 +247,7 @@ export default function ProductCreate() {
               <div class="col-6">
                 <button
                   class="btn btn-outline-danger w-100"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // const productID = {productID};
-                    axios
-                      .put(`${baseUrl}/api/products/${productID}/images`)
-                      .then((response) => {
-                        console.log('Delete images button is clicked');
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                      });
-                  }}
+                  onClick={handleDeleteImage}
                 >
                   Remove existing images
                 </button>
@@ -297,6 +285,5 @@ export default function ProductCreate() {
         </div>
       </form>
     </div>
-    // </>
   );
 }
