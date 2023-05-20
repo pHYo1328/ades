@@ -23,7 +23,7 @@ import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategori
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import './App.css';
 import './input.css';
-import VerifyOTP from './pages/Login/OTPPage';
+
 
 
 function App() {

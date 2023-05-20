@@ -71,7 +71,8 @@
           userId,
           newRefreshToken
         );
-        
+        console.log("what is my cookies", cookies);
+
         if (cookies?.jwt) {
           /* 
               Scenario added here: 

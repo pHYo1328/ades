@@ -1,5 +1,4 @@
 const loginServices = require('../services/login.services');
-const bcrypt = require('bcrypt');
 
 // const handleForgotPassword = async (req, res) => {
 //     const { email, password } = req.body;
