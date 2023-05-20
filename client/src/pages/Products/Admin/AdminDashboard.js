@@ -422,6 +422,7 @@ export default function AdminDashboard() {
                             );
                             setBrands(updatedBrands);
                             fetchBrands();
+                            fetchProducts();
                           });
                       }}
                     >
@@ -492,6 +493,7 @@ export default function AdminDashboard() {
                             );
                             setCategories(updatedCategories);
                             fetchCategories();
+                            fetchProducts();
                           });
                       }}
                     >
