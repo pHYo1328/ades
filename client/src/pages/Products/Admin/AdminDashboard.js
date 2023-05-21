@@ -267,7 +267,7 @@ export default function AdminDashboard() {
                 <div class="col-2">
                   <AdvancedImage
                     class="h-12 w-12 flex-none bg-gray-50"
-                    cldImg={cld.image(product.image_url.split(',')[0])}
+                    cldImg={cld.image(product.image_url)}
                   />
                 </div>
                 <div class="col-6">

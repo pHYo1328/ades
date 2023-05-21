@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
+import Category from '../../../components/Products/Dropdown/Category';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
@@ -79,14 +80,7 @@ export default function ProductCreate() {
       window.alert('Price must be a value not less than or equal to 0.');
     } else {
       const requestBody = {
-        // name,
-        // description,
-        // price,
-        // category_id,
-        // brand_id,
-        // quantity,
-        // image,
-        name: productName, 
+                name: productName, 
         description: productDescription, 
         price: productPrice, 
         category_id: productCategory,

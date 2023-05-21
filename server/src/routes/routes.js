@@ -36,11 +36,17 @@ module.exports = (app, router) => {
   );
   router.get('/api/brand/:brandID', productController.processGetBrandByID);
   router.get('/api/products/new', productController.processGetNewArrivals);
+
+  router.get('/api/admin/statistics', productController.processGetStatistics);
+  router.get(
+    '/api/products/:productID/images',
+    productController.processGetImagesByProductID
+  );
   router.get(
     '/api/products/:categoryID/:brandID',
     productController.processGetProductsByCategoryOrBrand
   );
-  router.get('/api/admin/statistics', productController.processGetStatistics);
+
   // DELETE
   router.delete(
     '/api/brands/:brandID',
@@ -54,11 +60,20 @@ module.exports = (app, router) => {
     '/api/products/:productID',
     productController.processDeleteProductByID
   );
+  router.delete(
+    '/api/products/images/:imageID',
+    productController.processDeleteImagesByID
+  );
+
   // POST
   router.post('/api/products', productController.processCreateProduct);
   router.post(
     '/api/products/admin/type',
     productController.processCreateBrandOrCategory
+  );
+  router.post(
+    '/api/products/images',
+    productController.processCreateImageForProduct
   );
   // PUT
   router.put(
@@ -174,4 +189,3 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 };
-
