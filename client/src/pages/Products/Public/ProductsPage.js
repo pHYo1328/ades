@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 // import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Category from '../../../components/Products/Dropdown/Category';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -19,46 +20,7 @@ export default function ProductsPage() {
   const [categoryID, setCategoryID] = useState(0)
   const [brandID, setBrandID] = useState(0)
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  // const productImage = cld.image(product.image_url);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/api/products`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setProducts(response.data.data);
-  //       console.log(products);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/api/products/category/${categoryID}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setProducts(response.data.data);
-  //       console.log(products);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/api/products/brand/${brandID}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setProducts(response.data.data);
-  //       console.log(products);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-
+  
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/${categoryID}/${brandID}`)
@@ -157,7 +119,7 @@ export default function ProductsPage() {
                   /> */}
                   {/* <p>{product.image_url}</p> */}
                   <AdvancedImage
-                    cldImg={cld.image(product.image_url.split(',')[0])}
+                    cldImg={cld.image(product.image_url)}
                   />
                   {/* {product.image_url} */}
                 </div>

@@ -14,7 +14,7 @@ export default function ProductsByCategory() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const categoryID = 3;
+  const { categoryID } = useParams();
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/category/${categoryID}`)
@@ -43,7 +43,7 @@ export default function ProductsByCategory() {
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
 
                   <AdvancedImage
-                    cldImg={cld.image(product.image_url.split(',')[0])}
+                    cldImg={cld.image(product.image_url)}
                   />
 
                 </div>

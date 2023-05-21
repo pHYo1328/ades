@@ -20,7 +20,9 @@ exports.processGetProductByID = async (req, res, next) => {
   }
 
   try {
-    const productData = await productServices.getProductByID(productID);
+    let [productData, imageData] = await productServices.getProductByID(
+      productID
+    );
 
     if (!productData) {
       return res.status(204).json({
@@ -30,16 +32,19 @@ exports.processGetProductByID = async (req, res, next) => {
       });
     }
 
-    const data = {
+    console.log(chalk.green(Object.values(productData)));
+    console.log(chalk.green(Object.values(imageData)));
+
+    let data = {
       product_name: productData.product_name,
       price: productData.price,
       description: productData.description,
       category_name: productData.category_name,
       brand_name: productData.brand_name,
-      image_url: productData.image_url,
       average_rating: productData.average_rating,
       rating_count: productData.rating_count,
       quantity: productData.quantity,
+      image_url: imageData.map((u) => u.image_url),
     };
 
     return res.status(200).json({
@@ -968,6 +973,117 @@ exports.processGetStatistics = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in getProductByID: ', error));
+    return next(error);
+  }
+};
+
+// get images by product ID
+exports.processGetImagesByProductID = async (req, res, next) => {
+  console.log(chalk.blue('processGetImagesByProductID running'));
+  const { productID } = req.params;
+  try {
+    const imageData = await productServices.getImagesByProductID(productID);
+    if (!imageData || imageData.length === 0) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No images exist',
+      });
+    }
+    console.log(chalk.yellow('Image data: ', imageData));
+    const images = imageData.map((image) => ({
+      product_id: image.product_id,
+      image_id: image.image_id,
+      image_url: image.image_url,
+    }));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read image details successful',
+      data: images,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getImagesByProductID: ', error));
+    return next(error);
+  }
+};
+
+// delete images by image id
+exports.processDeleteImagesByID = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteImagesByID running'));
+  const { imageID } = req.params;
+  if (!imageID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Image ID is missing',
+    });
+  }
+
+  try {
+    const deletedImageData = await productServices.deleteImageByID(
+      parseInt(imageID)
+    );
+    if (!deletedImageData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such images exist',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Image Deletion successful',
+      data: deletedImageData,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteImagesByID: ', error));
+    return next(error);
+  }
+};
+
+// add new image to product
+exports.processCreateImageForProduct = async (req, res, next) => {
+  console.log(chalk.blue('processCreateImageForProduct running'));
+  const { product_id, image_url } = req.body;
+  if (!product_id || !image_url) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: false,
+      message: 'Image data is missing',
+    });
+  }
+  if (isNaN(product_id) || product_id < 0) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: false,
+      message: 'Product ID has to be a number greater than 0',
+    });
+  }
+  console.log(chalk.yellow(image_url));
+  // console.log(chalk.yellow(req.body));
+  try {
+    const createdImageData = await productServices.createImageForProduct(
+      image_url,
+      product_id
+    );
+    console.log(chalk.yellow(createdImageData));
+    if (createdImageData) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'Create image successful',
+      });
+    } else {
+      return res.status(500).json({
+        statusCode: 500,
+        ok: false,
+        message: 'Failed to create image',
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red('Error in processCreateImageForProduct: ', error));
     return next(error);
   }
 };
