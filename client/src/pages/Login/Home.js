@@ -1,16 +1,12 @@
-// import { Link } from "react-router-dom";
 import React from 'react';
-const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-const domain_url = process.env.REACT_APP_DOMAIN_BASE_URL;
-console.log(process.env);
-console.log(baseUrl);
+
 function Home() {
   return (
     <div className="App">
       <header className="">
         <div className="hero min-h-screen bg-base-200">
           <div className="hero-content text-center">
-            <div className="max-w-md">
+            <div className="max-w-md mx-auto">
               <h1 className="text-5xl font-bold mb-5">Home page</h1>
               <div className="flex items-center justify-end mb-5">
                 <button className="bg-pink-800 text-white font-bold py-2 px-4 rounded-md mr-3">
@@ -21,6 +17,12 @@ function Home() {
                   className="bg-gray-400 text-white font-bold py-2 px-4 rounded-md text-lg"
                 >
                   Login
+                </a>
+                <a
+                  href="/login-admin"
+                  className="bg-green-400 text-white font-bold py-2 px-4 rounded-md text-lg ml-3"
+                >
+                  Admin Login
                 </a>
                 <a
                   href="/register"

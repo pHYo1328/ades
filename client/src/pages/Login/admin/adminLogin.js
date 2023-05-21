@@ -15,7 +15,7 @@ function Login() {
       return errorMessage;
     }
 
-    const url = 'http://localhost:8081/login';
+    const url = 'http://localhost:8081/login-admin';
 
     const body = {
       username: username,
@@ -33,14 +33,14 @@ function Login() {
       .then((data) => {
         console.log('this is my' + data);
         if (data.success) {
-          console.log('Login successful');
+          console.log('Admin login successful');
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('userid', data.userid);
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
-          navigate('/verify-otp');
+          navigate('/verify-otp-admin');
         } else {
-          console.log('Login failed');
+          console.log('Admin login failed');
           setErrorMessage('Incorrect username or password');
         }
       })
@@ -56,7 +56,7 @@ function Login() {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">
-            Log in to your account
+            Log in to your admin account
           </h2>
         </div>
         <form onSubmit={onHandleSubmit} className="mt-8 space-y-6">
@@ -89,15 +89,15 @@ function Login() {
               Forgot your password?
             </a>
           </div> */}
-          <div className="flex justify-end">
-            <button
-              className="text-sm text-gray-500 hover:text-gray-700"
-              onClick={() => navigate('/forgot')}
-            >
-              Forgot your password?
-            </button>
-          </div>
-
+        <div className="flex justify-end">
+        <button
+            className="text-sm text-gray-500 hover:text-gray-700"
+            onClick={() => navigate('/forgot-admin')}
+          >
+            Forgot your password?
+          </button>
+        </div>
+          
           <div>
             <button
               type="submit"
@@ -113,9 +113,9 @@ function Login() {
           </span>
           <button
             className="text-sm text-indigo-500 hover:text-indigo-600 focus:outline-none focus:underline"
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/register-admin')}
           >
-            Sign up
+            Sign up new admin
           </button>
         </div>
       </div>

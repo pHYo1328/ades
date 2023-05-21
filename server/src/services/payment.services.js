@@ -57,8 +57,8 @@ module.exports.getPaymentTotal = async (order_id) => {
 
   try {
     const paymentTotalQuery = `SELECT SUM(subQuery1.total_price+subQuery2.fee) as payment_total FROM
-            (SELECT total_price FROM orders where order_id=1 ) subQuery1 ,
-            (SELECT fee FROM shipping where shipping_id= (select shipping_id from orders where order_id=1)) subQuery2;`;
+            (SELECT total_price FROM orders where order_id=? ) subQuery1 ,
+            (SELECT fee FROM shipping where shipping_id= (select shipping_id from orders where order_id=?)) subQuery2;`;
 
     const results = await pool.query(paymentTotalQuery, [order_id, order_id]);
     console.log(chalk.green(results[0]));
