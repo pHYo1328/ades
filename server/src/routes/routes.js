@@ -15,6 +15,8 @@ const refreshTokenAdminController = require('../controller/admin/refreshTokenAdm
 const logoutAdminController = require('../controller/admin/logoutAdminController');
 const forgotPasswordAdminController = require('../controller/admin/forgotPasswordAdminController');
 const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
+
+const getUserInfo = require('../controller/customerInfo');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -180,6 +182,7 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 
+  router.get('/users', getUserInfo.retrieveUserInformation);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
