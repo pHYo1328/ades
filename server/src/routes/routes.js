@@ -15,6 +15,8 @@ const refreshTokenAdminController = require('../controller/admin/refreshTokenAdm
 const logoutAdminController = require('../controller/admin/logoutAdminController');
 const forgotPasswordAdminController = require('../controller/admin/forgotPasswordAdminController');
 const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
+
+const getUserInfo = require('../controller/customerInfo');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -42,11 +44,17 @@ module.exports = (app, router) => {
   );
   router.get('/api/brand/:brandID', productController.processGetBrandByID);
   router.get('/api/products/new', productController.processGetNewArrivals);
+
+  router.get('/api/admin/statistics', productController.processGetStatistics);
+  router.get(
+    '/api/products/:productID/images',
+    productController.processGetImagesByProductID
+  );
   router.get(
     '/api/products/:categoryID/:brandID',
     productController.processGetProductsByCategoryOrBrand
   );
-  router.get('/api/admin/statistics', productController.processGetStatistics);
+
   // DELETE
   router.delete(
     '/api/brands/:brandID',
@@ -60,11 +68,20 @@ module.exports = (app, router) => {
     '/api/products/:productID',
     productController.processDeleteProductByID
   );
+  router.delete(
+    '/api/products/images/:imageID',
+    productController.processDeleteImagesByID
+  );
+
   // POST
   router.post('/api/products', productController.processCreateProduct);
   router.post(
     '/api/products/admin/type',
     productController.processCreateBrandOrCategory
+  );
+  router.post(
+    '/api/products/images',
+    productController.processCreateImageForProduct
   );
   // PUT
   router.put(
@@ -180,6 +197,7 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 
+  router.get('/users', getUserInfo.retrieveUserInformation);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
@@ -189,4 +207,3 @@ module.exports = (app, router) => {
   router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };
-

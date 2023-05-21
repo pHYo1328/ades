@@ -51,9 +51,14 @@ export default function ProductDetails() {
           <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
             {/* <AdvancedImage cldImg={cld.image(product.image_url)} /> */}
 
-            {product.image_url.split(', ').map((url, index) => (
+            {/* {product.image_url.split(', ').map((url, index) => (
+              <AdvancedImage key={index} cldImg={cld.image(url)} />
+            ))} */}
+
+            {product.image_url.map((url, index) => (
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}
+
 
             <div className="text-left lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -152,7 +157,7 @@ export default function ProductDetails() {
 
               <form className="mt-10">
                 <button
-                  onClick={() => {}}
+                  onClick={() => { }}
                   className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Add to cart

@@ -6,6 +6,7 @@ import ForgotPassword from './pages/Login/ForgetPassword';
 import Register from './pages/Login/Register';
 import OTPPage from './pages/Login/OTPPage';
 import Homepage from './pages/Login/Homepage';
+import UserInfo from './pages/Login/UserInfo';
 
 import AdminHomepage from './pages/Login/admin/adminHomepage';
 import AdminRegister from './pages/Login/admin/adminRegister';
@@ -33,6 +34,7 @@ import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategori
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import './App.css';
 import './input.css';
+import { improve } from '@cloudinary/url-gen/actions/adjust';
 
 
 
@@ -50,6 +52,7 @@ function App() {
               <Route path="/verify-otp" element={<OTPPage />} />
               <Route path="/forgot" element={<ForgotPassword />} />
               <Route path="/homepage" element={<Homepage />} />
+              <Route path="/users" element={<UserInfo />} />
 
               <Route path="/homepage-admin" element={<AdminHomepage />} />
               <Route path="/register-admin" element={<AdminRegister />} />

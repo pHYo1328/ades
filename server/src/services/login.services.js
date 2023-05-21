@@ -204,6 +204,14 @@ module.exports.verifyOTP = async (otp) => {
   }
 };
 
+// Retrieve customer information
+module.exports.retrieveUsersInfo = async () => {
+  const query = 'SELECT * FROM users';
+  const [users] = await pool.query(query);
+  console.log('All users info retrieved!');
+  return users;
+};
+
 
 
 // // Forgot password
