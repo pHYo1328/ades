@@ -36,8 +36,6 @@ import './App.css';
 import './input.css';
 import { improve } from '@cloudinary/url-gen/actions/adjust';
 
-
-
 function App() {
   return (
     <>
@@ -72,15 +70,21 @@ function App() {
               />
               <Route path="/cart" element={<Cart />} />
               <Route path="/home" element={<LandingPage />} />
-              <Route path="/search" element={<SearchResults/>}/>
+              <Route path="/search" element={<SearchResults />} />
               <Route path="/products/create" element={<ProductCreate />} />
               {/* <Route path="/products/admin" element={<ProductModify />} /> */}
               {/* <Route path="/admin/brands" element={<Brands />} /> */}
               {/* <Route path="/admin/categories" element={<Categories />} /> */}
-              <Route path="/brands/categories" element={<AllBrandsAndCategories />}/>
-              <Route path="/brands/:brandID" element={<ProductsByBrand />}/>
-              <Route path="/categories/:categoryID" element={<ProductsByCategory />}/>
-              <Route path="/admin" element={<AdminDashboard/>}/>
+              <Route
+                path="/brands/categories"
+                element={<AllBrandsAndCategories />}
+              />
+              <Route path="/brands/:brandID" element={<ProductsByBrand />} />
+              <Route
+                path="/categories/:categoryID"
+                element={<ProductsByCategory />}
+              />
+              <Route path="/admin" element={<AdminDashboard />} />
 
               <Route
                 path="/products/edit/:productID"

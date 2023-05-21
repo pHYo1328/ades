@@ -15,12 +15,12 @@ const cld = new Cloudinary({
 export default function ProductsPage() {
   // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
-  const [brands, setBrands] = useState(null)
-  const [categories, setCategories] = useState(null)
-  const [categoryID, setCategoryID] = useState(0)
-  const [brandID, setBrandID] = useState(0)
+  const [brands, setBrands] = useState(null);
+  const [categories, setCategories] = useState(null);
+  const [categoryID, setCategoryID] = useState(0);
+  const [brandID, setBrandID] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  
+
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/${categoryID}/${brandID}`)
@@ -60,20 +60,23 @@ export default function ProductsPage() {
       });
   }, []);
 
-
-
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-
         <div class="row">
           <div class="col-8">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 text-center" class="h2">
+            <h2
+              className="text-2xl font-bold tracking-tight text-gray-900 text-center"
+              class="h2"
+            >
               Products
             </h2>
           </div>
           <div class="col-2">
-            <select class="form-select form-select-sm" onChange={(e) => setCategoryID(e.target.value)}>
+            <select
+              class="form-select form-select-sm"
+              onChange={(e) => setCategoryID(e.target.value)}
+            >
               <option disabled selected value="0">
                 -- CATEGORY --
               </option>
@@ -89,7 +92,10 @@ export default function ProductsPage() {
             </select>
           </div>
           <div class="col-2">
-            <select class="form-select form-select-sm" onChange={(e) => setBrandID(e.target.value)}>
+            <select
+              class="form-select form-select-sm"
+              onChange={(e) => setBrandID(e.target.value)}
+            >
               <option disabled selected value>
                 -- BRAND --
               </option>
@@ -107,10 +113,14 @@ export default function ProductsPage() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div key={product.product_id} className="group relative"  onClick={() => {
-                const productID = product.product_id
-                window.location.href=`http://localhost:3000/products/${productID}`
-              }}>
+              <div
+                key={product.product_id}
+                className="group relative"
+                onClick={() => {
+                  const productID = product.product_id;
+                  window.location.href = `http://localhost:3000/products/${productID}`;
+                }}
+              >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   {/* <img
                     src={cld.image(product.image_url)}
@@ -118,9 +128,7 @@ export default function ProductsPage() {
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                   /> */}
                   {/* <p>{product.image_url}</p> */}
-                  <AdvancedImage
-                    cldImg={cld.image(product.image_url)}
-                  />
+                  <AdvancedImage cldImg={cld.image(product.image_url)} />
                   {/* {product.image_url} */}
                 </div>
                 <div className="mt-4 flex justify-between">

@@ -35,7 +35,7 @@ exports.processAddCartData = async (req, res, next) => {
   }
 };
 
-// for reading, decided to use cache aside 
+// for reading, decided to use cache aside
 exports.processGetCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
   const { userID } = req.params;
@@ -48,7 +48,7 @@ exports.processGetCartData = async (req, res, next) => {
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
     let result = await cartServices.getCartDataFromRedis(userID);
 
-    if (!result) {
+    if (!result || result.length === 0) {
       const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
       result = mysqlResult;
       await cartServices.addCartDataToRedis(userID, mysqlResult);

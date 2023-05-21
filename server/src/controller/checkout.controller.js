@@ -7,7 +7,6 @@ exports.getConfig = (req, res) => {
   res.send({
     stripe_publishable_key: config.stripe_publishable_key,
   });
-
 };
 
 exports.createPaymentIntent = async (req, res) => {
@@ -30,8 +29,7 @@ exports.createPaymentIntent = async (req, res) => {
       amount: paymentTotal,
       automatic_payment_methods: { enabled: true },
     });
-    
-     
+
     // Send publishable key and PaymentIntent details to client
     res.send({
       clientSecret: paymentIntent.client_secret,

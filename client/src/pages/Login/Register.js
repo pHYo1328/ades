@@ -19,8 +19,8 @@ function Register() {
     };
 
     if (password !== cfmPassword)
-      return alert("Password and Confirm Password must be the same");
-      
+      return alert('Password and Confirm Password must be the same');
+
     fetch(url, {
       method: 'POST',
       headers: {

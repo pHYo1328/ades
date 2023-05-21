@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 // import { useNavigate } from "react-router-dom";
 // import { StarIcon } from '@heroicons/react/20/solid';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import CartContext from '../../../context/CartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -17,8 +18,12 @@ export default function ProductDetails() {
   // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-
+  const [cartData, setCartData,addToCart] = useContext(CartContext);
   const { productID } = useParams();
+  const customerId= localStorage.getItem('userid');
+  const addToCartHandler = (userid,productId, quantity) => {
+    addToCart(userid,productId, quantity);
+  };
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -58,7 +63,6 @@ export default function ProductDetails() {
             {product.image_url.map((url, index) => (
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}
-
 
             <div className="text-left lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -154,15 +158,14 @@ export default function ProductDetails() {
                   </div>
                 </div>
               </div>
-
-              <form className="mt-10">
-                <button
-                  onClick={() => { }}
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Add to cart
-                </button>
-              </form>
+              <button
+                onClick={() => {
+                  addToCartHandler(customerId,productID, 1);
+                }}
+                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Add to cart
+              </button>
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">

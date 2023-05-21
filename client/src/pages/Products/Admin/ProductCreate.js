@@ -15,7 +15,7 @@ export default function ProductCreate() {
   const [productPrice, setProductPrice] = useState(null);
   const [productDescription, setProductDescription] = useState(null);
   const [productCategory, setProductCategory] = useState(null);
-  const [productBrand, setProductBrand] = useState(null)
+  const [productBrand, setProductBrand] = useState(null);
   const [productQuantity, setProductQuantity] = useState(null);
   const [imagePath, setImagePath] = useState('');
 
@@ -80,13 +80,13 @@ export default function ProductCreate() {
       window.alert('Price must be a value not less than or equal to 0.');
     } else {
       const requestBody = {
-                name: productName, 
-        description: productDescription, 
-        price: productPrice, 
+        name: productName,
+        description: productDescription,
+        price: productPrice,
         category_id: productCategory,
-        brand_id: productBrand, 
+        brand_id: productBrand,
         quantity: productQuantity,
-        image: imagePath
+        image: imagePath,
       };
 
       console.log('path test');
@@ -131,8 +131,8 @@ export default function ProductCreate() {
           type="text"
           class="form-control form-control-sm"
           placeholder="Product Name"
-          value= {productName}
-          onChange = {(e) => setProductName(e.target.value)}
+          value={productName}
+          onChange={(e) => setProductName(e.target.value)}
         />
       </div>
 
@@ -144,8 +144,8 @@ export default function ProductCreate() {
           class="form-control form-control-sm"
           placeholder="Description"
           rows={3}
-          value= {productDescription}
-          onChange = {(e) => setProductDescription(e.target.value)}
+          value={productDescription}
+          onChange={(e) => setProductDescription(e.target.value)}
         />
       </div>
       <div class="row">
@@ -157,8 +157,8 @@ export default function ProductCreate() {
             type="number"
             min="0"
             class="form-control form-control-sm"
-            value= {productPrice}
-          onChange = {(e) => setProductPrice(e.target.value)}
+            value={productPrice}
+            onChange={(e) => setProductPrice(e.target.value)}
             placeholder="Price"
           />
         </div>
@@ -170,8 +170,8 @@ export default function ProductCreate() {
             min="0"
             type="number"
             class="form-control form-control-sm"
-            value= {productQuantity}
-          onChange = {(e) => setProductQuantity(e.target.value)}
+            value={productQuantity}
+            onChange={(e) => setProductQuantity(e.target.value)}
             placeholder="Inventory (Quantity)"
           />
         </div>
@@ -181,7 +181,10 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Category
           </label>
-          <select  class="form-select form-select-sm" onChange={(e) => setProductCategory(e.target.value)}>
+          <select
+            class="form-select form-select-sm"
+            onChange={(e) => setProductCategory(e.target.value)}
+          >
             <option disabled selected value>
               -- CATEGORY --
             </option>
@@ -200,7 +203,10 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Brand
           </label>
-          <select class="form-select form-select-sm" onChange={(e) => setProductBrand(e.target.value)}>
+          <select
+            class="form-select form-select-sm"
+            onChange={(e) => setProductBrand(e.target.value)}
+          >
             <option disabled selected value>
               -- BRAND --
             </option>

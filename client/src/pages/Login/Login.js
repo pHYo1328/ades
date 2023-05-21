@@ -1,12 +1,23 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import CartContext from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import api from '../../index';
 
 function Login() {
   const navigate = useNavigate();
+  const [cartData, setCartData] = useContext(CartContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const loadUpCartData = async (customerID) => {
+    try {
+      const cartResponse = await api.get(`/api/cart/${customerID}`);
+      const cartData = cartResponse.data.data;
+      setCartData(cartData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const onHandleSubmit = (e) => {
     e.preventDefault();
 
@@ -37,6 +48,7 @@ function Login() {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('userid', data.userid);
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+          loadUpCartData(data.userid);
           setErrorMessage('');
           navigate('/verify-otp');
         } else {

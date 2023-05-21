@@ -41,7 +41,7 @@ const deleteButtonHandler = (cartData, productID, updateCartData) => {
   updateCartData(filteredProducts);
 };
 const Cart = () => {
-  const [cartData, setCartData] = useContext(CartContext);
+  const [cartData,setCartData] = useContext(CartContext);
   const [cartProductData, setCartProductData] = useState(null);
   const [productDetails, setProductsDetails] = useState(null);
   const latestCartData = useRef(cartData);
@@ -54,7 +54,7 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
-  const customerID = localStorage.getItem('customerID') || 4;
+  const customerID = localStorage.getItem('userid') || 4;
   const combineCartDataAndProductDetails = () => {
     const itemsDetailsToShow = cartData.map((cartItem) => {
       console.log(cartItem);
@@ -75,7 +75,6 @@ const Cart = () => {
         const cartResponse = await api.get(`/api/cart/${customerID}`);
         const cartData = cartResponse.data.data;
         setCartData(cartData);
-
         if (cartData.length > 0) {
           var productIDs = [];
           cartData.forEach((cartItem) => {

@@ -10,163 +10,156 @@ import EditImage from '../../../components/Products/EditProduct/EditImage';
 import ProductEditForm from '../../../components/Products/EditProduct/ProductEditForm';
 import { edit } from '@cloudinary/url-gen/actions/animated';
 export default function ProductEdit() {
-    const { productID } = useParams();
-    const [brands, setBrands] = useState(null);
-    const [categories, setCategories] = useState(null);
+  const { productID } = useParams();
+  const [brands, setBrands] = useState(null);
+  const [categories, setCategories] = useState(null);
 
-    const [submitClicked, setSubmitClicked] = useState(false);
-    const [deleteImageClicked, setDeleteImageClicked] = useState(false);
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-    const [product, setProduct] = useState(null);
+  const [submitClicked, setSubmitClicked] = useState(false);
+  const [deleteImageClicked, setDeleteImageClicked] = useState(false);
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const [product, setProduct] = useState(null);
 
-    const [productName, setProductName] = useState('');
-    const [productPrice, setProductPrice] = useState('');
-    const [productDescription, setProductDescription] = useState('');
-    const [productCategory, setProductCategory] = useState('');
-    const [productBrand, setProductBrand] = useState('');
-    const [productQuantity, setProductQuantity] = useState('');
-    const [imagePath, setImagePath] = useState('');
+  const [productName, setProductName] = useState('');
+  const [productPrice, setProductPrice] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [productCategory, setProductCategory] = useState('');
+  const [productBrand, setProductBrand] = useState('');
+  const [productQuantity, setProductQuantity] = useState('');
+  const [imagePath, setImagePath] = useState('');
 
+  const [editImage, setEditImage] = useState(false);
 
-    const [editImage, setEditImage] = useState(false)
+  const handleImageChange = (path) => {
+    console.log('Selected image path:', path);
+    setImagePath(path);
+  };
 
+  const fetchProducts = () => {
+    axios
+      .get(`${baseUrl}/api/product/${productID}`)
+      .then((response) => {
+        console.log(response);
+        setProduct(response.data.data);
+        console.log(product);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-    const handleImageChange = (path) => {
-        console.log('Selected image path:', path);
-        setImagePath(path);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (product && !submitClicked) {
+      setProductName(product.product_name);
+      setProductPrice(product.price);
+      setProductDescription(product.description);
+      setProductCategory(product.category_id);
+      setProductBrand(product.brand_id);
+      setProductQuantity(product.quantity);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/category`)
+      .then((response) => {
+        console.log(response);
+        setCategories(response.data.data);
+        console.log(categories);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/brands`)
+      .then((response) => {
+        console.log(response);
+        setBrands(response.data.data);
+        console.log(brands);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleSubmit = async (event) => {
+    setSubmitClicked(true);
+    event.preventDefault();
+
+    console.log(chalk.yellow('submit button is clicked!'));
+    // submitClicked=true;
+
+    console.log('image path before requestBody', imagePath);
+
+    console.log('product.image_url: ', product.image_url);
+    console.log('product.image_url length: ', product.image_url.length);
+
+    if (product.image_url.length > 0) {
+      setImagePath(`, ${imagePath}`);
+      console.log('image path after comma', imagePath);
+    }
+
+    const requestBody = {
+      product_name: productName,
+      description: productDescription,
+      price: productPrice,
+      category_id: productCategory,
+      brand_id: productBrand,
+      quantity: productQuantity,
+      image_url: imagePath,
     };
 
+    console.log(requestBody);
 
-    const fetchProducts = () => {
-        axios
-            .get(`${baseUrl}/api/product/${productID}`)
-            .then((response) => {
-                console.log(response);
-                setProduct(response.data.data);
-                console.log(product);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
-
-    useEffect(() => {
+    axios
+      .put(`${baseUrl}/api/products/${productID}`, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setProduct(response.data.data);
+        console.log(product);
+        setSubmitClicked(false);
         fetchProducts();
-    }, []);
+      });
+  };
 
-    useEffect(() => {
-        if (product && !submitClicked) {
-            setProductName(product.product_name);
-            setProductPrice(product.price);
-            setProductDescription(product.description);
-            setProductCategory(product.category_id);
-            setProductBrand(product.brand_id);
-            setProductQuantity(product.quantity);
-        }
-    }, [product]);
+  const handleDeleteImage = async (event) => {
+    event.preventDefault();
 
-    useEffect(() => {
-        axios
-            .get(`${baseUrl}/api/category`)
-            .then((response) => {
-                console.log(response);
-                setCategories(response.data.data);
-                console.log(categories);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
+    axios
+      .put(`${baseUrl}/api/products/${productID}/images`)
+      .then((response) => {
+        console.log('Delete images button is clicked');
+        fetchProducts();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    useEffect(() => {
-        axios
-            .get(`${baseUrl}/api/brands`)
-            .then((response) => {
-                console.log(response);
-                setBrands(response.data.data);
-                console.log(brands);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, []);
+    setDeleteImageClicked(true);
+  };
 
+  useEffect(() => {
+    if (deleteImageClicked) {
+      const deleteImageBtn = document.getElementById('delete-image-btn');
+      if (deleteImageBtn) {
+        deleteImageBtn.removeEventListener('click', handleDeleteImage);
+      }
+    }
+  }, [deleteImageClicked]);
 
-    const handleSubmit = async (event) => {
-        setSubmitClicked(true);
-        event.preventDefault();
-
-        console.log(chalk.yellow('submit button is clicked!'));
-        // submitClicked=true;
-
-        console.log("image path before requestBody", imagePath)
-
-        console.log("product.image_url: ", product.image_url);
-        console.log("product.image_url length: ", product.image_url.length);
-
-        if (product.image_url.length > 0) {
-            setImagePath(`, ${imagePath}`);
-            console.log("image path after comma", imagePath);
-        }
-
-        const requestBody = {
-            product_name: productName,
-            description: productDescription,
-            price: productPrice,
-            category_id: productCategory,
-            brand_id: productBrand,
-            quantity: productQuantity,
-            image_url: imagePath,
-        };
-
-        console.log(requestBody)
-
-        axios
-            .put(`${baseUrl}/api/products/${productID}`, requestBody, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then((response) => {
-                console.log(response);
-                setProduct(response.data.data);
-                console.log(product);
-                setSubmitClicked(false);
-                fetchProducts();
-            });
-    };
-
-
-    const handleDeleteImage = async (event) => {
-        event.preventDefault();
-
-        axios
-            .put(`${baseUrl}/api/products/${productID}/images`)
-            .then((response) => {
-                console.log('Delete images button is clicked');
-                fetchProducts();
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        setDeleteImageClicked(true);
-    };
-
-    useEffect(() => {
-        if (deleteImageClicked) {
-            const deleteImageBtn = document.getElementById('delete-image-btn');
-            if (deleteImageBtn) {
-                deleteImageBtn.removeEventListener('click', handleDeleteImage);
-            }
-        }
-    }, [deleteImageClicked]);
-
-
-    return (
-
-        <div>
-            {/* <form
+  return (
+    <div>
+      {/* <form
         id="create-product-form"
         class="w-50 mt-5"
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -331,17 +324,15 @@ export default function ProductEdit() {
         </div>
       </form> */}
 
-            <button onClick={() => {
-                setEditImage(!editImage)
-            }
-            }>Toggle</button>
+      <button
+        onClick={() => {
+          setEditImage(!editImage);
+        }}
+      >
+        Toggle
+      </button>
 
-            {!editImage ? (
-                <ProductEditForm />
-            ) :
-                <EditImage />
-            }
-
-        </div>
-    );
+      {!editImage ? <ProductEditForm /> : <EditImage />}
+    </div>
+  );
 }

@@ -31,21 +31,22 @@ export default function ProductsByCategory() {
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-
-        <a href="/products" class="h2">Products</a>
+        <a href="/products" class="h2">
+          Products
+        </a>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div key={product.product_id} className="group relative" onClick={() => {
-                const productID = product.product_id
-                window.location.href = `http://localhost:3000/products/${productID}`
-              }}>
+              <div
+                key={product.product_id}
+                className="group relative"
+                onClick={() => {
+                  const productID = product.product_id;
+                  window.location.href = `http://localhost:3000/products/${productID}`;
+                }}
+              >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-
-                  <AdvancedImage
-                    cldImg={cld.image(product.image_url)}
-                  />
-
+                  <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
@@ -69,6 +70,7 @@ export default function ProductsByCategory() {
             <p>Loading...</p>
           )}
         </div>
-      </div></div>
+      </div>
+    </div>
   );
 }

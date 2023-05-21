@@ -13,7 +13,6 @@ function Payment() {
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState('');
 
-
   useEffect(() => {
     axios
       .get(`${baseUrl}/config`)

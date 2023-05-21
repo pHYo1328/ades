@@ -204,6 +204,9 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };
