@@ -229,30 +229,6 @@ module.exports.getAllProducts = async () => {
 module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
   try {
-    //     let productsDataQuery = `
-    //       SELECT
-    // 	p.product_id,
-    //     p.product_name,
-    //     p.description,
-    //     p.price,
-    //     c.category_name,
-    //     b.brand_name,
-    // 	MAX(p_i.image_url) as image_url
-    // FROM
-    // 	product p
-    //     INNER JOIN category c ON c.category_id = p.category_id
-    //     INNER JOIN brand b ON b.brand_id = p.brand_id
-    //     LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-    //    GROUP BY
-    //  p_i.product_id
-    //       `;
-    //     if (categoryID != 0) {
-    //       productsDataQuery += 'and c.category_id =?';
-    //     }
-    //     if (brandID != 0) {
-    //       productsDataQuery += 'and b.brand_id =?';
-    //     }
-
     let productsDataQuery = `
   SELECT
     p.product_id, 
@@ -616,7 +592,23 @@ module.exports.getSearchResults = async (
   console.log(chalk.blue('getSearchResults is called'));
   try {
     let searchResultsDataQuery =
-      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
+      // 'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
+      `
+      SELECT
+      p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+      MAX(p_i.image_url) as image_url
+    FROM 
+      category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+    WHERE 1 = 1
+      `;
     let queryInput = [];
     if (product_name)
       (searchResultsDataQuery += ` AND p.product_name RLIKE ?`),
@@ -638,6 +630,8 @@ module.exports.getSearchResults = async (
     } else if (min_price)
       (searchResultsDataQuery += ` AND p.price > ?`),
         queryInput.push(min_price);
+
+    searchResultsDataQuery += ` GROUP BY p.product_id;`;
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
