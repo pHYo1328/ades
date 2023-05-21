@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const getConnection = require('../config/redis');
 const pool = require('../config/database');
-const expireTime = 1;
+const expireTime = 3600;
 // set key value in redis
 module.exports.addCartDataToRedis = async (userId, cartData) => {
   console.log(chalk.blue('addCartDataToRedis is called'));
@@ -58,6 +58,7 @@ module.exports.deleteCartDataInRedis = async (userId) => {
   }
 };
 
+// for synchronization of cache and database, decided to use write through for data consistency
 module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
   console.log(chalk.blue('addCartDataToMySqlDB is called'));
   const cartDataValues = cartData.map((item) => [
@@ -75,11 +76,11 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
     console.log(chalk.blue('Cart data values:', cartDataValues));
     const existingCartData = await pool.query(selectCartDataQuery,[userId]);
     console.log(chalk.green('Existing cart data:', existingCartData));
-    if(existingCartData.length > cartDataValues.length) {
+    if(existingCartData[0].length > cartData.length) {
       const existingProductIDs = cartData.map((item)=>item.productId);
       console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
-      const [deleteRows]=await pool.query(deleteCartDataQuery,[userId,existingProductIDs]);
-      console.log(chalk.green('Deleted rows:', deleteRows));
+      const [deleteRows]=await pool.query(deleteCartDataQuery,[userId,[existingProductIDs]]);
+      console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
     }
     console.log(chalk.blue('Executing query >>>', addCartDataQuery));
     const [rows, fields] = await pool.query(addCartDataQuery, [cartDataValues]);

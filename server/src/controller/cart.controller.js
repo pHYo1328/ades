@@ -35,6 +35,7 @@ exports.processAddCartData = async (req, res, next) => {
   }
 };
 
+// for reading, decided to use cache aside 
 exports.processGetCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
   const { userID } = req.params;
