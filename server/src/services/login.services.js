@@ -7,18 +7,20 @@ const bcrypt = require('bcrypt');
 module.exports.registerUser = async (username, email, password) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-    // check for duplicates in the users table
-    const checkDuplicateQuery =
-      'SELECT COUNT(*) as count FROM users WHERE username = ?';
-    const duplicateResults = await pool.query(checkDuplicateQuery, [username]);
-    const count = duplicateResults[0].count;
-    if (count > 0) {
-      throw new Error('Username already exists');
-    }
-
+  //  // Check if the username already exists in the database
+  // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
+  // const usernameExists = await pool.query(checkUsernameQuery, [username]);
+  // const count = usernameExists[0].count;
+  
+  // if (count > 0) {
+  //   // Throw an error with status code 500
+  //   const error = new Error('Username already exists');
+  //   error.status = 500;
+  //   throw error;
+  // }
     // insert the new user
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "user");';
+      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "customer");';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
@@ -27,7 +29,7 @@ module.exports.registerUser = async (username, email, password) => {
     console.log(chalk.green(results));
     return results;
   } catch (error) {
-    console.error(chalk.red('Error in registering new user: ', error));
+    console.error(chalk.red('Error in registering new user: ', error)); //username prob already exists in database
     throw error;
   }
 };
@@ -120,7 +122,6 @@ module.exports.logoutUser = async (refreshToken) => {
   }
 };
 
-
 // Forgot password
 module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM users WHERE email = ?';
@@ -131,7 +132,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
 
     if (rows.length === 0) {
       // User not found
-      console.log("User not found");
+      console.log('User not found');
       return false;
     }
 
@@ -144,7 +145,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
       // password is the same as the previous password
-      console.log("New password is the same as the previous password");
+      console.log('New password is the same as the previous password');
       return false;
     }
 
@@ -152,7 +153,10 @@ module.exports.forgotPassword = async (email, newPassword) => {
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
     // Update the password
-    const updateResult = await pool.query(updatePasswordQuery, [hashedPwd, email]);
+    const updateResult = await pool.query(updatePasswordQuery, [
+      hashedPwd,
+      email,
+    ]);
 
     if (updateResult.affectedRows === 0) {
       console.log('Password update failed');
@@ -166,6 +170,49 @@ module.exports.forgotPassword = async (email, newPassword) => {
     throw error;
   }
 };
+
+// Verify OTP
+module.exports.verifyOTP = async (otp) => {
+  try {
+    console.log("am i here");
+    const result = await pool.query(
+      'SELECT otp FROM users WHERE otp = ?',
+      [otp]
+    );
+
+    const rows = result[0];
+    if (rows.length > 0) {
+      const savedOTP = rows[0].otp;
+
+      if (otp === savedOTP) {
+        // OTP verification successful
+        console.log("otp same as db otp");
+        return true;
+      } else {
+        // Invalid OTP
+        console.log("ITS WRONG");
+        return false;
+      }
+    } else {
+      // User not found or OTP not saved
+      console.log("not here LOL");
+      return false;
+    }
+  } catch (error) {
+    // Handle any error that occurred during the database query
+    throw error;
+  }
+};
+
+// Retrieve customer information
+module.exports.retrieveUsersInfo = async () => {
+  const query = 'SELECT * FROM users';
+  const [users] = await pool.query(query);
+  console.log('All users info retrieved!');
+  return users;
+};
+
+
 
 // // Forgot password
 // module.exports.forgotPassword = async (email, newPassword) => {
@@ -214,9 +261,6 @@ module.exports.forgotPassword = async (email, newPassword) => {
 //     throw error;
 //   }
 // };
-
-
-
 
 // // delete product by ID (done, but still need to delete from order)
 // module.exports.deleteProductByID = async (productID) => {

@@ -16,6 +16,9 @@ function ForgetPassword() {
       password: password,
     };
 
+    if (password !== cfmPassword)
+      return alert("Password and Confirm Password must be the same");
+
     fetch(url, {
       method: 'PUT',
       headers: {
@@ -23,19 +26,38 @@ function ForgetPassword() {
       },
       body: JSON.stringify(body),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // navigate('/login');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    
+    .then((response) => {
+      if (response.status === 404) {
+        return {
+          success: false,
+          message: "Password changed failed!",
+        };
+      } else {
+        return {
+          success: true,
+          message: "Password changed successfully!",
+        }
+      }
+      // return response.json();
+    })
+    .then((data) => {
+      console.log("this si the data",data);
+      if (!data.success) {
+        alert(data.message);
+      } else {
+        navigate('/login');
+        alert(data.message);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
     console.log(email, password, cfmPassword);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-indigo-950">
       <form
         className="max-w-lg w-full space-y-8 bg-white p-8 rounded-lg shadow-md"
         onSubmit={onHandleSubmit}
@@ -112,7 +134,7 @@ function ForgetPassword() {
         </div>
 
         <div className="flex justify-center">
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-full w-2/3 hover:bg-blue-700">
+          <button className="mt-4 w-full px-4 py-2 rounded-md shadow-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200">
             Reset Password!
           </button>
         </div>

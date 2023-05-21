@@ -1,7 +1,7 @@
 //const fs = require('fs');
+const { builtinModules } = require('module');
 const pool = require('../config/database');
 const chalk = require('chalk');
-const cloudinary = require('../config/cloudinary');
 
 // get product by ID (done) (done)
 module.exports.getProductByID = async (productID) => {
@@ -16,7 +16,6 @@ module.exports.getProductByID = async (productID) => {
   p.price,
   c.category_name,
   b.brand_name,
-  p.image_url,
   COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
   COUNT(r.rating_score) AS rating_count
 FROM
@@ -34,12 +33,17 @@ GROUP BY
   p.description,
   p.price,
   c.category_name,
-  b.brand_name,
-  p.image_url;
+  b.brand_name;
       `;
-    const results = await pool.query(productDataQuery, [productID]);
-    console.log(chalk.green(results));
-    return results[0][0];
+    let productImageQuery = `
+      SELECT image_url 
+      FROM product_image
+      WHERE product_id = ?`;
+    const productResults = await pool.query(productDataQuery, [productID]);
+    let productImageResults = await pool.query(productImageQuery, [productID]);
+    // console.log(chalk.green(Object.values(productResults[0][0])));
+    // console.log(chalk.green(Object.values(productImageResults[0][0])));
+    return [productResults[0][0], productImageResults[0]];
   } catch (error) {
     console.error(chalk.red('Error in getProductByID: ', error));
     throw error;
@@ -56,6 +60,7 @@ module.exports.deleteProductByID = async (productID) => {
       'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
     const ratingDeleteQuery = 'DELETE from rating where product_id =?;';
     const inventoryDeleteQuery = 'DELETE from inventory where product_id=?;';
+    const imageDeleteQuery = 'DELETE FROM product_image where product_id=?';
     const productDeleteQuery = 'DELETE FROM product where product_id=?;';
 
     // Run the delete queries concurrently
@@ -64,6 +69,7 @@ module.exports.deleteProductByID = async (productID) => {
       pool.query(ordersDeleteQuery),
       pool.query(ratingDeleteQuery, [productID]),
       pool.query(inventoryDeleteQuery, [productID]),
+      pool.query(imageDeleteQuery, [productID]),
     ]);
 
     const productDeleteResult = await pool.query(productDeleteQuery, [
@@ -81,59 +87,84 @@ module.exports.deleteProductByID = async (productID) => {
 // delete brand by id
 module.exports.deleteBrandByID = async (brandID) => {
   console.log(chalk.blue('deleteBrandByID is called'));
-  try {
-    const orderItemsDeleteQuery =
-      'DELETE o FROM order_items o JOIN product p ON o.product_id = p.product_id WHERE p.brand_id = ? AND o.order_id IN (SELECT order_id FROM orders);';
-    const ordersDeleteQuery =
-      'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
-    const ratingDeleteQuery =
-      'DELETE FROM rating WHERE product_id IN (SELECT product_id FROM product WHERE brand_id = ?);';
-    const inventoryDeleteQuery =
-      'DELETE FROM inventory WHERE product_id IN ( SELECT product_id FROM product WHERE brand_id = ?);';
-    const productDeleteQuery = 'DELETE FROM product where brand_id=?;';
-    const brandDeleteQuery = 'DELETE from brand where brand_id = ?;';
 
+  const orderItemsDeleteQuery =
+    'DELETE o FROM order_items o JOIN product p ON o.product_id = p.product_id WHERE p.brand_id = ? AND o.order_id IN (SELECT order_id FROM orders);';
+  const ordersDeleteQuery =
+    'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
+  const ratingDeleteQuery =
+    'DELETE FROM rating WHERE product_id IN (SELECT product_id FROM product WHERE brand_id = ?);';
+  const inventoryDeleteQuery =
+    'DELETE FROM inventory WHERE product_id IN ( SELECT product_id FROM product WHERE brand_id = ?);';
+  const imageDeleteQuery =
+    'DELETE FROM product_image where product_id IN ( SELECT product_id FROM product WHERE brand_id = ?);';
+  const productDeleteQuery = 'DELETE FROM product where brand_id=?;';
+  const brandDeleteQuery = 'DELETE from brand where brand_id = ?;';
+
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue('database is connected to product.services.js deleteBrandByID')
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
     // Run the delete queries concurrently
     await Promise.all([
       pool.query(orderItemsDeleteQuery, [brandID]),
       pool.query(ordersDeleteQuery),
       pool.query(ratingDeleteQuery, [brandID]),
       pool.query(inventoryDeleteQuery, [brandID]),
+      pool.query(imageDeleteQuery, [brandID]),
     ]);
 
     await pool.query(productDeleteQuery, [brandID]);
 
     const brandDeleteResult = await pool.query(brandDeleteQuery, [brandID]);
+    await connection.commit();
     console.log(chalk.green(brandDeleteResult));
     console.log(chalk.yellow(brandDeleteResult[0].affectedRows));
     return brandDeleteResult[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in deleteBrandByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
 // delete category by id
 module.exports.deleteCategoryByID = async (categoryID) => {
   console.log(chalk.blue('deleteCategoryByID is called'));
-  try {
-    const orderItemsDeleteQuery =
-      'DELETE o FROM order_items o JOIN product p ON o.product_id = p.product_id WHERE p.category_id = ? AND o.order_id IN (SELECT order_id FROM orders);';
-    const ordersDeleteQuery =
-      'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
-    const ratingDeleteQuery =
-      'DELETE FROM rating WHERE product_id IN (SELECT product_id FROM product WHERE category_id = ?);';
-    const inventoryDeleteQuery =
-      'DELETE FROM inventory WHERE product_id IN ( SELECT product_id FROM product WHERE category_id = ?);';
-    const productDeleteQuery = 'DELETE FROM product where category_id=?;';
-    const categoryDeleteQuery = 'DELETE from category where category_id = ?;';
+  const orderItemsDeleteQuery =
+    'DELETE o FROM order_items o JOIN product p ON o.product_id = p.product_id WHERE p.category_id = ? AND o.order_id IN (SELECT order_id FROM orders);';
+  const ordersDeleteQuery =
+    'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
+  const ratingDeleteQuery =
+    'DELETE FROM rating WHERE product_id IN (SELECT product_id FROM product WHERE category_id = ?);';
+  const inventoryDeleteQuery =
+    'DELETE FROM inventory WHERE product_id IN ( SELECT product_id FROM product WHERE category_id = ?);';
+  const imageDeleteQuery =
+    'DELETE FROM product_image WHERE product_id IN ( SELECT product_id FROM product WHERE category_id = ?);';
+  const productDeleteQuery = 'DELETE FROM product where category_id=?;';
+  const categoryDeleteQuery = 'DELETE from category where category_id = ?;';
 
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js deleteCategoryByID'
+    )
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
     // Run the delete queries concurrently
     await Promise.all([
       pool.query(orderItemsDeleteQuery, [categoryID]),
       pool.query(ordersDeleteQuery),
       pool.query(ratingDeleteQuery, [categoryID]),
       pool.query(inventoryDeleteQuery, [categoryID]),
+      pool.query(imageDeleteQuery, [categoryID]),
     ]);
 
     await pool.query(productDeleteQuery, [categoryID]);
@@ -141,12 +172,16 @@ module.exports.deleteCategoryByID = async (categoryID) => {
     const categoryDeleteResult = await pool.query(categoryDeleteQuery, [
       categoryID,
     ]);
+    await connection.commit();
     console.log(chalk.green(categoryDeleteResult));
     console.log(chalk.yellow(categoryDeleteResult[0].affectedRows));
     return categoryDeleteResult[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in deleteCategoryByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -155,32 +190,31 @@ module.exports.getAllProducts = async () => {
   console.log(chalk.blue('getAllProducts is called'));
   try {
     const productsDataQuery = `
-      SELECT
-  i.quantity,
-  p.product_id,
-  p.product_name,
-  p.description,
-  p.price,
-  c.category_name,
-  b.brand_name,
-  p.image_url,
-  COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
-  COUNT(r.rating_score) AS rating_count
-FROM
-  product p
-  INNER JOIN category c ON c.category_id = p.category_id
-  INNER JOIN brand b ON b.brand_id = p.brand_id
-  LEFT JOIN rating r ON r.product_id = p.product_id
-  LEFT JOIN inventory i ON i.product_id = p.product_id
-GROUP BY
-  i.quantity,
-  p.product_id,
-  p.product_name,
-  p.description,
-  p.price,
-  c.category_name,
-  b.brand_name,
-  p.image_url;
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name;
       `;
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
@@ -191,12 +225,78 @@ GROUP BY
   }
 };
 
+// get products by category or brand (done)
+module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
+  console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
+  try {
+    let productsDataQuery = `
+  SELECT
+    p.product_id, 
+    p.product_name, 
+    p.description, 
+    p.price, 
+    c.category_name, 
+    b.brand_name, 
+    MAX(p_i.image_url) as image_url
+  FROM 
+    product p 
+    INNER JOIN category c ON c.category_id = p.category_id
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+`;
+
+    const params = [];
+
+    if (categoryID != 0) {
+      productsDataQuery += ' WHERE c.category_id = ?';
+      params.push(categoryID);
+    }
+
+    if (brandID != 0) {
+      if (categoryID != 0) {
+        productsDataQuery += ' AND b.brand_id = ?';
+      } else {
+        productsDataQuery += ' WHERE b.brand_id = ?';
+      }
+      params.push(brandID);
+    }
+
+    productsDataQuery += ' GROUP BY p.product_id';
+
+    const results = await pool.query(productsDataQuery, params);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getProductsByCategoryOrBrand: ', error));
+    throw error;
+  }
+};
+
 // get products by category (done)
 module.exports.getProductsByCategoryID = async (categoryID) => {
   console.log(chalk.blue('getProductsByCategoryID is called'));
+  console.log(chalk.blue(categoryID));
   try {
-    const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and c.category_id =?;';
+    const productsDataQuery = `
+      SELECT 
+        p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+        MAX(p_i.image_url) as image_url
+      FROM 
+        category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+      WHERE
+        c.category_id = ?
+      GROUP BY
+	      p.product_id
+
+      `;
     const results = await pool.query(productsDataQuery, [categoryID]);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -210,8 +310,25 @@ module.exports.getProductsByCategoryID = async (categoryID) => {
 module.exports.getProductsByBrandID = async (brandID) => {
   console.log(chalk.blue('getProductsByBrandID is called'));
   try {
-    const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id and b.brand_id =?;';
+    const productsDataQuery = `
+      SELECT
+	p.product_id, 
+    p.product_name, 
+    p.description, 
+    p.price, 
+    c.category_name, 
+    b.brand_name, 
+	MAX(p_i.image_url) as image_url
+FROM 
+	category c 
+    INNER JOIN product p ON p.category_id = c.category_id 
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+WHERE
+	b.brand_id = ?
+GROUP BY
+	p.product_id
+      `;
     const results = await pool.query(productsDataQuery, [brandID]);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -225,8 +342,35 @@ module.exports.getProductsByBrandID = async (brandID) => {
 module.exports.getNewArrivals = async () => {
   console.log(chalk.blue('getNewArrivals is called'));
   try {
-    const productsDataQuery =
-      'SELECT p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id order by created_at desc limit 3';
+    const productsDataQuery = `
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name
+ORDER BY
+    p.created_at desc limit 5
+      `;
     const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
@@ -248,14 +392,21 @@ module.exports.updateProductByID = async (
   product_id
 ) => {
   console.log(chalk.blue('updateProductByID is called'));
-
+  const productUpdateQuery =
+    "UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url =  CONCAT(image_url, COALESCE(?, '')) where product_id = ?";
+  const inventoryUpdateQuery =
+    'UPDATE inventory SET quantity = COALESCE(?,quantity) where product_id = ?';
+  console.log(chalk.blue('Creating connection... '));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js createProduct function'
+    )
+  );
   try {
-    const productUpdateQuery =
-      'UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url = CONCAT(image_url, COALESCE(?, "")) where product_id = ?';
-    const inventoryUpdateQuery =
-      'UPDATE inventory SET quantity = COALESCE(?,quantity) where product_id = ?';
-
-    const productUpdatePromise = pool.query(productUpdateQuery, [
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+    const productData = [
       product_name,
       price,
       description,
@@ -263,28 +414,31 @@ module.exports.updateProductByID = async (
       brand_id,
       image_url,
       product_id,
-    ]);
-
-    const inventoryUpdatePromise = pool.query(inventoryUpdateQuery, [
-      quantity,
-      product_id,
-    ]);
-
-    const [productUpdateResult, inventoryUpdateResult] = await Promise.all([
-      productUpdatePromise,
-      inventoryUpdatePromise,
-    ]);
-
-    console.log(chalk.green(productUpdateResult[0]));
-    console.log(chalk.green(inventoryUpdateResult[0]));
-
-    return (
-      productUpdateResult[0].affectedRows > 0
-      // inventoryUpdateResult[0].affectedRows > 0
+    ];
+    console.log(chalk.blue('Executing query: '), productUpdateQuery);
+    const productUpdatePromise = connection.query(
+      productUpdateQuery,
+      productData
     );
+    console.log(chalk.green(productUpdatePromise));
+    const inventoryData = [quantity, product_id];
+    const inventoryUpdatePromise = connection.query(
+      inventoryUpdateQuery,
+      inventoryData
+    );
+
+    await Promise.all([productUpdatePromise, inventoryUpdatePromise]);
+    await connection.commit();
+    console.log(
+      chalk.green('Product and inventory have been updated successfully')
+    );
+    return true;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in updateProductByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -299,33 +453,60 @@ module.exports.createProduct = async (
   quantity
 ) => {
   console.log(chalk.blue('createProduct is called'));
+  console.log(chalk.blue(image));
+  const productCreateQuery =
+    'INSERT into product (product_name,price, description, category_id, brand_id) values (?,?,?,?,?)';
+  const inventoryCreateQuery =
+    'INSERT INTO inventory (product_id, quantity) values (?, ?);';
+  let imageCreateQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+
+  quantity = quantity || 0;
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js createProduct function'
+    )
+  );
   try {
-    const productCreateQuery =
-      'INSERT into product (product_name,price, description, category_id, brand_id, image_url) values (?,?,?,?,?, ?)';
-    const inventoryCreateQuery =
-      'INSERT INTO inventory (product_id, quantity) values (?, ?);';
-
-    quantity = quantity || 0;
-
-    const results = await pool.query(productCreateQuery, [
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+    const productData = [
       name,
       price,
       description,
       category_id,
       brand_id,
       image,
-    ]);
-    const productId = results[0].insertId;
-    console.log(chalk.green(results[0]));
-    const inventoryResults = await pool.query(inventoryCreateQuery, [
-      productId,
-      quantity,
-    ]);
-    console.log(chalk.green(inventoryResults[0]));
-    return results[0].affectedRows > 0;
+    ];
+
+    console.log(chalk.blue('Executing query: '), productCreateQuery);
+    const productResult = await connection.query(
+      productCreateQuery,
+      productData
+    );
+    const productID = productResult[0].insertId;
+
+    let imageValues = [image.map((i) => [productID, i])];
+    console.log(chalk.blue(imageValues));
+    await connection.query(imageCreateQuery, imageValues);
+
+    const inventoryData = [productID, quantity];
+    const result = await connection.query(inventoryCreateQuery, inventoryData);
+    await connection.commit();
+    console.log(
+      chalk.green('Product and inventory have been created successfully')
+    );
+    return result[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red('Error in createProduct: ', error));
+    await connection.rollback();
+    console.error(
+      chalk.red('Error in inserting product and inventory data: '),
+      error
+    );
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -411,9 +592,24 @@ module.exports.getSearchResults = async (
   console.log(chalk.blue('getSearchResults is called'));
   try {
     let searchResultsDataQuery =
-      'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
+      // 'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
+      `
+      SELECT
+      p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+      MAX(p_i.image_url) as image_url
+    FROM 
+      category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+    WHERE 1 = 1
+      `;
     let queryInput = [];
-
     if (product_name)
       (searchResultsDataQuery += ` AND p.product_name RLIKE ?`),
         queryInput.push(product_name);
@@ -434,6 +630,8 @@ module.exports.getSearchResults = async (
     } else if (min_price)
       (searchResultsDataQuery += ` AND p.price > ?`),
         queryInput.push(min_price);
+
+    searchResultsDataQuery += ` GROUP BY p.product_id;`;
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
@@ -531,6 +729,76 @@ module.exports.createBrandOrCategory = async (name, type) => {
     return results[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in createBrandOrCategory: ', error));
+    throw error;
+  }
+};
+
+// get stats
+module.exports.getStatistics = async () => {
+  console.log(chalk.blue('getStatistics is called'));
+  try {
+    const statisticsQuery = `
+    SELECT SUM(oi.quantity) as total_sold, 
+    SUM(i.quantity) as total_inventory, 
+    SUM(p.payment_total) as total_payment, 
+    COUNT(oi.order_id) as total_order
+FROM order_items oi
+JOIN inventory i ON oi.product_id = i.product_id
+JOIN payment p ON oi.order_id = p.order_id;
+  `;
+
+    const results = await pool.query(statisticsQuery);
+    console.log(chalk.green(results[0][0]));
+    return results[0][0];
+  } catch (error) {
+    console.error(chalk.red('Error in getStatistics: ', error));
+    throw error;
+  }
+};
+
+// get all images by product ID
+module.exports.getImagesByProductID = async (productID) => {
+  console.log(chalk.blue('getImagesByProductID is called'));
+  try {
+    const imageDataQuery = `
+      SELECT * FROM product_image WHERE product_id = ?;
+    `;
+    const results = await pool.query(imageDataQuery, [productID]);
+    console.log(chalk.green(results));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getImagesByProductID: ', error));
+    throw error;
+  }
+};
+
+// delete image by image id
+module.exports.deleteImageByID = async (imageID) => {
+  console.log(chalk.blue('deleteImageByID is called'));
+  try {
+    const deleteImageQuery = `DELETE FROM product_image WHERE image_id=?;`;
+    const results = await pool.query(deleteImageQuery, [imageID]);
+    console.log(chalk.green(results[0].affectedRows));
+    return results[0].affectedRows > 0;
+  } catch (error) {
+    console.error(chalk.red('Error in deleteImageByID: ', error));
+    throw error;
+  }
+};
+
+module.exports.createImageForProduct = async (image_urls, product_id) => {
+  console.log(chalk.blue('createImageForProduct is called'));
+  try {
+    const imageCreateQuery = `
+      INSERT INTO product_image (image_url, product_id) VALUES ?`;
+
+    const imageValues = image_urls.map((image) => [image, product_id]);
+    console.log(chalk.blue(imageValues));
+    const results = await pool.query(imageCreateQuery, [imageValues]);
+    console.log(chalk.green(results[0]));
+    return results[0].affectedRows > 0;
+  } catch (error) {
+    console.error(chalk.red('Error in createImageForProduct: ', error));
     throw error;
   }
 };

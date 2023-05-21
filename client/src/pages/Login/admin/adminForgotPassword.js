@@ -1,42 +1,59 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Register() {
+function ForgetPassword() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [cfmPassword, setCfmPassword] = useState('');
   const [email, setEmail] = useState('');
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/register';
+    const url = 'http://localhost:8081/forgot-admin';
 
     const body = {
-      username: username,
       email: email,
       password: password,
     };
 
     if (password !== cfmPassword)
       return alert("Password and Confirm Password must be the same");
-      
+
     fetch(url, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        navigate('/login');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    console.log(username, password, cfmPassword, email);
+    
+    .then((response) => {
+      if (response.status === 404) {
+        return {
+          success: false,
+          message: "Admin password changed failed!",
+        };
+      } else {
+        return {
+          success: true,
+          message: "Admin password changed successfully!",
+        }
+      }
+      // return response.json();
+    })
+    .then((data) => {
+      console.log("this si the data",data);
+      if (!data.success) {
+        alert(data.message);
+      } else {
+        navigate('/login-admin');
+        alert(data.message);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    console.log(email, password, cfmPassword);
   };
 
   return (
@@ -48,7 +65,7 @@ function Register() {
         <div className="flex items-center mb-8">
           <button
             className="text-gray-600 rounded-full p-2 mr-4"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login-admin')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,24 +82,7 @@ function Register() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Register</h2>
-        </div>
-
-        <div className="mb-6">
-          <label
-            className="text-sm font-medium text-gray-700"
-            htmlFor="username"
-          >
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            placeholder="Type here"
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <h2 className="text-2xl font-bold text-gray-800">Forgot Admin Password</h2>
         </div>
 
         <div className="mb-6">
@@ -104,12 +104,12 @@ function Register() {
             className="text-sm font-medium text-gray-700"
             htmlFor="password"
           >
-            Password
+            New Password
           </label>
           <input
-            id="password"
+            id="newPassword"
             type="password"
-            placeholder="Type here"
+            placeholder="Enter your new password"
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -135,7 +135,7 @@ function Register() {
 
         <div className="flex justify-center">
           <button className="mt-4 w-full px-4 py-2 rounded-md shadow-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200">
-            Register
+            Reset Password!
           </button>
         </div>
       </form>
@@ -143,4 +143,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default ForgetPassword;

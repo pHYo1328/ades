@@ -10,7 +10,7 @@ function Register() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/register';
+    const url = 'http://localhost:8081/register-admin';
 
     const body = {
       username: username,
@@ -31,7 +31,7 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        navigate('/login');
+        navigate('/login-admin');
       })
       .catch((error) => {
         console.error(error);
@@ -48,7 +48,7 @@ function Register() {
         <div className="flex items-center mb-8">
           <button
             className="text-gray-600 rounded-full p-2 mr-4"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login-admin')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ function Register() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Register</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Register Admin</h2>
         </div>
 
         <div className="mb-6">

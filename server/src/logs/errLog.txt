@@ -13,3 +13,9 @@
 20230515	16:09:04	4bcaff78-617a-4f02-be00-288970a956f3	Error: Not allowed by CORS
 20230515	16:09:04	741c8274-e8aa-4f35-ab35-732d6ba06610	Error: Not allowed by CORS
 20230515	16:09:04	a94d6121-ad9f-4763-9011-da93327bd787	Error: Not allowed by CORS
+20230518	14:03:21	dfca85eb-2ef6-46f3-981a-7b0e0c5d84d4	Error: Not allowed by CORS
+20230518	14:03:21	4fadb057-9e7d-4b43-a048-0e946f767691	Error: Not allowed by CORS
+20230518	14:03:21	e0f579d3-aa53-4e50-ac79-f9df567ba9ee	Error: Not allowed by CORS
+20230521	21:59:00	5ed65bb0-e5e9-41e7-b86d-c78d38126e5a	SyntaxError: Unexpected token ']', ..."    
+    ]
+}" is not valid JSON
