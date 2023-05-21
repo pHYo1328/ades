@@ -229,31 +229,65 @@ module.exports.getAllProducts = async () => {
 module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
   try {
+    //     let productsDataQuery = `
+    //       SELECT
+    // 	p.product_id,
+    //     p.product_name,
+    //     p.description,
+    //     p.price,
+    //     c.category_name,
+    //     b.brand_name,
+    // 	MAX(p_i.image_url) as image_url
+    // FROM
+    // 	product p
+    //     INNER JOIN category c ON c.category_id = p.category_id
+    //     INNER JOIN brand b ON b.brand_id = p.brand_id
+    //     LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+    //    GROUP BY
+    //  p_i.product_id
+    //       `;
+    //     if (categoryID != 0) {
+    //       productsDataQuery += 'and c.category_id =?';
+    //     }
+    //     if (brandID != 0) {
+    //       productsDataQuery += 'and b.brand_id =?';
+    //     }
+
     let productsDataQuery = `
-      SELECT
-	p.product_id, 
+  SELECT
+    p.product_id, 
     p.product_name, 
     p.description, 
     p.price, 
     c.category_name, 
     b.brand_name, 
-	MAX(p_i.image_url) as image_url
-FROM 
-	product p 
+    MAX(p_i.image_url) as image_url
+  FROM 
+    product p 
     INNER JOIN category c ON c.category_id = p.category_id
     INNER JOIN brand b ON b.brand_id = p.brand_id
     LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-   GROUP BY
-	p.product_id
-      `;
+`;
+
+    const params = [];
+
     if (categoryID != 0) {
-      productsDataQuery += 'and c.category_id =?';
-    }
-    if (brandID != 0) {
-      productsDataQuery += 'and b.brand_id =?';
+      productsDataQuery += ' WHERE c.category_id = ?';
+      params.push(categoryID);
     }
 
-    const results = await pool.query(productsDataQuery, [categoryID, brandID]);
+    if (brandID != 0) {
+      if (categoryID != 0) {
+        productsDataQuery += ' AND b.brand_id = ?';
+      } else {
+        productsDataQuery += ' WHERE b.brand_id = ?';
+      }
+      params.push(brandID);
+    }
+
+    productsDataQuery += ' GROUP BY p.product_id';
+
+    const results = await pool.query(productsDataQuery, params);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
@@ -584,7 +618,6 @@ module.exports.getSearchResults = async (
     let searchResultsDataQuery =
       'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
     let queryInput = [];
-
     if (product_name)
       (searchResultsDataQuery += ` AND p.product_name RLIKE ?`),
         queryInput.push(product_name);
