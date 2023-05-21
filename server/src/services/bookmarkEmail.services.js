@@ -15,7 +15,7 @@ const createHTMLContent = (customerProducts) => {
           `<p>${product.product_name} is available for u</p>
           <img src="https://res.cloudinary.com/ddoajstil/image/upload/${product.image_url}" alt="Product image">
           `
-          // I will create a customized email here 
+        // I will create a customized email here
       )
       .join('')}
     </body></html>`;
@@ -34,7 +34,7 @@ const sendEmail = (customer, customerProducts) => {
         },
       ],
       htmlContent: createHTMLContent(customerProducts),
-      params: { bodyMessage: 'Made just for you!' },// just testing
+      params: { bodyMessage: 'Made just for you!' }, // just testing
     })
     .then((data) => {
       console.log(data, customer);
@@ -48,7 +48,8 @@ const sendEmail = (customer, customerProducts) => {
 
 module.exports.updateProductsEmailSender = async () => {
   console.log(chalk.blue('Cron schedule Started'));
-  const updateCheckingQuery ='SELECT MAX(created_at) AS latest_update FROM product';
+  const updateCheckingQuery =
+    'SELECT MAX(created_at) AS latest_update FROM product';
   const fetchCustomerDetailsQuery = `
                               SELECT customer.first_name,customer.last_name, customer.email,bookmark.brand_id
                               FROM customer
