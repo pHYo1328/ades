@@ -120,7 +120,6 @@ module.exports.logoutUser = async (refreshToken) => {
   }
 };
 
-
 // Forgot password
 module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM users WHERE email = ?';
@@ -131,7 +130,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
 
     if (rows.length === 0) {
       // User not found
-      console.log("User not found");
+      console.log('User not found');
       return false;
     }
 
@@ -144,7 +143,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
       // password is the same as the previous password
-      console.log("New password is the same as the previous password");
+      console.log('New password is the same as the previous password');
       return false;
     }
 
@@ -152,7 +151,10 @@ module.exports.forgotPassword = async (email, newPassword) => {
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
     // Update the password
-    const updateResult = await pool.query(updatePasswordQuery, [hashedPwd, email]);
+    const updateResult = await pool.query(updatePasswordQuery, [
+      hashedPwd,
+      email,
+    ]);
 
     if (updateResult.affectedRows === 0) {
       console.log('Password update failed');
@@ -214,9 +216,6 @@ module.exports.forgotPassword = async (email, newPassword) => {
 //     throw error;
 //   }
 // };
-
-
-
 
 // // delete product by ID (done, but still need to delete from order)
 // module.exports.deleteProductByID = async (productID) => {

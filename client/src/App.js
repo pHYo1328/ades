@@ -20,7 +20,6 @@ import Categories from './pages/Products/Categories';
 import './App.css';
 import './input.css';
 
-
 function App() {
   return (
     <>

@@ -17,7 +17,10 @@ exports.processAddCartData = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
-    const result = await cartServices.addCartData(userID, cartData);
+    const result = await Promise.all([
+      cartServices.addCartDataToRedis(userID, cartData),
+      cartServices.addCartDataToMySqlDB(userID, cartData),
+    ]);
     console.log(
       chalk.yellow('Inspect result variable from addCartData service\n'),
       result
@@ -42,15 +45,21 @@ exports.processGetCartData = async (req, res, next) => {
       throw error;
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
-    const result = await cartServices.getCartData(userID);
+    let result = await cartServices.getCartDataFromRedis(userID);
+
+    if (!result) {
+      const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
+      result = mysqlResult;
+      await cartServices.addCartDataToRedis(userID, mysqlResult);
+    }
+
     console.log(
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result
     );
-    return res.status(200).send({
-      message: 'cartData founded successfully.',
-      data: result,
-    });
+
+    const message = 'cartData found successfully.';
+    return res.status(200).send({ message, data: result });
   } catch (error) {
     console.error(chalk.red('Error in processGetCartData:', error));
     next(error);
@@ -68,7 +77,10 @@ exports.processDeleteCartData = async (req, res, next) => {
       throw error;
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
-    const result = await cartServices.deleteCartData(userID);
+    const result = await Promise.all([
+      cartServices.deleteCartDataInRedis(userID),
+      cartServices.deleteCartDataInMySqlDB(userID),
+    ]);
     console.log(
       chalk.yellow('Inspect result variable from deleteCartData service\n'),
       result
@@ -90,21 +102,8 @@ exports.processGetCartProductData = async (req, res, next) => {
   const productIDs = req.query.productIDs.split(',');
   console.log(chalk.yellow(`Inspecting product IDs: ${productIDs}`));
   try {
-    const response = await Promise.all(
-      productIDs.map(async (productID) => {
-        const cartItemData = await productServices.getProductByID(productID);
-        if (!cartItemData || cartItemData.length == 0) {
-          const error = new Error('product not found');
-          error.status = 404;
-          throw error;
-        }
-        return {
-          status: 200,
-          message: 'cart item data found',
-          data: cartItemData,
-        };
-      })
-    );
+    // this is only for ADES project, actually this one can achieve better performance with WHERE IN statement
+    const response = await cartServices.getCartProductDetails(productIDs);
     return res.status(200).send({
       message: 'all fetch successfully',
       data: response,

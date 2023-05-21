@@ -7,8 +7,8 @@ import { AdvancedImage } from '@cloudinary/react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { BsArrowLeft } from 'react-icons/bs';
-import { Link, useLocation } from 'react-router-dom';
-const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+import { Link } from 'react-router-dom';
+import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -54,16 +54,15 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
-  console.log(cartData);
-  const customerID = localStorage.getItem('customerID') || 3;
+  const customerID = localStorage.getItem('customerID') || 4;
   const combineCartDataAndProductDetails = () => {
     const itemsDetailsToShow = cartData.map((cartItem) => {
       console.log(cartItem);
       const cartInfo = productDetails.find(
-        (item) => cartItem.productId === item.data.product_id
+        (item) => cartItem.productId === item.product_id
       );
       return {
-        ...cartInfo.data,
+        ...cartInfo,
         quantity: cartItem.quantity,
       };
     });
@@ -73,9 +72,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cartResponse = await axios.get(
-          `${baseUrl}/api/cart/${customerID}`
-        );
+        const cartResponse = await api.get(`/api/cart/${customerID}`);
         const cartData = cartResponse.data.data;
         setCartData(cartData);
 
@@ -84,11 +81,12 @@ const Cart = () => {
           cartData.forEach((cartItem) => {
             productIDs.push(cartItem.productId);
           });
-          const productResponse = await axios.get(
-            `${baseUrl}/api/cartdetails/getCartProductData?productIDs=${productIDs.join(
+          const productResponse = await api.get(
+            `/api/cartdetails/getCartProductData?productIDs=${productIDs.join(
               ','
             )}`
           );
+          console.log(productResponse.data.data)
           setProductsDetails(productResponse.data.data);
         }
       } catch (error) {
@@ -99,8 +97,8 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
-      axios
-        .post(`${baseUrl}/api/cart/${customerID}`, {
+      api
+        .post(`/api/cart/${customerID}`, {
           cartData: latestCartData.current,
         })
         .then((response) => {
@@ -144,6 +142,8 @@ const Cart = () => {
             </tr>
           ) : cartProductData && cartData.length > 0 ? (
             cartProductData.map((cartItem, index) => (
+              
+              
               <tr
                 key={`${cartItem.product_ID}-${index}`}
                 className="border-t-2 border-b-2 border-black"
