@@ -9,6 +9,14 @@ const refreshTokenController = require('../controller/refreshTokenController');
 const logoutController = require('../controller/logoutController');
 const forgotPasswordController = require('../controller/forgotPasswordController');
 const verifyOTPController = require('../controller/verifyOTPController');
+const registerAdminController = require('../controller/admin/registerAdminController');
+const authAdminController = require('../controller/admin/authAdminController');
+const refreshTokenAdminController = require('../controller/admin/refreshTokenAdminController');
+const logoutAdminController = require('../controller/admin/logoutAdminController');
+const forgotPasswordAdminController = require('../controller/admin/forgotPasswordAdminController');
+const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
+
+const getUserInfo = require('../controller/customerInfo');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
 module.exports = (app, router) => {
@@ -188,4 +196,14 @@ module.exports = (app, router) => {
   router.put('/forgot', forgotPasswordController.handleForgotPassword);
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
+
+  router.get('/users', getUserInfo.retrieveUserInformation);
+
+  // ADMIN ROUTES
+  router.post('/register-admin', registerAdminController.handleNewAdmin);
+  router.post('/login-admin', authAdminController.handleLogin);
+  router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
+  router.put('/logout-admin', logoutAdminController.handleLogout);
+  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };

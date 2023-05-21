@@ -9,7 +9,7 @@ function ForgetPassword() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/forgot';
+    const url = 'http://localhost:8081/forgot-admin';
 
     const body = {
       email: email,
@@ -31,12 +31,12 @@ function ForgetPassword() {
       if (response.status === 404) {
         return {
           success: false,
-          message: "Password changed failed!",
+          message: "Admin password changed failed!",
         };
       } else {
         return {
           success: true,
-          message: "Password changed successfully!",
+          message: "Admin password changed successfully!",
         }
       }
       // return response.json();
@@ -46,7 +46,7 @@ function ForgetPassword() {
       if (!data.success) {
         alert(data.message);
       } else {
-        navigate('/login');
+        navigate('/login-admin');
         alert(data.message);
       }
     })
@@ -82,7 +82,7 @@ function ForgetPassword() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Forgot Password</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Forgot Admin Password</h2>
         </div>
 
         <div className="mb-6">

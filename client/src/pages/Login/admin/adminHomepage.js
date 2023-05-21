@@ -7,11 +7,11 @@ function Home() {
   //call handleResponserError function when fetching anything to run refreshAccessToken
   const refreshAccessToken = async () => {
     try {
-      const response = await fetch('http://localhost:8081/refresh', {
+      const response = await fetch('http://localhost:8081/refresh-admin', {
         credentials: 'include',
       });
       if (response.status === 403 || response.status === 401) {
-        navigate('/login');
+        navigate('/login-admin');
         localStorage.removeItem('accessToken');
         return [];
       }
@@ -26,13 +26,9 @@ function Home() {
     }
   };
 
-  const redirectToUsers = () => {
-    navigate('/users');
-  };
-
   const onHandleLogout = async () => {
     try {
-      await fetch('http://localhost:8081/logout', {
+      await fetch('http://localhost:8081/logout-admin', {
         method: 'PUT',
         credentials: 'include',
       });
@@ -58,10 +54,7 @@ function Home() {
         <div className="hero min-h-screen bg-base-200">
           <div className="hero-content text-center">
             <div className="max-w-md">
-              <h1 className="text-5xl font-bold mb-5">Home page</h1>
-              <button className="btn btn-primary" onClick={redirectToUsers}>
-                Go to Users
-              </button>
+              <h1 className="text-5xl font-bold mb-5">Admin Home page</h1>
               <button className="btn btn-secondary" onClick={onHandleLogout}>
                 Sign out
               </button>

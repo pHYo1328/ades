@@ -1,10 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Login/Home';
+
 import Login from './pages/Login/Login';
-import ForgetPassword from './pages/Login/ForgetPassword';
+import ForgotPassword from './pages/Login/ForgetPassword';
 import Register from './pages/Login/Register';
 import OTPPage from './pages/Login/OTPPage';
 import Homepage from './pages/Login/Homepage';
+import UserInfo from './pages/Login/UserInfo';
+
+import AdminHomepage from './pages/Login/admin/adminHomepage';
+import AdminRegister from './pages/Login/admin/adminRegister';
+import AdminLogin from './pages/Login/admin/adminLogin';
+import AdminForgotPassword from './pages/Login/admin/adminForgotPassword';
+import AdminOTPPage from './pages/Login/admin/adminOTPPage';
+
 import ProductDetails from './pages/Products/Public/ProductDetails';
 import SearchResults from './pages/Products/Public/SearchResults';
 import ProductsPage from './pages/Products/Public/ProductsPage';
@@ -25,7 +34,8 @@ import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategori
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import './App.css';
 import './input.css';
-import VerifyOTP from './pages/Login/OTPPage';
+import { improve } from '@cloudinary/url-gen/actions/adjust';
+
 
 
 function App() {
@@ -36,11 +46,20 @@ function App() {
           <CartProvider>
             <Routes>
               <Route path="/" element={<Home />} />
+
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/verify-otp" element={<OTPPage />} />
-              <Route path="/forgot" element={<ForgetPassword />} />
+              <Route path="/forgot" element={<ForgotPassword />} />
               <Route path="/homepage" element={<Homepage />} />
+              <Route path="/users" element={<UserInfo />} />
+
+              <Route path="/homepage-admin" element={<AdminHomepage />} />
+              <Route path="/register-admin" element={<AdminRegister />} />
+              <Route path="/login-admin" element={<AdminLogin />} />
+              <Route path="/forgot-admin" element={<AdminForgotPassword />} />
+              <Route path="/verify-otp-admin" element={<AdminOTPPage />} />
+
               <Route path="/product/:productID" element={<ProductDetails />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route
