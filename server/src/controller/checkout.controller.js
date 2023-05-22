@@ -18,7 +18,7 @@ exports.createPaymentIntent = async (req, res) => {
 
     const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
     console.log(chalk.yellow('createdPaymentTotal:', createdPaymentTotal));
-    const paymentTotal = parseInt(createdPaymentTotal[0].payment_total * 100); // Convert to an integer
+    const paymentTotal = parseInt(createdPaymentTotal[0].payment_total * 100);
     console.log(chalk.yellow('paymentTotal:', paymentTotal));
     if (isNaN(paymentTotal)) {
       throw new Error('Invalid payment total');
@@ -28,16 +28,18 @@ exports.createPaymentIntent = async (req, res) => {
       currency: 'SGD',
       amount: paymentTotal,
       automatic_payment_methods: { enabled: true },
+      metadata: {
+        order_id: orderID,
+      },
     });
-
+    
+     
     // Send publishable key and PaymentIntent details to client
-    res
-      .send({
-        clientSecret: paymentIntent.client_secret,
-      })
-      .end();
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    }).end();
   } catch (err) {
-    console.log(chalk.red('Error is createPaymentIntent', err));
+    console.log(chalk.red('Error in createPaymentIntent', err));
     return res.status(400).send({
       error: {
         message: err.message,
@@ -53,50 +55,50 @@ exports.createWebhooks = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let data;
   let eventType;
+  
+  if(endpointSecret) {
+  let event ;
+  console.log(chalk.yellow(sig));
+  try {
 
-  if (endpointSecret) {
-    let event;
-    console.log(chalk.yellow(sig));
-    try {
-      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-      console.log('Webhook verified');
-      res.status(200).end();
-    } catch (err) {
-      console.log(`Webhook Error: ${err.message}`);
-      res.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-    data = event.data.object;
-    eventType = event.type;
-  } else {
+    event = stripe.webhooks.constructEvent( req.body, sig, endpointSecret);
+    console.log("Webhook verified")
+    res.status(200).end();
+  } catch (err) {
+    console.log(`Webhook Error: ${err.message}`)
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;   
+  }
+  data = event.data.object;
+  eventType = event.type;
+}else{
     data = req.body.data.object;
     eventType = req.body.type;
-    console.log(chalk.yellow('Data: ', data));
-    console.log(chalk.yellow('Event Type: ', eventType));
+    console.log(chalk.yellow("Data: ", data))
+    console.log(chalk.yellow("Event Type: ", eventType))
+   
+}
+//handle the event
+if (eventType === "charge.succeeded") {
+  const { id, status, amount, payment_method_details } = data;
+
+  console.log("Charge succeeded. Event data:");
+  console.log("ID:", id);
+  console.log("Status:", status);
+  const total = (amount * 0.01).toFixed(2);
+  console.log("Amount:", total );
+  console.log("Payment method:", payment_method_details.type);
+  
+  
+  try {
+    await paymentServices.addPayment(id, status, total, payment_method_details.type);
+    console.log("Payment details stored in the database successfully");
+  } catch (error) {
+    console.error("Error storing payment details in the database:", error);
   }
-  //handle the event
-  if (eventType === 'charge.succeeded') {
-    const { id, status, amount, payment_method_details } = data;
+ 
+}
 
-    console.log('Charge succeeded. Event data:');
-    console.log('ID:', id);
-    console.log('Status:', status);
-    const total = (amount * 0.01).toFixed(2);
-    console.log('Amount:', total);
-    console.log('Payment method:', payment_method_details.type);
+res.send().end();
 
-    try {
-      await paymentServices.addPayment(
-        id,
-        status,
-        total,
-        payment_method_details.type
-      );
-      console.log('Payment details stored in the database successfully');
-    } catch (error) {
-      console.error('Error storing payment details in the database:', error);
-    }
-  }
-
-  res.send().end();
 };
