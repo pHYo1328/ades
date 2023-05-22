@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
-// import { StarIcon } from '@heroicons/react/20/solid';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -14,7 +12,6 @@ const cld = new Cloudinary({
 });
 
 export default function ProductDetails() {
-  // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
 
@@ -49,12 +46,7 @@ export default function ProductDetails() {
       <div className="pt-6">
         {product ? (
           <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-            {/* <AdvancedImage cldImg={cld.image(product.image_url)} /> */}
-
-            {/* {product.image_url.split(', ').map((url, index) => (
-              <AdvancedImage key={index} cldImg={cld.image(url)} />
-            ))} */}
-
+          
             {product.image_url.map((url, index) => (
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}

@@ -379,14 +379,22 @@ module.exports.getSearchResults = async (
 module.exports.getStatistics = async () => {
   console.log(chalk.blue('getStatistics is called'));
   try {
+    //   const statisticsQuery = `
+    //   SELECT SUM(oi.quantity) as total_sold,
+    //   SUM(i.quantity) as total_inventory,
+    //   SUM(p.payment_total) as total_payment,
+    //   COUNT(oi.order_id) as total_order
+    //   FROM order_items oi
+    //   JOIN inventory i ON oi.product_id = i.product_id
+    //   JOIN payment p ON oi.order_id = p.order_id;
+    // `;
+
     const statisticsQuery = `
-    SELECT SUM(oi.quantity) as total_sold, 
-    SUM(i.quantity) as total_inventory, 
-    SUM(p.payment_total) as total_payment, 
-    COUNT(oi.order_id) as total_order
-FROM order_items oi
-JOIN inventory i ON oi.product_id = i.product_id
-JOIN payment p ON oi.order_id = p.order_id;
+  SELECT 
+  (SELECT SUM(quantity) FROM inventory) AS total_inventory,
+  (SELECT SUM(quantity) FROM order_items) AS total_sold,
+  (SELECT SUM(payment_total) FROM payment) AS total_payment,
+  (SELECT COUNT(order_id) FROM orders) AS total_order;
   `;
 
     const results = await pool.query(statisticsQuery);

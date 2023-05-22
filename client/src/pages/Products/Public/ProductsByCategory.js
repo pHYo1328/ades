@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
@@ -11,7 +10,6 @@ const cld = new Cloudinary({
   },
 });
 export default function ProductsByCategory() {
-  // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const { categoryID } = useParams();

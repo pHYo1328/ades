@@ -5,8 +5,6 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-
-
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -109,7 +107,6 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              {/* <label>CATEGORY</label> */}
               <select class="form-select" id="categoryOptions" onChange={(e) => setProductCategory(e.target.value)}>
                 <option disabled selected value>
                   -- CATEGORY --
@@ -143,33 +140,30 @@ export default function LandingPage() {
             </div>
           </div>
           <div class=" col-2 text-black">
-         
+
             <button
-  type="button"
-  class="btn btn-outline-primary w-100"
-  onClick={() => {
-    let url = '/search';
-    const queryParams = [];
+              type="button"
+              class="btn btn-outline-primary w-100"
+              onClick={() => {
+                let url = '/search';
+                const queryParams = [];
 
-    if (productName) queryParams.push(`product_name=${productName}`);
-    if (productCategory) queryParams.push(`category_id=${productCategory}`);
-    if (productBrand) queryParams.push(`brand_id=${productBrand}`);
-    if (productMaxPrice) queryParams.push(`max_price=${productMaxPrice}`);
-    if (productMinPrice) queryParams.push(`min_price=${productMinPrice}`);
+                if (productName) queryParams.push(`product_name=${productName}`);
+                if (productCategory) queryParams.push(`category_id=${productCategory}`);
+                if (productBrand) queryParams.push(`brand_id=${productBrand}`);
+                if (productMaxPrice) queryParams.push(`max_price=${productMaxPrice}`);
+                if (productMinPrice) queryParams.push(`min_price=${productMinPrice}`);
 
-    if (queryParams.length > 0) {
-      url += `?${queryParams.join('&')}`;
-      window.location.href = url;
-    }
-  }}
->
-  Search
-</button>
-
+                if (queryParams.length > 0) {
+                  url += `?${queryParams.join('&')}`;
+                  window.location.href = url;
+                }
+              }}
+            >
+              Search
+            </button>
           </div>
         </div>
-
-
 
         <div class="row mt-5">
           <div class="col-10" >
@@ -178,7 +172,7 @@ export default function LandingPage() {
             </h2>
           </div>
           <div class="col-2">
-          
+
             <Dropdown style={{ width: "100%" }}>
               <Dropdown.Toggle variant="outline-primary" id="dropdownMenuButton" className="w-100">
                 See All
@@ -187,7 +181,7 @@ export default function LandingPage() {
               <Dropdown.Menu>
                 <Dropdown.Item href="http://localhost:3000/products">Products</Dropdown.Item>
                 <Dropdown.Item href="http://localhost:3000/brands/categories">Brands & Categories</Dropdown.Item>
-              
+
               </Dropdown.Menu>
             </Dropdown>
           </div>
