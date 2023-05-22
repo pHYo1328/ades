@@ -26,10 +26,6 @@ function Home() {
     }
   };
 
-  const redirectToUsers = () => {
-    navigate('/users');
-  };
-
   const onHandleLogout = async () => {
     try {
       await fetch('http://localhost:8081/logout', {
@@ -59,9 +55,6 @@ function Home() {
           <div className="hero-content text-center">
             <div className="max-w-md">
               <h1 className="text-5xl font-bold mb-5">Home page</h1>
-              <button className="btn btn-primary" onClick={redirectToUsers}>
-                Go to Users
-              </button>
               <button className="btn btn-secondary" onClick={onHandleLogout}>
                 Sign out
               </button>

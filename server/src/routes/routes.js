@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
@@ -96,10 +97,6 @@ module.exports = (app, router) => {
     '/api/products/inventory/minus/:productID',
     productController.processUpdateInventoryDown
   );
-  router.put(
-    '/api/products/:productID/images',
-    productController.processDeleteProductImages
-  );
 
   // PHYO
 
@@ -129,7 +126,7 @@ module.exports = (app, router) => {
     orderController.processAddCustomerOrder
   );
   router.get(
-    '/api/payment/:paymentID',
+    '/api/payment/:orderID',
     // verifyAccessToken.verifyToken,
     paymentController.processGetPaymentByID
   );
@@ -180,6 +177,10 @@ module.exports = (app, router) => {
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
+
+  router.post('/webhook', 
+  bodyParser.raw({ type: 'application/json' }),
+  checkoutController.createWebhooks),
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

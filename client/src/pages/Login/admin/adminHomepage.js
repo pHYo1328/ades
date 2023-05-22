@@ -26,6 +26,10 @@ function Home() {
     }
   };
 
+  const redirectToUsers = () => {
+    navigate('/users');
+  };
+
   const onHandleLogout = async () => {
     try {
       await fetch('http://localhost:8081/logout-admin', {
@@ -40,6 +44,7 @@ function Home() {
     navigate('/');
   };
 
+  
   // const handleResponseError = (response) => {
   //   if (response.status === 403) {
   //     refreshAccessToken(); // Call refreshAccessToken only on 403 error
@@ -55,6 +60,9 @@ function Home() {
           <div className="hero-content text-center">
             <div className="max-w-md">
               <h1 className="text-5xl font-bold mb-5">Admin Home page</h1>
+              <button className="btn btn-primary" onClick={redirectToUsers}>
+                View all users
+              </button>
               <button className="btn btn-secondary" onClick={onHandleLogout}>
                 Sign out
               </button>
