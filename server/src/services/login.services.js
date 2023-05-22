@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // create new user
-module.exports.registerUser = async (username, email, password) => {
+module.exports.registerUser = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
   //  // Check if the username already exists in the database
@@ -20,11 +20,12 @@ module.exports.registerUser = async (username, email, password) => {
   // }
     // insert the new user
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "customer");';
+      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
       password,
+      roles,
     ]);
     console.log(chalk.green(results));
     return results;
