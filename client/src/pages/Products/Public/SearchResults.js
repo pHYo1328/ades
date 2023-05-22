@@ -11,7 +11,6 @@ const cld = new Cloudinary({
 });
 
 export default function SearchResults() {
-  // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   useEffect(() => {

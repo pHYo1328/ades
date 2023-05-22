@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import Category from '../../../components/Products/Dropdown/Category';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -13,7 +11,6 @@ const cld = new Cloudinary({
 });
 
 export default function ProductsPage() {
-  // const navigate = useNavigate();
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null)
   const [categories, setCategories] = useState(null)
@@ -112,16 +109,10 @@ export default function ProductsPage() {
                 window.location.href=`http://localhost:3000/products/${productID}`
               }}>
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                  {/* <img
-                    src={cld.image(product.image_url)}
-                    alt={product.image_url}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  /> */}
-                  {/* <p>{product.image_url}</p> */}
+               
                   <AdvancedImage
                     cldImg={cld.image(product.image_url)}
                   />
-                  {/* {product.image_url} */}
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">

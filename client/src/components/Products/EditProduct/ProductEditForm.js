@@ -8,16 +8,12 @@ import chalk from 'chalk';
 
 export default function ProductEditForm() {
     const { productID } = useParams();
-    // var productData;
     const [productData, setProductData] = useState();
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
     const [brands, setBrands] = useState(null);
     const [categories, setCategories] = useState(null);
-
-    //   const [submitClicked, setSubmitClicked] = useState(false);
-    //   const [deleteImageClicked, setDeleteImageClicked] = useState(false);
-    const [product, setProduct] = useState(null);
+     const [product, setProduct] = useState(null);
 
     const [productName, setProductName] = useState();
     const [productPrice, setProductPrice] = useState();
@@ -34,7 +30,6 @@ export default function ProductEditForm() {
             .get(`${baseUrl}/api/product/${productID}`)
             .then((response) => {
                 console.log(response);
-                // productData = response.data.data;
                 setProductData(response.data.data);
                 console.log(productData);
             })
@@ -72,15 +67,8 @@ export default function ProductEditForm() {
 
     useEffect(() => {
         getProducts();
-        // setProductName(product.product_name);
-        // setProductPrice(product.price);
-        // setProductDescription(product.description);
-        // setProductCategory(product.category_id);
-        // setProductBrand(product.brand_id);
-        // setProductQuantity(product.quantity);
         getCategories();
         getBrands();
-        console.log("AAA")
     }, [])
 
 

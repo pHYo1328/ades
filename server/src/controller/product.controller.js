@@ -296,13 +296,11 @@ exports.processGetBrandByID = async (req, res, next) => {
 
   const { brandID } = req.params;
 
-  let errors = [];
-
-  if (brandID == '') {
-    errors.push({
-      parameter: 'brandID',
-      value: 'Empty brandID',
-      message: 'brandID is empty',
+  if (!brandID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Brand ID is missing',
     });
   }
 
@@ -326,13 +324,6 @@ exports.processGetBrandByID = async (req, res, next) => {
       message: 'No such brand exists',
     });
   } catch (error) {
-    if (error.message === 'brandID is empty') {
-      return res.status(400).json({
-        statusCode: 400,
-        ok: true,
-        message: 'Brand ID is missing',
-      });
-    }
     console.error(chalk.red('Error in getBrandByID: ', error));
     return next(error);
   }
@@ -344,16 +335,13 @@ exports.processGetCategoryByID = async (req, res, next) => {
 
   const { categoryID } = req.params;
 
-  let errors = [];
-
-  if (categoryID == '') {
-    errors.push({
-      parameter: 'categoryID',
-      value: 'Empty categoryID',
-      message: 'categoryID is empty',
+  if (!categoryID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Category ID is missing',
     });
   }
-
   try {
     const categoryData = await productServices.getCategoryByID(categoryID);
     if (categoryID) {
@@ -374,13 +362,6 @@ exports.processGetCategoryByID = async (req, res, next) => {
       message: 'No such category exists',
     });
   } catch (error) {
-    if (error.message === 'categoryID is empty') {
-      return res.status(400).json({
-        statusCode: 400,
-        ok: true,
-        message: 'Category ID is missing',
-      });
-    }
     console.error(chalk.red('Error in getCategoryByID: ', error));
     return next(error);
   }

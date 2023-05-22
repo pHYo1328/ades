@@ -5,14 +5,12 @@ import chalk from 'chalk';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-// import { div } from "@cantonjs/react-scroll-view";
 
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
   },
 });
-
 
 export default function AdminDashboard() {
 
@@ -68,61 +66,39 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    fetchBrands();
-  }, [])
-
-  useEffect(() => {
-    fetchCategories();
-  }, [])
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/api/admin/statistics`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setStatistics(response.data.data);
-  //       console.log(statistics);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, [products]);
-
-  useEffect(() => {
-    const fetchStatistics = () => {
-      axios
-        .get(`${baseUrl}/api/admin/statistics`)
-        .then((response) => {
-          setStatistics(response.data.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    const fetchData = async () => {
+      const fetchProductsPromise = fetchProducts();
+      const fetchBrandsPromise = fetchBrands();
+      const fetchCategoriesPromise = fetchCategories();
+  
+      await Promise.all([fetchProductsPromise, fetchBrandsPromise, fetchCategoriesPromise]);
     };
-  
-    // Fetch statistics initially
+    fetchData();
+  }, []);  
+
+  const fetchStatistics = () => {
+    axios
+      .get(`${baseUrl}/api/admin/statistics`)
+      .then((response) => {
+        setStatistics(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
     fetchStatistics();
-  
-    // Fetch statistics every second
     const intervalId = setInterval(fetchStatistics, 60 * 1000);
-  
-    // Cleanup function to clear the interval
     return () => {
       clearInterval(intervalId);
     };
   }, [products]);
-  
+
 
   const handleSubmitBrand = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    // const name = document.getElementById("add").value;
-    // const type = "brand"
 
     if (!brandName) {
       window.alert('Please fill in the name of the brand');
@@ -140,8 +116,6 @@ export default function AdminDashboard() {
           console.log(brand);
           fetchBrands();
           setBrandName('')
-
-          // window.location.reload();
         });
     }
   };
@@ -149,9 +123,6 @@ export default function AdminDashboard() {
   const handleSubmitCategory = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    // const name = document.getElementById("add").value;
-    // const type = "category"
 
     if (!categoryName) {
       window.alert('Please fill in the name of the category');
@@ -174,8 +145,6 @@ export default function AdminDashboard() {
   };
 
   return (
-    // <div class="row col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-
     <div
       class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}
     >
@@ -283,24 +252,19 @@ export default function AdminDashboard() {
                     <button
                       id="plusButton"
                       onClick={() => {
-                        // console.log(product.product_id)
                         const productID = product.product_id;
                         axios
                           .put(
                             `${baseUrl}/api/products/inventory/plus/${productID}`
                           )
                           .then((response) => {
-                            //  console.log(response);
-                            //  setProducts(response.data.data);
-                            //  console.log(products);
                             console.log('Increase button is clicked');
                             fetchProducts();
+                            fetchStatistics();
                           })
                           .catch((error) => {
                             console.error(error);
                           });
-
-                        product.quantity++;
                       }}
                     >
                       <i class="bi bi-plus-circle"></i>
@@ -310,7 +274,6 @@ export default function AdminDashboard() {
                       id="minusButton"
                       onClick={() => {
                         if (product.quantity >= 1) {
-                          // console.log(product.product_id)
                           const productID = product.product_id;
                           axios
                             .put(
@@ -319,6 +282,7 @@ export default function AdminDashboard() {
                             .then((response) => {
                               console.log('Decrease button is clicked');
                               fetchProducts();
+                              fetchStatistics();
                             })
                             .catch((error) => {
                               console.error(error);
@@ -345,8 +309,6 @@ export default function AdminDashboard() {
                       axios
                         .delete(`${baseUrl}/api/products/${productID}`)
                         .then((res) => {
-                          // alert('Product is successfully deleted')
-                          // window.NavigationPreloadManager()
                           const updatedProducts = products.filter(
                             (p) => p.product_id !== productID
                           );
@@ -380,7 +342,6 @@ export default function AdminDashboard() {
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div class="col-8">
-              {/* <input type="text" class="form-control" id="add" placeholder="Brand Name"/> */}
               <input
                 type="text"
                 className="form-control"
@@ -415,8 +376,6 @@ export default function AdminDashboard() {
                         axios
                           .delete(`${baseUrl}/api/brands/${brandID}`)
                           .then((res) => {
-                            // alert('Product is successfully deleted')
-                            // window.NavigationPreloadManager()
                             const updatedBrands = brands.filter(
                               (b) => b.brand_id !== brandID
                             );
@@ -451,7 +410,6 @@ export default function AdminDashboard() {
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div class="col-8">
-              {/* <input type="text" class="form-control" id="add" placeholder="Category Name"/> */}
               <input
                 type="text"
                 className="form-control"
@@ -486,8 +444,6 @@ export default function AdminDashboard() {
                         axios
                           .delete(`${baseUrl}/api/categories/${categoryID}`)
                           .then((res) => {
-                            // alert('Product is successfully deleted')
-                            // window.NavigationPreloadManager()
                             const updatedCategories = categories.filter(
                               (c) => c.category_id !== categoryID
                             );
@@ -508,8 +464,6 @@ export default function AdminDashboard() {
           </ul>
         </div>
       </div>
-
-
     </div>
   )
 }
