@@ -17031,6 +17031,50 @@
 20230522	00:46:34	f28d2861-9d73-406e-815c-5e640bd5ccc9	POST	http://localhost:3000	/verify-otp
 20230522	00:46:36	43246482-9486-444d-b301-33efe7d58776	OPTIONS	http://localhost:3000	/logout
 20230522	00:46:36	ff91294f-f5a5-4a77-83eb-b07fc966a4c4	PUT	http://localhost:3000	/logout
+<<<<<<< HEAD
+20230522	13:12:55	8d874d07-8fad-4742-b96f-527b0c819a07	OPTIONS	http://localhost:3000	/login
+20230522	13:12:55	33ae886f-3b19-4cce-8234-e537c46a6f64	POST	http://localhost:3000	/login
+20230522	13:13:19	56558875-b22b-4c98-8ede-0517d1c3b530	OPTIONS	http://localhost:3000	/verify-otp
+20230522	13:13:19	1464b4f5-6099-46f1-8fa1-95606b2c2329	POST	http://localhost:3000	/verify-otp
+20230522	13:13:22	fd43e7f0-45f7-4930-b578-817a5b9c780f	OPTIONS	http://localhost:3000	/logout
+20230522	13:13:22	93e6a82e-d3d5-4619-bb60-269e620291d7	PUT	http://localhost:3000	/logout
+20230522	13:23:44	2891d5eb-0b2c-4043-81a3-e7d843d95e84	OPTIONS	http://localhost:3000	/login-admin
+20230522	13:23:44	836cbe5d-0fc7-48e7-b2ab-4fddfd1be676	POST	http://localhost:3000	/login-admin
+20230522	13:23:49	996335bf-04a0-46d1-a6d1-d823abd27028	POST	http://localhost:3000	/login-admin
+20230522	13:23:56	4d510d3d-94db-433b-a12f-a1b5e6551491	OPTIONS	http://localhost:3000	/login-admin
+20230522	13:23:56	3771d419-c820-43fa-bcdb-6028acb10482	POST	http://localhost:3000	/login-admin
+20230522	13:24:01	b47a5650-eeb0-4d67-af78-a600d826a5ae	POST	http://localhost:3000	/login-admin
+20230522	13:24:09	83698f0b-0054-4ae9-9ea1-5c76dec05153	OPTIONS	http://localhost:3000	/login-admin
+20230522	13:24:09	1f90191b-994b-42ab-8365-b1d24f87fca4	POST	http://localhost:3000	/login-admin
+20230522	13:24:09	9deb1707-f454-4ad0-a84c-077f96cac730	POST	http://localhost:3000	/login-admin
+20230522	13:24:09	419a1b16-394c-4b80-8756-c20f10b6973b	POST	http://localhost:3000	/login-admin
+20230522	13:24:10	5f4be6f6-09e8-4aeb-aa79-9bb940f65efa	POST	http://localhost:3000	/login-admin
+20230522	13:24:13	628cd28b-5012-41ea-a386-9af41bf7557e	POST	http://localhost:3000	/login-admin
+20230522	13:24:45	ec025972-251c-47a0-ba8c-e07ad046c67f	OPTIONS	http://localhost:3000	/verify-otp-admin
+20230522	13:24:45	df1a3d0c-b1d6-4f46-a290-b590cfd52fc2	POST	http://localhost:3000	/verify-otp-admin
+20230522	13:24:47	38e37c95-6db9-4ce4-8b33-75eb86c4b622	OPTIONS	http://localhost:3000	/users
+20230522	13:24:47	49e16cdd-37da-43ca-9a3c-a50b623cb65d	GET	http://localhost:3000	/users
+20230522	14:18:01	05a692af-b61b-4d07-82f8-bbb09dc9f11f	POST	undefined	/register
+20230522	14:18:45	6f85c5b4-0767-46ec-a149-c4214e074b19	POST	undefined	/register
+20230522	14:19:03	86fc5779-36e0-4f58-b953-f2348c402bcb	POST	undefined	/register
+20230522	14:19:37	0567af6e-5f06-4e56-9062-6567e628393a	POST	undefined	/login
+20230522	14:19:57	ac31e9ad-3e3d-49f3-9ecc-3fc350fcad8d	POST	undefined	/verify-otp
+20230522	14:20:15	b8afd19e-ee0a-40a6-a648-b10aafe34b6b	PUT	undefined	/logout
+20230522	14:20:47	88624cdb-937b-4f5c-83f1-98336e0f27b3	OPTIONS	http://localhost:3000	/login
+20230522	14:20:47	6acd969a-7e87-4d56-a26a-f528c2d7d541	POST	http://localhost:3000	/login
+20230522	14:21:03	bc91045e-11f4-4c7b-bf81-3a61ce78b951	OPTIONS	http://localhost:3000	/verify-otp
+20230522	14:21:03	1d61483e-05f1-4e61-8dab-b415fa3b0f07	POST	http://localhost:3000	/verify-otp
+20230522	14:21:04	5535aba8-9722-48f6-8042-b2b7ced58b41	OPTIONS	http://localhost:3000	/logout
+20230522	14:21:04	dd38f95b-d162-4151-ad12-82c94d551237	PUT	http://localhost:3000	/logout
+20230522	14:24:00	ef7acc16-8c47-47f8-95fe-cfa758805298	OPTIONS	http://localhost:3000	/register-admin
+20230522	14:24:00	ad60a4cf-8b4a-4988-b560-ec6bba169c0a	POST	http://localhost:3000	/register-admin
+20230522	14:24:04	a9c45dbe-8b6f-4ee0-be8a-8ff3852f2e6a	OPTIONS	http://localhost:3000	/login-admin
+20230522	14:24:04	0382c34a-28f6-484d-b1de-e5bacd1af1ea	POST	http://localhost:3000	/login-admin
+20230522	14:24:12	f0d7f514-f94c-4249-bee8-cd1bac70cb66	OPTIONS	http://localhost:3000	/verify-otp-admin
+20230522	14:24:12	9401e6b7-0769-45c9-8e1f-2d4cf78a828e	POST	http://localhost:3000	/verify-otp-admin
+20230522	14:24:23	f8ac67c4-cf33-41ac-b639-f84c7688b2d9	OPTIONS	http://localhost:3000	/logout-admin
+20230522	14:24:23	9c3ced59-f330-4488-9508-3c6ade056eee	PUT	http://localhost:3000	/logout-admin
+=======
 >>>>>>> ed2f3bf6a44d7b83b2f2ed28086290deb1530c48
 <<<<<<< HEAD
 20230522	01:22:53	75476c6e-1f2f-4c99-b856-ba6027f491ac	GET	http://localhost:3000	/api/products/new
@@ -17079,6 +17123,7 @@
 =======
 >>>>>>> 69b4a54213e8fc6d20551e7185746be27196a0db
 >>>>>>> 46194c35a504288a6e55eceb3275ce9411792bc7
+<<<<<<< HEAD
 20230522	11:46:12	c6921672-5664-4ddb-ae1e-df5355282239	GET	http://localhost:3000	/api/admin/statistics
 20230522	11:47:18	53f93b13-76e4-4092-9729-24e20506ab8f	GET	http://localhost:3000	/api/admin/statistics
 20230522	11:48:13	0e954aed-a590-4da5-aca3-754bae8b5c3f	GET	http://localhost:3000	/api/admin/statistics
@@ -18334,3 +18379,6 @@
 20230522	14:43:36	2833d36d-d5a6-49e3-95cb-c7790d37b999	GET	http://localhost:3000	/api/products/rating/169
 20230522	14:43:43	a2ad6f67-52ae-499a-af98-71755772d788	GET	http://localhost:3000	/api/product/199
 20230522	14:43:43	e8b4c357-8435-439a-82b4-1573db625f82	GET	http://localhost:3000	/api/products/rating/199
+=======
+>>>>>>> dc8f21823cbde4112df659b6b7b13eeee0389ee9
+>>>>>>> fa366afcb5ea91683bd0d83dbc92376c8cd7fbe5

@@ -4,16 +4,17 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // Create new admin
-module.exports.registerAdmin = async (username, email, password) => {
+module.exports.registerAdmin = async (username, email, password, roles) => {
     console.log(chalk.blue('User registered successfully'));
     try {
       // insert the new user
       const registerAdminQuery =
-        'INSERT INTO admin (username, email, password, roles) VALUES (?, ?, ?, "admin");';
+        'INSERT INTO admin (username, email, password, roles) VALUES (?, ?, ?, ?);';
       const results = await pool.query(registerAdminQuery, [
         username,
         email,
         password,
+        roles,
       ]);
       console.log(chalk.green(results));
       return results;
