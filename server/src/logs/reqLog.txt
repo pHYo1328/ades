@@ -17032,4 +17032,50 @@
 20230522	00:46:36	43246482-9486-444d-b301-33efe7d58776	OPTIONS	http://localhost:3000	/logout
 20230522	00:46:36	ff91294f-f5a5-4a77-83eb-b07fc966a4c4	PUT	http://localhost:3000	/logout
 >>>>>>> ed2f3bf6a44d7b83b2f2ed28086290deb1530c48
+<<<<<<< HEAD
+20230522	01:22:53	75476c6e-1f2f-4c99-b856-ba6027f491ac	GET	http://localhost:3000	/api/products/new
+20230522	01:22:53	ef5e3854-29d6-4718-aaac-16a8f3582555	GET	http://localhost:3000	/api/brands
+20230522	01:22:53	5588cffa-1513-4ef5-bb35-af14b085828b	GET	http://localhost:3000	/api/category
+20230522	01:23:05	c0c27e23-e45a-4752-bc4d-dbd830489fd6	GET	http://localhost:3000	/api/products/new
+20230522	01:23:05	accd620a-f6db-4a70-ac19-6846222cbc0c	GET	http://localhost:3000	/api/category
+20230522	01:23:05	efc8261a-2d49-4d1a-8588-60f7b306de1b	GET	http://localhost:3000	/api/brands
+20230522	11:25:20	13756d08-fc02-419f-a173-ea0c9cb5d21d	GET	http://localhost:3000	/api/products
+20230522	11:25:20	f03dbd19-cfd9-400d-8e07-1273050b73a8	GET	http://localhost:3000	/api/category
+20230522	11:25:20	2b50d256-9081-42ee-b358-64916893d053	GET	http://localhost:3000	/api/brands
+20230522	11:25:20	8e10643c-92f9-4347-97b1-e1cd94d62348	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:25:21	c69eab41-e649-43e8-aa5c-b69704322aaf	GET	http://localhost:3000	/api/category
+20230522	11:25:21	4d70d1eb-6b17-4b53-a13c-19717802edb2	GET	http://localhost:3000	/api/brands
+20230522	11:26:32	34359efc-9282-4853-8c3a-6dd2d86d0ccd	OPTIONS	http://localhost:3000	/api/products
+20230522	11:26:32	dd64a106-7040-49c4-ab79-87296bf80f51	POST	http://localhost:3000	/api/products
+20230522	11:26:33	29c0d2b0-a520-4600-a648-50599c91aed7	GET	http://localhost:3000	/api/category
+20230522	11:26:33	8f364a1e-fe4f-4fc0-b33f-5e609688b613	GET	http://localhost:3000	/api/brands
+20230522	11:26:49	6ea503d0-2331-4bba-8abc-eb68e1f7e2d8	GET	http://localhost:3000	/api/products
+20230522	11:26:49	d4bfbe7c-443a-44d0-847c-a35a2782887a	GET	http://localhost:3000	/api/category
+20230522	11:26:49	8e44b907-1eef-4e0a-9b90-343ff459c710	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:26:49	b72460f4-fa3e-4e2d-a099-4232dc0a0159	GET	http://localhost:3000	/api/brands
+20230522	11:26:49	913cb474-14a9-4966-a6e7-c53e5e1b7f1f	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:26:53	20ccc814-7356-402d-8835-f1c1b4cc3c2a	OPTIONS	http://localhost:3000	/api/categories/8
+20230522	11:26:53	e2dc80a7-99fc-4a37-bfd2-a93ea196c1e8	DELETE	http://localhost:3000	/api/categories/8
+20230522	11:26:53	bb803627-9bdc-4991-9b25-053608bbbd7a	GET	http://localhost:3000	/api/category
+20230522	11:26:53	5005b1a9-c57d-42d4-aebf-bbd3f0ffc189	GET	http://localhost:3000	/api/products
+20230522	11:26:53	821dcaec-74f0-4447-9eb1-0aa1d65f74b2	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:27:54	c430322b-25e9-431f-959e-e095a91504f6	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:28:54	1a6c1179-4f04-409c-a65b-9fdfffedbc9b	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:29:54	3403de0f-25e2-4c66-aa24-fbb68b70388d	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:32:03	8e8e45a9-465d-4160-8556-9e9d015cc336	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:32:12	fc77dc50-7c94-4e14-b53b-3214738f9bcc	OPTIONS	http://localhost:3000	/api/products/158
+20230522	11:32:12	9de9ee73-87ff-47ea-b958-4a335fd7cb89	DELETE	http://localhost:3000	/api/products/158
+20230522	11:32:12	45813632-8581-4e3a-a142-a2a12ec6c33c	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:33:13	fdfc42bd-05d3-4e5b-80ae-430d05d892f1	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:34:13	a382930a-d7f5-4ec0-9975-68c556a6f54d	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:35:13	191e9325-ff8b-4d7f-8ef4-0846710547f5	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:36:13	17920ff5-7633-4817-a646-848fc0fe6378	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:37:28	d5937a1c-5390-4277-b63e-04e893c9c696	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:38:28	30a51859-4a5c-4200-99fe-f41483f7319b	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:39:28	0dfe991b-abc6-4b27-a798-c5eef93cb867	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:40:28	0d0bfc19-9cd8-4041-a2c1-d7b30dc9794f	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:41:28	0d552fa8-fe6d-49fa-be31-b98adc83b92d	GET	http://localhost:3000	/api/admin/statistics
+20230522	11:42:28	9dbdf1aa-a5ff-4f10-97cf-8b8a3bbdcf9c	GET	http://localhost:3000	/api/admin/statistics
+=======
 >>>>>>> 69b4a54213e8fc6d20551e7185746be27196a0db
+>>>>>>> 46194c35a504288a6e55eceb3275ce9411792bc7
