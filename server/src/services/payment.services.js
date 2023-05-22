@@ -2,12 +2,17 @@ const pool = require('../config/database');
 const chalk = require('chalk');
 
 // get payment by ID
-module.exports.getPaymentByID = async (payment_id) => {
-  console.log(chalk.blue('getPaymentByCusID is called'));
+module.exports.getPaymentByID = async (order_id) => {
+  console.log(chalk.blue('getPaymentByID is called'));
   try {
     const paymentDataQuery =
-      'SELECT o.order_id, p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, pay.payment_total FROM product p, order_items i, orders o, shipping s, payment pay WHERE payment_id=? AND o.order_id = i.order_id AND pay.order_id = o.order_id AND s.shipping_id = o.shipping_id AND p.product_id = i.product_id;';
-    const results = await pool.query(paymentDataQuery, [payment_id]);
+      `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
+      FROM product AS p, order_items AS i, orders AS o, shipping AS s
+        WHERE o.order_id = ?
+        AND o.order_id = i.order_id
+        AND s.shipping_id = o.shipping_id
+        AND p.product_id = i.product_id;`;
+    const results = await pool.query(paymentDataQuery, [order_id]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
@@ -86,7 +91,30 @@ module.exports.addShipping = async (shipping_method, fee) => {
   } catch (error) {
     console.error(chalk.red('Error in addShipping: ', error));
     throw error;
-  } finally {
-    connection.release();
-  }
+  } 
+};
+
+//Creating payment data into database
+
+module.exports.addPayment = async (id, status, total, paymentMethod, orderID) => {
+  console.log(chalk.blue('addPayment is called'));
+  
+  try {
+    const createPaymentQuery = 'INSERT INTO payment (transaction_id, status, payment_total, payment_method) VALUES (?, ?, ?, ?);';
+    // const orderIDQuery = 'INSERT INTO payment(order_id) VALUES (?);';
+
+    const paymentUpdate = pool.query(createPaymentQuery, [id, status, total, paymentMethod]);
+    // const orderIDUpdate = pool.query(orderIDQuery,[orderID]);
+
+    const[paymentUpdateResult, orderIDUpdateResult] = await Promise.all([
+      paymentUpdate,
+      // orderIDUpdate,
+    ])
+    console.log(chalk.green(paymentUpdateResult[0]));
+    // console.log(chalk.green(orderIDUpdateResult[0]));
+    return paymentUpdateResult[0].affectedRows > 0;
+  } catch (error) {
+    console.error(chalk.red('Error in addPayment:', error));
+    throw error;
+  } 
 };
