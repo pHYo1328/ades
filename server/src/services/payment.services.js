@@ -5,8 +5,7 @@ const chalk = require('chalk');
 module.exports.getPaymentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentByID is called'));
   try {
-    const paymentDataQuery =
-      `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
+    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
       FROM product AS p, order_items AS i, orders AS o, shipping AS s
         WHERE o.order_id = ?
         AND o.order_id = i.order_id
@@ -91,19 +90,25 @@ module.exports.addShipping = async (shipping_method, fee) => {
   } catch (error) {
     console.error(chalk.red('Error in addShipping: ', error));
     throw error;
-  } 
+  }
 };
 
 //Creating payment data into database(used)
 
 module.exports.addPayment = async (
+  
   payment_intent,
+ 
   status,
+ 
   total,
+ 
   paymentMethod,
-  orderID) => {
+ 
+  orderID
+) => {
   console.log(chalk.blue('addPayment is called'));
-  const createPaymentQuery = 
+const createPaymentQuery = 
   'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
   const updateStatusQuery = 
   `UPDATE orders
@@ -151,5 +156,5 @@ module.exports.addPayment = async (
     await connection.rollback();
     console.error(chalk.red('Error in addPayment:', error));
     throw error;
-  } 
+  }
 };

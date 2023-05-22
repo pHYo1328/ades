@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-// import { div } from "@cantonjs/react-scroll-view";
 
 const cld = new Cloudinary({
   cloud: {
@@ -13,11 +11,9 @@ const cld = new Cloudinary({
   },
 });
 
-
 export default function AdminDashboard() {
-
   const [products, setProducts] = useState(null);
-  const [statistics, setStatistics] = useState(null)
+  const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const [brands, setBrands] = useState(null);
@@ -68,61 +64,39 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    fetchBrands();
-  }, [])
-
-  useEffect(() => {
-    fetchCategories();
-  }, [])
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseUrl}/api/admin/statistics`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setStatistics(response.data.data);
-  //       console.log(statistics);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, [products]);
-
-  useEffect(() => {
-    const fetchStatistics = () => {
-      axios
-        .get(`${baseUrl}/api/admin/statistics`)
-        .then((response) => {
-          setStatistics(response.data.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    const fetchData = async () => {
+      const fetchProductsPromise = fetchProducts();
+      const fetchBrandsPromise = fetchBrands();
+      const fetchCategoriesPromise = fetchCategories();
+  
+      await Promise.all([fetchProductsPromise, fetchBrandsPromise, fetchCategoriesPromise]);
     };
-  
-    // Fetch statistics initially
+    fetchData();
+  }, []);  
+
+  const fetchStatistics = () => {
+    axios
+      .get(`${baseUrl}/api/admin/statistics`)
+      .then((response) => {
+        setStatistics(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
     fetchStatistics();
-  
-    // Fetch statistics every second
     const intervalId = setInterval(fetchStatistics, 60 * 1000);
-  
-    // Cleanup function to clear the interval
     return () => {
       clearInterval(intervalId);
     };
   }, [products]);
-  
+
 
   const handleSubmitBrand = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    // const name = document.getElementById("add").value;
-    // const type = "brand"
 
     if (!brandName) {
       window.alert('Please fill in the name of the brand');
@@ -140,8 +114,6 @@ export default function AdminDashboard() {
           console.log(brand);
           fetchBrands();
           setBrandName('')
-
-          // window.location.reload();
         });
     }
   };
@@ -149,9 +121,6 @@ export default function AdminDashboard() {
   const handleSubmitCategory = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
-
-    // const name = document.getElementById("add").value;
-    // const type = "category"
 
     if (!categoryName) {
       window.alert('Please fill in the name of the category');
@@ -167,83 +136,89 @@ export default function AdminDashboard() {
           console.log(response);
           setCategory(response.data.data);
           console.log(category);
-          fetchCategories()
-          setCategoryName('')
+          fetchCategories();
+          setCategoryName('');
         });
     }
   };
 
   return (
-    // <div class="row col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-
-    <div
-      class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}
-    >
+    <div class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
       <div class="row">
         <h4 class="h4 font-weight-bold text-center mt-4">Admin Dashboard</h4>
       </div>
 
-
       {statistics ? (
         <div class="row my-2">
-
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#dff7ec" }}>
-                <h4 class="h4">
-                  Total Sold
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#dff7ec' }}>
+                <h4 class="h4">Total Sold</h4>
                 <p>{statistics.total_sold}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#dfeaf7" }}>
-                <h4 class="h4">
-                  Total Inventory
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#dfeaf7' }}>
+                <h4 class="h4">Total Inventory</h4>
                 <p>{statistics.total_inventory}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#f0f7df" }}>
-                <h4 class="h4">
-                  Total Revenue
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#f0f7df' }}>
+                <h4 class="h4">Total Revenue</h4>
                 <p>{statistics.total_payment}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#f3dff5" }}>
-                <h4 class="h4">
-                  Total Order
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#f3dff5' }}>
+                <h4 class="h4">Total Order</h4>
                 <p>{statistics.total_order}</p>
               </div>
             </div>
           </div>
-
-
         </div>
       ) : (
         <p>Loading...</p>
       )}
 
-
-      <div class="row my-2" style={{
-        height: "300px",
-        overflowY: "scroll",
-        background: "#c2d9ff",
-      }}>
-        <div class="py-2 w-100 col-12" style={{ position: "sticky", top: "0", background: "#dff7ec", width: '100%' }}>
+      <div
+        class="row my-2"
+        style={{
+          height: '300px',
+          overflowY: 'scroll',
+          background: '#c2d9ff',
+        }}
+      >
+        <div
+          class="py-2 w-100 col-12"
+          style={{
+            position: 'sticky',
+            top: '0',
+            background: '#dff7ec',
+            width: '100%',
+          }}
+        >
           <div className="row">
             <div className="col-10">Products</div>
             <div className="col-2">
@@ -252,7 +227,8 @@ export default function AdminDashboard() {
                 className="btn btn-success w-100 col-6 text-dark mr-2"
                 id="createButton"
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/products/create";
+                  window.location.href =
+                    'http://localhost:3000/products/create';
                 }}
               >
                 Create
@@ -283,24 +259,19 @@ export default function AdminDashboard() {
                     <button
                       id="plusButton"
                       onClick={() => {
-                        // console.log(product.product_id)
                         const productID = product.product_id;
                         axios
                           .put(
                             `${baseUrl}/api/products/inventory/plus/${productID}`
                           )
                           .then((response) => {
-                            //  console.log(response);
-                            //  setProducts(response.data.data);
-                            //  console.log(products);
                             console.log('Increase button is clicked');
                             fetchProducts();
+                            fetchStatistics();
                           })
                           .catch((error) => {
                             console.error(error);
                           });
-
-                        product.quantity++;
                       }}
                     >
                       <i class="bi bi-plus-circle"></i>
@@ -310,7 +281,6 @@ export default function AdminDashboard() {
                       id="minusButton"
                       onClick={() => {
                         if (product.quantity >= 1) {
-                          // console.log(product.product_id)
                           const productID = product.product_id;
                           axios
                             .put(
@@ -319,6 +289,7 @@ export default function AdminDashboard() {
                             .then((response) => {
                               console.log('Decrease button is clicked');
                               fetchProducts();
+                              fetchStatistics();
                             })
                             .catch((error) => {
                               console.error(error);
@@ -345,8 +316,6 @@ export default function AdminDashboard() {
                       axios
                         .delete(`${baseUrl}/api/products/${productID}`)
                         .then((res) => {
-                          // alert('Product is successfully deleted')
-                          // window.NavigationPreloadManager()
                           const updatedProducts = products.filter(
                             (p) => p.product_id !== productID
                           );
@@ -366,12 +335,16 @@ export default function AdminDashboard() {
       </div>
 
       <div class="row">
-        <div class="col-5" style={{
-          marginLeft: 'auto', marginRight: 'auto',
-          height: "300px",
-          overflowY: "scroll",
-          background: "#c2d9ff",
-        }}>
+        <div
+          class="col-5"
+          style={{
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+          }}
+        >
           <div class="row">
             <div class="col-10">Brands</div>
           </div>
@@ -380,7 +353,6 @@ export default function AdminDashboard() {
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div class="col-8">
-              {/* <input type="text" class="form-control" id="add" placeholder="Brand Name"/> */}
               <input
                 type="text"
                 className="form-control"
@@ -415,8 +387,6 @@ export default function AdminDashboard() {
                         axios
                           .delete(`${baseUrl}/api/brands/${brandID}`)
                           .then((res) => {
-                            // alert('Product is successfully deleted')
-                            // window.NavigationPreloadManager()
                             const updatedBrands = brands.filter(
                               (b) => b.brand_id !== brandID
                             );
@@ -436,12 +406,16 @@ export default function AdminDashboard() {
             )}
           </ul>
         </div>
-        <div class="col-5" style={{
-          marginLeft: 'auto', marginRight: 'auto',
-          height: "300px",
-          overflowY: "scroll",
-          background: "#c2d9ff",
-        }}>
+        <div
+          class="col-5"
+          style={{
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+          }}
+        >
           <div class="row">
             <div class="col-10">Categories</div>
           </div>
@@ -451,7 +425,6 @@ export default function AdminDashboard() {
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div class="col-8">
-              {/* <input type="text" class="form-control" id="add" placeholder="Category Name"/> */}
               <input
                 type="text"
                 className="form-control"
@@ -486,8 +459,6 @@ export default function AdminDashboard() {
                         axios
                           .delete(`${baseUrl}/api/categories/${categoryID}`)
                           .then((res) => {
-                            // alert('Product is successfully deleted')
-                            // window.NavigationPreloadManager()
                             const updatedCategories = categories.filter(
                               (c) => c.category_id !== categoryID
                             );
@@ -508,8 +479,6 @@ export default function AdminDashboard() {
           </ul>
         </div>
       </div>
-
-
     </div>
-  )
+  );
 }

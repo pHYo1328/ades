@@ -16,10 +16,20 @@ const refreshTokenAdminController = require('../controller/admin/refreshTokenAdm
 const logoutAdminController = require('../controller/admin/logoutAdminController');
 const forgotPasswordAdminController = require('../controller/admin/forgotPasswordAdminController');
 const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
-
+const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
+
+//MIDDLEWARES
+const verifyRoles = require("../middlewares/verifyRoles");
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
+
+//to use the middleware, see below 
+
+// router.get('/api', verifyRoles('customer'), (req, res) => {
+//   //This route can only be accessed by users with the 'customer' role
+//   // request logic here
+// });
 module.exports = (app, router) => {
   // Thinzar
   // GET
@@ -97,10 +107,6 @@ module.exports = (app, router) => {
     '/api/products/inventory/minus/:productID',
     productController.processUpdateInventoryDown
   );
-  router.put(
-    '/api/products/:productID/images',
-    productController.processDeleteProductImages
-  );
 
   // PHYO
 
@@ -177,6 +183,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
+  router.get(
+      '/api/shipping',
+      //verifyAccessToken.verifyToken,
+      shippingController.processFetchShippingMethod
+    );
   router.get('/config', checkoutController.getConfig);
 
   router.post(
@@ -184,15 +195,16 @@ module.exports = (app, router) => {
     checkoutController.createPaymentIntent
   );
 //inserting data from stripe to back_end
-  router.post('/webhook', 
-  bodyParser.raw({ type: 'application/json' }),
-  checkoutController.createWebhooks),
+  router.post(
+    '/webhook',
+    bodyParser.raw({ type: 'application/json' }),
+    checkoutController.createWebhooks
+  ),
 
 
-
-  router.get('^/$|/index(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-  });
+    router.get('^/$|/index(.html)?', (req, res) => {
+      res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+    });
 
   router.post('/register', registerController.handleNewUser);
 
@@ -213,6 +225,9 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };

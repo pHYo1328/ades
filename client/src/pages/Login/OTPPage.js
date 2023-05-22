@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import CartContext from '../../context/cartContext';
+import api from '../../index';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,12 +32,14 @@ const VerifyOTP = () => {
       // Handle error
     }
   };
-
   return (
     <div className="max-w-md mx-auto mt-8">
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="otp" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="otp"
+            className="block text-lg font-medium text-gray-700"
+          >
             OTP
           </label>
           <input

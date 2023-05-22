@@ -13,11 +13,11 @@ module.exports.OTPEmailSender = async (username) => {
   const userQuery = 'SELECT username, email FROM users WHERE username = ?';
 
   try {
-    console.log("im inside try this is my unsername", username)
+    console.log('im inside try this is my unsername', username);
     const result = await pool.query(userQuery, [username]);
-    console.log("Result:", result[0]);
+    console.log('Result:', result[0]);
     const rows = result[0]; // Access the rows returned from the query
-    console.log("Rows:", rows);
+    console.log('Rows:', rows);
     if (rows.length > 0) {
       // Process each row
       const response = await Promise.all(
@@ -44,8 +44,7 @@ module.exports.OTPEmailSender = async (username) => {
                 email: email,
               },
             ],
-            htmlContent:
-              `<html><body><h1>This is your OTP ${otp}</h1></body></html>`,
+            htmlContent: `<html><body><h1>This is your OTP ${otp}</h1></body></html>`,
             params: { bodyMessage: 'Made just for you!' },
           });
 

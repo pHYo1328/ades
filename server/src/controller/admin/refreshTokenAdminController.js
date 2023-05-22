@@ -11,7 +11,9 @@ const handleRefreshToken = async (req, res) => {
 
   try {
     // Find the user with the given refreshToken
-    const foundUser = await adminLoginServices.findAdminByRefreshToken(refreshToken);
+    const foundUser = await adminLoginServices.findAdminByRefreshToken(
+      refreshToken
+    );
 
     console.log('admin info', foundUser);
 
@@ -28,7 +30,7 @@ const handleRefreshToken = async (req, res) => {
         const hackedUser = await adminLoginServices.findAdminByUsername(
           decoded.username
         );
-        hackedUser.refreshToken = []; // not saved into db 
+        hackedUser.refreshToken = []; // not saved into db
         const result = await hackedUser.save();
         console.log('start', result);
 

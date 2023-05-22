@@ -12,8 +12,13 @@ const handleNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
 
     // register the new user
-    const result = await loginServices.registerUser(username, email, hashedPwd);
-
+    const result = await loginServices.registerUser(
+      username, 
+      email,
+      hashedPwd,
+      'customer'
+    );
+    
     console.log(result);
 
     res.status(201).json({ success: `New user ${username} created!` });

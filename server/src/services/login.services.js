@@ -4,27 +4,28 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // create new user
-module.exports.registerUser = async (username, email, password) => {
+module.exports.registerUser = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-  //  // Check if the username already exists in the database
-  // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
-  // const usernameExists = await pool.query(checkUsernameQuery, [username]);
-  // const count = usernameExists[0].count;
-  
-  // if (count > 0) {
-  //   // Throw an error with status code 500
-  //   const error = new Error('Username already exists');
-  //   error.status = 500;
-  //   throw error;
-  // }
+    //  // Check if the username already exists in the database
+    // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
+    // const usernameExists = await pool.query(checkUsernameQuery, [username]);
+    // const count = usernameExists[0].count;
+
+    // if (count > 0) {
+    //   // Throw an error with status code 500
+    //   const error = new Error('Username already exists');
+    //   error.status = 500;
+    //   throw error;
+    // }
     // insert the new user
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, "customer");';
+      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
       password,
+      roles,
     ]);
     console.log(chalk.green(results));
     return results;
@@ -174,11 +175,10 @@ module.exports.forgotPassword = async (email, newPassword) => {
 // Verify OTP
 module.exports.verifyOTP = async (otp) => {
   try {
-    console.log("am i here");
-    const result = await pool.query(
-      'SELECT otp FROM users WHERE otp = ?',
-      [otp]
-    );
+    console.log('am i here');
+    const result = await pool.query('SELECT otp FROM users WHERE otp = ?', [
+      otp,
+    ]);
 
     const rows = result[0];
     if (rows.length > 0) {
@@ -186,16 +186,16 @@ module.exports.verifyOTP = async (otp) => {
 
       if (otp === savedOTP) {
         // OTP verification successful
-        console.log("otp same as db otp");
+        console.log('otp same as db otp');
         return true;
       } else {
         // Invalid OTP
-        console.log("ITS WRONG");
+        console.log('ITS WRONG');
         return false;
       }
     } else {
       // User not found or OTP not saved
-      console.log("not here LOL");
+      console.log('not here LOL');
       return false;
     }
   } catch (error) {
@@ -211,8 +211,6 @@ module.exports.retrieveUsersInfo = async () => {
   console.log('All users info retrieved!');
   return users;
 };
-
-
 
 // // Forgot password
 // module.exports.forgotPassword = async (email, newPassword) => {

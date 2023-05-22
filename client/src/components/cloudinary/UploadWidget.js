@@ -99,9 +99,8 @@ const UploadWidget = ({ onImageChange }) => {
     console.log(images);
     // console.log(images.join(', '));
     // onImageChange(images.join(', '));
-    onImageChange(images)
-  }, [images]
-  );
+    onImageChange(images);
+  }, [images]);
 
   return (
     <button id="upload_widget" className="cloudinary-button w-100">
