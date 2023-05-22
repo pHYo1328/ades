@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import CartContext from '../../context/cartContext';
 import { useNavigate } from 'react-router-dom';
+import api from '../../index';
 
 function Login() {
   const navigate = useNavigate();
+  const [cartData, setCartData, addCartData] = useContext(CartContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const onHandleSubmit = (e) => {
     e.preventDefault();
 

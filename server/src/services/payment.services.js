@@ -5,8 +5,7 @@ const chalk = require('chalk');
 module.exports.getPaymentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentByID is called'));
   try {
-    const paymentDataQuery =
-      `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
+    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
       FROM product AS p, order_items AS i, orders AS o, shipping AS s
         WHERE o.order_id = ?
         AND o.order_id = i.order_id
@@ -91,30 +90,42 @@ module.exports.addShipping = async (shipping_method, fee) => {
   } catch (error) {
     console.error(chalk.red('Error in addShipping: ', error));
     throw error;
-  } 
+  }
 };
 
 //Creating payment data into database
 
-module.exports.addPayment = async (id, status, total, paymentMethod, orderID) => {
+module.exports.addPayment = async (
+  id,
+  status,
+  total,
+  paymentMethod,
+  orderID
+) => {
   console.log(chalk.blue('addPayment is called'));
-  
+
   try {
-    const createPaymentQuery = 'INSERT INTO payment (transaction_id, status, payment_total, payment_method) VALUES (?, ?, ?, ?);';
+    const createPaymentQuery =
+      'INSERT INTO payment (transaction_id, status, payment_total, payment_method) VALUES (?, ?, ?, ?);';
     // const orderIDQuery = 'INSERT INTO payment(order_id) VALUES (?);';
 
-    const paymentUpdate = pool.query(createPaymentQuery, [id, status, total, paymentMethod]);
+    const paymentUpdate = pool.query(createPaymentQuery, [
+      id,
+      status,
+      total,
+      paymentMethod,
+    ]);
     // const orderIDUpdate = pool.query(orderIDQuery,[orderID]);
 
-    const[paymentUpdateResult, orderIDUpdateResult] = await Promise.all([
+    const [paymentUpdateResult, orderIDUpdateResult] = await Promise.all([
       paymentUpdate,
       // orderIDUpdate,
-    ])
+    ]);
     console.log(chalk.green(paymentUpdateResult[0]));
     // console.log(chalk.green(orderIDUpdateResult[0]));
     return paymentUpdateResult[0].affectedRows > 0;
   } catch (error) {
     console.error(chalk.red('Error in addPayment:', error));
     throw error;
-  } 
+  }
 };

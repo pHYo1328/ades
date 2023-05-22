@@ -16,7 +16,7 @@ const refreshTokenAdminController = require('../controller/admin/refreshTokenAdm
 const logoutAdminController = require('../controller/admin/logoutAdminController');
 const forgotPasswordAdminController = require('../controller/admin/forgotPasswordAdminController');
 const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
-
+const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 
 //MIDDLEWARES
@@ -181,6 +181,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
+  router.get(
+      '/api/shipping',
+      //verifyAccessToken.verifyToken,
+      shippingController.processFetchShippingMethod
+    );
   router.get('/config', checkoutController.getConfig);
 
   router.post(
@@ -188,13 +193,14 @@ module.exports = (app, router) => {
     checkoutController.createPaymentIntent
   );
 
-  router.post('/webhook', 
-  bodyParser.raw({ type: 'application/json' }),
-  checkoutController.createWebhooks),
-
-  router.get('^/$|/index(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-  });
+  router.post(
+    '/webhook',
+    bodyParser.raw({ type: 'application/json' }),
+    checkoutController.createWebhooks
+  ),
+    router.get('^/$|/index(.html)?', (req, res) => {
+      res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+    });
 
   router.post('/register', registerController.handleNewUser);
 

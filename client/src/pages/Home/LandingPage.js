@@ -11,18 +11,16 @@ const cld = new Cloudinary({
   },
 });
 
-
 export default function LandingPage() {
-
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
 
-  const [productName, setProductName] = useState()
-  const [productMinPrice, setProductMinPrice] = useState()
-  const [productMaxPrice, setProductMaxPrice] = useState()
-  const [productCategory, setProductCategory] = useState()
-  const [productBrand, setProductBrand] = useState()
+  const [productName, setProductName] = useState();
+  const [productMinPrice, setProductMinPrice] = useState();
+  const [productMaxPrice, setProductMaxPrice] = useState();
+  const [productCategory, setProductCategory] = useState();
+  const [productBrand, setProductBrand] = useState();
 
   const baseUrl = 'http://localhost:8081';
   useEffect(() => {
@@ -65,14 +63,20 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-white w-full" style={{ marginLeft: "auto", marginRight: "auto" }}>
+    <div
+      className="bg-white w-full"
+      style={{ marginLeft: 'auto', marginRight: 'auto' }}
+    >
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <h3 class="text-center text-black font-weight-bold mb-3">
           WELCOME TO TECHZERO
         </h3>
 
         <div class="row">
-          <div class="input-wrap first col-lg-10 col-md-8 col-sm-12" style={{ marginLeft: "auto", marginRight: "auto" }}>
+          <div
+            class="input-wrap first col-lg-10 col-md-8 col-sm-12"
+            style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          >
             <div class="mb-3 text-dark">
               <input
                 type="text"
@@ -84,8 +88,14 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div class="row col-10" style={{ marginLeft: "auto", marginRight: "auto" }}>
-          <div class="input-wrap first col-lg-4 col-md-8 col-sm-12 row" style={{ marginLeft: "auto", marginRight: "auto" }} >
+        <div
+          class="row col-10"
+          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+        >
+          <div
+            class="input-wrap first col-lg-4 col-md-8 col-sm-12 row"
+            style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          >
             <div class="mb-3 text-dark col-lg-6">
               <input
                 type="number"
@@ -107,7 +117,11 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              <select class="form-select" id="categoryOptions" onChange={(e) => setProductCategory(e.target.value)}>
+              <select
+                class="form-select"
+                id="categoryOptions"
+                onChange={(e) => setProductCategory(e.target.value)}
+              >
                 <option disabled selected value>
                   -- CATEGORY --
                 </option>
@@ -125,7 +139,11 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              <select class="form-select" id="brandOptions" onChange={(e) => setProductBrand(e.target.value)}>
+              <select
+                class="form-select"
+                id="brandOptions"
+                onChange={(e) => setProductBrand(e.target.value)}
+              >
                 <option disabled selected value>
                   -- BRAND --
                 </option>
@@ -148,11 +166,15 @@ export default function LandingPage() {
                 let url = '/search';
                 const queryParams = [];
 
-                if (productName) queryParams.push(`product_name=${productName}`);
-                if (productCategory) queryParams.push(`category_id=${productCategory}`);
-                if (productBrand) queryParams.push(`brand_id=${productBrand}`);
-                if (productMaxPrice) queryParams.push(`max_price=${productMaxPrice}`);
-                if (productMinPrice) queryParams.push(`min_price=${productMinPrice}`);
+                            if (productName)
+                  queryParams.push(`product_name=${productName}`);
+                            if (productCategory)
+                  queryParams.push(`category_id=${productCategory}`);
+                            if (productBrand) queryParams.push(`brand_id=${productBrand}`);
+                            if (productMaxPrice)
+                  queryParams.push(`max_price=${productMaxPrice}`);
+                            if (productMinPrice)
+                  queryParams.push(`min_price=${productMinPrice}`);
 
                 if (queryParams.length > 0) {
                   url += `?${queryParams.join('&')}`;
@@ -166,7 +188,7 @@ export default function LandingPage() {
         </div>
 
         <div class="row mt-5">
-          <div class="col-10" >
+          <div class="col-10">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">
               New Arrivals
             </h2>
@@ -189,15 +211,16 @@ export default function LandingPage() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div key={product.product_id} className="group relative" onClick={() => {
-                const productID = product.product_id
-                window.location.href = `http://localhost:3000/products/${productID}`
-              }}>
+              <div
+                key={product.product_id}
+                className="group relative"
+                onClick={() => {
+                  const productID = product.product_id;
+                  window.location.href = `http://localhost:3000/products/${productID}`;
+                }}
+              >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-
-                  <AdvancedImage
-                    cldImg={cld.image(product.image_url)}
-                  />
+                  <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
