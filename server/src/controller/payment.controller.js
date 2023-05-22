@@ -5,28 +5,36 @@ const paymentServices = require('../services/payment.services');
 exports.processGetPaymentByID = async (req, res, next) => {
   console.log(chalk.blue('processGetPaymentByID running'));
 
-  const { paymentID } = req.params;
+  const { orderID } = req.params;
 
   try {
-    if (isNaN(parseInt(paymentID))) {
-      const error = new Error('invalid paymentID');
+    if (isNaN(parseInt(orderID))) {
+      const error = new Error('invalid orderID');
       error.status = 400;
       throw error;
     }
-    const paymentData = await paymentServices.getPaymentByID(paymentID);
+    const paymentData = await paymentServices.getPaymentByID(orderID);
     if (paymentData.length == 0) {
-      const error = new Error('No payment exists');
+      const error = new Error('No order exists');
       error.status = 404;
       throw error;
     }
     if (paymentData) {
-      console.log(chalk.yellow('Payment data: ', paymentData));
-
+      console.log(chalk.yellow('Order data: ', paymentData));
+      const payments = paymentData.map((payment) => ({
+        product_name: payment.product_name,
+        price: payment.price,
+        description: payment.description,
+        quantity: payment.quantity,
+        total_price: payment.total_price,
+        shipping_method: payment.shipping_method,
+        fee: payment.fee
+      }));
       return res.status(200).json({
         statusCode: 200,
         ok: true,
-        message: 'Read payment details successful',
-        paymentData,
+        message: 'Read order details successful',
+        data: payments,
       });
     }
   } catch (error) {

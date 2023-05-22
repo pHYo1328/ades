@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const config = require('./config');
 
 const stripe = require('stripe')(`${config.stripe_secret_key}`, {

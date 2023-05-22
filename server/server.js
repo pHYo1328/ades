@@ -37,6 +37,8 @@ app.use(fileUpload());
 //serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
 
+
+
 // routes
 
 // app.use('/', require('../server/src/routes/root'));
