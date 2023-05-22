@@ -129,6 +129,7 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
+
   router.get(
     '/api/payment/:orderID',
     // verifyAccessToken.verifyToken,
@@ -157,6 +158,7 @@ module.exports = (app, router) => {
     orderController.processGetOrderDetailsBeforePickUp
   );
 
+
   router.get(
     '/api/order/getOrderDetailsByDeliverStatus/:customerID',
     //verifyAccessToken.verifyToken,
@@ -181,10 +183,12 @@ module.exports = (app, router) => {
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-
+//inserting data from stripe to back_end
   router.post('/webhook', 
   bodyParser.raw({ type: 'application/json' }),
   checkoutController.createWebhooks),
+
+
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
