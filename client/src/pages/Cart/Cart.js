@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useEffect, useContext, useState, useRef } from 'react';
-import CartContext from '../../context/CartContext';
 import LoadingIndicator from 'react-loading-indicator';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -15,18 +14,19 @@ const cld = new Cloudinary({
   },
 });
 
-const plusButtonHandler = (cartData, productID, updateCartData) => {
+const plusButtonHandler = (cartData, productId, updateCartData) => {
   const updatedCart = cartData.map((item) =>
-    item.productId === productID
+    item.productId == productId
       ? { ...item, quantity: item.quantity + 1 }
       : item
   );
+  console.log(updatedCart);
   updateCartData([...updatedCart]);
 };
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
   const updatedCart = cartData.map((item) =>
-    item.productId === productID && item.quantity > 0
+    item.productId == productID && item.quantity > 0
       ? { ...item, quantity: item.quantity - 1 }
       : item
   );
@@ -35,17 +35,18 @@ const minusButtonHandler = (cartData, productID, updateCartData) => {
 
 const deleteButtonHandler = (cartData, productID, updateCartData) => {
   const filteredProducts = cartData.filter(
-    (item) => item.productId !== productID
+    (item) => item.productId != productID
   );
   console.log(filteredProducts);
   updateCartData(filteredProducts);
 };
 const Cart = () => {
-  const [cartData,setCartData] = useContext(CartContext);
+  const [cartData, setCartData] = useState([]);
   const [cartProductData, setCartProductData] = useState(null);
   const [productDetails, setProductsDetails] = useState(null);
   const latestCartData = useRef(cartData);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [address, setAddress] = useState({
     firstName: '',
     lastName: '',
@@ -54,27 +55,41 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
+  const [shippingFee, setShippingFee] = useState(0);
+  const [shippingMethod, setShippingMethod] = useState(null);
+  console.log(cartData);
   const customerID = localStorage.getItem('userid') || 4;
   const combineCartDataAndProductDetails = () => {
     const itemsDetailsToShow = cartData.map((cartItem) => {
       console.log(cartItem);
+      console.log(productDetails);
+
       const cartInfo = productDetails.find(
-        (item) => cartItem.productId === item.product_id
+        (item) => cartItem.productId == item.product_id
       );
+      const totalAmount = parseFloat(
+        cartInfo.price * cartItem.quantity
+      ).toFixed(2);
       return {
         ...cartInfo,
         quantity: cartItem.quantity,
+        totalAmount: totalAmount,
       };
     });
-    console.log(JSON.stringify(itemsDetailsToShow));
+    const overallTotalAmount = itemsDetailsToShow
+      .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
+      .toFixed(2);
+    setTotalAmount(overallTotalAmount);
     setCartProductData(itemsDetailsToShow);
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cartResponse = await api.get(`/api/cart/${customerID}`);
-        const cartData = cartResponse.data.data;
+        const response = await api.get(`api/cart/${customerID}`);
+        const cartData = response.data.data;
         setCartData(cartData);
+        const shippingData = await api.get(`api/shipping`);
+        setShippingMethod(shippingData.data.data);
         if (cartData.length > 0) {
           var productIDs = [];
           cartData.forEach((cartItem) => {
@@ -85,7 +100,7 @@ const Cart = () => {
               ','
             )}`
           );
-          console.log(productResponse.data.data)
+          console.log(productResponse.data.data);
           setProductsDetails(productResponse.data.data);
         }
       } catch (error) {
@@ -124,7 +139,7 @@ const Cart = () => {
   }, [cartData, productDetails]);
   return (
     <div className="flex flex-row">
-      <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36">
+      <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36 mb-48">
         <thead>
           <tr>
             <th>Your Cart({cartData.length})</th>
@@ -141,8 +156,6 @@ const Cart = () => {
             </tr>
           ) : cartProductData && cartData.length > 0 ? (
             cartProductData.map((cartItem, index) => (
-              
-              
               <tr
                 key={`${cartItem.product_ID}-${index}`}
                 className="border-t-2 border-b-2 border-black"
@@ -190,9 +203,7 @@ const Cart = () => {
                 </td>
 
                 <td className="pl-6">
-                  <b>
-                    ${parseFloat(cartItem.price * cartItem.quantity).toFixed(2)}
-                  </b>
+                  <b>${cartItem.totalAmount}</b>
                 </td>
                 <td className="pl-4">
                   <button
@@ -327,7 +338,7 @@ const Cart = () => {
           </button>
         </form>
       </div>
-      <div className="fixed bottom-0  w-3/5 h-1/5 z-1 bg-white ">
+      <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
         <div className="flex flex-row justify-between">
           <button>
             <Link
@@ -338,6 +349,27 @@ const Cart = () => {
               <b>Continue Shipping</b>
             </Link>
           </button>
+          <div class="col-2">
+            <select required
+              class="form-select form-select-sm"
+              onChange={(event) => setShippingFee(event.target.value) }
+            >
+              <option disabled selected value="0">
+                -- Shipping Method --
+              </option>
+              {shippingMethod ? (
+                shippingMethod.map((method) => (
+                  <option value={method.fee} >{method.shipping_method}</option>
+                ))
+              ) : (
+                <LoadingIndicator />
+              )}
+            </select>
+          </div>
+          <div className='flex flex-column '>
+          <p>subTotal :{totalAmount}</p>
+          <p>total :{(parseFloat(totalAmount)+parseFloat(shippingFee)).toFixed(2)}</p>
+          </div>
         </div>
       </div>
     </div>

@@ -3,10 +3,11 @@ import { useState, useEffect, useContext } from 'react';
 // import { StarIcon } from '@heroicons/react/20/solid';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
-import CartContext from '../../../context/CartContext';
+import { Link } from 'react-router-dom';
+import CartContext from '../../../context/cartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import api from '../../../index';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -18,11 +19,30 @@ export default function ProductDetails() {
   // const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-  const [cartData, setCartData,addToCart] = useContext(CartContext);
+  const { cartData, setCartData, addToCart } = useContext(CartContext);
   const { productID } = useParams();
-  const customerId= localStorage.getItem('userid');
-  const addToCartHandler = (userid,productId, quantity) => {
-    addToCart(userid,productId, quantity);
+  const customerId = localStorage.getItem('userid');
+  const addToCartHandler = async (userid, productId, quantity) => {
+    // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
+    const cartData = await api.get(`/api/cart/${userid}`);
+    console.log(cartData.data.data);
+    let updatedCartData = [...cartData.data.data];
+
+    const productIndex = updatedCartData.findIndex(
+      (item) => item.productId === productId
+    );
+
+    if (productIndex !== -1) {
+      updatedCartData[productIndex].quantity += quantity;
+    } else {
+      updatedCartData.push({ productId: productId, quantity: quantity });
+    }
+
+    // Update the cartData for the given userId
+    const updatedResponse = await api.post(`/api/cart/${userid}`, {
+      cartData: updatedCartData,
+    });
+    console.log(updatedResponse);
   };
   useEffect(() => {
     axios
@@ -160,7 +180,7 @@ export default function ProductDetails() {
               </div>
               <button
                 onClick={() => {
-                  addToCartHandler(customerId,productID, 1);
+                  addToCartHandler(customerId, productID, 1);
                 }}
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >

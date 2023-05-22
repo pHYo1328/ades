@@ -61,7 +61,7 @@ module.exports.deleteCartDataInRedis = async (userId) => {
 // for synchronization of cache and database, decided to use write through for data consistency
 module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
   console.log(chalk.blue('addCartDataToMySqlDB is called'));
-  console.log(cartData)
+  console.log(cartData);
   const cartDataValues = cartData.map((item) => [
     userId,
     item.productId,

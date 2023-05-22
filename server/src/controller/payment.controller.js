@@ -28,7 +28,7 @@ exports.processGetPaymentByID = async (req, res, next) => {
         quantity: payment.quantity,
         total_price: payment.total_price,
         shipping_method: payment.shipping_method,
-        fee: payment.fee
+        fee: payment.fee,
       }));
       return res.status(200).json({
         statusCode: 200,

@@ -37,7 +37,7 @@ exports.processAddCartData = async (req, res, next) => {
 
 // for reading, decided to use cache aside
 exports.processGetCartData = async (req, res, next) => {
-  console.log(chalk.blue('processAddCartData is running'));
+  console.log(chalk.blue('processGetCartData is running'));
   const { userID } = req.params;
   try {
     if (isNaN(parseInt(userID))) {
@@ -58,8 +58,8 @@ exports.processGetCartData = async (req, res, next) => {
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result
     );
-
     const message = 'cartData found successfully.';
+    console.log(result);
     return res.status(200).send({ message, data: result });
   } catch (error) {
     console.error(chalk.red('Error in processGetCartData:', error));

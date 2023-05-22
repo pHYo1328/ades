@@ -80,15 +80,9 @@ export default function ProductCreate() {
       window.alert('Price must be a value not less than or equal to 0.');
     } else {
       const requestBody = {
-<<<<<<< HEAD
         name: productName,
         description: productDescription,
         price: productPrice,
-=======
-        name: productName, 
-        description: productDescription, 
-        price: productPrice, 
->>>>>>> dc8f21823cbde4112df659b6b7b13eeee0389ee9
         category_id: productCategory,
         brand_id: productBrand,
         quantity: productQuantity,

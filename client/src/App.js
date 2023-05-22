@@ -20,12 +20,12 @@ import ProductsPage from './pages/Products/Public/ProductsPage';
 import ProductsByBrand from './pages/Products/Public/ProductsByBrand';
 import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
-
+import Header from './components/header/Header';
 import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
 // import ProductModify from './pages/Products/Admin/ProductModify';
-import { CartProvider } from './context/CartContext';
+
 import Payment from './pages/Stripe/Payment';
 // import Brands from './pages/Products/Admin/Brands';
 // import Categories from './pages/Products/Admin/Categories';
@@ -33,7 +33,7 @@ import Payment from './pages/Stripe/Payment';
 import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategories';
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import './App.css';
-import './input.css';
+import './input.css'; 
 import { improve } from '@cloudinary/url-gen/actions/adjust';
 
 function App() {
@@ -41,7 +41,8 @@ function App() {
     <>
       <div className="App">
         <header className="App-header">
-          <CartProvider>
+        <Header />
+
             <Routes>
               <Route path="/" element={<Home />} />
 
@@ -92,7 +93,6 @@ function App() {
               />
               <Route path="/payment/:orderID" element={<Payment />} />
             </Routes>
-          </CartProvider>
           {/* Hello, we are ready to develop our ades project. */}
         </header>
       </div>
