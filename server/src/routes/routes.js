@@ -96,10 +96,6 @@ module.exports = (app, router) => {
     '/api/products/inventory/minus/:productID',
     productController.processUpdateInventoryDown
   );
-  router.put(
-    '/api/products/:productID/images',
-    productController.processDeleteProductImages
-  );
 
   // PHYO
 
@@ -204,6 +200,9 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };
