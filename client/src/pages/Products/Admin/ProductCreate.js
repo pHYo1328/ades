@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
-import Category from '../../../components/Products/Dropdown/Category';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
@@ -53,18 +52,6 @@ export default function ProductCreate() {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
-    // const name = document.getElementById('create-product-name').value;
-    // const description = document.getElementById(
-    //   'create-product-description'
-    // ).value;
-    // const price = document.getElementById('create-product-price').value;
-    // const category_id = document.getElementById(
-    //   'create-product-category'
-    // ).value;
-    // const brand_id = document.getElementById('create-product-brand').value;
-    // const quantity = document.getElementById('create-product-quantity').value;
-    // const image = imagePath;
-
     if (
       !productName ||
       !productDescription ||
@@ -109,13 +96,6 @@ export default function ProductCreate() {
   };
 
   return (
-    // <>
-    //   <Helmet>
-    //     <script
-    //       src="https://widget.cloudinary.com/v2.0/global/all.js"
-    //       type="text/javascript"
-    //     />
-    //   </Helmet>
     <form
       id="create-product-form"
       class="w-50 mt-5"

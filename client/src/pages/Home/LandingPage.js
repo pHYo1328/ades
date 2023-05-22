@@ -117,7 +117,6 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              {/* <label>CATEGORY</label> */}
               <select
                 class="form-select"
                 id="categoryOptions"
@@ -159,6 +158,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div class=" col-2 text-black">
+
             <button
               type="button"
               class="btn btn-outline-primary w-100"
@@ -166,14 +166,14 @@ export default function LandingPage() {
                 let url = '/search';
                 const queryParams = [];
 
-                if (productName)
+                            if (productName)
                   queryParams.push(`product_name=${productName}`);
-                if (productCategory)
+                            if (productCategory)
                   queryParams.push(`category_id=${productCategory}`);
-                if (productBrand) queryParams.push(`brand_id=${productBrand}`);
-                if (productMaxPrice)
+                            if (productBrand) queryParams.push(`brand_id=${productBrand}`);
+                            if (productMaxPrice)
                   queryParams.push(`max_price=${productMaxPrice}`);
-                if (productMinPrice)
+                            if (productMinPrice)
                   queryParams.push(`min_price=${productMinPrice}`);
 
                 if (queryParams.length > 0) {
@@ -194,22 +194,16 @@ export default function LandingPage() {
             </h2>
           </div>
           <div class="col-2">
-            <Dropdown style={{ width: '100%' }}>
-              <Dropdown.Toggle
-                variant="outline-primary"
-                id="dropdownMenuButton"
-                className="w-100"
-              >
+
+            <Dropdown style={{ width: "100%" }}>
+              <Dropdown.Toggle variant="outline-primary" id="dropdownMenuButton" className="w-100">
                 See All
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="http://localhost:3000/products">
-                  Products
-                </Dropdown.Item>
-                <Dropdown.Item href="http://localhost:3000/brands/categories">
-                  Brands & Categories
-                </Dropdown.Item>
+                <Dropdown.Item href="http://localhost:3000/products">Products</Dropdown.Item>
+                <Dropdown.Item href="http://localhost:3000/brands/categories">Brands & Categories</Dropdown.Item>
+
               </Dropdown.Menu>
             </Dropdown>
           </div>

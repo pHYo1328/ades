@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 
 import axios from 'axios';
-import chalk from 'chalk';
 
 export default function AllBrandsAndCategories() {
-  const [brands, setBrands] = useState(null);
-  const [brandName, setBrandName] = useState('');
-  const [brand, setBrand] = useState(null);
-  const [categories, setCategories] = useState(null);
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+
+    const [brands, setBrands] = useState(null)
+    const [categories, setCategories] = useState(null)
+    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   useEffect(() => {
     axios

@@ -13,9 +13,14 @@ const handleNewAdmin = async (req, res) => {
 
     // register the new user
     const result = await adminLoginServices.registerAdmin(
+      
       username,
+     
       email,
-      hashedPwd
+     
+      hashedPwd,
+      'admin',
+      
     );
 
     console.log(result);

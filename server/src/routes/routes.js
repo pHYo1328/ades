@@ -18,8 +18,18 @@ const forgotPasswordAdminController = require('../controller/admin/forgotPasswor
 const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminController');
 const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
+
+//MIDDLEWARES
+const verifyRoles = require("../middlewares/verifyRoles");
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
+
+//to use the middleware, see below 
+
+// router.get('/api', verifyRoles('customer'), (req, res) => {
+//   //This route can only be accessed by users with the 'customer' role
+//   // request logic here
+// });
 module.exports = (app, router) => {
   // Thinzar
   // GET
