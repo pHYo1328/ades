@@ -35,7 +35,10 @@ const VerifyOTP = () => {
     <div className="max-w-md mx-auto mt-8">
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="otp" className="block text-lg font-medium text-gray-700">
+          <label
+            htmlFor="otp"
+            className="block text-lg font-medium text-gray-700"
+          >
             OTP ADMIN
           </label>
           <input

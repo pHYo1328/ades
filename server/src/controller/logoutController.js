@@ -3,11 +3,11 @@ const loginServices = require('../services/login.services');
 const handleLogout = async (req, res) => {
   // On client, also delete the accessToken
   const cookies = req.cookies;
-  console.log("am i herE", req.cookies);
+  console.log('am i herE', req.cookies);
   if (!cookies?.refreshToken) return res.sendStatus(204); // No content
   const refreshToken = cookies.refreshToken;
   try {
-    console.log("am i logging out");
+    console.log('am i logging out');
     const logoutSuccess = await loginServices.logoutUser(refreshToken);
 
     if (!logoutSuccess) {

@@ -35,9 +35,9 @@ exports.processAddCartData = async (req, res, next) => {
   }
 };
 
-// for reading, decided to use cache aside 
+// for reading, decided to use cache aside
 exports.processGetCartData = async (req, res, next) => {
-  console.log(chalk.blue('processAddCartData is running'));
+  console.log(chalk.blue('processGetCartData is running'));
   const { userID } = req.params;
   try {
     if (isNaN(parseInt(userID))) {
@@ -48,7 +48,7 @@ exports.processGetCartData = async (req, res, next) => {
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
     let result = await cartServices.getCartDataFromRedis(userID);
 
-    if (!result) {
+    if (!result || result.length === 0) {
       const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
       result = mysqlResult;
       await cartServices.addCartDataToRedis(userID, mysqlResult);
@@ -58,8 +58,8 @@ exports.processGetCartData = async (req, res, next) => {
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result
     );
-
     const message = 'cartData found successfully.';
+    console.log(result);
     return res.status(200).send({ message, data: result });
   } catch (error) {
     console.error(chalk.red('Error in processGetCartData:', error));

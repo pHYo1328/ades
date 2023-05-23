@@ -26,7 +26,9 @@ const handleLogout = async (req, res) => {
       sameSite: 'None',
       secure: true,
     });
-    console.log('Successful admin logout! RefreshToken removed from the admin database.');
+    console.log(
+      'Successful admin logout! RefreshToken removed from the admin database.'
+    );
     res.sendStatus(204);
   } catch (error) {
     console.error('Error in handling logout: ', error);

@@ -17,7 +17,7 @@ function ForgetPassword() {
     };
 
     if (password !== cfmPassword)
-      return alert("Password and Confirm Password must be the same");
+      return alert('Password and Confirm Password must be the same');
 
     fetch(url, {
       method: 'PUT',
@@ -26,33 +26,32 @@ function ForgetPassword() {
       },
       body: JSON.stringify(body),
     })
-    
-    .then((response) => {
-      if (response.status === 404) {
-        return {
-          success: false,
-          message: "Admin password changed failed!",
-        };
-      } else {
-        return {
-          success: true,
-          message: "Admin password changed successfully!",
+      .then((response) => {
+        if (response.status === 404) {
+          return {
+            success: false,
+            message: 'Admin password changed failed!',
+          };
+        } else {
+          return {
+            success: true,
+            message: 'Admin password changed successfully!',
+          };
         }
-      }
-      // return response.json();
-    })
-    .then((data) => {
-      console.log("this si the data",data);
-      if (!data.success) {
-        alert(data.message);
-      } else {
-        navigate('/login-admin');
-        alert(data.message);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+        // return response.json();
+      })
+      .then((data) => {
+        console.log('this si the data', data);
+        if (!data.success) {
+          alert(data.message);
+        } else {
+          navigate('/login-admin');
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     console.log(email, password, cfmPassword);
   };
 
@@ -82,7 +81,9 @@ function ForgetPassword() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Forgot Admin Password</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Forgot Admin Password
+          </h2>
         </div>
 
         <div className="mb-6">
