@@ -97,13 +97,9 @@ module.exports.addShipping = async (shipping_method, fee) => {
 
 module.exports.addPayment = async (
   payment_intent,
-
   status,
-
   total,
-
   paymentMethod,
-
   orderID
 ) => {
   console.log(chalk.blue('addPayment is called'));
