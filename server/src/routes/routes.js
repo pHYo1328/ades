@@ -202,6 +202,10 @@ module.exports = (app, router) => {
     checkoutController.createWebhooks
   ),
 
+  router.post(
+    '/processRefund/:orderID',
+    checkoutController.processRefund
+  );
 
     router.get('^/$|/index(.html)?', (req, res) => {
       res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

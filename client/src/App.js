@@ -27,6 +27,7 @@ import ProductEdit from './pages/Products/Admin/ProductEdit';
 // import ProductModify from './pages/Products/Admin/ProductModify';
 
 import Payment from './pages/Stripe/Payment';
+import RefundPayment from './pages/Stripe/Refund';
 // import Brands from './pages/Products/Admin/Brands';
 // import Categories from './pages/Products/Admin/Categories';
 // import AllCategories from './pages/Products/Public/AllCategories';
@@ -92,6 +93,8 @@ function App() {
                 element={<ProductEdit />}
               />
               <Route path="/payment/:orderID" element={<Payment />} />
+              <Route path="/payment-refund/:orderID" element={<RefundPayment />} />
+
             </Routes>
           {/* Hello, we are ready to develop our ades project. */}
         </header>
