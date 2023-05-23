@@ -7,19 +7,18 @@ exports.getConfig = (req, res) => {
   res.send({
     stripe_publishable_key: config.stripe_publishable_key,
   });
-
 };
 
 exports.createPaymentIntent = async (req, res) => {
   console.log(chalk.blue('create payment intent'));
   try {
     const orderID = req.params.orderID; // Get the orderID from the request parameters
-    
+
     // Call the getPaymentTotal function from payment.services to fetch the payment_total
 
     const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
     console.log(chalk.yellow('createdPaymentTotal:', createdPaymentTotal));
-    const paymentTotal = parseInt(createdPaymentTotal[0].payment_total * 100); // Convert to an integer
+    const paymentTotal = parseInt(createdPaymentTotal[0].payment_total * 100);
     console.log(chalk.yellow('paymentTotal:', paymentTotal));
     if (isNaN(paymentTotal)) {
       throw new Error('Invalid payment total');
@@ -29,6 +28,9 @@ exports.createPaymentIntent = async (req, res) => {
       currency: 'SGD',
       amount: paymentTotal,
       automatic_payment_methods: { enabled: true },
+      metadata: {
+        order_id: orderID,
+      },
     });
     
      
@@ -37,7 +39,7 @@ exports.createPaymentIntent = async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     }).end();
   } catch (err) {
-    console.log(chalk.red('Error is createPaymentIntent', err));
+    console.log(chalk.red('Error in createPaymentIntent', err));
     return res.status(400).send({
       error: {
         message: err.message,
@@ -49,8 +51,7 @@ exports.createPaymentIntent = async (req, res) => {
 let endpointSecret;
 // endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 
-exports.createWebhooks= async (req, res) => {
-  
+exports.createWebhooks = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let data;
   let eventType;
@@ -101,4 +102,3 @@ if (eventType === "charge.succeeded") {
 res.send().end();
 
 };
-

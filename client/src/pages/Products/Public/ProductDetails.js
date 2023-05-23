@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
+import CartContext from '../../../context/CartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import api from '../../../index';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -14,8 +16,31 @@ const cld = new Cloudinary({
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-
+  const { cartData, setCartData, addToCart } = useContext(CartContext);
   const { productID } = useParams();
+  const customerId = localStorage.getItem('userid');
+  const addToCartHandler = async (userid, productId, quantity) => {
+    // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
+    const cartData = await api.get(`/api/cart/${userid}`);
+    console.log(cartData.data.data);
+    let updatedCartData = [...cartData.data.data];
+
+    const productIndex = updatedCartData.findIndex(
+      (item) => item.productId === productId
+    );
+
+    if (productIndex !== -1) {
+      updatedCartData[productIndex].quantity += quantity;
+    } else {
+      updatedCartData.push({ productId: productId, quantity: quantity });
+    }
+
+    // Update the cartData for the given userId
+    const updatedResponse = await api.post(`/api/cart/${userid}`, {
+      cartData: updatedCartData,
+    });
+    console.log(updatedResponse);
+  };
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -50,7 +75,6 @@ export default function ProductDetails() {
             {product.image_url.map((url, index) => (
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}
-
 
             <div className="text-left lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
               <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -146,15 +170,14 @@ export default function ProductDetails() {
                   </div>
                 </div>
               </div>
-
-              <form className="mt-10">
-                <button
-                  onClick={() => { }}
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Add to cart
-                </button>
-              </form>
+              <button
+                onClick={() => {
+                  addToCartHandler(customerId, productID, 1);
+                }}
+                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Add to cart
+              </button>
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">

@@ -61,6 +61,7 @@ module.exports.deleteCartDataInRedis = async (userId) => {
 // for synchronization of cache and database, decided to use write through for data consistency
 module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
   console.log(chalk.blue('addCartDataToMySqlDB is called'));
+  console.log(cartData);
   const cartDataValues = cartData.map((item) => [
     userId,
     item.productId,
@@ -74,12 +75,15 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query >>>', selectCartDataQuery));
     console.log(chalk.blue('Cart data values:', cartDataValues));
-    const existingCartData = await pool.query(selectCartDataQuery,[userId]);
+    const existingCartData = await pool.query(selectCartDataQuery, [userId]);
     console.log(chalk.green('Existing cart data:', existingCartData));
-    if(existingCartData[0].length > cartData.length) {
-      const existingProductIDs = cartData.map((item)=>item.productId);
+    if (existingCartData[0].length > cartData.length) {
+      const existingProductIDs = cartData.map((item) => item.productId);
       console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
-      const [deleteRows]=await pool.query(deleteCartDataQuery,[userId,[existingProductIDs]]);
+      const [deleteRows] = await pool.query(deleteCartDataQuery, [
+        userId,
+        [existingProductIDs],
+      ]);
       console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
     }
     console.log(chalk.blue('Executing query >>>', addCartDataQuery));
@@ -135,7 +139,9 @@ module.exports.getCartProductDetails = async (productIDs) => {
     console.log(chalk.blue('Executing query', productDetailsFetchQuery));
     console.log(chalk.blue('Cart product_id values :', productIDs));
     const result = await pool.query(productDetailsFetchQuery, [[productIDs]]);
-    console.log(chalk.green('Cart product details values :', JSON.stringify(result[0])));
+    console.log(
+      chalk.green('Cart product details values :', JSON.stringify(result[0]))
+    );
     return result[0];
   } catch (error) {
     console.error(chalk.red('Error in getCartProductDetails:', error));

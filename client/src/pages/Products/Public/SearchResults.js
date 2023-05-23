@@ -14,11 +14,11 @@ export default function SearchResults() {
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   useEffect(() => {
-    const query = window.location.href.split('http://localhost:3000/')[1]
+    const query = window.location.href.split('http://localhost:3000/')[1];
     axios
       .get(`${baseUrl}/api/${query}`)
       .then((response) => {
-        console.log("response: ", response);
+        console.log('response: ', response);
         setProducts(response.data.data);
         console.log(products);
       })
@@ -26,8 +26,6 @@ export default function SearchResults() {
         console.error(error);
       });
   }, []);
-  
-  
 
   return (
     <div className="bg-white w-full">
@@ -39,15 +37,16 @@ export default function SearchResults() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div key={product.product_id} className="group relative" onClick={() => {
-                const productID = product.product_id
-                window.location.href = `http://localhost:3000/products/${productID}`
-              }}>
+              <div
+                key={product.product_id}
+                className="group relative"
+                onClick={() => {
+                  const productID = product.product_id;
+                  window.location.href = `http://localhost:3000/products/${productID}`;
+                }}
+              >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-
-                  <AdvancedImage
-                    cldImg={cld.image(product.image_url)}
-                  />
+                  <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">

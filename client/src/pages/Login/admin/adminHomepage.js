@@ -44,7 +44,6 @@ function Home() {
     navigate('/');
   };
 
-  
   // const handleResponseError = (response) => {
   //   if (response.status === 403) {
   //     refreshAccessToken(); // Call refreshAccessToken only on 403 error

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
@@ -13,9 +12,8 @@ const cld = new Cloudinary({
 });
 
 export default function AdminDashboard() {
-
   const [products, setProducts] = useState(null);
-  const [statistics, setStatistics] = useState(null)
+  const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const [brands, setBrands] = useState(null);
@@ -138,81 +136,89 @@ export default function AdminDashboard() {
           console.log(response);
           setCategory(response.data.data);
           console.log(category);
-          fetchCategories()
-          setCategoryName('')
+          fetchCategories();
+          setCategoryName('');
         });
     }
   };
 
   return (
-    <div
-      class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}
-    >
+    <div class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
       <div class="row">
         <h4 class="h4 font-weight-bold text-center mt-4">Admin Dashboard</h4>
       </div>
 
-
       {statistics ? (
         <div class="row my-2">
-
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#dff7ec" }}>
-                <h4 class="h4">
-                  Total Sold
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#dff7ec' }}>
+                <h4 class="h4">Total Sold</h4>
                 <p>{statistics.total_sold}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#dfeaf7" }}>
-                <h4 class="h4">
-                  Total Inventory
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#dfeaf7' }}>
+                <h4 class="h4">Total Inventory</h4>
                 <p>{statistics.total_inventory}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#f0f7df" }}>
-                <h4 class="h4">
-                  Total Revenue
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#f0f7df' }}>
+                <h4 class="h4">Total Revenue</h4>
                 <p>{statistics.total_payment}</p>
               </div>
             </div>
           </div>
 
           <div class="col-3 text-center">
-            <div class="d-flex align-items-center justify-content-center" style={{ height: "100%" }}>
-              <div class="w-100 p-3 rounded" style={{ background: "#f3dff5" }}>
-                <h4 class="h4">
-                  Total Order
-                </h4>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style={{ height: '100%' }}
+            >
+              <div class="w-100 p-3 rounded" style={{ background: '#f3dff5' }}>
+                <h4 class="h4">Total Order</h4>
                 <p>{statistics.total_order}</p>
               </div>
             </div>
           </div>
-
-
         </div>
       ) : (
         <p>Loading...</p>
       )}
 
-
-      <div class="row my-2" style={{
-        height: "300px",
-        overflowY: "scroll",
-        background: "#c2d9ff",
-      }}>
-        <div class="py-2 w-100 col-12" style={{ position: "sticky", top: "0", background: "#dff7ec", width: '100%' }}>
+      <div
+        class="row my-2"
+        style={{
+          height: '300px',
+          overflowY: 'scroll',
+          background: '#c2d9ff',
+        }}
+      >
+        <div
+          class="py-2 w-100 col-12"
+          style={{
+            position: 'sticky',
+            top: '0',
+            background: '#dff7ec',
+            width: '100%',
+          }}
+        >
           <div className="row">
             <div className="col-10">Products</div>
             <div className="col-2">
@@ -221,7 +227,8 @@ export default function AdminDashboard() {
                 className="btn btn-success w-100 col-6 text-dark mr-2"
                 id="createButton"
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/products/create";
+                  window.location.href =
+                    'http://localhost:3000/products/create';
                 }}
               >
                 Create
@@ -328,12 +335,16 @@ export default function AdminDashboard() {
       </div>
 
       <div class="row">
-        <div class="col-5" style={{
-          marginLeft: 'auto', marginRight: 'auto',
-          height: "300px",
-          overflowY: "scroll",
-          background: "#c2d9ff",
-        }}>
+        <div
+          class="col-5"
+          style={{
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+          }}
+        >
           <div class="row">
             <div class="col-10">Brands</div>
           </div>
@@ -395,12 +406,16 @@ export default function AdminDashboard() {
             )}
           </ul>
         </div>
-        <div class="col-5" style={{
-          marginLeft: 'auto', marginRight: 'auto',
-          height: "300px",
-          overflowY: "scroll",
-          background: "#c2d9ff",
-        }}>
+        <div
+          class="col-5"
+          style={{
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+          }}
+        >
           <div class="row">
             <div class="col-10">Categories</div>
           </div>
@@ -465,5 +480,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

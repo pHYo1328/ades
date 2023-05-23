@@ -6,7 +6,6 @@ export default function CheckoutForm({ clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
 
-
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -40,7 +39,6 @@ export default function CheckoutForm({ clientSecret }) {
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      
       <PaymentElement id="payment-element" />
       <button disabled={isProcessing || !stripe || !elements} id="submit">
         <span id="button-text">

@@ -1,12 +1,11 @@
 const pool = require('../config/database');
 const chalk = require('chalk');
 
-// get payment by ID
+// get payment by ID(used)
 module.exports.getPaymentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentByID is called'));
   try {
-    const paymentDataQuery =
-      `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
+    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
       FROM product AS p, order_items AS i, orders AS o, shipping AS s
         WHERE o.order_id = ?
         AND o.order_id = i.order_id
@@ -56,7 +55,7 @@ module.exports.updateDeliByID = async (delivery_status, payment_id) => {
   }
 };
 
-//paymentTotal
+//paymentTotal(used)
 module.exports.getPaymentTotal = async (order_id) => {
   console.log(chalk.blue('getPaymentTotal is called'));
 
@@ -91,30 +90,71 @@ module.exports.addShipping = async (shipping_method, fee) => {
   } catch (error) {
     console.error(chalk.red('Error in addShipping: ', error));
     throw error;
-  } 
+  }
 };
 
-//Creating payment data into database
+//Creating payment data into database(used)
 
-module.exports.addPayment = async (id, status, total, paymentMethod, orderID) => {
-  console.log(chalk.blue('addPayment is called'));
+module.exports.addPayment = async (
   
+  payment_intent,
+ 
+  status,
+ 
+  total,
+ 
+  paymentMethod,
+ 
+  orderID
+) => {
+  console.log(chalk.blue('addPayment is called'));
+const createPaymentQuery = 
+  'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
+  const updateStatusQuery = 
+  `UPDATE orders
+   SET order_status = 'paid'
+   WHERE order_id = ? AND order_id IN (
+   SELECT order_id
+   FROM payment
+   WHERE status = 'succeeded'
+   );`
+  const updateInventoryQuery = 
+  `UPDATE inventory
+  JOIN order_items ON inventory.product_id = order_items.product_id
+  JOIN orders ON order_items.order_id = orders.order_id
+  JOIN payment ON orders.order_id = payment.order_id
+  SET inventory.quantity = inventory.quantity - order_items.quantity
+  WHERE payment.order_id = ? AND payment.status = 'succeeded' AND inventory.inventory_id > 0;
+  `
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js addPayment function'
+    )
+  );
   try {
-    const createPaymentQuery = 'INSERT INTO payment (transaction_id, status, payment_total, payment_method) VALUES (?, ?, ?, ?);';
-    // const orderIDQuery = 'INSERT INTO payment(order_id) VALUES (?);';
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
 
-    const paymentUpdate = pool.query(createPaymentQuery, [id, status, total, paymentMethod]);
-    // const orderIDUpdate = pool.query(orderIDQuery,[orderID]);
+    await pool.query(createPaymentQuery,[
+      payment_intent,
+      status,
+      total,
+      paymentMethod,
+      orderID]);
 
-    const[paymentUpdateResult, orderIDUpdateResult] = await Promise.all([
-      paymentUpdate,
-      // orderIDUpdate,
-    ])
-    console.log(chalk.green(paymentUpdateResult[0]));
-    // console.log(chalk.green(orderIDUpdateResult[0]));
-    return paymentUpdateResult[0].affectedRows > 0;
+      const createPaymentResult =    await Promise.all([
+        pool.query(updateStatusQuery, [orderID]),
+        pool.query(updateInventoryQuery, [orderID]),
+      ]);
+    await connection.commit();
+    console.log(chalk.green(createPaymentResult));
+  
+    return createPaymentResult[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in addPayment:', error));
     throw error;
-  } 
+  }
 };
