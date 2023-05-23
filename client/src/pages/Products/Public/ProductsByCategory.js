@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import Spinner from 'react-bootstrap/Spinner';
 
 const cld = new Cloudinary({
   cloud: {
@@ -64,7 +65,10 @@ export default function ProductsByCategory() {
               </div>
             ))
           ) : (
-            <p>Loading...</p>
+            <div class="text-center">
+              <p>Hang on tight! Products are out of stock!</p>
+              <Spinner animation="border" />
+            </div>
           )}
         </div>
       </div></div>
