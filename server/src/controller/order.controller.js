@@ -6,7 +6,6 @@ exports.processAddCustomerOrder = async (req, res, next) => {
   const { customerId } = req.params;
   const {
     shippingAddr,
-    billingAddr,
     totalPrice,
     paymentMethod,
     shippingMethod,
@@ -16,7 +15,6 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     chalk.yellow(
       'Inspect req.body variables',
       shippingAddr,
-      billingAddr,
       totalPrice,
       paymentMethod,
       shippingMethod,
@@ -32,8 +30,6 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     if (
       !shippingAddr ||
       !shippingAddr.trim() ||
-      !billingAddr ||
-      !billingAddr.trim() ||
       isNaN(parseInt(totalPrice)) ||
       !paymentMethod ||
       !paymentMethod.trim() ||

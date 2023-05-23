@@ -20,11 +20,10 @@ const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 
 //MIDDLEWARES
-const verifyRoles = require("../middlewares/verifyRoles");
+const verifyRoles = require('../middlewares/verifyRoles');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
-
-//to use the middleware, see below 
+//to use the middleware, see below
 
 // router.get('/api', verifyRoles('customer'), (req, res) => {
 //   //This route can only be accessed by users with the 'customer' role
@@ -182,10 +181,10 @@ module.exports = (app, router) => {
   );
 
   router.get(
-      '/api/shipping',
-      //verifyAccessToken.verifyToken,
-      shippingController.processFetchShippingMethod
-    );
+    '/api/shipping',
+    //verifyAccessToken.verifyToken,
+    shippingController.processFetchShippingMethod
+  );
   router.get('/config', checkoutController.getConfig);
 
   router.post(

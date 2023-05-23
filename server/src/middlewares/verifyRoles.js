@@ -3,12 +3,12 @@ const verifyRoles = (...allowedRoles) => {
     if (!req.roles || !Array.isArray(req.roles)) {
       return res.sendStatus(401);
     }
-    
-    const result = req.roles.some(role => allowedRoles.includes(role));
+
+    const result = req.roles.some((role) => allowedRoles.includes(role));
     if (!result) {
       return res.sendStatus(401);
     }
-    
+
     next();
   };
 };
