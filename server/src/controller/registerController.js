@@ -13,12 +13,12 @@ const handleNewUser = async (req, res) => {
 
     // register the new user
     const result = await loginServices.registerUser(
-      username, 
+      username,
       email,
       hashedPwd,
       'customer'
     );
-    
+
     console.log(result);
 
     res.status(201).json({ success: `New user ${username} created!` });

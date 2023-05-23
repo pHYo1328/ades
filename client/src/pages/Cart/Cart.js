@@ -6,7 +6,7 @@ import { AdvancedImage } from '@cloudinary/react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { BsArrowLeft } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
@@ -57,8 +57,12 @@ const Cart = () => {
   });
   const [shippingFee, setShippingFee] = useState(0);
   const [shippingMethod, setShippingMethod] = useState(null);
-  console.log(cartData);
-  const customerID = localStorage.getItem('userid') || 4;
+  const [shippingId, setShippingId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [checkoutSuccessful, setCheckoutSuccessful] = useState(false);
+  const checkoutSuccessfulRef = useRef(checkoutSuccessful);
+  const customerID = localStorage.getItem('userid');
+  const navigate = useNavigate();
   const combineCartDataAndProductDetails = () => {
     const itemsDetailsToShow = cartData.map((cartItem) => {
       console.log(cartItem);
@@ -82,9 +86,38 @@ const Cart = () => {
     setTotalAmount(overallTotalAmount);
     setCartProductData(itemsDetailsToShow);
   };
+  const checkOutHandler = (
+    customerId,
+    address,
+    totalPrice,
+    shippingMethod,
+    cartData
+  ) => {
+    if (!shippingMethod) {
+      alert('Please select shipping method');
+      return;
+    }
+    const requestBody = {
+      shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
+      totalPrice: totalPrice,
+      shippingMethod: shippingMethod,
+      orderItems: cartData,
+    };
+
+    api
+      .post(`/api/order/${customerId}`, requestBody)
+      .then((response) => {
+        setCheckoutSuccessful(true);
+        setOrderId(response.data.data);
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+      });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await api.get(`api/cart/${customerID}`);
         const cartData = response.data.data;
         setCartData(cartData);
@@ -111,15 +144,29 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
-      api
-        .post(`/api/cart/${customerID}`, {
-          cartData: latestCartData.current,
-        })
-        .then((response) => {
+      console.log(checkoutSuccessfulRef.current);
+      if (!checkoutSuccessfulRef.current) {
+        api
+          .post(`/api/cart/${customerID}`, {
+            cartData: latestCartData.current,
+          })
+          .then((response) => {
+            console.log(response);
+          });
+      } else {
+        api.delete(`/api/cart/${customerID}`).then((response) => {
           console.log(response);
         });
+      }
     };
   }, []);
+
+  useEffect(() => {
+    checkoutSuccessfulRef.current = checkoutSuccessful;
+    if (checkoutSuccessful) {
+      navigate(`/payment/${orderId}`);
+    }
+  }, [checkoutSuccessful]);
   const handleChange = (event) => {
     setAddress({
       ...address,
@@ -129,12 +176,13 @@ const Cart = () => {
   useEffect(() => {
     latestCartData.current = cartData;
     if (cartData.length > 0) {
-      setIsLoading(true);
       if (productDetails) {
         console.log(cartData);
         combineCartDataAndProductDetails();
         setIsLoading(false);
       }
+    } else {
+      setIsLoading(false);
     }
   }, [cartData, productDetails]);
   return (
@@ -162,7 +210,7 @@ const Cart = () => {
               >
                 <td className="flex flew-row py-6">
                   <AdvancedImage
-                    cldImg={cld.image(cartItem.image_url.split(',')[0])}
+                    cldImg={cld.image(cartItem.image_url)}
                     className="w-64 h-48 "
                   />
                 </td>
@@ -231,7 +279,7 @@ const Cart = () => {
         </tbody>
       </table>
       <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5 rounded-lgz`">
-        <form className="space-y-4 ">
+        <div className="space-y-4 ">
           <h1 className="text-lg font-bold text-white">Shipping Address</h1>
           <div className="flex flex-row item-center ">
             <label
@@ -241,6 +289,7 @@ const Cart = () => {
               First Name :
             </label>
             <input
+              required
               type="text"
               name="firstName"
               value={address.firstName}
@@ -258,6 +307,7 @@ const Cart = () => {
               Last Name :
             </label>
             <input
+              required
               type="text"
               name="lastName"
               value={address.lastName}
@@ -274,6 +324,7 @@ const Cart = () => {
               Address line 1 :
             </label>
             <input
+              required
               type="text"
               name="addressLine1"
               value={address.addressLine1}
@@ -290,6 +341,7 @@ const Cart = () => {
               Address line 2:
             </label>
             <input
+              required
               type="text"
               name="addressLine2"
               value={address.addressLine2}
@@ -306,6 +358,7 @@ const Cart = () => {
               State :
             </label>
             <input
+              required
               type="text"
               name="state"
               value={address.state}
@@ -322,7 +375,8 @@ const Cart = () => {
               Postal Code :
             </label>
             <input
-              type="text"
+              required
+              type="number"
               name="postalCode"
               value={address.postalCode}
               onChange={handleChange}
@@ -331,12 +385,20 @@ const Cart = () => {
             />
           </div>
           <button
-            type="submit"
+            onClick={() =>
+              checkOutHandler(
+                customerID,
+                address,
+                totalAmount,
+                shippingId,
+                cartData
+              )
+            }
             className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
           >
             Check out
           </button>
-        </form>
+        </div>
       </div>
       <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
         <div className="flex flex-row justify-between">
@@ -349,26 +411,35 @@ const Cart = () => {
               <b>Continue Shipping</b>
             </Link>
           </button>
-          <div class="col-2">
-            <select required
+          <div className="col-3">
+            <select
+              required
               class="form-select form-select-sm"
-              onChange={(event) => setShippingFee(event.target.value) }
+              onChange={(event) => {
+                setShippingFee(event.target.value);
+                setShippingId(event.target.selectedIndex);
+              }}
             >
               <option disabled selected value="0">
                 -- Shipping Method --
               </option>
               {shippingMethod ? (
                 shippingMethod.map((method) => (
-                  <option value={method.fee} >{method.shipping_method}</option>
+                  <option key={method.shipping_id} value={method.fee}>
+                    {method.shipping_method}
+                  </option>
                 ))
               ) : (
                 <LoadingIndicator />
               )}
             </select>
           </div>
-          <div className='flex flex-column '>
-          <p>subTotal :{totalAmount}</p>
-          <p>total :{(parseFloat(totalAmount)+parseFloat(shippingFee)).toFixed(2)}</p>
+          <div className="flex flex-column text-base ">
+            <p>subTotal : ${totalAmount}</p>
+            <p>
+              total : $
+              {(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
+            </p>
           </div>
         </div>
       </div>
