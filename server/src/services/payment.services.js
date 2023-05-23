@@ -103,24 +103,22 @@ module.exports.addPayment = async (
   orderID
 ) => {
   console.log(chalk.blue('addPayment is called'));
-const createPaymentQuery = 
-  'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
-  const updateStatusQuery = 
-  `UPDATE orders
+  const createPaymentQuery =
+    'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
+  const updateStatusQuery = `UPDATE orders
    SET order_status = 'paid'
    WHERE order_id = ? AND order_id IN (
    SELECT order_id
    FROM payment
    WHERE status = 'succeeded'
-   );`
-  const updateInventoryQuery = 
-  `UPDATE inventory
+   );`;
+  const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
   JOIN payment ON orders.order_id = payment.order_id
   SET inventory.quantity = inventory.quantity - order_items.quantity
   WHERE payment.order_id = ? AND payment.status = 'succeeded' AND inventory.inventory_id > 0;
-  `
+  `;
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
   console.log(
@@ -132,20 +130,21 @@ const createPaymentQuery =
     console.log(chalk.blue('Starting transaction'));
     await connection.beginTransaction();
 
-    await pool.query(createPaymentQuery,[
+    await pool.query(createPaymentQuery, [
       payment_intent,
       status,
       total,
       paymentMethod,
-      orderID]);
+      orderID,
+    ]);
 
-      const createPaymentResult =    await Promise.all([
-        pool.query(updateStatusQuery, [orderID]),
-        pool.query(updateInventoryQuery, [orderID]),
-      ]);
+    const createPaymentResult = await Promise.all([
+      pool.query(updateStatusQuery, [orderID]),
+      pool.query(updateInventoryQuery, [orderID]),
+    ]);
     await connection.commit();
     console.log(chalk.green(createPaymentResult));
-  
+
     return createPaymentResult[0].affectedRows > 0;
   } catch (error) {
     await connection.rollback();

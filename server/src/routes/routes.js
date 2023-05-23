@@ -21,11 +21,10 @@ const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 
 //MIDDLEWARES
-const verifyRoles = require("../middlewares/verifyRoles");
+const verifyRoles = require('../middlewares/verifyRoles');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 
-
-//to use the middleware, see below 
+//to use the middleware, see below
 
 // router.get('/api', verifyRoles('customer'), (req, res) => {
 //   //This route can only be accessed by users with the 'customer' role
@@ -91,7 +90,7 @@ module.exports = (app, router) => {
     '/api/products/admin/type',
     productController.processCreateBrandOrCategory
   );
-  router.post(  
+  router.post(
     '/api/products/images',
     productController.processCreateImageForProduct
   );
@@ -165,7 +164,6 @@ module.exports = (app, router) => {
     orderController.processGetOrderDetailsBeforePickUp
   );
 
-
   router.get(
     '/api/order/getOrderDetailsByDeliverStatus/:customerID',
     //verifyAccessToken.verifyToken,
@@ -185,17 +183,17 @@ module.exports = (app, router) => {
   );
 
   router.get(
-      '/api/shipping',
-      //verifyAccessToken.verifyToken,
-      shippingController.processFetchShippingMethod
-    );
+    '/api/shipping',
+    //verifyAccessToken.verifyToken,
+    shippingController.processFetchShippingMethod
+  );
   router.get('/config', checkoutController.getConfig);
 
   router.post(
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-//inserting data from stripe to back_end
+  //inserting data from stripe to back_end
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
@@ -232,6 +230,9 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };

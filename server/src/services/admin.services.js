@@ -16,9 +16,9 @@ module.exports.updateUser = async (username, email, password, userid) => {
     console.log(username, email, userid);
     // Fetch the updated user from the database
     const getUserQuery = 'SELECT * FROM users WHERE userid = ?;';
-    console.log("sql userid", userid);
+    console.log('sql userid', userid);
     const [updatedUser] = await pool.query(getUserQuery, [userid]);
-    console.log(chalk.green("this is my userid", userid ));
+    console.log(chalk.green('this is my userid', userid));
 
     return updatedUser;
   } catch (error) {
@@ -26,4 +26,3 @@ module.exports.updateUser = async (username, email, password, userid) => {
     throw error;
   }
 };
-

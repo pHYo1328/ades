@@ -14,7 +14,7 @@ module.exports.registerAdmin = async (username, email, password, roles) => {
       username,
       email,
       password,
-        roles,
+      roles,
     ]);
     console.log(chalk.green(results));
     return results;

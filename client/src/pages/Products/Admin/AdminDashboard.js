@@ -70,7 +70,11 @@ export default function AdminDashboard() {
       const fetchBrandsPromise = fetchBrands();
       const fetchCategoriesPromise = fetchCategories();
 
-      await Promise.all([fetchProductsPromise, fetchBrandsPromise, fetchCategoriesPromise]);
+      await Promise.all([
+        fetchProductsPromise,
+        fetchBrandsPromise,
+        fetchCategoriesPromise,
+      ]);
     };
     fetchData();
   }, []);
@@ -94,7 +98,6 @@ export default function AdminDashboard() {
     };
   }, [products]);
 
-
   const handleSubmitBrand = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
@@ -114,7 +117,7 @@ export default function AdminDashboard() {
           setBrand(response.data.data);
           console.log(brand);
           fetchBrands();
-          setBrandName('')
+          setBrandName('');
         });
     }
   };
