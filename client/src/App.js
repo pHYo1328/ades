@@ -20,7 +20,7 @@ import ProductsPage from './pages/Products/Public/ProductsPage';
 import ProductsByBrand from './pages/Products/Public/ProductsByBrand';
 import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
-import Header from './components/header/Header';
+import Header from './components/header/header';
 import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
