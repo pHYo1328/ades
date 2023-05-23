@@ -49,7 +49,7 @@ exports.processGetCartData = async (req, res, next) => {
     let result = await cartServices.getCartDataFromRedis(userID);
 
     if (!result || result.length === 0) {
-      console.log(chalk.blue("There is no redis result"));
+      console.log(chalk.blue('There is no redis result'));
       const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
       result = mysqlResult;
       await cartServices.addCartDataToRedis(userID, mysqlResult);

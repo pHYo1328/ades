@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
+import api from '../../index';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
@@ -21,9 +21,12 @@ function Payment() {
           await Promise.all([
             axios.get(`${baseUrl}/config`),
             axios.get(`${baseUrl}/api/payment/${orderID}`),
-            axios.post(`${baseUrl}/createPaymentIntent/${orderID}`, { orderID: orderID }),,
+            axios.post(`${baseUrl}/createPaymentIntent/${orderID}`, {
+              orderID: orderID,
+            }),
+            ,
           ]);
-        console.log(parseInt(orderID)); 
+        console.log(parseInt(orderID));
         const { stripe_publishable_key } = configResponse.data;
         const { data: paymentData } = paymentResponse.data;
         const { clientSecret } = clientSecretResponse.data;
@@ -38,7 +41,6 @@ function Payment() {
 
     fetchData();
   }, [orderID]);
-  
 
   return (
     <>

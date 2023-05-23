@@ -4,18 +4,12 @@ const orderServices = require('../services/order.services');
 exports.processAddCustomerOrder = async (req, res, next) => {
   console.log(chalk.blue('processAddCustomerOrder is running'));
   const { customerId } = req.params;
-  const {
-    shippingAddr,
-    totalPrice,
-    shippingMethod,
-    orderItems,
-  } = req.body;
+  const { shippingAddr, totalPrice, shippingMethod, orderItems } = req.body;
   console.log(
     chalk.yellow(
       'Inspect req.body variables',
       shippingAddr,
       totalPrice,
-      paymentMethod,
       shippingMethod,
       orderItems
     )
@@ -62,7 +56,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     if (result) {
       return res.status(201).send({
         message: 'Order Data added successfully',
-        data: '',
+        data: result,
       });
     }
   } catch (error) {

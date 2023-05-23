@@ -61,6 +61,9 @@ describe('processGetCartData', () => {
       data: ['item1', 'item2'],
     });
     expect(cartServices.getCartDataFromMySqlDB).toHaveBeenCalledWith('123');
-    expect(cartServices.addCartDataToRedis).toHaveBeenCalledWith('123', ['item1', 'item2']);
+    expect(cartServices.addCartDataToRedis).toHaveBeenCalledWith('123', [
+      'item1',
+      'item2',
+    ]);
   });
 });

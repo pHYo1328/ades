@@ -84,7 +84,12 @@ const UserInfo = () => {
           </table>
         </div>
 
-        {showModal && <UpdateModal closeModal={closeModal} selectedUserId={selectedUserId}/>}
+        {showModal && (
+          <UpdateModal
+            closeModal={closeModal}
+            selectedUserId={selectedUserId}
+          />
+        )}
 
         {!showModal && (
           <ul className="pagination flex justify-center mt-4">

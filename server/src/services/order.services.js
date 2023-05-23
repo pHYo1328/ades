@@ -4,13 +4,8 @@ const pool = require('../config/database');
 module.exports.addCustomerOrder = async (data) => {
   console.log(chalk.blue('addCustomOrder is called'));
   // order data
-  const {
-    customerID,
-    shippingAddr,
-    totalPrice,
-    shippingMethod,
-    orderItems,
-  } = data;
+  const { customerID, shippingAddr, totalPrice, shippingMethod, orderItems } =
+    data;
   const addOrderQuery = `
                     INSERT INTO orders
                     (customer_id,shipping_address,total_price,shipping_id) 
@@ -31,16 +26,7 @@ module.exports.addCustomerOrder = async (data) => {
   try {
     console.log(chalk.blue('Starting transaction'));
     await connection.beginTransaction();
-    const orderData = [
-      [
-        customerID,
-        shippingAddr,
-        billingAddr,
-        totalPrice,
-        paymentMethod,
-        shippingMethod,
-      ],
-    ];
+    const orderData = [[customerID, shippingAddr, totalPrice, shippingMethod]];
     console.log(chalk.blue('Executing query >>>>>>'), addOrderQuery);
     const [orderResult] = await connection.query(addOrderQuery, [orderData]);
     const orderID = orderResult.insertId;
@@ -54,7 +40,7 @@ module.exports.addCustomerOrder = async (data) => {
     console.log(
       chalk.green('Order and order items have been inserted successfully.')
     );
-    return result[0].affectedRows;
+    return orderID;
   } catch (error) {
     await connection.rollback();
     console.error(
