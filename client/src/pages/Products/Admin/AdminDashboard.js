@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState(null);
   const [categoryName, setCategoryName] = useState('');
   const [category, setCategory] = useState(null);
+  const [orderID, setOrderID] = useState(null);
 
   const fetchCategories = () => {
     axios
@@ -142,6 +143,19 @@ export default function AdminDashboard() {
           fetchCategories();
           setCategoryName('');
         });
+    }
+  };
+
+  const handleSearchOrder = async (event) => {
+    console.log(chalk.yellow('Search button is clicked!'));
+    event.preventDefault();
+
+    if (!orderID) {
+      window.alert('Please fill in the order_id to process refund');
+    } else {
+    
+      console.log(orderID);
+      window.location.href = `/payment-refund/${orderID}`;
     }
   };
 
@@ -480,6 +494,50 @@ export default function AdminDashboard() {
               <p>Loading...</p>
             )}
           </ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <div
+          class="col-5"
+          style={{
+
+            marginTop: '10px',
+            background: '#c2d9ff',
+          }}
+        >
+          <div class="row">
+            <div class="col-10">Refund</div>
+          </div>
+          <div
+            class="row col-12"
+            style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          >
+
+       
+          <div class="col-8">
+
+
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter order_id..."
+              value={orderID}
+              onChange={(e) => setOrderID(e.target.value)}
+            />
+
+
+
+          </div>
+          <div class="col-4">
+            <button
+              class="btn btn-outline-success w-100"
+              onClick={handleSearchOrder}
+            >
+              Search
+            </button>
+          </div>
+        </div>
         </div>
       </div>
     </div>

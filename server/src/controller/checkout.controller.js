@@ -49,6 +49,46 @@ exports.createPaymentIntent = async (req, res) => {
   }
 };
 
+exports.processRefund = async (req, res) => {
+  console.log(chalk.blue('refund'));
+  try {
+    const orderID = req.params.orderID;
+    const transactionID = await paymentServices.getPaymentIntentByID(orderID);
+    console.log(chalk.yellow('Transaction_id:', transactionID));
+
+    // Extract the payment intent ID from the transactionID object
+    const paymentIntentID = transactionID[0].transaction_id;
+
+    const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
+    console.log(chalk.yellow('createdPaymentTotal:', createdPaymentTotal));
+    const refundAmount = parseInt(createdPaymentTotal[0].payment_total * 100);
+    console.log(chalk.yellow('refundTotal:', refundAmount));
+
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentID, // Use the extracted payment intent ID
+      amount: refundAmount,
+      metadata: {
+        order_id: orderID,
+      },
+    });
+
+    res.send({
+      refundId: refund.id,
+      amountRefunded: refund.amount,
+      currency: refund.currency,
+      status: refund.status,
+    });
+  } catch (error) {
+    console.error('Error processing refund:', error);
+    return res.status(500).send({
+      error: {
+        message: 'An error occurred while processing the refund.',
+      },
+    });
+  }
+};
+
+
 let endpointSecret;
 // endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 
@@ -79,27 +119,51 @@ exports.createWebhooks = async (req, res) => {
   }
   //handle the event
   if (eventType === 'charge.succeeded') {
-    const { id, status, amount, payment_method_details } = data;
+    const { payment_intent, status, amount, payment_method_details, metadata } = data;
 
     console.log('Charge succeeded. Event data:');
-    console.log('ID:', id);
+    console.log('ID:', payment_intent);
     console.log('Status:', status);
     const total = (amount * 0.01).toFixed(2);
     console.log('Amount:', total);
     console.log('Payment method:', payment_method_details.type);
+    console.log("Order ID:", metadata.order_id);
 
     try {
       await paymentServices.addPayment(
-        id,
+        payment_intent,
         status,
         total,
-        payment_method_details.type
+        payment_method_details.type,
+        metadata.order_id
       );
+
+    
       console.log('Payment details stored in the database successfully');
     } catch (error) {
       console.error('Error storing payment details in the database:', error);
     }
-  }
+  
+ 
+}else if(eventType == "charge.refund.updated") {
+  const{ id, status, amount, metadata } = data;
 
-  res.send().end();
+  console.log("Payment refunded. Event data:");
+  console.log("ID:", id);
+  console.log("Status:", status);
+  const total = (amount * 0.01).toFixed(2);
+  console.log("Amount:", total );
+  console.log("Order ID:", metadata.order_id);
+
+  try {
+    await paymentServices.addRefund( id, metadata.order_id, total, status );
+    console.log("Refund details stored in the database successfully");
+  } catch (error) {
+    console.error("Error storing refund details in the database:", error);
+  }
+}
+
+res.send().end();
+
 };
+
