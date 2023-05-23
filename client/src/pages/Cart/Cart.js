@@ -231,7 +231,7 @@ const Cart = () => {
         </tbody>
       </table>
       <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5 rounded-lgz`">
-        <form className="space-y-4 ">
+        <div className="space-y-4 ">
           <h1 className="text-lg font-bold text-white">Shipping Address</h1>
           <div className="flex flex-row item-center ">
             <label
@@ -331,12 +331,12 @@ const Cart = () => {
             />
           </div>
           <button
-            type="submit"
+          onClick={()=>checkOutHandler()}
             className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
           >
             Check out
           </button>
-        </form>
+        </div>
       </div>
       <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
         <div className="flex flex-row justify-between">
@@ -349,26 +349,30 @@ const Cart = () => {
               <b>Continue Shipping</b>
             </Link>
           </button>
-          <div class="col-2">
-            <select required
+          <div className="col-2">
+            <select
+              required
               class="form-select form-select-sm"
-              onChange={(event) => setShippingFee(event.target.value) }
+              onChange={(event) => setShippingFee(event.target.value)}
             >
-              <option disabled selected value="0">
+              <option disabled defaultValue="0">
                 -- Shipping Method --
               </option>
               {shippingMethod ? (
                 shippingMethod.map((method) => (
-                  <option value={method.fee} >{method.shipping_method}</option>
+                  <option key={method.shipping_id} value={method.fee}>{method.shipping_method}</option>
                 ))
               ) : (
                 <LoadingIndicator />
               )}
             </select>
           </div>
-          <div className='flex flex-column '>
-          <p>subTotal :{totalAmount}</p>
-          <p>total :{(parseFloat(totalAmount)+parseFloat(shippingFee)).toFixed(2)}</p>
+          <div className="flex flex-column text-base ">
+            <p>subTotal : ${totalAmount}</p>
+            <p>
+              total : $
+              {(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
+            </p>
           </div>
         </div>
       </div>

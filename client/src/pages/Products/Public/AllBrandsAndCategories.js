@@ -3,10 +3,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function AllBrandsAndCategories() {
-
-    const [brands, setBrands] = useState(null)
-    const [categories, setCategories] = useState(null)
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const [brands, setBrands] = useState(null);
+  const [categories, setCategories] = useState(null);
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   useEffect(() => {
     axios
