@@ -20621,3 +20621,26 @@
 >>>>>>> e14f8f351c6f0718bfcd63b4dbfe979947695e3e
 >>>>>>> 7f17e5fc1ee5861ecacbf8f2e2d690ef762c82a2
 >>>>>>> 8362e15cf9bacb7aa8027855d802ba359aaa213f
+20230523	19:54:05	9e8b04c2-7ea7-4514-ad56-ae187ac796af	GET	http://localhost:3000	/config
+20230523	19:54:05	9a04ff99-f7fe-4591-821e-91b51ba5d545	GET	http://localhost:3000	/api/payment/1
+20230523	19:54:05	327dc50a-ac9d-4118-841e-0349dc8ca7cc	OPTIONS	http://localhost:3000	/createPaymentIntent/1
+20230523	19:54:05	77152eb5-61fd-4479-84be-6243d3007757	POST	http://localhost:3000	/createPaymentIntent/1
+20230523	19:59:24	2e58ca5f-1e7f-4a7f-8df3-1290edc363f2	GET	http://localhost:3000	/config
+20230523	19:59:24	aa890725-66de-4d3b-9cf8-27be24596e94	OPTIONS	http://localhost:3000	/createPaymentIntent/1
+20230523	19:59:24	a4d2afab-686d-464d-ba1d-910a20c63e52	GET	http://localhost:3000	/api/payment/1
+20230523	19:59:24	fd524e69-90ff-4a2b-85e3-407b72686cfe	POST	http://localhost:3000	/createPaymentIntent/1
+20230523	20:03:33	f6df4ce3-ee65-42b3-8ef7-f93513a994a6	GET	http://localhost:3000	/config
+20230523	20:03:33	a0c811db-c938-4450-bf1d-b8708ab851a7	OPTIONS	http://localhost:3000	/createPaymentIntent/1
+20230523	20:03:33	24e64e52-62e9-451b-9c0a-32dda06a1cb2	GET	http://localhost:3000	/api/payment/1
+20230523	20:03:33	83f72842-1a53-4e79-9638-556e7d5bcc00	POST	http://localhost:3000	/createPaymentIntent/1
+20230523	20:12:16	a6484540-d647-4ad3-a340-64645e5dff48	POST	undefined	/webhook
+20230523	20:12:16	e485f27c-2062-49ab-8a84-eba9cc1709de	POST	undefined	/webhook
+20230523	20:12:16	96e6d32f-5c72-4208-bcf4-ef4daad2a072	POST	undefined	/webhook
+20230523	20:12:26	5f678516-dfbb-43c1-b898-564297d31e5a	GET	http://localhost:3000	/config
+20230523	20:12:26	47299a62-d2d6-431d-af97-79a92df08b43	GET	http://localhost:3000	/api/payment/1
+20230523	20:12:26	da5e6e84-8970-480b-8df9-7e4adbff9a39	OPTIONS	http://localhost:3000	/createPaymentIntent/1
+20230523	20:12:26	b6b17024-7e06-48bd-bf2a-56fad18b265f	POST	http://localhost:3000	/createPaymentIntent/1
+20230523	20:12:27	0246c71f-2fb8-4af4-95fa-dd2691e005b0	POST	undefined	/webhook
+20230523	20:14:28	7328f99d-9faf-49eb-89da-0b64372d8cc8	POST	undefined	/webhook
+20230523	20:14:36	11415106-dd42-4067-95c0-e36c9abc132a	POST	undefined	/webhook
+20230523	20:14:36	c9cd5fc4-e3c2-4fd6-93aa-319388b06375	POST	undefined	/webhook

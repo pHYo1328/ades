@@ -80,18 +80,19 @@ exports.createWebhooks = async (req, res) => {
 }
 //handle the event
 if (eventType === "charge.succeeded") {
-  const { id, status, amount, payment_method_details } = data;
+  const { payment_intent, status, amount, payment_method_details, metadata } = data;
 
   console.log("Charge succeeded. Event data:");
-  console.log("ID:", id);
+  console.log("ID:", payment_intent);
   console.log("Status:", status);
   const total = (amount * 0.01).toFixed(2);
   console.log("Amount:", total );
   console.log("Payment method:", payment_method_details.type);
+  console.log("Order ID:", metadata.order_id);
   
   
   try {
-    await paymentServices.addPayment(id, status, total, payment_method_details.type);
+    await paymentServices.addPayment(payment_intent, status, total, payment_method_details.type, metadata.order_id);
     console.log("Payment details stored in the database successfully");
   } catch (error) {
     console.error("Error storing payment details in the database:", error);
