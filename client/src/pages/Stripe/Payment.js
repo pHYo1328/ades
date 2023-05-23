@@ -21,9 +21,9 @@ function Payment() {
           await Promise.all([
             axios.get(`${baseUrl}/config`),
             axios.get(`${baseUrl}/api/payment/${orderID}`),
-            axios.post(`${baseUrl}/createPaymentIntent/${orderID}`),
+            axios.post(`${baseUrl}/createPaymentIntent/${orderID}`, { orderID: orderID }),,
           ]);
-
+        console.log(parseInt(orderID)); 
         const { stripe_publishable_key } = configResponse.data;
         const { data: paymentData } = paymentResponse.data;
         const { clientSecret } = clientSecretResponse.data;
@@ -38,6 +38,7 @@ function Payment() {
 
     fetchData();
   }, [orderID]);
+  
 
   return (
     <>

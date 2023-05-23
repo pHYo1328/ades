@@ -7,7 +7,6 @@ exports.processAddCustomerOrder = async (req, res, next) => {
   const {
     shippingAddr,
     totalPrice,
-    paymentMethod,
     shippingMethod,
     orderItems,
   } = req.body;
@@ -31,8 +30,6 @@ exports.processAddCustomerOrder = async (req, res, next) => {
       !shippingAddr ||
       !shippingAddr.trim() ||
       isNaN(parseInt(totalPrice)) ||
-      !paymentMethod ||
-      !paymentMethod.trim() ||
       isNaN(parseInt(shippingMethod))
     ) {
       const error = new Error('Invalid Information parameters');
@@ -51,9 +48,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     const data = {
       customerID: customerId,
       shippingAddr,
-      billingAddr,
       totalPrice,
-      paymentMethod,
       shippingMethod,
       orderItems,
     };

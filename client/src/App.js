@@ -21,11 +21,11 @@ import ProductsByBrand from './pages/Products/Public/ProductsByBrand';
 import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
 import Header from './components/header/header';
+import OrderToShip from './pages/Order/OrderToShip/OrderToShip'
 import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
 // import ProductModify from './pages/Products/Admin/ProductModify';
-
 import Payment from './pages/Stripe/Payment';
 // import Brands from './pages/Products/Admin/Brands';
 // import Categories from './pages/Products/Admin/Categories';
@@ -70,6 +70,7 @@ function App() {
               element={<ProductsByCategory />}
             />
             <Route path="/cart" element={<Cart />} />
+            <Route path='/orderToShip' element={<OrderToShip/>}/>
             <Route path="/home" element={<LandingPage />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/products/create" element={<ProductCreate />} />

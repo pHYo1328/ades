@@ -82,6 +82,15 @@ const Cart = () => {
     setTotalAmount(overallTotalAmount);
     setCartProductData(itemsDetailsToShow);
   };
+  const checkOutHandler = (customerId,address,totalPrice, shippingMethod,cartData) => {
+    const requestBody = {
+      shippingAddr : `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
+      totalPrice : totalPrice,
+      shippingMethod : shippingMethod,
+      orderItems : cartData
+    }
+    api.post(`/api/order/${customerId}`).then((response)=>{console.log(response)});
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -240,7 +249,7 @@ const Cart = () => {
             >
               First Name :
             </label>
-            <input
+            <input required
               type="text"
               name="firstName"
               value={address.firstName}
@@ -257,7 +266,7 @@ const Cart = () => {
             >
               Last Name :
             </label>
-            <input
+            <input required
               type="text"
               name="lastName"
               value={address.lastName}
@@ -273,7 +282,7 @@ const Cart = () => {
             >
               Address line 1 :
             </label>
-            <input
+            <input required
               type="text"
               name="addressLine1"
               value={address.addressLine1}
@@ -281,7 +290,7 @@ const Cart = () => {
               className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
               placeholder="Address Line 1"
             />
-          </div>
+          </div> 
           <div className="flex flex-row">
             <label
               htmlFor="addressLine2"
@@ -289,7 +298,7 @@ const Cart = () => {
             >
               Address line 2:
             </label>
-            <input
+            <input required
               type="text"
               name="addressLine2"
               value={address.addressLine2}
@@ -305,7 +314,7 @@ const Cart = () => {
             >
               State :
             </label>
-            <input
+            <input required
               type="text"
               name="state"
               value={address.state}
@@ -321,7 +330,7 @@ const Cart = () => {
             >
               Postal Code :
             </label>
-            <input
+            <input required
               type="text"
               name="postalCode"
               value={address.postalCode}
@@ -331,7 +340,7 @@ const Cart = () => {
             />
           </div>
           <button
-          onClick={()=>checkOutHandler()}
+          onClick={()=>checkOutHandler(customerID,address,)}
             className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
           >
             Check out

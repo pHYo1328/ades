@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CartContext from '../../context/cartContext';
+import CartContext from '../../context/CartContext';
 import api from '../../index';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -20,16 +20,13 @@ const VerifyOTP = () => {
       });
       console.log(response);
       if (response.ok) {
-        // OTP verification successful
         console.log('Successful OTP verification');
         navigate('/homepage');
       } else {
-        // Invalid OTP
         console.log('Invalid OTP');
       }
     } catch (error) {
       console.error(error);
-      // Handle error
     }
   };
   return (

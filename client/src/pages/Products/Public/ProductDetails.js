@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import CartContext from '../../../context/cartContext';
+import CartContext from '../../../context/CartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';

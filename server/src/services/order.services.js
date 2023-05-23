@@ -7,15 +7,13 @@ module.exports.addCustomerOrder = async (data) => {
   const {
     customerID,
     shippingAddr,
-    billingAddr,
     totalPrice,
-    paymentMethod,
     shippingMethod,
     orderItems,
   } = data;
   const addOrderQuery = `
                     INSERT INTO orders
-                    (customer_id,shipping_address,billing_address,total_price,payment_method,shipping_id) 
+                    (customer_id,shipping_address,total_price,shipping_id) 
                     VALUES ?
                     `;
   const addOrderItemsQuery = `
