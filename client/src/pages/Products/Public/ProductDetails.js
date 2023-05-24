@@ -6,6 +6,8 @@ import CartContext from '../../../context/CartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -20,28 +22,43 @@ export default function ProductDetails() {
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const customerId = localStorage.getItem('userid');
-  const addToCartHandler = async (userid, productId, quantity) => {
+  const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
-    const cartData = await api.get(`/api/cart/${userid}`);
-    console.log(cartData.data.data);
-    let updatedCartData = [...cartData.data.data];
-
-    const productIndex = updatedCartData.findIndex(
-      (item) => item.productId === productId
-    );
-
-    if (productIndex !== -1) {
-      updatedCartData[productIndex].quantity += quantity;
+    if (quantity === 0) {
+      toast.error('Please select quantity', {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
-      updatedCartData.push({ productId: productId, quantity: quantity });
-    }
+      const cartData = await api.get(`/api/cart/${userid}`);
 
-    // Update the cartData for the given userId
-    const updatedResponse = await api.post(`/api/cart/${userid}`, {
-      cartData: updatedCartData,
-    });
-    console.log(updatedResponse);
+      console.log(cartData.data.data);
+      let updatedCartData = [...cartData.data.data];
+
+      const productIndex = updatedCartData.findIndex(
+        (item) => item.productId === productId
+      );
+
+      if (productIndex !== -1) {
+        updatedCartData[productIndex].quantity += quantity;
+      } else {
+        updatedCartData.push({ productId: productId, quantity: quantity });
+      }
+
+      // Update the cartData for the given userId
+      const updatedResponse = await api.post(`/api/cart/${userid}`, {
+        cartData: updatedCartData,
+      });
+      console.log(updatedResponse);
+      toast.success(`${productName} added to cart`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
+    }
   };
+
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -168,41 +185,52 @@ export default function ProductDetails() {
                   </div>
                 </div>
               </div>
-              <p>cartQuantity: {cartQuantity}</p>
-                    <p>Inventory: {product.quantity}</p>
+              <p>Inventory: {product.quantity}</p>
               <div class="col-6">
-                    <button
-                      id="plusButton"
-                      onClick={() => {
-                        if(product.quantity > cartQuantity){
-                          setCartQuantity(cartQuantity+=1);
-                        } else {
-                          window.alert('Quantity exceeded the inventory!')
-                        }
-                      }}
-                    >
-                      <i class="bi bi-plus-circle"></i>
-                    </button>
-                   <p>{cartQuantity}</p>
-                    <button
-                      id="minusButton"
-                      onClick={() => {
-                        if (product.quantity >= 1) {
-                          setCartQuantity(cartQuantity-=1)
-                        }
-                      }}
-                    >
-                      <i class="bi bi-dash-circle"></i>
-                    </button>
-                  </div>
-              <button
-                onClick={() => {
-                  addToCartHandler(customerId, productID, cartQuantity);
-                }}
-                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Add to cart
-              </button>
+                <button
+                  id="plusButton"
+                  onClick={() => {
+                    if (product.quantity > cartQuantity) {
+                      setCartQuantity((cartQuantity += 1));
+                    }
+                  }}
+                >
+                  <i class="bi bi-plus-circle"></i>
+                </button>
+                <p>{cartQuantity}</p>
+                <button
+                  id="minusButton"
+                  onClick={() => {
+                    if (product.quantity >= 1) {
+                      setCartQuantity((cartQuantity -= 1));
+                    }
+                  }}
+                >
+                  <i class="bi bi-dash-circle"></i>
+                </button>
+              </div>
+              {product.quantity <= 0 ? (
+                <p className="text-red-800 text-base">No stock available</p>
+              ) : (
+                <p className="text-emerald-800 text-base">Stock in</p>
+              )}
+              <div>
+                <button
+                  disabled={product.quantity <= 0}
+                  onClick={() => {
+                    addToCartHandler(
+                      customerId,
+                      productID,
+                      product.product_name,
+                      cartQuantity
+                    );
+                  }}
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Add to cart
+                </button>
+                <ToastContainer limit={2} newestOnTop={true} />
+              </div>
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">

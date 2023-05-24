@@ -3,39 +3,36 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import chalk from 'chalk';
 
-
-
 function RefundPayment() {
-    const { orderID } = useParams();
-    const [payments, setPayments] = useState(null);
-    const [refunds, setRefunds] = useState(null);
+  const { orderID } = useParams();
+  const [payments, setPayments] = useState(null);
+  const [refunds, setRefunds] = useState(null);
 
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-    useEffect(() => {
-        axios
-        .get(`${baseUrl}/api/payment/${orderID}`)
-          .then((response) => {
-            console.log(response);
-            setPayments(response.data.data);
-            console.log(payments);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }, []);
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/payment/${orderID}`)
+      .then((response) => {
+        console.log(response);
+        setPayments(response.data.data);
+        console.log(payments);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
-      const handleBack = async (event) => {
-        console.log(chalk.yellow('Back button is clicked!'));
-        event.preventDefault();
-          window.location.href = `/admin`;
-        
-      };
+  const handleBack = async (event) => {
+    console.log(chalk.yellow('Back button is clicked!'));
+    event.preventDefault();
+    window.location.href = `/admin`;
+  };
 
-      const handleRefund = async (event) => {
-        console.log(chalk.yellow('Refund button is clicked!'));
-        event.preventDefault();   
-        axios
+  const handleRefund = async (event) => {
+    console.log(chalk.yellow('Refund button is clicked!'));
+    event.preventDefault();
+    axios
       .post(`${baseUrl}/processRefund/${orderID}`)
       .then((response) => {
         console.log(response);
@@ -46,11 +43,10 @@ function RefundPayment() {
         console.error(error);
       });
 
-      window.alert('Already refunded');
-      };
-      
+    window.alert('Already refunded');
+  };
 
-return (
+  return (
     <>
       <h1>The details of order</h1>
 
@@ -81,7 +77,6 @@ return (
               Sub total: {payments[0].total_price}
             </p>
 
-            
             <p className="text-sm font-medium text-gray-900 justify-start">
               Charged amount:{' '}
               {(
@@ -95,28 +90,27 @@ return (
         <p>Loading...</p>
       )}
 
-<div class="row col-10" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
-      <div class="row">
-      <div class="col-4">
-              <button
-                class="btn btn-outline-success w-100"
-                onClick={handleRefund}
-              >
-                Refund
-              </button>
-            </div>
-       
+      <div
+        class="row col-10"
+        style={{ marginRight: 'auto', marginLeft: 'auto' }}
+      >
+        <div class="row">
+          <div class="col-4">
+            <button
+              class="btn btn-outline-success w-100"
+              onClick={handleRefund}
+            >
+              Refund
+            </button>
+          </div>
 
-        <div class="col-4">
-              <button
-                class="btn btn-outline-success w-100"
-                onClick={handleBack}
-              >
-                Back
-              </button>
-            </div>
-            </div>
+          <div class="col-4">
+            <button class="btn btn-outline-success w-100" onClick={handleBack}>
+              Back
+            </button>
+          </div>
         </div>
+      </div>
     </>
   );
 }

@@ -46,15 +46,19 @@ exports.processGetCartData = async (req, res, next) => {
       throw error;
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
-    let result = await cartServices.getCartDataFromRedis(userID);
-
+    let result;
+    try {
+      result = await cartServices.getCartDataFromRedis(userID);
+    } catch (error) {
+      console.log(chalk.red('Error fetching data from Redis:', error));
+    }
+    // If there's no data in Redis or if there was an error, get from MySQL and store it in Redis
     if (!result || result.length === 0) {
       console.log(chalk.blue('There is no redis result'));
       const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
       result = mysqlResult;
       await cartServices.addCartDataToRedis(userID, mysqlResult);
     }
-
     console.log(
       chalk.yellow('Inspect result variable from getCartData service\n'),
       result

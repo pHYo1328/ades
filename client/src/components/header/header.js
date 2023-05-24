@@ -17,7 +17,7 @@ const Header = () => {
     <header className="flex items-center justify-end bg-black text-white py-4 px-8">
       <nav>
         <ul className="flex justify-end space-x-12">
-          <li>  
+          <li>
             <Link to="/products">Products</Link>
           </li>
           <li>

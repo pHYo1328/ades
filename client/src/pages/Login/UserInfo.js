@@ -55,9 +55,12 @@ const UserInfo = () => {
   };
 
   const handleDeleteClick = async (userid) => {
-    console.log("this is the userid I'm using ", JSON.stringify({ userid: userid }));
+    console.log(
+      "this is the userid I'm using ",
+      JSON.stringify({ userid: userid })
+    );
     const url = `${baseUrl}/deleteUser`;
-  
+
     try {
       console.log("I'm inside the frontend try-catch!!");
       console.log(userid);
@@ -68,7 +71,7 @@ const UserInfo = () => {
         },
         body: JSON.stringify({ userid: userid }),
       });
-      console.log("this is the response", response);
+      console.log('this is the response', response);
       if (response.ok) {
         updateUser();
         alert('User deleted successfully!!');
@@ -79,7 +82,6 @@ const UserInfo = () => {
       console.error('Error occurred while deleting user:', error);
     }
   };
-  
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -103,23 +105,39 @@ const UserInfo = () => {
             </thead>
             <tbody>
               {currentUsers.map((user) => (
-                <User key={user.userid} user={user} handleUpdateClick={handleUpdateClick} handleDeleteClick={handleDeleteClick} />
+                <User
+                  key={user.userid}
+                  user={user}
+                  handleUpdateClick={handleUpdateClick}
+                  handleDeleteClick={handleDeleteClick}
+                />
               ))}
             </tbody>
           </table>
         </div>
 
-        {showModal && <UpdateModal closeModal={closeModal} selectedUserId={selectedUserId} updateUser={updateUser} />}
+        {showModal && (
+          <UpdateModal
+            closeModal={closeModal}
+            selectedUserId={selectedUserId}
+            updateUser={updateUser}
+          />
+        )}
 
         {!showModal && (
           <ul className="pagination flex justify-center mt-4">
-            {Array.from({ length: Math.ceil(users.length / usersPerPage) }).map((_, index) => (
-              <li key={index} className="page-item">
-                <button className="page-link" onClick={() => paginate(index + 1)}>
-                  {index + 1}
-                </button>
-              </li>
-            ))}
+            {Array.from({ length: Math.ceil(users.length / usersPerPage) }).map(
+              (_, index) => (
+                <li key={index} className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>
@@ -135,10 +153,16 @@ const User = ({ user, handleUpdateClick, handleDeleteClick }) => {
       <td className="py-2">{user.password}</td>
       <td className="py-2">
         <div className="flex gap-2">
-          <button className="update-button text-blue-500 hover:text-blue-700" onClick={() => handleUpdateClick(user.userid)}>
+          <button
+            className="update-button text-blue-500 hover:text-blue-700"
+            onClick={() => handleUpdateClick(user.userid)}
+          >
             Update
           </button>
-          <button className="update-button text-blue-500 hover:text-blue-700" onClick={() => handleDeleteClick(user.userid)}>
+          <button
+            className="update-button text-blue-500 hover:text-blue-700"
+            onClick={() => handleDeleteClick(user.userid)}
+          >
             Delete
           </button>
         </div>

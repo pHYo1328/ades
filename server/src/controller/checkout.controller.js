@@ -88,7 +88,6 @@ exports.processRefund = async (req, res) => {
   }
 };
 
-
 let endpointSecret;
 // endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 
@@ -119,7 +118,8 @@ exports.createWebhooks = async (req, res) => {
   }
   //handle the event
   if (eventType === 'charge.succeeded') {
-    const { payment_intent, status, amount, payment_method_details, metadata } = data;
+    const { payment_intent, status, amount, payment_method_details, metadata } =
+      data;
 
     console.log('Charge succeeded. Event data:');
     console.log('ID:', payment_intent);
@@ -127,7 +127,7 @@ exports.createWebhooks = async (req, res) => {
     const total = (amount * 0.01).toFixed(2);
     console.log('Amount:', total);
     console.log('Payment method:', payment_method_details.type);
-    console.log("Order ID:", metadata.order_id);
+    console.log('Order ID:', metadata.order_id);
 
     try {
       await paymentServices.addPayment(
@@ -138,32 +138,27 @@ exports.createWebhooks = async (req, res) => {
         metadata.order_id
       );
 
-    
       console.log('Payment details stored in the database successfully');
     } catch (error) {
       console.error('Error storing payment details in the database:', error);
     }
-  
- 
-}else if(eventType == "charge.refund.updated") {
-  const{ id, status, amount, metadata } = data;
+  } else if (eventType == 'charge.refund.updated') {
+    const { id, status, amount, metadata } = data;
 
-  console.log("Payment refunded. Event data:");
-  console.log("ID:", id);
-  console.log("Status:", status);
-  const total = (amount * 0.01).toFixed(2);
-  console.log("Amount:", total );
-  console.log("Order ID:", metadata.order_id);
+    console.log('Payment refunded. Event data:');
+    console.log('ID:', id);
+    console.log('Status:', status);
+    const total = (amount * 0.01).toFixed(2);
+    console.log('Amount:', total);
+    console.log('Order ID:', metadata.order_id);
 
-  try {
-    await paymentServices.addRefund( id, metadata.order_id, total, status );
-    console.log("Refund details stored in the database successfully");
-  } catch (error) {
-    console.error("Error storing refund details in the database:", error);
+    try {
+      await paymentServices.addRefund(id, metadata.order_id, total, status);
+      console.log('Refund details stored in the database successfully');
+    } catch (error) {
+      console.error('Error storing refund details in the database:', error);
+    }
   }
-}
 
-res.send().end();
-
+  res.send().end();
 };
-
