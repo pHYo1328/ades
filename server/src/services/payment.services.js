@@ -96,36 +96,29 @@ module.exports.addShipping = async (shipping_method, fee) => {
 //Creating payment data into database(used)
 
 module.exports.addPayment = async (
-  
   payment_intent,
- 
   status,
- 
   total,
- 
   paymentMethod,
- 
   orderID
 ) => {
   console.log(chalk.blue('addPayment is called'));
-const createPaymentQuery = 
-  'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
-  const updateStatusQuery = 
-  `UPDATE orders
+  const createPaymentQuery =
+    'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
+  const updateStatusQuery = `UPDATE orders
    SET order_status = 'paid'
    WHERE order_id = ? AND order_id IN (
    SELECT order_id
    FROM payment
    WHERE status = 'succeeded'
-   );`
-  const updateInventoryQuery = 
-  `UPDATE inventory
+   );`;
+  const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
   JOIN payment ON orders.order_id = payment.order_id
   SET inventory.quantity = inventory.quantity - order_items.quantity
   WHERE payment.order_id = ? AND payment.status = 'succeeded' AND inventory.inventory_id > 0;
-  `
+  `;
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
   console.log(
@@ -137,21 +130,108 @@ const createPaymentQuery =
     console.log(chalk.blue('Starting transaction'));
     await connection.beginTransaction();
 
-    await pool.query(createPaymentQuery,[
+    await pool.query(createPaymentQuery, [
       payment_intent,
       status,
       total,
       paymentMethod,
-      orderID]);
+      orderID,
+    ]);
 
-      const createPaymentResult =    await Promise.all([
+    const createPaymentResult = await Promise.all([
+      pool.query(updateStatusQuery, [orderID]),
+      pool.query(updateInventoryQuery, [orderID]),
+    ]);
+    await connection.commit();
+    console.log(chalk.green(createPaymentResult));
+
+    return createPaymentResult[0].affectedRows > 0;
+  } catch (error) {
+    await connection.rollback();
+    console.error(chalk.red('Error in addPayment:', error));
+    throw error;
+  }
+};
+
+
+//payment_intent
+module.exports.getPaymentIntentByID = async (order_id) => {
+  console.log(chalk.blue('getPaymentIntentByID is called'));
+
+  try {
+    const getPaymentIntentByIDQuery = `SELECT transaction_id FROM payment WHERE order_id = ?;`;
+
+    const results = await pool.query(getPaymentIntentByIDQuery, [order_id]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getPaymentTotal: ', error));
+    throw error;
+  }
+};
+
+//Creating refund data into database(used)
+
+module.exports.addRefund = async (
+  id,
+  orderID,
+  total,
+  status
+) => {
+  console.log(chalk.blue('addRefund is called'));
+const createRefundQuery = 
+  'INSERT INTO refund (refund_id, order_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
+  const deletePaymentQuery = 
+  `DELETE FROM payment
+  WHERE order_id = ?
+    AND order_id IN (
+      SELECT r.order_id
+      FROM refund r
+      WHERE r.refunded_status = 'succeeded'
+    );
+  `;
+  const updateStatusQuery = 
+  `UPDATE orders
+   SET order_status = 'refunded'
+   WHERE order_id = ? AND order_id IN (
+   SELECT order_id
+   FROM refund
+   WHERE refunded_status = 'succeeded'
+   );`
+  const updateInventoryQuery = 
+  `UPDATE inventory
+  JOIN order_items ON inventory.product_id = order_items.product_id
+  JOIN orders ON order_items.order_id = orders.order_id
+  JOIN refund ON orders.order_id = refund.order_id
+  SET inventory.quantity = inventory.quantity + order_items.quantity
+  WHERE refund.order_id = ? AND refund.refunded_status = 'succeeded' AND inventory.inventory_id > 0;
+  `
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to payment.services.js addRefund function'
+    )
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+
+    await pool.query(createRefundQuery,[
+      id,
+      orderID,
+      total,
+      status]);
+
+      const createRefundResult =    await Promise.all([
+        pool.query(deletePaymentQuery, [orderID]),
         pool.query(updateStatusQuery, [orderID]),
         pool.query(updateInventoryQuery, [orderID]),
       ]);
     await connection.commit();
-    console.log(chalk.green(createPaymentResult));
+    console.log(chalk.green(createRefundResult));
   
-    return createPaymentResult[0].affectedRows > 0;
+    return createRefundResult[0].affectedRows > 0;
   } catch (error) {
     await connection.rollback();
     console.error(chalk.red('Error in addPayment:', error));

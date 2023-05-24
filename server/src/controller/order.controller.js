@@ -4,21 +4,12 @@ const orderServices = require('../services/order.services');
 exports.processAddCustomerOrder = async (req, res, next) => {
   console.log(chalk.blue('processAddCustomerOrder is running'));
   const { customerId } = req.params;
-  const {
-    shippingAddr,
-    billingAddr,
-    totalPrice,
-    paymentMethod,
-    shippingMethod,
-    orderItems,
-  } = req.body;
+  const { shippingAddr, totalPrice, shippingMethod, orderItems } = req.body;
   console.log(
     chalk.yellow(
       'Inspect req.body variables',
       shippingAddr,
-      billingAddr,
       totalPrice,
-      paymentMethod,
       shippingMethod,
       orderItems
     )
@@ -32,11 +23,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     if (
       !shippingAddr ||
       !shippingAddr.trim() ||
-      !billingAddr ||
-      !billingAddr.trim() ||
       isNaN(parseInt(totalPrice)) ||
-      !paymentMethod ||
-      !paymentMethod.trim() ||
       isNaN(parseInt(shippingMethod))
     ) {
       const error = new Error('Invalid Information parameters');
@@ -55,9 +42,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     const data = {
       customerID: customerId,
       shippingAddr,
-      billingAddr,
       totalPrice,
-      paymentMethod,
       shippingMethod,
       orderItems,
     };
@@ -71,7 +56,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
     if (result) {
       return res.status(201).send({
         message: 'Order Data added successfully',
-        data: '',
+        data: result,
       });
     }
   } catch (error) {

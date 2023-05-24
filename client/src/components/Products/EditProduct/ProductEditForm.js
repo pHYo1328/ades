@@ -7,13 +7,13 @@ import axios from 'axios';
 import chalk from 'chalk';
 
 export default function ProductEditForm() {
-    const { productID } = useParams();
-    const [productData, setProductData] = useState();
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const { productID } = useParams();
+  const [productData, setProductData] = useState();
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-    const [brands, setBrands] = useState(null);
-    const [categories, setCategories] = useState(null);
-     const [product, setProduct] = useState(null);
+  const [brands, setBrands] = useState(null);
+  const [categories, setCategories] = useState(null);
+  const [product, setProduct] = useState(null);
 
   const [productName, setProductName] = useState();
   const [productPrice, setProductPrice] = useState();
@@ -22,21 +22,20 @@ export default function ProductEditForm() {
   const [productBrand, setProductBrand] = useState();
   const [productQuantity, setProductQuantity] = useState();
 
-
-    const getProducts = () => {
-        console.log("134")
-        console.log(productID)
-        axios
-            .get(`${baseUrl}/api/product/${productID}`)
-            .then((response) => {
-                console.log(response);
-                setProductData(response.data.data);
-                console.log(productData);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
+  const getProducts = () => {
+    console.log('134');
+    console.log(productID);
+    axios
+      .get(`${baseUrl}/api/product/${productID}`)
+      .then((response) => {
+        console.log(response);
+        setProductData(response.data.data);
+        console.log(productData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const getCategories = () => {
     axios
@@ -64,11 +63,11 @@ export default function ProductEditForm() {
       });
   };
 
-    useEffect(() => {
-        getProducts();
-        getCategories();
-        getBrands();
-    }, [])
+  useEffect(() => {
+    getProducts();
+    getCategories();
+    getBrands();
+  }, []);
 
   console.log(productData);
 

@@ -1,5 +1,5 @@
-  import React, { useState, useEffect } from 'react';
-  import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
   const UpdateModal = ({ closeModal, selectedUserId, updateUser }) => {
     const [username, setUsername] = useState('');
@@ -93,4 +93,4 @@
     );
   };  
 
-  export default UpdateModal;
+export default UpdateModal;
