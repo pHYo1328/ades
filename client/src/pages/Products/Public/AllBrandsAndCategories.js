@@ -5,6 +5,7 @@ import axios from 'axios';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [isBookmarkFilled, setIsBookmarkFilled] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   useEffect(() => {
@@ -44,15 +45,15 @@ export default function AllBrandsAndCategories() {
             {brands ? (
               brands.map((brand) => (
                 <div
-                  key={brand.brand_id}
+
                   className="group relative border border-gray-300 rounded p-4"
-                  onClick={() => {
-                    const brandID = brand.brand_id;
-                    window.location.href = `http://localhost:3000/brands/${brandID}`;
-                  }}
+
                 >
                   <div className="flex justify-between">
-                    <div className="text-left">
+                    <div className="text-left" key={brand.brand_id} onClick={() => {
+                      const brandID = brand.brand_id;
+                      window.location.href = `http://localhost:3000/brands/${brandID}`;
+                    }}>
                       <h3 className="text-sm text-gray-700">
                         <a href={`/brands/${brand.brand_id}`}>
                           <span
@@ -62,8 +63,18 @@ export default function AllBrandsAndCategories() {
                           {brand.brand_name}
                         </a>
                       </h3>
+
+
                     </div>
+                    <div>
+                      <i
+                        className={`bi bi-bookmark${isBookmarkFilled ? '-fill' : ''}`}
+                        onClick={() => setIsBookmarkFilled(!isBookmarkFilled)}
+                      ></i>
+                    </div>
+
                   </div>
+
                 </div>
               ))
             ) : (

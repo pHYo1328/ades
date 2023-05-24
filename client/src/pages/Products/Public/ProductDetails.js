@@ -17,6 +17,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
   const { cartData, setCartData, addToCart } = useContext(CartContext);
+  let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const customerId = localStorage.getItem('userid');
   const addToCartHandler = async (userid, productId, quantity) => {
@@ -99,7 +100,6 @@ export default function ProductDetails() {
                     class="w-5 h-5 text-yellow-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <title>Rating star</title>
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
@@ -136,7 +136,6 @@ export default function ProductDetails() {
                           class="w-5 h-5"
                           fill="currentColor"
                           viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
                             fill-rule="evenodd"
@@ -169,9 +168,36 @@ export default function ProductDetails() {
                   </div>
                 </div>
               </div>
+              <p>cartQuantity: {cartQuantity}</p>
+                    <p>Inventory: {product.quantity}</p>
+              <div class="col-6">
+                    <button
+                      id="plusButton"
+                      onClick={() => {
+                        if(product.quantity > cartQuantity){
+                          setCartQuantity(cartQuantity+=1);
+                        } else {
+                          window.alert('Quantity exceeded the inventory!')
+                        }
+                      }}
+                    >
+                      <i class="bi bi-plus-circle"></i>
+                    </button>
+                   <p>{cartQuantity}</p>
+                    <button
+                      id="minusButton"
+                      onClick={() => {
+                        if (product.quantity >= 1) {
+                          setCartQuantity(cartQuantity-=1)
+                        }
+                      }}
+                    >
+                      <i class="bi bi-dash-circle"></i>
+                    </button>
+                  </div>
               <button
                 onClick={() => {
-                  addToCartHandler(customerId, productID, 1);
+                  addToCartHandler(customerId, productID, cartQuantity);
                 }}
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
