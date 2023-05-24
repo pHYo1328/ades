@@ -3,6 +3,7 @@ import CartContext from '../../context/CartContext';
 import api from '../../index';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const VerifyOTP = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8081/verify-otp', {
+      const response = await fetch(`${baseUrl}/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

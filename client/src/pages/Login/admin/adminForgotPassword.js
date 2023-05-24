@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function ForgetPassword() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function ForgetPassword() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/forgot-admin';
+    const url = `${baseUrl}/forgot-admin`;
 
     const body = {
       email: email,

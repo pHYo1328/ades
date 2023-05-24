@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UpdateModal from '../../components/modal/updateModal';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const UserInfo = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +9,7 @@ const UserInfo = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const url = 'http://localhost:8081/users';
+  const url = `${baseUrl}/users`;
 
   const handleUpdateClick = (userid) => {
     setShowModal(true);
@@ -55,7 +56,7 @@ const UserInfo = () => {
 
   const handleDeleteClick = async (userid) => {
     console.log("this is the userid I'm using ", JSON.stringify({ userid: userid }));
-    const url = 'http://localhost:8081/deleteUser';
+    const url = `${baseUrl}/deleteUser`;
   
     try {
       console.log("I'm inside the frontend try-catch!!");
