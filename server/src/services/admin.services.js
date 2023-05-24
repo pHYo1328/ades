@@ -30,18 +30,17 @@ module.exports.updateUser = async (username, email, password, userid) => {
 // DELETE USER
 module.exports.deleteUser = async (userid) => {
   console.log(chalk.blue('User deleted successfully'));
-  console.log("this is 1231234" + userid.userid);
+  console.log('this is 1231234' + userid.userid);
   try {
     console.log("I'm inside delete try-catch");
     // Update the user information
     const deleteUserQuery = 'DELETE FROM users WHERE userid = ?';
     const deletedUser = await pool.query(deleteUserQuery, [userid]);
     console.log(chalk.green(userid));
-    console.log("this is the deleted user ", deletedUser);
+    console.log('this is the deleted user ', deletedUser);
     return deletedUser; // Return the deletedUser object
   } catch (error) {
     console.error(chalk.red('Error in deleting user: ', error));
-    throw error; 
+    throw error;
   }
 };
-

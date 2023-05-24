@@ -44,16 +44,16 @@ export default function AllBrandsAndCategories() {
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
             {brands ? (
               brands.map((brand) => (
-                <div
-
-                  className="group relative border border-gray-300 rounded p-4"
-
-                >
+                <div className="group relative border border-gray-300 rounded p-4">
                   <div className="flex justify-between">
-                    <div className="text-left" key={brand.brand_id} onClick={() => {
-                      const brandID = brand.brand_id;
-                      window.location.href = `http://localhost:3000/brands/${brandID}`;
-                    }}>
+                    <div
+                      className="text-left"
+                      key={brand.brand_id}
+                      onClick={() => {
+                        const brandID = brand.brand_id;
+                        window.location.href = `http://localhost:3000/brands/${brandID}`;
+                      }}
+                    >
                       <h3 className="text-sm text-gray-700">
                         <a href={`/brands/${brand.brand_id}`}>
                           <span
@@ -63,18 +63,16 @@ export default function AllBrandsAndCategories() {
                           {brand.brand_name}
                         </a>
                       </h3>
-
-
                     </div>
                     <div>
                       <i
-                        className={`bi bi-bookmark${isBookmarkFilled ? '-fill' : ''}`}
+                        className={`bi bi-bookmark${
+                          isBookmarkFilled ? '-fill' : ''
+                        }`}
                         onClick={() => setIsBookmarkFilled(!isBookmarkFilled)}
                       ></i>
                     </div>
-
                   </div>
-
                 </div>
               ))
             ) : (

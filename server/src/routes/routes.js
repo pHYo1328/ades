@@ -200,15 +200,11 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
+    router.post('/processRefund/:orderID', checkoutController.processRefund);
 
-  router.post(
-    '/processRefund/:orderID',
-    checkoutController.processRefund
-  );
-
-    router.get('^/$|/index(.html)?', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-    });
+  router.get('^/$|/index(.html)?', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  });
 
   router.post('/register', registerController.handleNewUser);
 
@@ -227,7 +223,7 @@ module.exports = (app, router) => {
   router.put('/updateUser', updateUser.updateUser);
 
   router.delete('/deleteUser', deleteUser.deleteUser);
-  
+
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
   router.post('/login-admin', authAdminController.handleLogin);

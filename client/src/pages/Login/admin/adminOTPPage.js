@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');

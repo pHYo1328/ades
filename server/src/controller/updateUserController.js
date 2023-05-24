@@ -17,11 +17,9 @@ const updateUser = async (req, res) => {
     if (isSamePassword) {
       // Password is the same as the previous password
       console.log('New password is the same as the previous password');
-      res
-        .status(400)
-        .json({
-          error: 'New password cannot be the same as the previous password',
-        });
+      res.status(400).json({
+        error: 'New password cannot be the same as the previous password',
+      });
       return;
     }
 

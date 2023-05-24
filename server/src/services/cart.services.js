@@ -71,6 +71,7 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
                           ON DUPLICATE KEY UPDATE quantity = VALUES(quantity)`;
   const selectCartDataQuery = `SELECT product_id,quantity FROM cart WHERE customer_id = ?`;
   const deleteCartDataQuery = `DELETE FROM cart WHERE customer_id = ? AND product_id NOT IN ?;`;
+  const deleteAllCartDataQuery = `DELETE FROM cart WHERE customer_id =?`;
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query >>>', selectCartDataQuery));
@@ -79,12 +80,18 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
     console.log(chalk.green('Existing cart data:', existingCartData));
     if (existingCartData[0].length > cartData.length) {
       const existingProductIDs = cartData.map((item) => item.productId);
-      console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
-      const [deleteRows] = await pool.query(deleteCartDataQuery, [
-        userId,
-        [existingProductIDs],
-      ]);
-      console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
+      if (existingProductIDs.length === 0) {
+        console.log(chalk.blue('Executing query >>>', deleteAllCartDataQuery));
+        const [deleteRows] = await pool.query(deleteAllCartDataQuery, [userId]);
+        console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
+      } else {
+        console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
+        const [deleteRows] = await pool.query(deleteCartDataQuery, [
+          userId,
+          [existingProductIDs],
+        ]);
+        console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
+      }
     }
     console.log(chalk.blue('Executing query >>>', addCartDataQuery));
     const [rows, fields] = await pool.query(addCartDataQuery, [cartDataValues]);
