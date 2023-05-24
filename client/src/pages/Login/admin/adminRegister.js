@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Register() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ function Register() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8081/register-admin';
+    const url = `${baseUrl}/register-admin`;
 
     const body = {
       username: username,

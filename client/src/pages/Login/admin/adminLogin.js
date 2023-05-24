@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Login() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Login() {
       return errorMessage;
     }
 
-    const url = 'http://localhost:8081/login-admin';
+    const url = `${baseUrl}/login-admin`;
 
     const body = {
       username: username,
