@@ -19,6 +19,7 @@ const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminCont
 const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
+const deleteUser = require('../controller/deleteUserController');
 
 //MIDDLEWARES
 const verifyRoles = require("../middlewares/verifyRoles");
@@ -223,6 +224,8 @@ module.exports = (app, router) => {
 
   router.put('/updateUser', updateUser.updateUser);
 
+  router.delete('/deleteUser', deleteUser.deleteUser);
+  
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
   router.post('/login-admin', authAdminController.handleLogin);

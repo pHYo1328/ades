@@ -16,7 +16,7 @@ const Header = () => {
             <Link to="/category">Category</Link>
           </li>
           <li>
-            <Link to="/user">User</Link>
+            <Link to="/users">User</Link>
           </li>
           <li>
             <Link to="/cart">Cart</Link>

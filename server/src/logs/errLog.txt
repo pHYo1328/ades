@@ -19,3 +19,6 @@
 20230521	21:59:00	5ed65bb0-e5e9-41e7-b86d-c78d38126e5a	SyntaxError: Unexpected token ']', ..."    
     ]
 }" is not valid JSON
+20230523	20:48:23	7395b82e-ff04-4ce2-8a17-4a037324a3aa	SyntaxError: Unexpected token 3 in JSON at position 0
+20230523	23:07:35	dd1f7985-43d9-462d-b959-eca5fd9cd2e5	SyntaxError: Unexpected token 3 in JSON at position 0
+20230523	23:29:28	2a2d2a80-2c06-4175-aa41-b681b0aef79e	SyntaxError: Unexpected token 3 in JSON at position 0
