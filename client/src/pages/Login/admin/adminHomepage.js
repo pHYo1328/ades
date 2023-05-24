@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Home() {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ function Home() {
   //call handleResponserError function when fetching anything to run refreshAccessToken
   const refreshAccessToken = async () => {
     try {
-      const response = await fetch('http://localhost:8081/refresh-admin', {
+      const response = await fetch(`${baseUrl}/refresh-admin`, {
         credentials: 'include',
       });
       if (response.status === 403 || response.status === 401) {
@@ -32,7 +33,7 @@ function Home() {
 
   const onHandleLogout = async () => {
     try {
-      await fetch('http://localhost:8081/logout-admin', {
+      await fetch(`${baseUrl}/logout-admin`, {
         method: 'PUT',
         credentials: 'include',
       });
