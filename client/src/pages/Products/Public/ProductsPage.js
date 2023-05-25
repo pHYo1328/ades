@@ -17,6 +17,7 @@ export default function ProductsPage() {
   const [categoryID, setCategoryID] = useState(0);
   const [brandID, setBrandID] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   useEffect(() => {
     axios
@@ -115,7 +116,7 @@ export default function ProductsPage() {
                 className="group relative"
                 onClick={() => {
                   const productID = product.product_id;
-                  window.location.href = `http://localhost:3000/products/${productID}`;
+                  window.location.href = `${clientUrl}/products/${productID}`;
                 }}
               >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
