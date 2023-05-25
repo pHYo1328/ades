@@ -13,8 +13,10 @@ const cld = new Cloudinary({
 export default function SearchResults() {
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
+
   useEffect(() => {
-    const query = window.location.href.split('http://localhost:3000/')[1];
+    const query = window.location.href.split(`${clientUrl}/`)[1];
     axios
       .get(`${baseUrl}/api/${query}`)
       .then((response) => {
@@ -42,7 +44,7 @@ export default function SearchResults() {
                 className="group relative"
                 onClick={() => {
                   const productID = product.product_id;
-                  window.location.href = `http://localhost:3000/products/${productID}`;
+                  window.location.href = `${clientUrl}/products/${productID}`;
                 }}
               >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">

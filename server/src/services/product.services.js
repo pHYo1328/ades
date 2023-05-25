@@ -429,7 +429,8 @@ module.exports.deleteProductByID = async (productID) => {
   console.log(chalk.blue('deleteProductByID is called'));
   try {
     const orderItemsDeleteQuery =
-      'DELETE from order_items where product_id = ?;';
+      // 'DELETE from order_items where product_id = ?;';
+      'UPDATE order_items SET status = "Unavailable" WHERE product_id =?';
     const ordersDeleteQuery =
       'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
     const ratingDeleteQuery = 'DELETE from rating where product_id =?;';

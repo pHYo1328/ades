@@ -7,6 +7,8 @@ import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
@@ -26,7 +28,7 @@ const plusButtonHandler = (cartData, productId, updateCartData) => {
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
   const updatedCart = cartData.map((item) =>
-    item.productId == productID && item.quantity > 0
+    item.productId == productID && item.quantity > 1
       ? { ...item, quantity: item.quantity - 1 }
       : item
   );
@@ -34,11 +36,26 @@ const minusButtonHandler = (cartData, productID, updateCartData) => {
 };
 
 const deleteButtonHandler = (cartData, productID, updateCartData) => {
-  const filteredProducts = cartData.filter(
-    (item) => item.productId != productID
-  );
-  console.log(filteredProducts);
-  updateCartData(filteredProducts);
+  confirmAlert({
+    title: 'Confirm to delete',
+    message: 'Are you sure you want to delete this item?',
+    buttons: [
+      {
+        label: 'Yes',
+        onClick: () => {
+          const filteredProducts = cartData.filter(
+            (item) => item.productId != productID
+          );
+          console.log(filteredProducts);
+          updateCartData(filteredProducts);
+        },
+      },
+      {
+        label: 'No',
+        onClick: () => {},
+      },
+    ],
+  });
 };
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
@@ -186,8 +203,8 @@ const Cart = () => {
     }
   }, [cartData, productDetails]);
   return (
-    <div className="flex flex-row">
-      <table className="border-collapse mt-4 mb-8 text-base w-3/5 ml-36 mb-48">
+    <div className="flex flex-row ">
+      <table className="border-collapse mt-4 mb-48 text-base w-3/5 ml-36">
         <thead>
           <tr>
             <th>Your Cart({cartData.length})</th>

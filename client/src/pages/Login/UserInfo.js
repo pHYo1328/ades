@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UpdateModal from '../../components/modal/updateModal';
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const UserInfo = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +9,7 @@ const UserInfo = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const url = 'http://localhost:8081/users';
+  const url = `${baseUrl}/users`;
 
   const handleUpdateClick = (userid) => {
     setShowModal(true);
@@ -38,7 +39,50 @@ const UserInfo = () => {
     fetchUsers();
   }, []);
 
-  // Pagination logic
+  const updateUser = async () => {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteClick = async (userid) => {
+    console.log(
+      "this is the userid I'm using ",
+      JSON.stringify({ userid: userid })
+    );
+    const url = `${baseUrl}/deleteUser`;
+
+    try {
+      console.log("I'm inside the frontend try-catch!!");
+      console.log(userid);
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userid: userid }),
+      });
+      console.log('this is the response', response);
+      if (response.ok) {
+        updateUser();
+        alert('User deleted successfully!!');
+      } else {
+        throw new Error('Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error occurred while deleting user:', error);
+    }
+  };
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -61,24 +105,12 @@ const UserInfo = () => {
             </thead>
             <tbody>
               {currentUsers.map((user) => (
-                <tr key={user.userid}>
-                  <td className="py-2">{user.username}</td>
-                  <td className="py-2">{user.email}</td>
-                  <td className="py-2">{user.password}</td>
-                  <td className="py-2">
-                    <div className="flex gap-2">
-                      <button
-                        className="update-button text-blue-500 hover:text-blue-700"
-                        onClick={() => handleUpdateClick(user.userid)}
-                      >
-                        Update
-                      </button>
-                      <button className="update-button text-blue-500 hover:text-blue-700">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <User
+                  key={user.userid}
+                  user={user}
+                  handleUpdateClick={handleUpdateClick}
+                  handleDeleteClick={handleDeleteClick}
+                />
               ))}
             </tbody>
           </table>
@@ -88,6 +120,7 @@ const UserInfo = () => {
           <UpdateModal
             closeModal={closeModal}
             selectedUserId={selectedUserId}
+            updateUser={updateUser}
           />
         )}
 
@@ -109,6 +142,32 @@ const UserInfo = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const User = ({ user, handleUpdateClick, handleDeleteClick }) => {
+  return (
+    <tr>
+      <td className="py-2">{user.username}</td>
+      <td className="py-2">{user.email}</td>
+      <td className="py-2">{user.password}</td>
+      <td className="py-2">
+        <div className="flex gap-2">
+          <button
+            className="update-button text-blue-500 hover:text-blue-700"
+            onClick={() => handleUpdateClick(user.userid)}
+          >
+            Update
+          </button>
+          <button
+            className="update-button text-blue-500 hover:text-blue-700"
+            onClick={() => handleDeleteClick(user.userid)}
+          >
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
   );
 };
 

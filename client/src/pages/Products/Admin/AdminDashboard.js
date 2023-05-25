@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState(null);
   const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   const [brands, setBrands] = useState(null);
   const [brandName, setBrandName] = useState('');
@@ -153,7 +154,6 @@ export default function AdminDashboard() {
     if (!orderID) {
       window.alert('Please fill in the order_id to process refund');
     } else {
-    
       console.log(orderID);
       window.location.href = `/payment-refund/${orderID}`;
     }
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                 id="createButton"
                 onClick={() => {
                   window.location.href =
-                    'http://localhost:3000/products/create';
+                    `${clientUrl}/products/create`;
                 }}
               >
                 Create
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => {
                       const productID = product.product_id;
-                      window.location.href = `http://localhost:3000/products/edit/${productID}`;
+                      window.location.href = `${clientUrl}/products/edit/${productID}`;
                     }}
                   >
                     <i className="bi bi-pencil-square"></i>
@@ -501,7 +501,6 @@ export default function AdminDashboard() {
         <div
           class="col-5"
           style={{
-
             marginTop: '10px',
             background: '#c2d9ff',
           }}
@@ -513,31 +512,24 @@ export default function AdminDashboard() {
             class="row col-12"
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
-
-       
-          <div class="col-8">
-
-
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter order_id..."
-              value={orderID}
-              onChange={(e) => setOrderID(e.target.value)}
-            />
-
-
-
+            <div class="col-8">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter order_id..."
+                value={orderID}
+                onChange={(e) => setOrderID(e.target.value)}
+              />
+            </div>
+            <div class="col-4">
+              <button
+                class="btn btn-outline-success w-100"
+                onClick={handleSearchOrder}
+              >
+                Search
+              </button>
+            </div>
           </div>
-          <div class="col-4">
-            <button
-              class="btn btn-outline-success w-100"
-              onClick={handleSearchOrder}
-            >
-              Search
-            </button>
-          </div>
-        </div>
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ const verifyOTPAdminController = require('../controller/admin/verifyOTPAdminCont
 const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
+const deleteUser = require('../controller/deleteUserController');
 
 //MIDDLEWARES
 const verifyRoles = require('../middlewares/verifyRoles');
@@ -199,15 +200,11 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
+    router.post('/processRefund/:orderID', checkoutController.processRefund);
 
-  router.post(
-    '/processRefund/:orderID',
-    checkoutController.processRefund
-  );
-
-    router.get('^/$|/index(.html)?', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
-    });
+  router.get('^/$|/index(.html)?', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+  });
 
   router.post('/register', registerController.handleNewUser);
 
@@ -224,6 +221,8 @@ module.exports = (app, router) => {
   router.get('/users', getUserInfo.retrieveUserInformation);
 
   router.put('/updateUser', updateUser.updateUser);
+
+  router.delete('/deleteUser', deleteUser.deleteUser);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);

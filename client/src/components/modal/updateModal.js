@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const UpdateModal = ({ closeModal, selectedUserId }) => {
-  const navigate = useNavigate();
+const UpdateModal = ({ closeModal, selectedUserId, updateUser }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const url = 'http://localhost:8081/updateUser';
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('this is id', selectedUserId);
-    // Create an object with the updated user information
+
     const updatedUser = {
       userid: selectedUserId,
       username,
@@ -30,9 +27,9 @@ const UpdateModal = ({ closeModal, selectedUserId }) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        alert('succesfully changed!');
+        await response.json();
+        alert('Successfully changed!');
+        updateUser();
         closeModal();
       } else {
         throw new Error('Failed to update user');

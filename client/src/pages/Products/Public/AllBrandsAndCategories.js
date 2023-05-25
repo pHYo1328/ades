@@ -5,7 +5,9 @@ import axios from 'axios';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [isBookmarkFilled, setIsBookmarkFilled] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   useEffect(() => {
     axios
@@ -43,16 +45,16 @@ export default function AllBrandsAndCategories() {
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
             {brands ? (
               brands.map((brand) => (
-                <div
-                  key={brand.brand_id}
-                  className="group relative border border-gray-300 rounded p-4"
-                  onClick={() => {
-                    const brandID = brand.brand_id;
-                    window.location.href = `http://localhost:3000/brands/${brandID}`;
-                  }}
-                >
+                <div className="group relative border border-gray-300 rounded p-4">
                   <div className="flex justify-between">
-                    <div className="text-left">
+                    <div
+                      className="text-left"
+                      key={brand.brand_id}
+                      onClick={() => {
+                        const brandID = brand.brand_id;
+                        window.location.href = `${clientUrl}/brands/${brandID}`;
+                      }}
+                    >
                       <h3 className="text-sm text-gray-700">
                         <a href={`/brands/${brand.brand_id}`}>
                           <span
@@ -62,6 +64,14 @@ export default function AllBrandsAndCategories() {
                           {brand.brand_name}
                         </a>
                       </h3>
+                    </div>
+                    <div>
+                      <i
+                        className={`bi bi-bookmark${
+                          isBookmarkFilled ? '-fill' : ''
+                        }`}
+                        onClick={() => setIsBookmarkFilled(!isBookmarkFilled)}
+                      ></i>
                     </div>
                   </div>
                 </div>
@@ -83,7 +93,7 @@ export default function AllBrandsAndCategories() {
                   className="group relative border border-gray-300 rounded p-4"
                   onClick={() => {
                     const categoryID = category.category_id;
-                    window.location.href = `http://localhost:3000/products/${categoryID}`;
+                    window.location.href = `${clientUrl}/products/${categoryID}`;
                   }}
                 >
                   <div className="flex justify-between">
