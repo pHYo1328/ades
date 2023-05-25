@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState(null);
   const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   const [brands, setBrands] = useState(null);
   const [brandName, setBrandName] = useState('');
@@ -244,7 +245,7 @@ export default function AdminDashboard() {
                 id="createButton"
                 onClick={() => {
                   window.location.href =
-                    'http://localhost:3000/products/create';
+                    `${clientUrl}/products/create`;
                 }}
               >
                 Create
@@ -320,7 +321,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => {
                       const productID = product.product_id;
-                      window.location.href = `http://localhost:3000/products/edit/${productID}`;
+                      window.location.href = `${clientUrl}/products/edit/${productID}`;
                     }}
                   >
                     <i className="bi bi-pencil-square"></i>

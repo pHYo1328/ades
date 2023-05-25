@@ -5,6 +5,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://techzero.onrender.com',
   'https://techzero-one.onrender.com',
+  'https://techzero-v1-1.onrender.com',
 ];
 
 module.exports = allowedOrigins;
