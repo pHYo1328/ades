@@ -40,7 +40,7 @@ module.exports.loginUser = async (username) => {
   console.log(chalk.blue('user is logged in'));
   try {
     const loginUserQuery =
-      'SELECT userid,username,password,roles FROM users WHERE username = ?';
+      'SELECT customer_id,username,password,roles FROM users WHERE username = ?';
     const results = await pool.query(loginUserQuery, [username]);
     console.log(chalk.red(JSON.stringify(results[0])));
     return results[0];
@@ -61,7 +61,7 @@ module.exports.checkRefreshTokenReuse = async (refreshToken) => {
 module.exports.saveRefreshToken = async (userId, refreshToken) => {
   try {
     const saveRefreshTokenQuery =
-      'UPDATE users SET refreshToken = ? WHERE userid = ?';
+      'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
     await pool.query(saveRefreshTokenQuery, [refreshToken, userId]);
     console.log('Refresh token saved in the database');
     return [refreshToken]; // Return the updated refresh token array
@@ -93,7 +93,7 @@ module.exports.updateRefreshToken = async (
   newRefreshToken,
   userId
 ) => {
-  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE userid = ?';
+  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
   const values = [...newRefreshTokenArray, newRefreshToken, userId];
 
   try {
