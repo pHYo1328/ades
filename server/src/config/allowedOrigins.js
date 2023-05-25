@@ -4,6 +4,7 @@ const allowedOrigins = [
   'http://localhost:3500',
   'http://localhost:3000',
   'https://techzero.onrender.com',
+  'https://techzero-v3-1.onrender.com'
   'https://techzero-one.onrender.com',
   'https://techzero-v1-1.onrender.com',
   'https://techzero-v2-1.onrender.com',
