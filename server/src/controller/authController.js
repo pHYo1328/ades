@@ -31,7 +31,8 @@ const handleLogin = async (req, res) => {
 
     // evaluate password
     const foundUser = results[0];
-    const userId = foundUser.userid;
+    const userId = foundUser.customer_id;
+    console.log("my found userid", foundUser.customer_id);
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
       // Send OTP email using OTPEmailSender
@@ -49,7 +50,7 @@ const handleLogin = async (req, res) => {
         const accessToken = jwt.sign(
           {
             UserInfo: {
-              userid: foundUser.userid,
+              userid: foundUser.customer_id,
               username: foundUser.username,
               roles: foundUser.roles,
             },
