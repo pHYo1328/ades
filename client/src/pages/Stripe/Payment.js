@@ -44,13 +44,14 @@ function Payment() {
 
   return (
     <>
-      <h1>React Stripe and the Payment Element</h1>
+      <h1>Payment form</h1>
       {clientSecret && stripePromise && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm />
         </Elements>
       )}
-
+       
+      <h1>Order summary</h1>
       {payments && payments.length > 0 ? (
         <>
           {payments.map((paymentData) => (
