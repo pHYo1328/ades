@@ -14,6 +14,7 @@ const UserInfo = () => {
   const handleUpdateClick = (userid) => {
     setShowModal(true);
     setSelectedUserId(userid);
+    console.log("selected user", userid);
   };
 
   const closeModal = () => {
@@ -106,7 +107,7 @@ const UserInfo = () => {
             <tbody>
               {currentUsers.map((user) => (
                 <User
-                  key={user.userid}
+                  key={user.customer_id}
                   user={user}
                   handleUpdateClick={handleUpdateClick}
                   handleDeleteClick={handleDeleteClick}
@@ -155,13 +156,13 @@ const User = ({ user, handleUpdateClick, handleDeleteClick }) => {
         <div className="flex gap-2">
           <button
             className="update-button text-blue-500 hover:text-blue-700"
-            onClick={() => handleUpdateClick(user.userid)}
+            onClick={() => handleUpdateClick(user.customer_id)}
           >
             Update
           </button>
           <button
             className="update-button text-blue-500 hover:text-blue-700"
-            onClick={() => handleDeleteClick(user.userid)}
+            onClick={() => handleDeleteClick(user.customer_id)}
           >
             Delete
           </button>
