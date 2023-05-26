@@ -229,7 +229,11 @@ export default function ProductDetails() {
                 >
                   Add to cart
                 </button>
-                <ToastContainer limit={2} newestOnTop={true} position='top-center' />
+                <ToastContainer
+                  limit={2}
+                  newestOnTop={true}
+                  position="top-center"
+                />
               </div>
             </div>
 

@@ -118,7 +118,7 @@ const Cart = () => {
     cartProductData
   ) => {
     if (!shippingMethod) {
-      toast.error('Please select shipping method',{
+      toast.error('Please select shipping method', {
         autoClose: 3000,
         pauseOnHover: true,
         style: { 'font-size': '16px' },
@@ -127,49 +127,63 @@ const Cart = () => {
     }
     let isStockAvailable = true;
     let alertString = [];
-    const productIDs = cartProductData.map((item)=>item.product_id);
-    const cartData = cartProductData.map((item)=>({productId: item.product_id, quantity: item.quantity}))
-    api.get(`/api/inventory/checkQuantity?productIDs=${productIDs.join(
-      ','
-    )}`).then((response)=>{
-      console.log(response.data.data)
-      response.data.data.forEach((inventory)=>{
-        const quantityIndex= cartData.findIndex((item)=>item.productId==inventory.product_id)
-        if (quantityIndex !== -1 && inventory.quantity < cartData[quantityIndex].quantity) {
-          isStockAvailable=false;
-          alertString.push(`Sorry, ${inventory.product_name} cannot provide the quantity you are asking for. Please reduce your quantity by ${cartData[quantityIndex].quantity-inventory.quantity}.`);
-        }
-      })
-      if(!isStockAvailable){
-        alertString.forEach((string)=>{
-          toast.error(string,{
-            autoClose: 3000,
-            pauseOnHover: true,
-            style: { 'font-size': '16px' },
-          });
-        })
-        return;
-      }
-      
-      const requestBody = {
-        shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
-        totalPrice: totalPrice,
-        shippingMethod: shippingMethod,
-        orderItems: cartData,
-      };
-      api
-        .post(`/api/order/${customerId}`, requestBody)
-        .then((response) => {
-          setCheckoutSuccessful(true);
-          setOrderId(response.data.data);
-        })
-        .catch((error) => {
-          alert(error.response.data.message);
+    const productIDs = cartProductData.map((item) => item.product_id);
+    const cartData = cartProductData.map((item) => ({
+      productId: item.product_id,
+      quantity: item.quantity,
+    }));
+    api
+      .get(`/api/inventory/checkQuantity?productIDs=${productIDs.join(',')}`)
+      .then((response) => {
+        console.log(response.data.data);
+        response.data.data.forEach((inventory) => {
+          const quantityIndex = cartData.findIndex(
+            (item) => item.productId == inventory.product_id
+          );
+          if (
+            quantityIndex !== -1 &&
+            inventory.quantity < cartData[quantityIndex].quantity
+          ) {
+            isStockAvailable = false;
+            alertString.push(
+              `Sorry, ${
+                inventory.product_name
+              } cannot provide the quantity you are asking for. Please reduce your quantity by ${
+                cartData[quantityIndex].quantity - inventory.quantity
+              }.`
+            );
+          }
         });
-    }).catch(error =>{
-      console.log(error)
-    })
-    
+        if (!isStockAvailable) {
+          alertString.forEach((string) => {
+            toast.error(string, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
+          });
+          return;
+        }
+
+        const requestBody = {
+          shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
+          totalPrice: totalPrice,
+          shippingMethod: shippingMethod,
+          orderItems: cartData,
+        };
+        api
+          .post(`/api/order/${customerId}`, requestBody)
+          .then((response) => {
+            setCheckoutSuccessful(true);
+            setOrderId(response.data.data);
+          })
+          .catch((error) => {
+            alert(error.response.data.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -446,21 +460,26 @@ const Cart = () => {
             />
           </div>
           <div>
-          <button
-            onClick={() =>
-              checkOutHandler(
-                customerID,
-                address,
-                totalAmount,
-                shippingId,
-                cartProductData
-              )
-            }
-            className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
-          >
-            Check out
-          </button>
-          <ToastContainer limit={2} newestOnTop={true} position='top-center' style={{width:'600px',height:'200px'}}/>
+            <button
+              onClick={() =>
+                checkOutHandler(
+                  customerID,
+                  address,
+                  totalAmount,
+                  shippingId,
+                  cartProductData
+                )
+              }
+              className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
+            >
+              Check out
+            </button>
+            <ToastContainer
+              limit={2}
+              newestOnTop={true}
+              position="top-center"
+              style={{ width: '600px', height: '200px' }}
+            />
           </div>
         </div>
       </div>

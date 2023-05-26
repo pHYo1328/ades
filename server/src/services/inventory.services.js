@@ -16,7 +16,7 @@ module.exports.checkInventory = async (productIDs) => {
       )
     );
     console.log(chalk.blue('Executing query >>>>>>'), checkInventoryQuery);
-    const result = await pool.query(checkInventoryQuery,[[productIDs]]);
+    const result = await pool.query(checkInventoryQuery, [[productIDs]]);
     console.log(
       chalk.green('Fetched Data to check inventory status>>>', result)
     );

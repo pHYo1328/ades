@@ -40,30 +40,33 @@ const Header = () => {
       {isUserPanelOpen && (
         <div className="bg-black text-white absolute top-16 right-8 rounded p-2 text-base">
           <div className="flex flex-row justify-between">
-            <button className="p-2 ">
-              <FaWallet />
-              to pay
-            </button>
-            <button className="p-2">
-              <FaBox />
-              to ship
-            </button>
+            <Link to="/orderToPay">
+              {' '}
+              <button className="p-2">
+                <FaWallet />
+                to pay
+              </button>
+            </Link>
+            <Link to="/orderToShip">
+              <button className="p-2">
+                <FaBox />
+                to ship
+              </button>
+            </Link>
           </div>
           <div className="flex flex-row justify-between">
-            <button className="p-2">
-              <RiTruckLine />
-              to receive
-            </button>
-            <button className="p-2">
-              <RiCheckboxCircleLine />
-              completed
-            </button>
-          </div>
-          <div>
-            <button className="p-2">
-              <RiCloseCircleLine />
-              cancelled
-            </button>
+            <Link to="/orderToDeliver">
+              <button className="p-2">
+                <RiTruckLine />
+                to receive
+              </button>
+            </Link>
+            <Link to="/orderDelivered">
+              <button className="p-2">
+                <RiCheckboxCircleLine />
+                completed
+              </button>
+            </Link>
           </div>
         </div>
       )}
