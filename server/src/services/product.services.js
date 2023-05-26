@@ -574,6 +574,20 @@ module.exports.deleteImageByID = async (imageID) => {
   }
 };
 
+// delete all images by product id
+module.exports.deleteImagesByProductID = async (productID) => {
+  console.log(chalk.blue('deleteImagesByProductID is called'));
+  try {
+    const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
+    const results = await pool.query(deleteImageQuery, [productID]);
+    console.log(chalk.green(results[0].affectedRows));
+    return results[0].affectedRows > 0;
+  } catch (error) {
+    console.error(chalk.red('Error in deleteImageByID: ', error));
+    throw error;
+  }
+};
+
 // PUT
 
 // update product by ID

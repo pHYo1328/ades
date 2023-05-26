@@ -7,7 +7,6 @@ export default function AllBrandsAndCategories() {
   const [categories, setCategories] = useState(null);
   const [isBookmarkFilled, setIsBookmarkFilled] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   useEffect(() => {
     axios
@@ -52,7 +51,7 @@ export default function AllBrandsAndCategories() {
                       key={brand.brand_id}
                       onClick={() => {
                         const brandID = brand.brand_id;
-                        window.location.href = `${clientUrl}/brands/${brandID}`;
+                        window.location.href = `/brands/${brandID}`;
                       }}
                     >
                       <h3 className="text-sm text-gray-700">
@@ -93,7 +92,7 @@ export default function AllBrandsAndCategories() {
                   className="group relative border border-gray-300 rounded p-4"
                   onClick={() => {
                     const categoryID = category.category_id;
-                    window.location.href = `${clientUrl}/products/${categoryID}`;
+                    window.location.href = `/products/${categoryID}`;
                   }}
                 >
                   <div className="flex justify-between">

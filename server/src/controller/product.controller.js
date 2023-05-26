@@ -727,6 +727,41 @@ exports.processDeleteImagesByID = async (req, res, next) => {
   }
 };
 
+// delete images by product id
+exports.processDeleteImagesByProductID = async (req, res, next) => {
+  console.log(chalk.blue('processDeleteImagesByProductID running'));
+  const { productID } = req.params;
+  if (!productID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Product ID is missing',
+    });
+  }
+
+  try {
+    const deletedImageData = await productServices.deleteImagesByProductID(
+      parseInt(productID)
+    );
+    if (!deletedImageData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No such products exist',
+      });
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Image Deletion successful',
+      data: deletedImageData,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in deleteImagesByProductID: ', error));
+    return next(error);
+  }
+};
+
 // PUT
 
 // update product by ID
