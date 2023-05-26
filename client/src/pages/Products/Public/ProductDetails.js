@@ -37,7 +37,7 @@ export default function ProductDetails() {
       let updatedCartData = [...cartData.data.data];
 
       const productIndex = updatedCartData.findIndex(
-        (item) => item.productId === productId
+        (item) => item.productId == productId
       );
 
       if (productIndex !== -1) {
@@ -229,7 +229,7 @@ export default function ProductDetails() {
                 >
                   Add to cart
                 </button>
-                <ToastContainer limit={2} newestOnTop={true} />
+                <ToastContainer limit={2} newestOnTop={true} position='top-center' />
               </div>
             </div>
 

@@ -1,26 +1,26 @@
 const chalk = require('chalk');
 const pool = require('../config/database');
 
-module.export.checkInventory = async (data) => {
+module.exports.checkInventory = async (productIDs) => {
   console.log(chalk.blue('checkInventory is called'));
-  const { productID } = data;
   const checkInventoryQuery = `
-                        SELECT quantity FROM inventory 
-                        WHERE product_id=?
-                        `;
+                              SELECT inventory.product_id,inventory.quantity,product.product_name FROM inventory 
+                              inner join product on product.product_id = inventory.product_id
+                              WHERE inventory.product_id in ?;
+                              `;
   try {
     console.log(
       chalk.blue(
         'Creating connection...\n',
-        'database is connected in order.services.js getOrderDetailsBeforePickUp function'
+        'database is connected in inventory.services.js checkInventory function'
       )
     );
-    const IdRequired = [productID];
     console.log(chalk.blue('Executing query >>>>>>'), checkInventoryQuery);
-    const result = await pool.query(checkInventoryQuery, IdRequired);
+    const result = await pool.query(checkInventoryQuery,[[productIDs]]);
     console.log(
       chalk.green('Fetched Data to check inventory status>>>', result)
     );
+    return result[0];
   } catch (error) {
     console.error(chalk.red('Errors in fetch inventory quantity', error));
   }

@@ -50,7 +50,7 @@ function Payment() {
           <CheckoutForm />
         </Elements>
       )}
-       
+
       <h1>Order summary</h1>
       {payments && payments.length > 0 ? (
         <>

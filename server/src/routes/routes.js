@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
+const inventoryController = require('../controller/inventory.controller.js')
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
 const registerController = require('../controller/registerController');
@@ -157,6 +158,10 @@ module.exports = (app, router) => {
     paymentController.processUpdateDeliByID
   );
 
+  router.get(
+    '/api/inventory/checkQuantity',
+    inventoryController.processCheckInventory
+  )
   router.get(
     '/api/paymentTotal/:orderID',
     //verifyAccessToken.verifyToken,

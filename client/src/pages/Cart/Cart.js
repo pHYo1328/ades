@@ -9,6 +9,8 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
@@ -81,22 +83,27 @@ const Cart = () => {
   const customerID = localStorage.getItem('userid');
   const navigate = useNavigate();
   const combineCartDataAndProductDetails = () => {
-    const itemsDetailsToShow = cartData.map((cartItem) => {
-      console.log(cartItem);
-      console.log(productDetails);
+    const itemsDetailsToShow = cartData
+      .map((cartItem) => {
+        const cartInfo = productDetails.find(
+          (item) => cartItem.productId == item.product_id
+        );
 
-      const cartInfo = productDetails.find(
-        (item) => cartItem.productId == item.product_id
-      );
-      const totalAmount = parseFloat(
-        cartInfo.price * cartItem.quantity
-      ).toFixed(2);
-      return {
-        ...cartInfo,
-        quantity: cartItem.quantity,
-        totalAmount: totalAmount,
-      };
-    });
+        if (cartInfo) {
+          const totalAmount = parseFloat(
+            cartInfo.price * cartItem.quantity
+          ).toFixed(2);
+          return {
+            ...cartInfo,
+            quantity: cartItem.quantity,
+            totalAmount: totalAmount,
+          };
+        } else {
+          return null;
+        }
+      })
+      .filter((item) => item !== null); // Filter out the null values
+    console.log(itemsDetailsToShow);
     const overallTotalAmount = itemsDetailsToShow
       .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
       .toFixed(2);
@@ -108,28 +115,61 @@ const Cart = () => {
     address,
     totalPrice,
     shippingMethod,
-    cartData
+    cartProductData
   ) => {
     if (!shippingMethod) {
-      alert('Please select shipping method');
+      toast.error('Please select shipping method',{
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
       return;
     }
-    const requestBody = {
-      shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
-      totalPrice: totalPrice,
-      shippingMethod: shippingMethod,
-      orderItems: cartData,
-    };
-
-    api
-      .post(`/api/order/${customerId}`, requestBody)
-      .then((response) => {
-        setCheckoutSuccessful(true);
-        setOrderId(response.data.data);
+    let isStockAvailable = true;
+    let alertString = [];
+    const productIDs = cartProductData.map((item)=>item.product_id);
+    const cartData = cartProductData.map((item)=>({productId: item.product_id, quantity: item.quantity}))
+    api.get(`/api/inventory/checkQuantity?productIDs=${productIDs.join(
+      ','
+    )}`).then((response)=>{
+      console.log(response.data.data)
+      response.data.data.forEach((inventory)=>{
+        const quantityIndex= cartData.findIndex((item)=>item.productId==inventory.product_id)
+        if (quantityIndex !== -1 && inventory.quantity < cartData[quantityIndex].quantity) {
+          isStockAvailable=false;
+          alertString.push(`Sorry, ${inventory.product_name} cannot provide the quantity you are asking for. Please reduce your quantity by ${cartData[quantityIndex].quantity-inventory.quantity}.`);
+        }
       })
-      .catch((error) => {
-        alert(error.response.data.message);
-      });
+      if(!isStockAvailable){
+        alertString.forEach((string)=>{
+          toast.error(string,{
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
+        })
+        return;
+      }
+      
+      const requestBody = {
+        shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
+        totalPrice: totalPrice,
+        shippingMethod: shippingMethod,
+        orderItems: cartData,
+      };
+      api
+        .post(`/api/order/${customerId}`, requestBody)
+        .then((response) => {
+          setCheckoutSuccessful(true);
+          setOrderId(response.data.data);
+        })
+        .catch((error) => {
+          alert(error.response.data.message);
+        });
+    }).catch(error =>{
+      console.log(error)
+    })
+    
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -193,9 +233,11 @@ const Cart = () => {
   useEffect(() => {
     latestCartData.current = cartData;
     if (cartData.length > 0) {
-      if (productDetails) {
+      if (productDetails && productDetails.length > 0) {
         console.log(cartData);
         combineCartDataAndProductDetails();
+        setIsLoading(false);
+      } else {
         setIsLoading(false);
       }
     } else {
@@ -219,7 +261,9 @@ const Cart = () => {
             <tr className="flex justify-center items-center">
               <LoadingIndicator />
             </tr>
-          ) : cartProductData && cartData.length > 0 ? (
+          ) : cartProductData &&
+            cartData.length > 0 &&
+            productDetails.length > 0 ? (
             cartProductData.map((cartItem, index) => (
               <tr
                 key={`${cartItem.product_ID}-${index}`}
@@ -401,6 +445,7 @@ const Cart = () => {
               placeholder="Postal Code"
             />
           </div>
+          <div>
           <button
             onClick={() =>
               checkOutHandler(
@@ -408,13 +453,15 @@ const Cart = () => {
                 address,
                 totalAmount,
                 shippingId,
-                cartData
+                cartProductData
               )
             }
             className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
           >
             Check out
           </button>
+          <ToastContainer limit={2} newestOnTop={true} position='top-center' style={{width:'600px',height:'200px'}}/>
+          </div>
         </div>
       </div>
       <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
