@@ -60,9 +60,13 @@ exports.processGetProductByID = async (req, res, next) => {
 
 // get all products (done)
 exports.processGetAllProducts = async (req, res, next) => {
+  const { limit, offset } = req.query;
   console.log(chalk.blue('processGetAllProducts running'));
   try {
-    const productData = await productServices.getAllProducts();
+    const productData = await productServices.getAllProducts(
+      parseInt(limit),
+      parseInt(offset)
+    );
     if (!productData || productData.length === 0) {
       return res.status(404).json({
         statusCode: 404,
@@ -93,10 +97,11 @@ exports.processGetAllProducts = async (req, res, next) => {
   }
 };
 
-// get products by category and brand (done)
+// get products by category or brand (done)
 exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
   console.log(chalk.blue('processGetProductsByCategoryOrBrand running'));
-  const { categoryID, brandID } = req.params;
+  const { categoryID, brandID, limit, offset, sort } = req.params;
+  // let { limit, offset } = req.query;
   if (!categoryID || !brandID) {
     return res.status(400).json({
       statusCode: 400,
@@ -111,10 +116,16 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       message: 'Category ID or Brand ID is not a number',
     });
   }
+  // limit = limit || 0;
+  // offset = offset || 10;
+
   try {
     const productData = await productServices.getProductsByCategoryOrBrand(
       categoryID,
-      brandID
+      brandID,
+      parseInt(limit),
+      parseInt(offset),
+      parseInt(sort)
     );
     console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({
@@ -526,6 +537,7 @@ exports.processGetStatistics = async (req, res, next) => {
       total_inventory: statisticsData.total_inventory,
       total_payment: statisticsData.total_payment,
       total_order: statisticsData.total_order,
+      total_products: statisticsData.total_products,
     };
 
     console.log(chalk.green(data));
@@ -538,6 +550,58 @@ exports.processGetStatistics = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in getProductByID: ', error));
+    return next(error);
+  }
+};
+
+// get total number of products by brand or category
+exports.processGetTotalNumberOfProducts = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfProducts running'));
+  const { categoryID, brandID } = req.params;
+  if (!categoryID || !brandID) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Category ID or Brand ID is missing',
+    });
+  }
+  if (isNaN(parseInt(categoryID)) || isNaN(parseInt(brandID))) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Category ID or Brand ID is not a number',
+    });
+  }
+
+  try {
+    const productData = await productServices.getTotalNumberOfProducts(
+      categoryID,
+      brandID
+    );
+    console.log(chalk.yellow('Total Products: ', productData));
+    const data = {
+      total_products: productData.total_products,
+    };
+
+    console.log(chalk.green(data));
+
+    const response = {
+      statusCode: 200,
+      ok: true,
+      message: 'Read product details successful',
+      data: data.total_products,
+    };
+
+    console.log(chalk.yellow(productData.length));
+
+    if (productData.length === 0) {
+      response.statusCode = 404;
+      response.message = 'No categories or brands exist';
+    }
+
+    return res.status(response.statusCode).json(response);
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfProducts: ', error));
     return next(error);
   }
 };
