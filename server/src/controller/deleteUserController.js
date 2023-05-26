@@ -3,13 +3,12 @@ const chalk = require('chalk');
 
 const deleteUser = async (req, res) => {
   try {
-    const { userid } = req.body; // Extract the userid from the request body
+    const { userid } = req.body;
     console.log('try catch in controller!!');
-    console.log('controller userid', userid);
+    console.log('delete controller userid', userid);
     const result = await adminServices.deleteUser(userid);
-    console.log('in controller', userid);
-    if (result.affectedRows === 0) {
-      // No user was deleted, handle this case
+    console.log('in controller', result);
+    if (!result) {
       throw new Error('User not found');
     }
 

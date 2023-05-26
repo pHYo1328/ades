@@ -7,8 +7,9 @@ const pool = require('../config/database');
 const updateUser = async (req, res) => {
   const { userid, username, email, password } = req.body;
   try {
+    console.log("updateController userid", userid);
     // Fetch the previous hashed password from the database
-    const getUserQuery = 'SELECT password FROM users WHERE userid = ?;';
+    const getUserQuery = 'SELECT password FROM users WHERE customer_id = ?;';
     const [user] = await pool.query(getUserQuery, [userid]);
     const previousHashedPwd = user[0].password;
 
@@ -33,6 +34,7 @@ const updateUser = async (req, res) => {
       hashedPassword,
       userid
     );
+    console.log("updated user", userid);
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error(chalk.red('Error in updating user: ', error));
