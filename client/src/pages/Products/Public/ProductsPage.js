@@ -115,7 +115,7 @@ export default function ProductsPage() {
                 className="group relative"
                 onClick={() => {
                   const productID = product.product_id;
-                  window.location.href = `http://localhost:3000/products/${productID}`;
+                  window.location.href = `/products/${productID}`;
                 }}
               >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">

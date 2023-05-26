@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
+import { Link } from 'react-router-dom';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -238,17 +239,14 @@ export default function AdminDashboard() {
           <div className="row">
             <div className="col-10">Products</div>
             <div className="col-2">
-              <button
-                type="button"
+              <Link
+                to="/products/create"
                 className="btn btn-success w-100 col-6 text-dark mr-2"
                 id="createButton"
-                onClick={() => {
-                  window.location.href =
-                    'http://localhost:3000/products/create';
-                }}
               >
                 Create
-              </button>
+              </Link>
+
             </div>
           </div>
         </div>
@@ -317,14 +315,9 @@ export default function AdminDashboard() {
                     </button>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      const productID = product.product_id;
-                      window.location.href = `http://localhost:3000/products/edit/${productID}`;
-                    }}
-                  >
+                  <Link to={`/products/edit/${product.product_id}`}>
                     <i className="bi bi-pencil-square"></i>
-                  </button>
+                  </Link>
 
                   <button
                     onClick={() => {

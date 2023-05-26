@@ -51,7 +51,7 @@ export default function AllBrandsAndCategories() {
                       key={brand.brand_id}
                       onClick={() => {
                         const brandID = brand.brand_id;
-                        window.location.href = `http://localhost:3000/brands/${brandID}`;
+                        window.location.href = `/brands/${brandID}`;
                       }}
                     >
                       <h3 className="text-sm text-gray-700">
@@ -92,7 +92,7 @@ export default function AllBrandsAndCategories() {
                   className="group relative border border-gray-300 rounded p-4"
                   onClick={() => {
                     const categoryID = category.category_id;
-                    window.location.href = `http://localhost:3000/products/${categoryID}`;
+                    window.location.href = `/products/${categoryID}`;
                   }}
                 >
                   <div className="flex justify-between">
