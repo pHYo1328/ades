@@ -49,8 +49,10 @@ module.exports.getProductByID = async (productID) => {
 };
 
 // get all products (done)
-module.exports.getAllProducts = async () => {
+module.exports.getAllProducts = async (limit, offset) => {
   console.log(chalk.blue('getAllProducts is called'));
+  console.log('limit: ', limit);
+  console.log('offset: ', offset);
   try {
     const productsDataQuery = `
     SELECT
@@ -77,9 +79,11 @@ module.exports.getAllProducts = async () => {
     p.product_name,
     p.description,
     p.price,
-    c.category_name;
+    c.category_name
+  LIMIT ?
+  OFFSET ?;
       `;
-    const results = await pool.query(productsDataQuery);
+    const results = await pool.query(productsDataQuery, [limit, offset]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
@@ -89,7 +93,12 @@ module.exports.getAllProducts = async () => {
 };
 
 // get products by category or brand (done)
-module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
+module.exports.getProductsByCategoryOrBrand = async (
+  categoryID,
+  brandID,
+  limit,
+  offset
+) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
   try {
     let productsDataQuery = `
@@ -125,6 +134,15 @@ module.exports.getProductsByCategoryOrBrand = async (categoryID, brandID) => {
     }
 
     productsDataQuery += ' GROUP BY p.product_id';
+
+    if (limit != 0) {
+      productsDataQuery += ' LIMIT ?';
+      params.push(limit);
+      if (offset != 0) {
+        productsDataQuery += ' OFFSET ?';
+        params.push(offset);
+      }
+    }
 
     const results = await pool.query(productsDataQuery, params);
     console.log(chalk.green(results[0]));
@@ -379,22 +397,13 @@ module.exports.getSearchResults = async (
 module.exports.getStatistics = async () => {
   console.log(chalk.blue('getStatistics is called'));
   try {
-    //   const statisticsQuery = `
-    //   SELECT SUM(oi.quantity) as total_sold,
-    //   SUM(i.quantity) as total_inventory,
-    //   SUM(p.payment_total) as total_payment,
-    //   COUNT(oi.order_id) as total_order
-    //   FROM order_items oi
-    //   JOIN inventory i ON oi.product_id = i.product_id
-    //   JOIN payment p ON oi.order_id = p.order_id;
-    // `;
-
     const statisticsQuery = `
   SELECT 
   (SELECT SUM(quantity) FROM inventory) AS total_inventory,
   (SELECT SUM(quantity) FROM order_items) AS total_sold,
   (SELECT SUM(payment_total) FROM payment) AS total_payment,
-  (SELECT COUNT(order_id) FROM orders) AS total_order;
+  (SELECT COUNT(order_id) FROM orders) AS total_order,
+  (SELECT COUNT(product_id) FROM product) AS total_products;
   `;
 
     const results = await pool.query(statisticsQuery);
@@ -402,6 +411,40 @@ module.exports.getStatistics = async () => {
     return results[0][0];
   } catch (error) {
     console.error(chalk.red('Error in getStatistics: ', error));
+    throw error;
+  }
+};
+
+// get total number of products by brand or category
+module.exports.getTotalNumberOfProducts = async (categoryID, brandID) => {
+  console.log(chalk.blue('getTotalNumberOfProducts is called'));
+  try {
+    let productsDataQuery = `
+      SELECT COUNT(DISTINCT p.product_id) AS total_products
+      FROM product p
+      JOIN category c ON p.category_id = c.category_id
+      JOIN brand b ON p.brand_id = b.brand_id
+      `;
+    const params = [];
+
+    if (categoryID != 0) {
+      productsDataQuery += ' WHERE c.category_id = ?';
+      params.push(categoryID);
+    }
+
+    if (brandID != 0) {
+      if (categoryID != 0) {
+        productsDataQuery += ' AND b.brand_id = ?';
+      } else {
+        productsDataQuery += ' WHERE b.brand_id = ?';
+      }
+      params.push(brandID);
+    }
+    const results = await pool.query(productsDataQuery, params);
+    console.log(chalk.green('total products: ', results[0][0].total_products));
+    return results[0][0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfProducts: ', error));
     throw error;
   }
 };
@@ -427,17 +470,23 @@ module.exports.getImagesByProductID = async (productID) => {
 // delete product by id
 module.exports.deleteProductByID = async (productID) => {
   console.log(chalk.blue('deleteProductByID is called'));
-  try {
-    const orderItemsDeleteQuery =
-      // 'DELETE from order_items where product_id = ?;';
-      'UPDATE order_items SET status = "Unavailable" WHERE product_id =?';
-    const ordersDeleteQuery =
-      'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
-    const ratingDeleteQuery = 'DELETE from rating where product_id =?;';
-    const inventoryDeleteQuery = 'DELETE from inventory where product_id=?;';
-    const imageDeleteQuery = 'DELETE FROM product_image where product_id=?';
-    const productDeleteQuery = 'DELETE FROM product where product_id=?;';
+  const orderItemsDeleteQuery =
+    // 'DELETE from order_items where product_id = ?;';
+    'UPDATE order_items SET status = "Unavailable" WHERE product_id =?';
+  const ordersDeleteQuery =
+    'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';
+  const ratingDeleteQuery = 'DELETE from rating where product_id =?;';
+  const inventoryDeleteQuery = 'DELETE from inventory where product_id=?;';
+  const imageDeleteQuery = 'DELETE FROM product_image where product_id=?';
+  const productDeleteQuery = 'DELETE FROM product where product_id=?;';
 
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue('database is connected to product.services.js deleteProductByID')
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
     // Run the delete queries concurrently
     await Promise.all([
       pool.query(orderItemsDeleteQuery, [productID]),
@@ -450,12 +499,16 @@ module.exports.deleteProductByID = async (productID) => {
     const productDeleteResult = await pool.query(productDeleteQuery, [
       productID,
     ]);
+    await connection.commit();
     console.log(chalk.green(productDeleteResult));
     console.log(chalk.yellow(productDeleteResult[0].affectedRows));
     return productDeleteResult[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in deleteProductByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
