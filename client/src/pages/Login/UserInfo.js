@@ -14,7 +14,7 @@ const UserInfo = () => {
   const handleUpdateClick = (userid) => {
     setShowModal(true);
     setSelectedUserId(userid);
-    console.log("selected user", userid);
+    console.log('selected user', userid);
   };
 
   const closeModal = () => {

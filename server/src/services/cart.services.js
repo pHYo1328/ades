@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const getConnection = require('../config/redis');
 const pool = require('../config/database');
 const expireTime = 3600;
+
 // set key value in redis
 module.exports.addCartDataToRedis = async (userId, cartData) => {
   console.log(chalk.blue('addCartDataToRedis is called'));

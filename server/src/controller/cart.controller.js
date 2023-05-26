@@ -51,6 +51,8 @@ exports.processGetCartData = async (req, res, next) => {
       result = await cartServices.getCartDataFromRedis(userID);
     } catch (error) {
       console.log(chalk.red('Error fetching data from Redis:', error));
+      const mysqlResult = await cartServices.getCartDataFromMySqlDB(userID);
+      result = mysqlResult;
     }
     // If there's no data in Redis or if there was an error, get from MySQL and store it in Redis
     if (!result || result.length === 0) {
@@ -108,7 +110,6 @@ exports.processGetCartProductData = async (req, res, next) => {
   const productIDs = req.query.productIDs.split(',');
   console.log(chalk.yellow(`Inspecting product IDs: ${productIDs}`));
   try {
-    // this is only for ADES project, actually this one can achieve better performance with WHERE IN statement
     const response = await cartServices.getCartProductDetails(productIDs);
     return res.status(200).send({
       message: 'all fetch successfully',
