@@ -95,6 +95,10 @@ module.exports = (app, router) => {
     '/api/products/images',
     productController.processCreateImageForProduct
   );
+  router.post(
+    '/api/products/:productID/ratings',
+    productController.processCreateRating
+  );
   // PUT
   router.put(
     '/api/products/:productID',
