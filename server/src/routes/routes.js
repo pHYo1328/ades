@@ -63,7 +63,7 @@ module.exports = (app, router) => {
     productController.processGetImagesByProductID
   );
   router.get(
-    '/api/products/:categoryID/:brandID/:limit/:offset',
+    '/api/products/:categoryID/:brandID/:limit/:offset/:sort',
     productController.processGetProductsByCategoryOrBrand
   );
   router.get(

@@ -100,7 +100,7 @@ exports.processGetAllProducts = async (req, res, next) => {
 // get products by category or brand (done)
 exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
   console.log(chalk.blue('processGetProductsByCategoryOrBrand running'));
-  const { categoryID, brandID, limit, offset } = req.params;
+  const { categoryID, brandID, limit, offset, sort } = req.params;
   // let { limit, offset } = req.query;
   if (!categoryID || !brandID) {
     return res.status(400).json({
@@ -124,7 +124,8 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       categoryID,
       brandID,
       parseInt(limit),
-      parseInt(offset)
+      parseInt(offset),
+      parseInt(sort)
     );
     console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({

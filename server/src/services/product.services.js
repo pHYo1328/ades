@@ -97,7 +97,8 @@ module.exports.getProductsByCategoryOrBrand = async (
   categoryID,
   brandID,
   limit,
-  offset
+  offset,
+  sort
 ) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
   try {
@@ -134,6 +135,25 @@ module.exports.getProductsByCategoryOrBrand = async (
     }
 
     productsDataQuery += ' GROUP BY p.product_id';
+
+    if (sort != 0) {
+      switch (sort) {
+        case 1:
+          productsDataQuery += ' ORDER BY p.price ASC';
+          break;
+        case 2:
+          productsDataQuery += ' ORDER BY p.price DESC';
+          break;
+        case 3:
+          productsDataQuery += ' ORDER BY p.product_name ASC';
+          break;
+        case 4:
+          productsDataQuery += ' ORDER BY p.product_name DESC';
+          break;
+        default:
+          break;
+      }
+    }
 
     if (limit != 0) {
       productsDataQuery += ' LIMIT ?';
