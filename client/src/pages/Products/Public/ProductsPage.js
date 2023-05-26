@@ -40,7 +40,6 @@ export default function ProductsPage() {
         }else{
           setTotalPages(Math.ceil(total / limit)); 
         }
-        setCurrentPage(1)
         console.log("products.length: ", total)
         console.log("totalPages: ", totalPages)
         console.log("limit", limit)
@@ -49,6 +48,10 @@ export default function ProductsPage() {
         console.error(error);
       });
   }, [categoryID, brandID, limit, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [limit])
 
   useEffect(() => {
     axios
