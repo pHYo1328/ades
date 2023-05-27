@@ -101,7 +101,7 @@ module.exports = (app, router) => {
     productController.processCreateImageForProduct
   );
   router.post(
-    '/api/products/:productID/ratings',
+    '/api/products/ratings',
     productController.processCreateRating
   );
   // PUT
