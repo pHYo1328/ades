@@ -43,14 +43,8 @@ const Header = () => {
             <Link to="/products" className="text-gray-800 hover:text-gray-600">
               Products
             </Link>
-            <Link to="/brands" className="text-gray-800 hover:text-gray-600">
-              Brands
-            </Link>
             <Link to="/cart" className="text-gray-800 hover:text-gray-600">
               Cart
-            </Link>
-            <Link to="/category" className="text-gray-800 hover:text-gray-600">
-              Category
             </Link>
             <div className="relative" ref={userPanelRef}>
               <button
@@ -97,6 +91,11 @@ const Header = () => {
                 Sign In
               </button>
             </Link>
+            <Link to="/login-admin">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+              Admin
+            </button>
+          </Link>
           </div>
         </nav>
       </div>
