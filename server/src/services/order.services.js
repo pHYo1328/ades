@@ -40,6 +40,7 @@ module.exports.addCustomerOrder = async (data) => {
       item.productId,
       item.quantity,
     ]);
+    console.log(orderItemsData);
     const result = await connection.query(addOrderItemsQuery, [orderItemsData]);
     await connection.commit();
     console.log(

@@ -3,6 +3,7 @@ const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const inventoryController = require('../controller/inventory.controller.js');
+const bookmarkController = require('../controller/bookmark.controller');
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
 const registerController = require('../controller/registerController');
@@ -198,6 +199,13 @@ module.exports = (app, router) => {
     '/api/shipping',
     //verifyAccessToken.verifyToken,
     shippingController.processFetchShippingMethod
+  );
+
+  router.post('/api/bookmark', bookmarkController.processAddBookMark);
+
+  router.get(
+    '/api/bookmark/:customerId',
+    bookmarkController.processFetchBookmarks
   );
   router.get('/config', checkoutController.getConfig);
 

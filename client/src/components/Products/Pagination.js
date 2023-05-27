@@ -5,12 +5,11 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
     const items = [];
     for (let i = 1; i <= totalPages; i++) {
       items.push(
-        <li key={i} className={`page-item ${currentPage === i ? 'active' : ''}`}>
-          <a
-            className="page-link"
-            href="#"
-            onClick={() => onPageChange(i)}
-          >
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? 'active' : ''}`}
+        >
+          <a className="page-link" href="#" onClick={() => onPageChange(i)}>
             {i}
           </a>
         </li>
@@ -33,7 +32,11 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
           </a>
         </li>
         {renderPaginationItems()}
-        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+        <li
+          className={`page-item ${
+            currentPage === totalPages ? 'disabled' : ''
+          }`}
+        >
           <a
             className="page-link"
             href="#"

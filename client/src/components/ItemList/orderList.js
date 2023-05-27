@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import api from '../../index';
-
-const ItemList = ({ items, shippingMethods, customerID }) => {
+import { useNavigate } from 'react-router-dom';
+const OrderList = ({ items, shippingMethods, customerID, renderButton }) => {
   const [editingIndex, setEditingIndex] = useState(-1);
+  const [itemList, setItemList] = useState(items);
   const [editedShippingAddress, setEditedShippingAddress] = useState('');
   const [editedShippingMethod, setEditedShippingMethod] = useState('');
-  const [isUpdateSuccess, setUpdateSuccess] = useState(false);
-
+  const navigate = useNavigate();
   const handleEditClick = (index) => {
     setEditingIndex(index);
     setEditedShippingAddress(items[index].shipping_address);
     setEditedShippingMethod(items[index].shipping_method);
   };
+
+  // Create a lookup for shipping methodsx
+  const shippingMethodLookup = shippingMethods.reduce((lookup, method) => {
+    lookup[method.shipping_id] = method.shipping_method;
+    return lookup;
+  }, {});
 
   const handleSaveClick = async (orderId) => {
     console.log('Edited Shipping Address:', editedShippingAddress);
@@ -25,9 +31,12 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
       }
     );
     console.log(result);
-    
+
     setEditingIndex(-1);
-    setUpdateSuccess(true);
+    const updatedItemList = itemList.map((item) =>
+    item.order_id === result.data.order_id ? result.data : item
+  );
+  setItemList(updatedItemList);
   };
 
   const combineOrders = (orders) => {
@@ -69,10 +78,16 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
   const handleDeleteItem = async (orderId, productId) => {
     console.log(orderId, productId);
     try {
-      const result = await api.delete(`/api/order?orderId=${orderId}&productID=${productId}`);
+      const result = await api.delete(
+        `/api/order?orderId=${orderId}&productID=${productId}`
+      );
       console.log('Deleted Item:', orderId, productId);
       console.log(result);
-      //need to update the UI or refresh the order items after deletion
+      // Remove the deleted item from state
+      const updatedItemList = itemList.filter(
+        (item) => item.order_id !== orderId || item.product_id !== productId
+      );
+      setItemList(updatedItemList);    
     } catch (error) {
       console.error('Error deleting item:', error);
     }
@@ -90,7 +105,7 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
     <ul>
       {clearedItems.map((item, index) => (
         <li key={index}>
-          <div className="py-3 mx-6 my-3 shadow-md">
+          <div className="py-3 mx-6 my-6 shadow-md">
             <div className="flex flex-row justify-around text-xl">
               <p>{item.order_id}</p>
               {editingIndex === index ? (
@@ -103,40 +118,47 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
                     }
                     className="border border-gray-300 rounded px-2 py-1 mt-2 flex-grow"
                   />
-                  <select
-                    value={editedShippingMethod}
-                    onChange={(event) =>
-                      setEditedShippingMethod(event.target.value)
-                    }
-                    className="border border-gray-300 rounded px-2 py-1 mt-2 flex-grow text-base"
-                  >
-                    {shippingMethods.map((method) => (
-                      <option
-                        key={method.shipping_id}
-                        value={method.shipping_id}
-                      >
-                        {method.shipping_method}
-                      </option>
-                    ))}
-                  </select>
+                   <select
+        value={editedShippingMethod}
+        onChange={(event) =>
+          setEditedShippingMethod(event.target.value)
+        }
+        className="border border-gray-300 rounded px-2 py-1 mt-2 flex-grow text-base"
+      >
+        <option disabled selected value="">
+          Select a method
+        </option>
+        {shippingMethods.map((method) => (
+          <option
+            key={method.shipping_id}
+            value={method.shipping_id}
+          >
+            {method.shipping_method}
+          </option>
+        ))}
+      </select>
                   <button onClick={() => handleSaveClick(item.order_id)}>
                     Save
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-row space-x-12">
-                  {isUpdateSuccess ? (
-                    <>
-                      <p>{editedShippingAddress}</p>
-                      <p>{editedShippingMethod}</p>
-                    </>
-                  ) : (
+                  
                     <>
                       <p>{item.shipping_address}</p>
                       <p>{item.shipping_method}</p>
                     </>
-                  )}
                   <button onClick={() => handleEditClick(index)}>Edit</button>
+                  {renderButton && (
+                    <button
+                      onClick={() => {
+                        navigate(`/payment/${item.order_id}`);
+                      }}
+                      className="bg-green-600 p-3"
+                    >
+                      Pay
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -150,14 +172,16 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
                     <p>{orderItem.product_name}</p>
                     <p>{orderItem.product_id}</p>
                     <p>{orderItem.price}</p>
-                    <button
-                      onClick={() =>
-                        handleDeleteItem(item.order_id, orderItem.product_id)
-                      }
-                      className="ml-4 text-red-500"
-                    >
-                      Delete
-                    </button>
+                    {renderButton && (
+                      <button
+                        onClick={() =>
+                          handleDeleteItem(item.order_id, orderItem.product_id)
+                        }
+                        className="ml-4 text-red-500"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -169,4 +193,4 @@ const ItemList = ({ items, shippingMethods, customerID }) => {
   );
 };
 
-export default ItemList;
+export default OrderList;

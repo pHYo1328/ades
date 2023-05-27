@@ -7,7 +7,7 @@ const CompletedItemList = ({ items, customerID }) => {
   const [rating, setRating] = useState([]);
   const [productID, setProductID] = useState(null);
   const [ratingData, setRatingData] = useState(null);
-  const [index, setIndex] = useState(null)
+  const [index, setIndex] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const handleRateItemClick = (index) => {
@@ -41,10 +41,10 @@ const CompletedItemList = ({ items, customerID }) => {
     updatedRatingComment[index] = '';
     setRatingComment(updatedRatingComment);
 
-    console.log("rating", rating[index])
-    console.log("comment", ratingComment[index])
-    console.log("productID", productID)
-    console.log("customerID", customerID)
+    console.log('rating', rating[index]);
+    console.log('comment', ratingComment[index]);
+    console.log('productID', productID);
+    console.log('customerID', customerID);
 
     if (!rating || !ratingComment || !productID || !customerID) {
       window.alert('Please fill in all the fields');
@@ -53,16 +53,17 @@ const CompletedItemList = ({ items, customerID }) => {
         comment: ratingComment,
         rating_score: rating,
         product_id: productID,
-        customer_id: customerID
-      }
-      console.log(requestBody)
-      axios.post(`${baseUrl}/api/products/ratings`, requestBody)
-      .then((response) => {
-        console.log(response);
-        setRatingData(response.data.data);
-        console.log(ratingData);
-        // window.location.reload();
-      });
+        customer_id: customerID,
+      };
+      console.log(requestBody);
+      axios
+        .post(`${baseUrl}/api/products/ratings`, requestBody)
+        .then((response) => {
+          console.log(response);
+          setRatingData(response.data.data);
+          console.log(ratingData);
+          // window.location.reload();
+        });
     }
   };
 
@@ -83,7 +84,14 @@ const CompletedItemList = ({ items, customerID }) => {
               <div className="flex items-center">
                 <p>{item.product_name}</p>
               </div>
-              <button onClick={() => { handleRateItemClick(index); console.log("console.log item.product_id", item.product_id); setProductID(item.product_id); setIndex(index) }}>
+              <button
+                onClick={() => {
+                  handleRateItemClick(index);
+                  console.log('console.log item.product_id', item.product_id);
+                  setProductID(item.product_id);
+                  setIndex(index);
+                }}
+              >
                 Rate this item
               </button>
             </div>
@@ -93,10 +101,11 @@ const CompletedItemList = ({ items, customerID }) => {
                   {Array.from({ length: 5 }, (_, i) => (
                     <span
                       key={i}
-                      className={`${i < (rating[index] || 0)
+                      className={`${
+                        i < (rating[index] || 0)
                           ? 'text-yellow-500'
                           : 'text-gray-400'
-                        } mr-1`}
+                      } mr-1`}
                       onClick={() => handleRatingClick(index, i + 1)}
                     >
                       &#9733;
