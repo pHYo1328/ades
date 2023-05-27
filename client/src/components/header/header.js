@@ -43,15 +43,15 @@ const Header = () => {
             <Link to="/products" className="text-gray-800 hover:text-gray-600">
               Products
             </Link>
-            <Link to="/brands" className="text-gray-800 hover:text-gray-600">
+            {/* <Link to="/brands" className="text-gray-800 hover:text-gray-600">
               Brands
-            </Link>
+            </Link> */}
             <Link to="/cart" className="text-gray-800 hover:text-gray-600">
               Cart
             </Link>
-            <Link to="/category" className="text-gray-800 hover:text-gray-600">
+            {/* <Link to="/category" className="text-gray-800 hover:text-gray-600">
               Category
-            </Link>
+            </Link> */}
             <div className="relative"  ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}

@@ -18,10 +18,10 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState(null);
   const [categoryID, setCategoryID] = useState(0);
   const [brandID, setBrandID] = useState(0);
-  const [limit, setLimit] = useState(0);
+  const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(Math.ceil(total/limit));
   const [offset, setOffset] = useState(1);
   const [sort, setSort] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -48,6 +48,10 @@ export default function ProductsPage() {
         console.error(error);
       });
   }, [categoryID, brandID, sort, limit, currentPage]);
+
+  useEffect(() => {
+setTotalPages(Math.ceil(total/limit))
+  }, [total])
 
   useEffect(() => {
     setCurrentPage(1)
