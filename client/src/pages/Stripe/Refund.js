@@ -43,7 +43,7 @@ function RefundPayment() {
         console.error(error);
       });
 
-    window.alert('Already refunded');
+    window.alert('Giving refund now...');
   };
 
   return (
