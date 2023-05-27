@@ -8,7 +8,7 @@ exports.processGetPaymentByID = async (req, res, next) => {
   const { orderID } = req.params;
 
   try {
-    if (isNaN(orderID)){
+    if (!orderID){
       const error = new Error('invalid orderID');
       error.status = 400;
       throw error;
