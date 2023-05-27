@@ -24,6 +24,7 @@ const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
 
 //MIDDLEWARES
+const authenticateUser = require('../middlewares/authenticateUser');
 const verifyRoles = require('../middlewares/verifyRoles');
 //const verifyAccessToken = require("../middlewares/verifyAccessToken");
 

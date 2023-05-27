@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
@@ -22,6 +23,9 @@ export default function ProductCreate() {
     console.log('Selected image path:', path);
     setImagePath(path);
   };
+  
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -47,6 +51,21 @@ export default function ProductCreate() {
         console.error(error);
       });
   }, []);
+
+    useEffect(() => {
+      const roles = JSON.parse(localStorage.getItem('roles'));
+      console.log(roles);
+      const isAdmin = roles.includes('admin');
+      console.log(isAdmin);
+      if (!isAdmin) {
+        // User does not have the required role(s), redirect them to the homepage or show an error message
+        alert("you're not admin");
+        console.log('Redirecting to homepage-admin');
+        navigate('/homepage-admin');
+      }
+    }, []);
+  
+  
 
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
