@@ -227,3 +227,22 @@ module.exports.addRefund = async (id, orderID, total, status) => {
     throw error;
   }
 };
+
+module.exports.getIdAndAmount = async (productID) => {
+  console.log(chalk.blue('getIdAndAmount is called'));
+
+  try {
+    const partialRefundQuery = `SELECT payment.transaction_id, (order_items.quantity * product.price) as refund_total
+    FROM payment
+    JOIN order_items ON payment.order_id = order_items.order_id
+    JOIN product ON order_items.product_id = product.product_id
+    WHERE order_items.product_id = ?;`;
+
+    const results = await pool.query(partialRefundQuery, [productID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getIdAndAmount: ', error));
+    throw error;
+  }
+};
