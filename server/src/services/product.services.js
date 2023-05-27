@@ -49,10 +49,10 @@ module.exports.getProductByID = async (productID) => {
 };
 
 // get all products (done)
-module.exports.getAllProducts = async (limit, offset) => {
+module.exports.getAllProducts = async () => {
   console.log(chalk.blue('getAllProducts is called'));
-  console.log('limit: ', limit);
-  console.log('offset: ', offset);
+  // console.log('limit: ', limit);
+  // console.log('offset: ', offset);
   try {
     const productsDataQuery = `
     SELECT
@@ -79,11 +79,9 @@ module.exports.getAllProducts = async (limit, offset) => {
     p.product_name,
     p.description,
     p.price,
-    c.category_name
-  LIMIT ?
-  OFFSET ?;
+    c.category_name;
       `;
-    const results = await pool.query(productsDataQuery, [limit, offset]);
+    const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
@@ -381,27 +379,34 @@ module.exports.getSearchResults = async (
     WHERE 1 = 1
       `;
     let queryInput = [];
-    if (product_name)
-      (searchResultsDataQuery += ` AND p.product_name RLIKE ?`),
-        queryInput.push(product_name);
-    if (category_id)
-      (searchResultsDataQuery += ` AND p.category_id = ?`),
-        queryInput.push(category_id);
-    if (brand_id)
-      (searchResultsDataQuery += ` AND p.brand_id = ?`),
-        queryInput.push(brand_id);
-
+    if (product_name) {
+      searchResultsDataQuery += `
+        AND (p.product_name RLIKE ? 
+          OR c.category_name RLIKE ? 
+          OR b.brand_name RLIKE ? 
+          OR p.description RLIKE ?)`;
+      queryInput.push(product_name, product_name, product_name, product_name);
+    }
+    if (category_id) {
+      searchResultsDataQuery += ` AND p.category_id = ?`;
+      queryInput.push(category_id);
+    }
+    if (brand_id) {
+      searchResultsDataQuery += ` AND p.brand_id = ?`;
+      queryInput.push(brand_id);
+    }
     if (max_price) {
-      if (min_price)
-        (searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`),
-          queryInput.push(max_price, min_price);
-      else
-        (searchResultsDataQuery += ` AND p.price < ?`),
-          queryInput.push(max_price);
-    } else if (min_price)
-      (searchResultsDataQuery += ` AND p.price > ?`),
-        queryInput.push(min_price);
-
+      if (min_price) {
+        searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`;
+        queryInput.push(max_price, min_price);
+      } else {
+        searchResultsDataQuery += ` AND p.price < ?`;
+        queryInput.push(max_price);
+      }
+    } else if (min_price) {
+      searchResultsDataQuery += ` AND p.price > ?`;
+      queryInput.push(min_price);
+    }
     searchResultsDataQuery += ` GROUP BY p.product_id;`;
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
