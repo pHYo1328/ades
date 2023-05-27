@@ -36,7 +36,7 @@ const verifyRoles = require('../middlewares/verifyRoles');
 module.exports = (app, router) => {
   // Thinzar
   // GET
-  // router.get('/api/products', productController.processGetAllProducts);
+  router.get('/api/allProducts', productController.processGetAllProducts);
   router.get('/api/search', productController.processGetSearchResults);
   router.get('/api/brands', productController.processGetAllBrands);
   router.get('/api/category', productController.processGetAllCategory);

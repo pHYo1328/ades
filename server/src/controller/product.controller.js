@@ -60,13 +60,14 @@ exports.processGetProductByID = async (req, res, next) => {
 
 // get all products (done)
 exports.processGetAllProducts = async (req, res, next) => {
-  const { limit, offset } = req.query;
+  // const { limit, offset } = req.query;
   console.log(chalk.blue('processGetAllProducts running'));
   try {
-    const productData = await productServices.getAllProducts(
-      parseInt(limit),
-      parseInt(offset)
-    );
+    const productData = await productServices
+      .getAllProducts
+      // parseInt(limit),
+      // parseInt(offset)
+      ();
     if (!productData || productData.length === 0) {
       return res.status(404).json({
         statusCode: 404,

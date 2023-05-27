@@ -22,7 +22,7 @@ export default function LandingPage() {
   const [productCategory, setProductCategory] = useState();
   const [productBrand, setProductBrand] = useState();
 
-  const baseUrl = 'http://localhost:8081';
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/new`)
