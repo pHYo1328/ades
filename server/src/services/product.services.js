@@ -381,27 +381,34 @@ module.exports.getSearchResults = async (
     WHERE 1 = 1
       `;
     let queryInput = [];
-    if (product_name)
-      (searchResultsDataQuery += ` AND p.product_name RLIKE ?`),
-        queryInput.push(product_name);
-    if (category_id)
-      (searchResultsDataQuery += ` AND p.category_id = ?`),
-        queryInput.push(category_id);
-    if (brand_id)
-      (searchResultsDataQuery += ` AND p.brand_id = ?`),
-        queryInput.push(brand_id);
-
+    if (product_name) {
+      searchResultsDataQuery += `
+        AND (p.product_name RLIKE ? 
+          OR c.category_name RLIKE ? 
+          OR b.brand_name RLIKE ? 
+          OR p.description RLIKE ?)`;
+      queryInput.push(product_name, product_name, product_name, product_name);
+    }
+    if (category_id) {
+      searchResultsDataQuery += ` AND p.category_id = ?`;
+      queryInput.push(category_id);
+    }
+    if (brand_id) {
+      searchResultsDataQuery += ` AND p.brand_id = ?`;
+      queryInput.push(brand_id);
+    }
     if (max_price) {
-      if (min_price)
-        (searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`),
-          queryInput.push(max_price, min_price);
-      else
-        (searchResultsDataQuery += ` AND p.price < ?`),
-          queryInput.push(max_price);
-    } else if (min_price)
-      (searchResultsDataQuery += ` AND p.price > ?`),
-        queryInput.push(min_price);
-
+      if (min_price) {
+        searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`;
+        queryInput.push(max_price, min_price);
+      } else {
+        searchResultsDataQuery += ` AND p.price < ?`;
+        queryInput.push(max_price);
+      }
+    } else if (min_price) {
+      searchResultsDataQuery += ` AND p.price > ?`;
+      queryInput.push(min_price);
+    }
     searchResultsDataQuery += ` GROUP BY p.product_id;`;
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
