@@ -6,6 +6,7 @@ export default function AllBrandsAndCategories() {
   const [categories, setCategories] = useState(null);
   const [bookmarkStatus, setBookmarkStatus] = useState({}); // Store bookmark status for each brand
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const [clickedBrandIds, setClickedBrandIds] = useState([]);
   const customerId = localStorage.getItem('userid');
 
   useEffect(() => {
@@ -35,10 +36,19 @@ export default function AllBrandsAndCategories() {
   }, []);
 
   const bookmarkClickHandler = (brandId) => {
+    console.log(brandId)
     setBookmarkStatus((prevStatus) => ({
       ...prevStatus,
       [brandId]: !prevStatus[brandId],
     }));
+    if (clickedBrandIds.includes(brandId)) {
+      setClickedBrandIds((prevClickedBrandIds) =>
+        prevClickedBrandIds.filter((id) => id !== brandId)
+      );
+    } else {
+      setClickedBrandIds((prevClickedBrandIds) => [...prevClickedBrandIds, brandId]);
+    }
+    
   };
 
   return (
