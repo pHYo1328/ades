@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
+const inventoryController = require('../controller/inventory.controller.js');
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
 const registerController = require('../controller/registerController');
@@ -34,7 +35,7 @@ const verifyRoles = require('../middlewares/verifyRoles');
 module.exports = (app, router) => {
   // Thinzar
   // GET
-  router.get('/api/products', productController.processGetAllProducts);
+  // router.get('/api/products', productController.processGetAllProducts);
   router.get('/api/search', productController.processGetSearchResults);
   router.get('/api/brands', productController.processGetAllBrands);
   router.get('/api/category', productController.processGetAllCategory);
@@ -63,8 +64,12 @@ module.exports = (app, router) => {
     productController.processGetImagesByProductID
   );
   router.get(
-    '/api/products/:categoryID/:brandID',
+    '/api/products/:categoryID/:brandID/:limit/:offset/:sort',
     productController.processGetProductsByCategoryOrBrand
+  );
+  router.get(
+    '/api/products/total/:categoryID/:brandID',
+    productController.processGetTotalNumberOfProducts
   );
 
   // DELETE
@@ -158,22 +163,27 @@ module.exports = (app, router) => {
   );
 
   router.get(
+    '/api/inventory/checkQuantity',
+    inventoryController.processCheckInventory
+  );
+  router.get(
     '/api/paymentTotal/:orderID',
     //verifyAccessToken.verifyToken,
     paymentController.processGetPaymentTotal
   );
 
   router.get(
-    '/api/order/getOrderDetailBeforePickUp/:customerID',
+    '/api/order/getOrderDetailByOrderStatus',
     //verifyAccessToken.verifyToken,
-    orderController.processGetOrderDetailsBeforePickUp
+    orderController.processGetOrderDetailsByOrderStatus
   );
 
   router.get(
-    '/api/order/getOrderDetailsByDeliverStatus/:customerID',
-    //verifyAccessToken.verifyToken,
-    orderController.processGetOrderDetailsByDeliverStatus
+    '/api/admin/order',
+    orderController.processGetOrderDetailsForAdmin
   );
+
+  router.put('/api/admin/order', orderController.processUpdateOrderStatus);
 
   router.put(
     '/api/order/updateShippingDetails/:customerID',

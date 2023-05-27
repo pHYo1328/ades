@@ -5,7 +5,7 @@ const chalk = require('chalk');
 module.exports.getPaymentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentByID is called'));
   try {
-    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee
+    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee, o.shipping_address
       FROM product AS p, order_items AS i, orders AS o, shipping AS s
         WHERE o.order_id = ?
         AND o.order_id = i.order_id
@@ -100,11 +100,12 @@ module.exports.addPayment = async (
   status,
   total,
   paymentMethod,
+  shippingAddr,
   orderID
 ) => {
   console.log(chalk.blue('addPayment is called'));
   const createPaymentQuery =
-    'INSERT INTO payment (transaction_id, status, payment_total, payment_method, order_id) VALUES (?, ?, ?, ?, ?);';
+    'INSERT INTO payment (transaction_id, status, payment_total, payment_method, billing_address, order_id) VALUES (?, ?, ?, ?, ?, ?);';
   const updateStatusQuery = `UPDATE orders
    SET order_status = 'paid'
    WHERE order_id = ? AND order_id IN (
@@ -135,6 +136,7 @@ module.exports.addPayment = async (
       status,
       total,
       paymentMethod,
+      shippingAddr,
       orderID,
     ]);
 

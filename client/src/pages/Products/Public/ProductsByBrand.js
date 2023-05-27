@@ -13,7 +13,7 @@ const cld = new Cloudinary({
 export default function ProductsByBrand() {
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  
+
   const { brandID } = useParams();
   useEffect(() => {
     axios

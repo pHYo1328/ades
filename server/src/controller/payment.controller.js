@@ -8,7 +8,7 @@ exports.processGetPaymentByID = async (req, res, next) => {
   const { orderID } = req.params;
 
   try {
-    if (isNaN(parseInt(orderID))) {
+    if (isNaN(orderID)){
       const error = new Error('invalid orderID');
       error.status = 400;
       throw error;
@@ -29,6 +29,7 @@ exports.processGetPaymentByID = async (req, res, next) => {
         total_price: payment.total_price,
         shipping_method: payment.shipping_method,
         fee: payment.fee,
+        shipping_address: payment.shipping_address
       }));
       return res.status(200).json({
         statusCode: 200,
@@ -113,7 +114,7 @@ exports.processGetPaymentTotal = async (req, res, next) => {
   const { orderID } = req.params;
 
   try {
-    if (isNaN(parseInt(orderID))) {
+    if (isNaN(orderID)) {
       const error = new Error('invalid orderID');
       error.status = 400;
       throw error;

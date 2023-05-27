@@ -7,7 +7,7 @@ const chalk = require('chalk');
 // UPDATE USER INFO
 module.exports.updateUser = async (username, email, password, userid) => {
   console.log(chalk.blue('User updated successfully'));
-  console.log("sql", userid);
+  console.log('sql', userid);
   try {
     console.log("I'm inside try-catch");
     // Update the user information
@@ -49,23 +49,20 @@ module.exports.updateUser = async (username, email, password, userid) => {
 // Delete user
 module.exports.deleteUser = async (userid) => {
   console.log(chalk.blue('User deleted successfully'));
-  console.log("delete user targeted userid", userid);
+  console.log('delete user targeted userid', userid);
   const orderDeleteQuery =
     'DELETE FROM orders WHERE customer_id = ? AND order_status NOT IN ("paid", "delivering");';
   const productOrderDeleteQuery =
-    'DELETE product FROM product INNER JOIN cart ON product.product_id = cart.product_id;'
-  const userDeleteQuery =
-    'DELETE FROM users WHERE customer_id = ?';
+    'DELETE product FROM product INNER JOIN cart ON product.product_id = cart.product_id;';
+  const userDeleteQuery = 'DELETE FROM users WHERE customer_id = ?';
 
   const connection = await pool.getConnection();
   console.log(
-    chalk.blue(
-      'Database is connected to admin.services deleteUser query'
-    )
+    chalk.blue('Database is connected to admin.services deleteUser query')
   );
   try {
     console.log(chalk.blue('Running SQL >>>>>>'));
-    console.log("does this work",userid)
+    console.log('does this work', userid);
     await connection.beginTransaction();
     // Run the delete queries concurrently
     await Promise.all([
@@ -73,9 +70,11 @@ module.exports.deleteUser = async (userid) => {
       pool.query(productOrderDeleteQuery),
       pool.query(userDeleteQuery, [userid]),
     ]);
-    console.log("try catch ", userid);
+    console.log('try catch ', userid);
     await connection.commit();
-    console.log(chalk.green('User and all involving orders deleted successfully'));
+    console.log(
+      chalk.green('User and all involving orders deleted successfully')
+    );
     return true;
   } catch (error) {
     await connection.rollback();
@@ -85,4 +84,3 @@ module.exports.deleteUser = async (userid) => {
     connection.release();
   }
 };
-

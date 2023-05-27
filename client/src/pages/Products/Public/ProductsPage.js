@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+// import Pagination from '@mui/material/Pagination';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import Pagination from '../../../components/Products/Pagination'
 
 const cld = new Cloudinary({
   cloud: {
@@ -11,25 +12,66 @@ const cld = new Cloudinary({
 });
 
 export default function ProductsPage() {
+  const [statistics, setStatistics] = useState(null);
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
   const [categoryID, setCategoryID] = useState(0);
   const [brandID, setBrandID] = useState(0);
+  const [limit, setLimit] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [offset, setOffset] = useState(1);
+  const [sort, setSort] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}/api/products/${categoryID}/${brandID}`)
+      .get(`${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`)
       .then((response) => {
         console.log(response);
         setProducts(response.data.data);
         console.log(products);
+
+        if (limit == 0) {
+          setTotalPages(1);
+        } else {
+          setTotalPages(Math.ceil(total / limit));
+        }
+        console.log("products.length: ", total)
+        console.log("totalPages: ", totalPages)
+        console.log("limit", limit)
+        console.log("sort", sort)
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [categoryID, brandID]);
+  }, [categoryID, brandID, sort, limit, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [limit])
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/products/total/${categoryID}/${brandID}`)
+      .then((response) => {
+        console.log(response);
+        setTotal(response.data.data);
+        console.log(total);
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [categoryID, brandID])
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    const calculatedOffset = limit * (page - 1) + 1;
+    setOffset(calculatedOffset);
+  };
 
   useEffect(() => {
     axios
@@ -57,17 +99,50 @@ export default function ProductsPage() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/admin/statistics`)
+      .then((response) => {
+        console.log(response);
+        setStatistics(response.data.data);
+        console.log(statistics);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <div class="row">
-          <div class="col-8">
+          <div class="col-4">
             <h2
               className="text-2xl font-bold tracking-tight text-gray-900 text-center"
               class="h2"
             >
               Products
             </h2>
+          </div>
+          <div class="col-2">
+            <input
+              min="0"
+              type="number"
+              class="form-control form-control-sm"
+              value={limit}
+              onChange={(e) => setLimit(parseInt(e.target.value, 10))}
+              placeholder="Limit"
+            />
+
+          </div>
+          <div class="col-2">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"  onChange={(e) => setSort(e.target.value)}>
+              <option disabled selected value="0">Sort</option>
+              <option value="1">Price (Ascending)</option>
+              <option value="2">Price (Descending)</option>
+              <option value="3">Name (A-Z)</option>
+              <option value="4">Name (Z-A)</option>
+            </select>
           </div>
           <div class="col-2">
             <select
@@ -86,6 +161,9 @@ export default function ProductsPage() {
               ) : (
                 <p>Loading...</p>
               )}
+              <option value={0}>
+                All
+              </option>
             </select>
           </div>
           <div class="col-2">
@@ -103,6 +181,9 @@ export default function ProductsPage() {
               ) : (
                 <p>Loading...</p>
               )}
+              <option value={0}>
+                All
+              </option>
             </select>
           </div>
         </div>
@@ -137,13 +218,28 @@ export default function ProductsPage() {
                     {product.price}
                   </p>
                 </div>
+
               </div>
+
             ))
           ) : (
             <p>Loading...</p>
           )}
         </div>
       </div>
+
+      <div class="pb-5 mb-5">
+        <Pagination
+          style={{ marginLeft: 'auto', marginRight: 'auto' }}
+          // totalPages={limit == 0 ? 0 : Math.ceil(products.length / limit)}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+        <p>{currentPage} / {totalPages}</p>
+      </div>
+
+
     </div>
   );
 }

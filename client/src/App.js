@@ -22,6 +22,10 @@ import ProductsByCategory from './pages/Products/Public/ProductsByCategory';
 import Cart from './pages/Cart/Cart';
 import Header from './components/header/header';
 import OrderToShip from './pages/Order/OrderToShip/OrderToShip';
+import OrderDelivered from './pages/Order/OrderDelivered/OrderDelivered';
+import OrderToDeliver from './pages/Order/OrderToDeliver/OrderToDeliver';
+import OrderToPay from './pages/Order/OrderToPay/OrderToPay';
+import OrderAdmin from './pages/Order/Admin/OrderAdmin';
 import LandingPage from './pages/Home/LandingPage';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
@@ -72,6 +76,10 @@ function App() {
             />
             <Route path="/cart" element={<Cart />} />
             <Route path="/orderToShip" element={<OrderToShip />} />
+            <Route path="/orderDelivered" element={<OrderDelivered />} />
+            <Route path="/orderToDeliver" element={<OrderToDeliver />} />
+            <Route path="/orderToPay" element={<OrderToPay />} />
+            <Route path="/admin/orderStatus" element={<OrderAdmin />} />
             <Route path="/home" element={<LandingPage />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/products/create" element={<ProductCreate />} />

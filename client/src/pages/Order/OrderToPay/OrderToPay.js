@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ItemList from '../../../components/ItemList/orderList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
-const OrderToShip = () => {
+const OrderToPay = () => {
   const userId = localStorage.getItem('userid');
   const [orderItems, setOrderItems] = useState(null);
   const [shippingMethods, setShippingMethods] = useState(null);
@@ -11,13 +11,13 @@ const OrderToShip = () => {
     setIsLoading(true);
     const fetchData = async () => {
       const response = await api.get(
-        `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=paid`
+        `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=order_received`
       );
       console.log(response);
       setOrderItems(response.data.data);
       const shippingMethods = await api.get(`/api/shipping`);
       console.log(shippingMethods.data.data);
-      setShippingMethods(shippingMethods.data.data);
+      setShippingMethods(shippingMethods);
       setIsLoading(false);
     };
     fetchData();
@@ -36,12 +36,8 @@ const OrderToShip = () => {
       </div>
     </div>
   ) : (
-    <ItemList
-      items={orderItems}
-      shippingMethods={shippingMethods}
-      customerID={userId}
-    ></ItemList>
+    <ItemList items={orderItems}></ItemList>
   );
 };
 
-export default OrderToShip;
+export default OrderToPay;
