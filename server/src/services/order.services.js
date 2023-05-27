@@ -71,7 +71,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                       where orders.customer_id=? and orders.order_status=?;
                     `;
   const orderAfterDeliverQuery = `
-                    select product.product_name,product.image_url,product.price, order_items.quantity FROM product
+                    select product.product_id,product.product_name,product.image_url,product.price, order_items.quantity FROM product
                     inner join order_items on order_items.product_id=product.product_id
                     inner join  orders on orders.order_id= order_items.order_id
                     where orders.customer_id=? and orders.order_status=?;
