@@ -31,8 +31,9 @@ const handleLogin = async (req, res) => {
 
     // evaluate password
     const foundUser = results[0];
+    
     const userId = foundUser.customer_id;
-    console.log('my found userid', foundUser.customer_id);
+    console.log('my found userid', foundUser);
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
       // Send OTP email using OTPEmailSender
@@ -46,6 +47,9 @@ const handleLogin = async (req, res) => {
       } else {
         // User does not have an OTP, login successful
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        const rolesString = roles.join(''); 
+        const rolesWithoutQuotes = rolesString.replace(/"/g, ''); // Remove double quotes from the string
+        console.log("else", rolesWithoutQuotes);
         // create JWTs
         const accessToken = jwt.sign(
           {
@@ -113,10 +117,11 @@ const handleLogin = async (req, res) => {
         console.log('Cookie set successfullyyy');
         console.log('this is my rt' + newRefreshToken);
         // Send authorization roles and access token to user
+        console.log(rolesWithoutQuotes);
         res.json({
           success: true,
           userid: userId,
-          roles: roles,
+          roles: rolesWithoutQuotes,
           accessToken: accessToken,
           newRefreshToken: newRefreshToken,
         });

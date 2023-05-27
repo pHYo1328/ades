@@ -44,6 +44,9 @@ const handleLogin = async (req, res) => {
       } else {
         // User does not have an OTP, login successful
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        const rolesString = roles.join(''); 
+        const rolesWithoutQuotes = rolesString.replace(/"/g, ''); // Remove double quotes from the string
+        console.log("else", rolesWithoutQuotes);
         // create JWTs
         const accessToken = jwt.sign(
           {
@@ -113,7 +116,7 @@ const handleLogin = async (req, res) => {
         res.json({
           success: true,
           userid: userId,
-          roles: roles,
+          roles: rolesWithoutQuotes,
           accessToken: accessToken,
           newRefreshToken: newRefreshToken,
         });
