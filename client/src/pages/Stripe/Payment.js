@@ -5,6 +5,7 @@ import api from '../../index';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
+import AddressForm from './AddressForm';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -48,6 +49,7 @@ function Payment() {
       {clientSecret && stripePromise && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm />
+          <AddressForm />
         </Elements>
       )}
        
@@ -91,7 +93,13 @@ function Payment() {
                 parseFloat(payments[0].fee)
               ).toFixed(2)}
             </p>
+            <p className="text-sm font-medium text-gray-900 justify-start">
+              Shipping_address: {payments[0].shipping_address}
+            </p>
+           
           </div>
+
+
         </>
       ) : (
         <p>Loading...</p>
