@@ -21,7 +21,7 @@ export default function ProductsPage() {
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(Math.ceil(total/limit));
+  const [totalPages, setTotalPages] = useState(Math.ceil(total / limit));
   const [offset, setOffset] = useState(1);
   const [sort, setSort] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -50,7 +50,7 @@ export default function ProductsPage() {
   }, [categoryID, brandID, sort, limit, currentPage]);
 
   useEffect(() => {
-setTotalPages(Math.ceil(total/limit))
+    setTotalPages(Math.ceil(total / limit))
   }, [total])
 
   useEffect(() => {
@@ -129,18 +129,23 @@ setTotalPages(Math.ceil(total/limit))
             </h2>
           </div>
           <div class="col-2">
-            <input
-              min="0"
-              type="number"
-              class="form-control form-control-sm"
-              value={limit}
-              onChange={(e) => setLimit(parseInt(e.target.value, 10))}
-              placeholder="Limit"
-            />
+            <div class="input-group mb-3">
+              <input
+                min="0"
+                type="number"
+                class="form-control form-control-sm"
+                value={limit}
+                onChange={(e) => setLimit(parseInt(e.target.value, 10))}
+                placeholder="Limit"
+                aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">Products/Page</span>
+              </div>
+            </div>
 
           </div>
           <div class="col-2">
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example"  onChange={(e) => setSort(e.target.value)}>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" onChange={(e) => setSort(e.target.value)}>
               <option disabled selected value="0">Sort</option>
               <option value="1">Price (Ascending)</option>
               <option value="2">Price (Descending)</option>
@@ -232,7 +237,7 @@ setTotalPages(Math.ceil(total/limit))
         </div>
       </div>
 
-      <div class="pb-5 mb-5">
+      <div class="pb-5 mb-5" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
         <Pagination
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           // totalPages={limit == 0 ? 0 : Math.ceil(products.length / limit)}
@@ -240,7 +245,7 @@ setTotalPages(Math.ceil(total/limit))
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-        <p>{currentPage} / {totalPages}</p>
+        <p class="text-center h6 mt-4">{currentPage} / {totalPages}</p>
       </div>
 
 
