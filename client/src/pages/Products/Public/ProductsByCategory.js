@@ -55,8 +55,8 @@ export default function ProductsByCategory() {
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
                       </a> */}
-                       <Link to={`/product/${product.product_id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
+                      <Link to={`/product/${product.product_id}`}>
+                        <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
                       </Link>
                     </h3>

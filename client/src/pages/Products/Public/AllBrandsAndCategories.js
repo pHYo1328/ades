@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';import api from '../../../index';
+import { Link } from 'react-router-dom';
+import api from '../../../index';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -113,8 +114,8 @@ export default function AllBrandsAndCategories() {
                           {brand.brand_name}
                         </a> */}
                         <Link to={`/brands/${brand.brand_id}`}>
-                        {brand.brand_name}
-                      </Link>
+                          {brand.brand_name}
+                        </Link>
                       </h3>
                     </div>
                     <div>
@@ -153,9 +154,9 @@ export default function AllBrandsAndCategories() {
                         {/* <a href={`/categories/${category.category_id}`}>
                           {category.category_name}
                         </a> */}
-                         <Link to={`/categories/${category.category_id}`}>
-                       {category.category_name}
-                      </Link>
+                        <Link to={`/categories/${category.category_id}`}>
+                          {category.category_name}
+                        </Link>
                       </h3>
                     </div>
                   </div>

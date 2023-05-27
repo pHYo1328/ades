@@ -69,10 +69,10 @@ function Home() {
                 Sign out
               </button>
               <Link to="/admin">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
-              Go to Admin Dashboard
-            </button>
-          </Link>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+                  Go to Admin Dashboard
+                </button>
+              </Link>
             </div>
           </div>
         </div>

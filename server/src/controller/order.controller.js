@@ -242,8 +242,16 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
 
 exports.processCancelOrder = async (req, res, next) => {
   console.log(chalk.blue('processCancelOrder is running'));
-  const { orderId, productID } = req.query;
-  console.log(chalk.yellow('Inspect req body variables :', orderId, productID));
+  const { orderId, productID, quantity, orderStatus } = req.query;
+  console.log(
+    chalk.yellow(
+      'Inspect req body variables :',
+      orderId,
+      productID,
+      quantity,
+      orderStatus
+    )
+  );
   try {
     if (!orderId) {
       const error = new Error('Invalid order ID parameter');
@@ -255,9 +263,29 @@ exports.processCancelOrder = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
+    if (isNaN(parseInt(quantity))) {
+      const error = new Error('Invalid quantity parameter');
+      error.status = 400;
+      throw error;
+    }
+    let status = null;
+    switch (orderStatus) {
+      case 'order_received':
+        status = OrderStatus.ORDER_RECEIVED;
+        break;
+      case 'paid':
+        status = OrderStatus.ORDER_PAID;
+        break;
+      default:
+        const error = new Error('Invalid order status parameter');
+        error.status = 400;
+        throw error;
+    }
     const data = {
       orderID: orderId,
       productID: productID,
+      quantity: quantity,
+      orderStatus: status,
     };
     const result = await orderServices.cancelOrder(data);
     console.log(
