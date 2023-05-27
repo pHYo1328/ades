@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -66,9 +66,12 @@ export default function AllBrandsAndCategories() {
                   <div className="flex justify-between">
                     <div className="text-left">
                       <h3 className="text-sm text-gray-700">
-                        <a href={`/brands/${brand.brand_id}`}>
+                        {/* <a href={`/brands/${brand.brand_id}`}>
                           {brand.brand_name}
-                        </a>
+                        </a> */}
+                        <Link to={`/brands/${brand.brand_id}`}>
+                        {brand.brand_name}
+                      </Link>
                       </h3>
                     </div>
                     <div>
@@ -100,9 +103,12 @@ export default function AllBrandsAndCategories() {
                   <div className="flex justify-between">
                     <div className="text-left">
                       <h3 className="text-sm text-gray-700">
-                        <a href={`/categories/${category.category_id}`}>
+                        {/* <a href={`/categories/${category.category_id}`}>
                           {category.category_name}
-                        </a>
+                        </a> */}
+                         <Link to={`/categories/${category.category_id}`}>
+                       {category.category_name}
+                      </Link>
                       </h3>
                     </div>
                   </div>

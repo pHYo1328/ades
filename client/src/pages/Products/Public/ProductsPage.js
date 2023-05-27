@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import Pagination from '../../../components/Products/Pagination'
-
+import { Link } from 'react-router-dom';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -203,10 +203,10 @@ export default function ProductsPage() {
               <div
                 key={product.product_id}
                 className="group relative"
-                onClick={() => {
-                  const productID = product.product_id;
-                  window.location.href = `/products/${productID}`;
-                }}
+                // onClick={() => {
+                //   const productID = product.product_id;
+                //   window.location.href = `/products/${productID}`;
+                // }}
               >
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
@@ -214,10 +214,14 @@ export default function ProductsPage() {
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
                     <h3 className="text-sm text-gray-700">
-                      <a href={`/product/${product.product_id}`}>
+                      {/* <a href={`/product/${product.product_id}`}>
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
-                      </a>
+                      </a> */}
+                      <Link to={`/product/${product.product_id}`}>
+                      <span aria-hidden="true" className="absolute inset-0" />
+                        {product.product_name}
+                      </Link>
                     </h3>
                     <p className="mt-1 text-sm text-gray-500">
                       {product.brand_name}
