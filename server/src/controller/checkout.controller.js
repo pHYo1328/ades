@@ -88,6 +88,51 @@ exports.processRefund = async (req, res) => {
   }
 };
 
+exports.processPartialRefund = async (req, res) => {
+  console.log(chalk.blue('partial refund'));
+  try {
+    const productID = req.params.productID;
+    // Retrieve transaction IDs and refund amounts for orders with the given productID
+    const idAndAmount = await paymentServices.getIdAndAmount(productID);
+
+    // Process partial refunds for each order
+    const refundPromises = idAndAmount.map(async (row) => {
+      const transactionID = row.transaction_id;
+      const refundAmount = row.refund_total;
+
+      // Process the refund using Stripe
+      const refund = await stripe.refunds.create({
+        payment_intent: transactionID,
+        amount: refundAmount,
+        metadata: {
+          order_id: row.order_id,
+        },
+      });
+
+      // Return the refund details
+      return {
+        orderID: row.order_id,
+        refundId: refund.id,
+        amountRefunded: refund.amount,
+        currency: refund.currency,
+        status: refund.status,
+      };
+    });
+
+    // Wait for all refunds to complete
+    const refunds = await Promise.all(refundPromises);
+
+    res.send(refunds);
+  } catch (error) {
+    console.error('Error processing refund:', error);
+    return res.status(500).send({
+      error: {
+        message: 'An error occurred while processing the refund.',
+      },
+    });
+  }
+};
+
 let endpointSecret;
 // endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 

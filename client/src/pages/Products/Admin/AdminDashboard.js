@@ -54,7 +54,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = () => {
     axios
-      .get(`${baseUrl}/api/products`)
+      .get(`${baseUrl}/api/allProducts`)
       .then((response) => {
         console.log(response);
         setProducts(response.data.data);
