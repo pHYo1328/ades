@@ -28203,3 +28203,13 @@
 20230527	15:03:35	9fb8586b-5976-403a-aafe-9e0e8c65b715	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=3&orderStatus=order_received
 20230527	15:03:35	48108d34-4ccc-4d5c-9017-52481eeca8d8	GET	http://localhost:3000	/api/shipping
 >>>>>>> c5888df2b8455bd75dcfc3d8a4e229c88de15a47
+20230527	15:17:57	f3fbbff3-bb38-47f4-b533-04828b7452c7	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=null&orderStatus=paid
+20230527	15:17:59	58754943-f1fd-490f-b83e-cf96ff46dc3a	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=null&orderStatus=order_received
+20230527	15:18:00	b84b0d34-3098-445c-b56b-f63d33ba9603	GET	http://localhost:3000	/api/products/0/0/0/1/0
+20230527	15:18:00	fde0eea2-ccad-4d90-b151-86eab84c3889	GET	http://localhost:3000	/api/products/total/0/0
+20230527	15:18:00	4e1a649f-def1-4d9f-8838-86621ec59623	GET	http://localhost:3000	/api/category
+20230527	15:18:00	3c0c9a62-bd44-4e89-9ae4-8635ef79f061	GET	http://localhost:3000	/api/brands
+20230527	15:18:00	e34c487e-cd7b-415a-aa59-21a10d5c58e1	GET	http://localhost:3000	/api/admin/statistics
+20230527	15:19:31	c96c3b86-15ea-40c3-b8ea-e7bfc352d587	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=null&orderStatus=order_received
+20230527	15:19:34	421baede-3f8f-4caf-8ec6-3885bf3059c0	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=null&orderStatus=paid
+20230527	15:21:32	1aba72e9-efd9-47b7-9d02-3d532e67df1f	GET	http://localhost:3000	/api/order/getOrderDetailByOrderStatus?customerID=null&orderStatus=order_received

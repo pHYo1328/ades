@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { Link } from 'react-router-dom';
 import {
   RiTruckLine,
@@ -10,9 +10,25 @@ import { FaBox, FaWallet } from 'react-icons/fa';
 const Header = () => {
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
   const userId = localStorage.getItem('userid');
+  const userPanelRef = useRef(null);
+
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
+
+  const handleOutsideClick = (event) => {
+    if (userPanelRef.current && !userPanelRef.current.contains(event.target)) {
+      setIsUserPanelOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
 
   return (
     <header className="bg-white shadow">
@@ -36,7 +52,7 @@ const Header = () => {
             <Link to="/category" className="text-gray-800 hover:text-gray-600">
               Category
             </Link>
-            <div className="relative">
+            <div className="relative"  ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}
                 className="text-gray-800 hover:text-gray-600"
@@ -80,11 +96,6 @@ const Header = () => {
             <Link to="/login">
               <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Sign In
-              </button>
-            </Link>
-            <Link to="/register">
-              <button className="bg-pink-600 hover:bg-pink-800 text-white font-bold py-2 px-4 rounded-md text-lg">
-                Sign Up
               </button>
             </Link>
           </div>
