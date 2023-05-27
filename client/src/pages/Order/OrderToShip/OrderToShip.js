@@ -38,8 +38,10 @@ const OrderToShip = () => {
   ) : (
     <OrderList
       items={orderItems}
+      setItems={setOrderItems}
       shippingMethods={shippingMethods}
       customerID={userId}
+      orderStatus={'paid'}
     ></OrderList>
   );
 };

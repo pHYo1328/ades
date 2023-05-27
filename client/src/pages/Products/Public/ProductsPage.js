@@ -52,16 +52,16 @@ export default function ProductsPage() {
   }, [categoryID, brandID, sort, limit, currentPage]);
 
   useEffect(() => {
-    setTotalPages(Math.ceil(total / limit))
-  }, [total])
+    setTotalPages(Math.ceil(total / limit));
+  }, [total]);
 
   useEffect(() => {
-    setTotalPages(Math.ceil(total / limit))
-  }, [total])
+    setTotalPages(Math.ceil(total / limit));
+  }, [total]);
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [limit])
+    setCurrentPage(1);
+  }, [limit]);
 
   useEffect(() => {
     axios
@@ -142,9 +142,12 @@ export default function ProductsPage() {
                 value={limit}
                 onChange={(e) => setLimit(parseInt(e.target.value, 10))}
                 placeholder="Limit"
-                aria-describedby="basic-addon2" />
+                aria-describedby="basic-addon2"
+              />
               <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">Products/Page</span>
+                <span class="input-group-text" id="basic-addon2">
+                  Products/Page
+                </span>
               </div>
             </div>
           </div>
@@ -152,7 +155,7 @@ export default function ProductsPage() {
             <select
               class="form-select form-select-sm"
               aria-label=".form-select-sm example"
-             onChange={(e) => setSort(e.target.value)}
+              onChange={(e) => setSort(e.target.value)}
             >
               <option disabled selected value="0">
                 Sort
@@ -225,7 +228,7 @@ export default function ProductsPage() {
                         {product.product_name}
                       </a> */}
                       <Link to={`/product/${product.product_id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
+                        <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
                       </Link>
                     </h3>
@@ -245,7 +248,10 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div class="pb-5 mb-5" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+      <div
+        class="pb-5 mb-5"
+        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+      >
         <Pagination
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           // totalPages={limit == 0 ? 0 : Math.ceil(products.length / limit)}

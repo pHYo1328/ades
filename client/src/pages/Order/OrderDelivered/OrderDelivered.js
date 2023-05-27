@@ -35,6 +35,7 @@ const OrderDelivered = () => {
     <CompletedItemList
       items={orderItems}
       customerID={userId}
+      renderRating={true}
     ></CompletedItemList>
   );
 };

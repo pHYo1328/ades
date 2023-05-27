@@ -22,6 +22,9 @@ const OrderToPay = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    console.log(orderItems);
+  }, [orderItems]);
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-row">
@@ -38,8 +41,10 @@ const OrderToPay = () => {
   ) : (
     <OrderList
       items={orderItems}
+      setItems={setOrderItems}
       shippingMethods={shippingMethods}
       customerID={userId}
+      orderStatus={'order_received'}
       renderButton={true}
     ></OrderList>
   );

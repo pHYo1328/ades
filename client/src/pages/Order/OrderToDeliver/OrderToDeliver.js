@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ItemList from '../../../components/ItemList/orderList';
+import CompletedItemList from '../../../components/ItemList/completedItemList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 const OrderToDeliver = () => {
@@ -32,7 +32,10 @@ const OrderToDeliver = () => {
       </div>
     </div>
   ) : (
-    <ItemList items={orderItems}></ItemList>
+    <CompletedItemList
+      items={orderItems}
+      customerID={userId}
+    ></CompletedItemList>
   );
 };
 

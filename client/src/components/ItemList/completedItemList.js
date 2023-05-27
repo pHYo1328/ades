@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-const CompletedItemList = ({ items, customerID }) => {
+const CompletedItemList = ({ items, customerID, renderRating }) => {
   const [showRatingForm, setShowRatingForm] = useState([]);
   const [ratingComment, setRatingComment] = useState([]);
   const [rating, setRating] = useState([]);
@@ -69,7 +69,7 @@ const CompletedItemList = ({ items, customerID }) => {
 
   if (items.length === 0) {
     return (
-      <div>
+      <div className="flex item-center">
         <h2>No Items</h2>
       </div>
     );
@@ -84,16 +84,18 @@ const CompletedItemList = ({ items, customerID }) => {
               <div className="flex items-center">
                 <p>{item.product_name}</p>
               </div>
-              <button
-                onClick={() => {
-                  handleRateItemClick(index);
-                  console.log('console.log item.product_id', item.product_id);
-                  setProductID(item.product_id);
-                  setIndex(index);
-                }}
-              >
-                Rate this item
-              </button>
+              {renderRating && (
+                <button
+                  onClick={() => {
+                    handleRateItemClick(index);
+                    console.log('console.log item.product_id', item.product_id);
+                    setProductID(item.product_id);
+                    setIndex(index);
+                  }}
+                >
+                  Rate this item
+                </button>
+              )}
             </div>
             {showRatingForm[index] && (
               <div className="flex flex-col items-end mt-2">
