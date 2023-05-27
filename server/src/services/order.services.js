@@ -40,6 +40,7 @@ module.exports.addCustomerOrder = async (data) => {
       item.productId,
       item.quantity,
     ]);
+    console.log(orderItemsData);
     const result = await connection.query(addOrderItemsQuery, [orderItemsData]);
     await connection.commit();
     console.log(
@@ -206,7 +207,7 @@ module.exports.updateShippingDetails = async (data) => {
 
 module.exports.cancelOrder = async (data) => {
   console.log(chalk.blue('cancelOrder is called'));
-  const { orderID, productID } = data;
+  const { orderID, productID, quantity, orderStatus } = data;
   const deleteOrderQuery = `
                     DELETE FROM orders
                     WHERE order_id = ?;
@@ -220,6 +221,9 @@ module.exports.cancelOrder = async (data) => {
                     FROM order_items 
                     WHERE order_id = ?
                     ;`;
+  const returnInventoryQuery = `UPDATE inventory 
+                                SET quantity = quantity + ? 
+                                WHERE product_id = ?`;
   try {
     console.log(chalk.blue('Creating connection...'));
     const connection = await pool.getConnection();
@@ -237,7 +241,11 @@ module.exports.cancelOrder = async (data) => {
       deleteOrderItemsQuery,
       dataRequiredToDeleteOrderItems
     );
-
+    // return the quantity of the order items if customer canceled
+    if (orderStatus === OrderStatus.ORDER_PAID) {
+      console.log(chalk.blue('Executing query >>>>>>'), returnInventoryQuery);
+      await connection.query(returnInventoryQuery, [quantity, productID]);
+    }
     const orderIdData = [orderID];
     console.log(chalk.blue('Executing query >>>>>>'), checkRemainingItemsQuery);
     // Check if there are any remaining items for this order

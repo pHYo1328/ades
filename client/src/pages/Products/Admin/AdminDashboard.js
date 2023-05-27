@@ -71,7 +71,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = () => {
     axios
-      .get(`${baseUrl}/api/products`)
+      .get(`${baseUrl}/api/allProducts`)
       .then((response) => {
         console.log(response);
         setProducts(response.data.data);
@@ -539,7 +539,15 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+       
       </div>
-    </div>
+      <div className='flex justify-end mb-12'>
+              <Link to={'/admin/orderStatus'}>
+                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Go to Order Status Management</button>
+              </Link>
+            </div>
+</div>
+
+
   );
 }

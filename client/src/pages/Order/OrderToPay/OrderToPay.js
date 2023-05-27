@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ItemList from '../../../components/ItemList/orderList';
+import OrderList from '../../../components/ItemList/orderList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 const OrderToPay = () => {
@@ -17,11 +17,14 @@ const OrderToPay = () => {
       setOrderItems(response.data.data);
       const shippingMethods = await api.get(`/api/shipping`);
       console.log(shippingMethods.data.data);
-      setShippingMethods(shippingMethods);
+      setShippingMethods(shippingMethods.data.data);
       setIsLoading(false);
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    console.log(orderItems);
+  }, [orderItems]);
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-row">
@@ -36,8 +39,14 @@ const OrderToPay = () => {
       </div>
     </div>
   ) : (
-    <ItemList items={orderItems}></ItemList>
+    <OrderList
+      items={orderItems}
+      setItems={setOrderItems}
+      shippingMethods={shippingMethods}
+      customerID={userId}
+      orderStatus={'order_received'}
+      renderButton={true}
+    ></OrderList>
   );
 };
-
 export default OrderToPay;

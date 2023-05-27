@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Home() {
@@ -67,6 +69,11 @@ function Home() {
               <button className="btn btn-secondary" onClick={onHandleLogout}>
                 Sign out
               </button>
+              <Link to="/admin">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+                  Go to Admin Dashboard
+                </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -32,7 +32,11 @@ const OrderDelivered = () => {
       </div>
     </div>
   ) : (
-    <CompletedItemList items={orderItems} customerID={userId}></CompletedItemList>
+    <CompletedItemList
+      items={orderItems}
+      customerID={userId}
+      renderRating={true}
+    ></CompletedItemList>
   );
 };
 

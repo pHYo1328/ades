@@ -88,6 +88,51 @@ exports.processRefund = async (req, res) => {
   }
 };
 
+exports.processPartialRefund = async (req, res) => {
+  console.log(chalk.blue('partial refund'));
+  try {
+    const productID = req.params.productID;
+    // Retrieve transaction IDs and refund amounts for orders with the given productID
+    const idAndAmount = await paymentServices.getIdAndAmount(productID);
+
+    // Process partial refunds for each order
+    const refundPromises = idAndAmount.map(async (row) => {
+      const transactionID = row.transaction_id;
+      const refundAmount = row.refund_total;
+
+      // Process the refund using Stripe
+      const refund = await stripe.refunds.create({
+        payment_intent: transactionID,
+        amount: refundAmount,
+        metadata: {
+          order_id: row.order_id,
+        },
+      });
+
+      // Return the refund details
+      return {
+        orderID: row.order_id,
+        refundId: refund.id,
+        amountRefunded: refund.amount,
+        currency: refund.currency,
+        status: refund.status,
+      };
+    });
+
+    // Wait for all refunds to complete
+    const refunds = await Promise.all(refundPromises);
+
+    res.send(refunds);
+  } catch (error) {
+    console.error('Error processing refund:', error);
+    return res.status(500).send({
+      error: {
+        message: 'An error occurred while processing the refund.',
+      },
+    });
+  }
+};
+
 let endpointSecret;
 // endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 
@@ -118,10 +163,18 @@ exports.createWebhooks = async (req, res) => {
   }
   //handle the event
   if (eventType === 'charge.succeeded') {
-    const { payment_intent, status, amount, payment_method_details, billing_details, metadata } =
-      data;
-      const { line1, line2, state, postal_code } = billing_details.address;
-      const shippingAddr = `${line1} ${line2 ? line2 + ' ' : ''}${state} ${postal_code}`;
+    const {
+      payment_intent,
+      status,
+      amount,
+      payment_method_details,
+      billing_details,
+      metadata,
+    } = data;
+    const { line1, line2, state, postal_code } = billing_details.address;
+    const shippingAddr = `${line1} ${
+      line2 ? line2 + ' ' : ''
+    }${state} ${postal_code}`;
 
     console.log('Charge succeeded. Event data:');
     console.log('ID:', payment_intent);
@@ -130,7 +183,7 @@ exports.createWebhooks = async (req, res) => {
     console.log('Amount:', total);
     console.log('Payment method:', payment_method_details.type);
     console.log('Order ID:', metadata.order_id);
-    console.log("Shipping address:" , shippingAddr);
+    console.log('Shipping address:', shippingAddr);
     try {
       await paymentServices.addPayment(
         payment_intent,

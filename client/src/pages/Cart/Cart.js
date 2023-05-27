@@ -215,19 +215,20 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
-      console.log(checkoutSuccessfulRef.current);
-      if (!checkoutSuccessfulRef.current) {
-        api
-          .post(`/api/cart/${customerID}`, {
-            cartData: latestCartData.current,
-          })
-          .then((response) => {
+      if (latestCartData.current.length > 0) {
+        if (!checkoutSuccessfulRef.current) {
+          api
+            .post(`/api/cart/${customerID}`, {
+              cartData: latestCartData.current,
+            })
+            .then((response) => {
+              console.log(response);
+            });
+        } else {
+          api.delete(`/api/cart/${customerID}`).then((response) => {
             console.log(response);
           });
-      } else {
-        api.delete(`/api/cart/${customerID}`).then((response) => {
-          console.log(response);
-        });
+        }
       }
     };
   }, []);

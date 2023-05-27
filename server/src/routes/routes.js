@@ -3,6 +3,7 @@ const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
 const inventoryController = require('../controller/inventory.controller.js');
+const bookmarkController = require('../controller/bookmark.controller');
 const paymentController = require('../controller/payment.controller');
 const checkoutController = require('../controller/checkout.controller');
 const registerController = require('../controller/registerController');
@@ -36,7 +37,7 @@ const verifyRoles = require('../middlewares/verifyRoles');
 module.exports = (app, router) => {
   // Thinzar
   // GET
-  // router.get('/api/products', productController.processGetAllProducts);
+  router.get('/api/allProducts', productController.processGetAllProducts);
   router.get('/api/search', productController.processGetSearchResults);
   router.get('/api/brands', productController.processGetAllBrands);
   router.get('/api/category', productController.processGetAllCategory);
@@ -101,10 +102,7 @@ module.exports = (app, router) => {
     '/api/products/images',
     productController.processCreateImageForProduct
   );
-  router.post(
-    '/api/products/ratings',
-    productController.processCreateRating
-  );
+  router.post('/api/products/ratings', productController.processCreateRating);
   // PUT
   router.put(
     '/api/products/:productID',
@@ -202,6 +200,13 @@ module.exports = (app, router) => {
     '/api/shipping',
     //verifyAccessToken.verifyToken,
     shippingController.processFetchShippingMethod
+  );
+
+  router.post('/api/bookmark', bookmarkController.processAddBookMark);
+
+  router.get(
+    '/api/bookmark/:customerId',
+    bookmarkController.processFetchBookmarks
   );
   router.get('/config', checkoutController.getConfig);
 
