@@ -28073,3 +28073,10 @@
 =======
 >>>>>>> 5423cbaec7312b9ea5f9eb270652e90abc922892
 >>>>>>> 0a5ca96f6797093d74f42706002d84010e80379e
+20230527	14:14:20	8c98c792-7562-4564-a605-1d6ac574c76c	OPTIONS	http://localhost:3000	/api/cart/null
+20230527	14:14:20	d2ed6f48-dd49-471d-b891-69c8c5987567	POST	http://localhost:3000	/api/cart/null
+20230527	14:14:20	acdc2aeb-465d-45d0-a8de-39d9399b2618	GET	http://localhost:3000	/api/products/0/0/0/1/0
+20230527	14:14:20	418046cb-49ad-42d3-9c71-9c24053af34d	GET	http://localhost:3000	/api/products/total/0/0
+20230527	14:14:20	0e093d7a-85f4-44f2-9a21-d64c9d9aceab	GET	http://localhost:3000	/api/category
+20230527	14:14:20	b7ede081-934a-4c52-8bb1-b505c5831248	GET	http://localhost:3000	/api/brands
+20230527	14:14:20	d6aa39be-b9d2-43f9-9dc8-3b47bdf7da44	GET	http://localhost:3000	/api/admin/statistics
