@@ -13,60 +13,74 @@ const Header = () => {
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
+
   return (
-    <header className="flex items-center justify-end bg-black text-white py-4 px-8">
-      <nav>
-        <ul className="flex justify-end space-x-12">
-          <li>
-            <Link to="/products">Products</Link>
-          </li>
-          <li>
-            <Link to="/brands">Brands</Link>
-          </li>
-          <li>
-            <Link to="/category">Category</Link>
-          </li>
-          <li>
-            <Link to="#" onClick={handleUserPanelToggle}>
-              User
+    <header className="bg-white shadow">
+      <div className="container mx-auto px-4 py-6">
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/" className="text-lg font-bold text-gray-800">
+              TECHZERO
             </Link>
-          </li>
-          <li>
-            <Link to="/cart">Cart</Link>
-          </li>
-        </ul>
-      </nav>
-      {/* User Panel */}
-      {isUserPanelOpen && (
-        <div className="bg-black text-white absolute top-16 right-8 rounded p-2 text-base">
-          <div className="flex flex-row justify-between">
-            <button className="p-2 ">
-              <FaWallet />
-              to pay
-            </button>
-            <button className="p-2">
-              <FaBox />
-              to ship
-            </button>
           </div>
-          <div className="flex flex-row justify-between">
-            <button className="p-2">
-              <RiTruckLine />
-              to receive
-            </button>
-            <button className="p-2">
-              <RiCheckboxCircleLine />
-              completed
-            </button>
+          <div className="flex items-center space-x-4">
+            <Link to="/products" className="text-gray-800 hover:text-gray-600">
+              Products
+            </Link>
+            <Link to="/brands" className="text-gray-800 hover:text-gray-600">
+              Brands
+            </Link>
+            <Link to="/cart" className="text-gray-800 hover:text-gray-600">
+              Cart
+            </Link>
+            <Link to="/category" className="text-gray-800 hover:text-gray-600">
+              Category
+            </Link>
+            <div className="relative">
+              <button
+                onClick={handleUserPanelToggle}
+                className="text-gray-800 hover:text-gray-600"
+              >
+                User
+              </button>
+              {isUserPanelOpen && (
+                <div className="absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <FaWallet className="inline-block mr-2" />
+                    to pay
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <FaBox className="inline-block mr-2" />
+                    to ship
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <RiTruckLine className="inline-block mr-2" />
+                    to receive
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <RiCheckboxCircleLine className="inline-block mr-2" />
+                    completed
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <RiCloseCircleLine className="inline-block mr-2" />
+                    cancelled
+                  </button>
+                </div>
+              )}
+            </div>
+            <Link to="/login">
+              <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg">
+                Sign In
+              </button>
+            </Link>
+            <Link to="/register">
+              <button className="bg-pink-600 hover:bg-pink-800 text-white font-bold py-2 px-4 rounded-md text-lg">
+                Sign Up
+              </button>
+            </Link>
           </div>
-          <div>
-            <button className="p-2">
-              <RiCloseCircleLine />
-              cancelled
-            </button>
-          </div>
-        </div>
-      )}
+        </nav>
+      </div>
     </header>
   );
 };
