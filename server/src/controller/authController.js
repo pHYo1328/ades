@@ -32,11 +32,11 @@ const handleLogin = async (req, res) => {
     // evaluate password
     const foundUser = results[0];
     const userId = foundUser.customer_id;
-    console.log("my found userid", foundUser.customer_id);
+    console.log('my found userid', foundUser.customer_id);
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
       // Send OTP email using OTPEmailSender
-      console.log("im in email controller");
+      console.log('im in email controller');
       await OTPservices.OTPEmailSender(username);
       console.log('email sent!!!');
       console.log('founduser otp ' + foundUser.otp);

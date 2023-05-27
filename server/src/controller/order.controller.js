@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const orderServices = require('../services/order.services');
-
+const { OrderStatus } = require('../config/orderStatus.enum');
 exports.processAddCustomerOrder = async (req, res, next) => {
   console.log(chalk.blue('processAddCustomerOrder is running'));
   const { customerId } = req.params;
@@ -65,21 +65,45 @@ exports.processAddCustomerOrder = async (req, res, next) => {
   }
 };
 
-exports.processGetOrderDetailsBeforePickUp = async (req, res, next) => {
-  console.log(chalk.blue('processGetOrderDetailsBeforePickUp is running'));
-  const { customerID } = req.params;
-  console.log(chalk.yellow('Inspect customerID variable :', customerID));
+exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
+  console.log(chalk.blue('processGetOrderDetailsByOrderStatus is running'));
+  const { customerID, orderStatus } = req.query;
+  console.log(
+    chalk.yellow('Inspect request variable :', customerID, orderStatus)
+  );
   try {
     if (isNaN(parseInt(customerID))) {
       const error = new Error('Invalid customer ID parameter');
       error.status(400);
       throw error;
     }
-    const data = { customerID: customerID };
-    const result = await orderServices.getOrderDetailsBeforePickUp(data);
+    let status = null;
+    switch (orderStatus) {
+      case 'order_received':
+        status = OrderStatus.ORDER_RECEIVED;
+        break;
+      case 'paid':
+        status = OrderStatus.ORDER_PAID;
+        break;
+      case 'delivering':
+        status = OrderStatus.ORDER_DELIVERING;
+        break;
+      case 'delivered':
+        status = OrderStatus.ORDER_DELIVERED;
+        break;
+      default:
+        const error = new Error('Invalid order status parameter');
+        error.status = 400;
+        throw error;
+    }
+    const data = { customerID: customerID, orderStatus: status };
+    console.log(
+      chalk.yellow('Inspecting data parameter variable', JSON.stringify(data))
+    );
+    const result = await orderServices.getOrderDetailsByOrderStatus(data);
     console.log(
       chalk.yellow(
-        'Inspect result variable from getOrderDetailsBeforePickUp service',
+        'Inspect result variable from getOrderDetailsByOrderStatus service',
         result
       )
     );
@@ -95,21 +119,13 @@ exports.processGetOrderDetailsBeforePickUp = async (req, res, next) => {
   }
 };
 
-exports.processGetOrderDetailsByDeliverStatus = async (req, res, next) => {
-  console.log(chalk.blue('processGetOrderDetailsByDeliverStatus is running'));
-  const { customerID } = req.params;
-  console.log(chalk.yellow('Inspect customerID variable :', customerID));
+exports.processGetOrderDetailsForAdmin = async (req, res, next) => {
+  console.log(chalk.blue('processGetOrderDetailsForAdmin is running'));
   try {
-    if (isNaN(parseInt(customerID))) {
-      const error = new Error('Invalid customer ID parameter');
-      error.status(400);
-      throw error;
-    }
-    const data = { customerID: customerID };
-    const result = await orderServices.getOrderDetailsByDeliverStatus(data);
+    const result = await orderServices.getOrderDetailsForAdmin();
     console.log(
       chalk.yellow(
-        'Inspect result variable from processGetOrderDetailsByDeliverStatus service',
+        'Inspect result variable from getOrderDetailsForAdmin service',
         result
       )
     );
@@ -119,8 +135,48 @@ exports.processGetOrderDetailsByDeliverStatus = async (req, res, next) => {
     });
   } catch (error) {
     console.error(
-      chalk.red('Error in processGetOrderDetailsByDeliverStatus: ', error)
+      chalk.red('Error in processGetOrderDetailsForAdmin: ', error)
     );
+    next(error);
+  }
+};
+
+exports.processUpdateOrderStatus = async (req, res, next) => {
+  console.log(chalk.blue('ProcessUpdateOrderStatus is running'));
+  const { orderIDs, orderStatus } = req.body;
+  try {
+    if (!orderIDs || !orderStatus) {
+      const error = new Error('Invalid Information parameters');
+      error.status = 400;
+      throw error;
+    }
+    let status = null;
+    switch (orderStatus) {
+      case 'delivering':
+        status = OrderStatus.ORDER_DELIVERING;
+        break;
+      case 'delivered':
+        status = OrderStatus.ORDER_DELIVERED;
+        break;
+      default:
+        const error = new Error('Invalid order status parameter');
+        error.status = 400;
+        throw error;
+    }
+    const data = { orderIDs, orderStatus: status };
+    const result = await orderServices.updateOrderStatus(data);
+    console.log(
+      chalk.yellow(
+        'Inspect result variable from updateOrderStatus service',
+        result
+      )
+    );
+    return res.status(200).send({
+      message: 'Order Status updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in processUpdateOrderStatus: ', error));
     next(error);
   }
 };
@@ -145,11 +201,10 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
       throw error;
     }
     if (
-      isNaN(parseInt(orderId)) ||
+      !orderId ||
       !shippingAddr ||
       !shippingAddr.trim() ||
-      !shippingMethod ||
-      !shippingMethod.trim()
+      isNaN(parseInt(shippingMethod))
     ) {
       const error = new Error('Invalid information parameter');
       error.status = 400;
@@ -187,10 +242,10 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
 
 exports.processCancelOrder = async (req, res, next) => {
   console.log(chalk.blue('processCancelOrder is running'));
-  const { orderId, productID } = req.body;
+  const { orderId, productID } = req.query;
   console.log(chalk.yellow('Inspect req body variables :', orderId, productID));
   try {
-    if (isNaN(parseInt(orderId))) {
+    if (!orderId) {
       const error = new Error('Invalid order ID parameter');
       error.status = 400;
       throw error;

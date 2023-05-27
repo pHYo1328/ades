@@ -13,7 +13,6 @@ const cld = new Cloudinary({
 export default function ProductsByCategory() {
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   const { categoryID } = useParams();
   useEffect(() => {

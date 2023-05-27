@@ -52,7 +52,7 @@ function Payment() {
           <AddressForm />
         </Elements>
       )}
-       
+
       <h1>Order summary</h1>
       {payments && payments.length > 0 ? (
         <>

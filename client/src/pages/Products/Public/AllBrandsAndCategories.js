@@ -7,8 +7,7 @@ export default function AllBrandsAndCategories() {
   const [categories, setCategories] = useState(null);
   const [isBookmarkFilled, setIsBookmarkFilled] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
-
+  const customerId = localStorage.getItem('userid');
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -34,6 +33,11 @@ export default function AllBrandsAndCategories() {
         console.error(error);
       });
   }, []);
+
+  const bookmarkClickHandler = (customerId,brandId) =>{
+    console.log(customerId,brandId);
+    setIsBookmarkFilled(!isBookmarkFilled);
+  }
   return (
     <div className="bg-white w-full text-dark text-left container-fluid align-items-center">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -50,28 +54,30 @@ export default function AllBrandsAndCategories() {
                     <div
                       className="text-left"
                       key={brand.brand_id}
-                      onClick={() => {
-                        const brandID = brand.brand_id;
-                        window.location.href = `${clientUrl}/brands/${brandID}`;
-                      }}
+                      // onClick={() => {
+                      //   const brandID = brand.brand_id;
+                      //   window.location.href = `/brands/${brandID}`;
+                      // }}
                     >
                       <h3 className="text-sm text-gray-700">
-                        <a href={`/brands/${brand.brand_id}`}>
+                        {/* <a href={`/brands/${brand.brand_id}`}> */}
                           <span
                             aria-hidden="true"
                             className="absolute inset-0"
                           />
                           {brand.brand_name}
-                        </a>
+                        {/* </a> */}
                       </h3>
                     </div>
                     <div>
-                      <i
+                     <button onClick={() => bookmarkClickHandler(customerId, brand.brand_id)}>
+                     <i
                         className={`bi bi-bookmark${
                           isBookmarkFilled ? '-fill' : ''
                         }`}
-                        onClick={() => setIsBookmarkFilled(!isBookmarkFilled)}
+                        
                       ></i>
+                     </button>
                     </div>
                   </div>
                 </div>
@@ -93,7 +99,7 @@ export default function AllBrandsAndCategories() {
                   className="group relative border border-gray-300 rounded p-4"
                   onClick={() => {
                     const categoryID = category.category_id;
-                    window.location.href = `${clientUrl}/products/${categoryID}`;
+                    window.location.href = `/products/${categoryID}`;
                   }}
                 >
                   <div className="flex justify-between">

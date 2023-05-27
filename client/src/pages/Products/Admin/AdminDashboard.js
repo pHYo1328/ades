@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
+import { Link } from 'react-router-dom';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -15,7 +16,6 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState(null);
   const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
   const [brands, setBrands] = useState(null);
   const [brandName, setBrandName] = useState('');
@@ -239,17 +239,13 @@ export default function AdminDashboard() {
           <div className="row">
             <div className="col-10">Products</div>
             <div className="col-2">
-              <button
-                type="button"
+              <Link
+                to="/products/create"
                 className="btn btn-success w-100 col-6 text-dark mr-2"
                 id="createButton"
-                onClick={() => {
-                  window.location.href =
-                    `${clientUrl}/products/create`;
-                }}
               >
                 Create
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -318,14 +314,9 @@ export default function AdminDashboard() {
                     </button>
                   </div>
 
-                  <button
-                    onClick={() => {
-                      const productID = product.product_id;
-                      window.location.href = `${clientUrl}/products/edit/${productID}`;
-                    }}
-                  >
+                  <Link to={`/products/edit/${product.product_id}`}>
                     <i className="bi bi-pencil-square"></i>
-                  </button>
+                  </Link>
 
                   <button
                     onClick={() => {
