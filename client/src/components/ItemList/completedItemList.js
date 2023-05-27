@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
 const CompletedItemList = ({ items }) => {
@@ -35,6 +36,8 @@ const CompletedItemList = ({ items }) => {
     const updatedRatingComment = [...ratingComment];
     updatedRatingComment[index] = '';
     setRatingComment(updatedRatingComment);
+
+    // if(!rating || !ratingComment || !productID)
   };
 
   if (items.length === 0) {
