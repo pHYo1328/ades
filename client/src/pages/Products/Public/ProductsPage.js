@@ -3,7 +3,7 @@ import axios from 'axios';
 // import Pagination from '@mui/material/Pagination';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-import Pagination from '../../../components/Products/Pagination'
+import Pagination from '../../../components/Products/Pagination';
 import { Link } from 'react-router-dom';
 const cld = new Cloudinary({
   cloud: {
@@ -28,7 +28,9 @@ export default function ProductsPage() {
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`)
+      .get(
+        `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
+      )
       .then((response) => {
         console.log(response);
         setProducts(response.data.data);
@@ -39,15 +41,19 @@ export default function ProductsPage() {
         } else {
           setTotalPages(Math.ceil(total / limit));
         }
-        console.log("products.length: ", total)
-        console.log("totalPages: ", totalPages)
-        console.log("limit", limit)
-        console.log("sort", sort)
+        console.log('products.length: ', total);
+        console.log('totalPages: ', totalPages);
+        console.log('limit', limit);
+        console.log('sort', sort);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [categoryID, brandID, sort, limit, currentPage]);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(total / limit))
+  }, [total])
 
   useEffect(() => {
     setTotalPages(Math.ceil(total / limit))
@@ -64,12 +70,11 @@ export default function ProductsPage() {
         console.log(response);
         setTotal(response.data.data);
         console.log(total);
-
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [categoryID, brandID])
+  }, [categoryID, brandID]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -142,11 +147,16 @@ export default function ProductsPage() {
                 <span class="input-group-text" id="basic-addon2">Products/Page</span>
               </div>
             </div>
-
           </div>
           <div class="col-2">
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" onChange={(e) => setSort(e.target.value)}>
-              <option disabled selected value="0">Sort</option>
+            <select
+              class="form-select form-select-sm"
+              aria-label=".form-select-sm example"
+             onChange={(e) => setSort(e.target.value)}
+            >
+              <option disabled selected value="0">
+                Sort
+              </option>
               <option value="1">Price (Ascending)</option>
               <option value="2">Price (Descending)</option>
               <option value="3">Name (A-Z)</option>
@@ -170,9 +180,7 @@ export default function ProductsPage() {
               ) : (
                 <p>Loading...</p>
               )}
-              <option value={0}>
-                All
-              </option>
+              <option value={0}>All</option>
             </select>
           </div>
           <div class="col-2">
@@ -190,9 +198,7 @@ export default function ProductsPage() {
               ) : (
                 <p>Loading...</p>
               )}
-              <option value={0}>
-                All
-              </option>
+              <option value={0}>All</option>
             </select>
           </div>
         </div>
@@ -231,9 +237,7 @@ export default function ProductsPage() {
                     {product.price}
                   </p>
                 </div>
-
               </div>
-
             ))
           ) : (
             <p>Loading...</p>
@@ -249,10 +253,10 @@ export default function ProductsPage() {
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-        <p class="text-center h6 mt-4">{currentPage} / {totalPages}</p>
+        <p class="text-center h6 mt-4">
+          {currentPage} / {totalPages}
+        </p>
       </div>
-
-
     </div>
   );
 }

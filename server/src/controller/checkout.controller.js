@@ -118,10 +118,18 @@ exports.createWebhooks = async (req, res) => {
   }
   //handle the event
   if (eventType === 'charge.succeeded') {
-    const { payment_intent, status, amount, payment_method_details, billing_details, metadata } =
-      data;
-      const { line1, line2, state, postal_code } = billing_details.address;
-      const shippingAddr = `${line1} ${line2 ? line2 + ' ' : ''}${state} ${postal_code}`;
+    const {
+      payment_intent,
+      status,
+      amount,
+      payment_method_details,
+      billing_details,
+      metadata,
+    } = data;
+    const { line1, line2, state, postal_code } = billing_details.address;
+    const shippingAddr = `${line1} ${
+      line2 ? line2 + ' ' : ''
+    }${state} ${postal_code}`;
 
     console.log('Charge succeeded. Event data:');
     console.log('ID:', payment_intent);
@@ -130,7 +138,7 @@ exports.createWebhooks = async (req, res) => {
     console.log('Amount:', total);
     console.log('Payment method:', payment_method_details.type);
     console.log('Order ID:', metadata.order_id);
-    console.log("Shipping address:" , shippingAddr);
+    console.log('Shipping address:', shippingAddr);
     try {
       await paymentServices.addPayment(
         payment_intent,

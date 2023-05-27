@@ -40,10 +40,15 @@ export default function CheckoutForm({ clientSecret }) {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <button disabled={isProcessing || !stripe || !elements} id="submit" style={{
-    outline: '2px solid black',  marginTop: '20px', // Adjust the color and size of the outline as needed
-  }}>
-        <span id="button-text" >
+      <button
+        disabled={isProcessing || !stripe || !elements}
+        id="submit"
+        style={{
+          outline: '2px solid black',
+          marginTop: '20px', // Adjust the color and size of the outline as needed
+        }}
+      >
+        <span id="button-text">
           {isProcessing ? 'Processing ... ' : ' Check out '}
         </span>
       </button>
