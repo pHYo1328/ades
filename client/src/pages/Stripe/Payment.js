@@ -96,10 +96,7 @@ function Payment() {
             <p className="text-sm font-medium text-gray-900 justify-start">
               Shipping_address: {payments[0].shipping_address}
             </p>
-           
           </div>
-
-
         </>
       ) : (
         <p>Loading...</p>
