@@ -27788,3 +27788,4 @@
 20230527	14:08:03	7972f993-036f-4725-99fe-765ec46a10fa	GET	http://localhost:3000	/api/brands
 20230527	14:08:03	6ace0c32-52c8-4245-a53a-67aaaa4af1d3	GET	http://localhost:3000	/api/category
 20230527	14:08:07	2d186af1-a989-4157-a047-d9122a6aa70a	GET	http://localhost:3000	/api/products/brand/1
+20230527	14:12:50	2d0e2229-06ed-497b-a029-c7264314d6ee	GET	http://localhost:3000	/api/cart/null
