@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import CartContext from '../../../context/CartContext';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
@@ -18,7 +17,6 @@ const cld = new Cloudinary({
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
-  const { cartData, setCartData, addToCart } = useContext(CartContext);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const customerId = localStorage.getItem('userid');
