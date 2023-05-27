@@ -49,10 +49,10 @@ module.exports.getProductByID = async (productID) => {
 };
 
 // get all products (done)
-module.exports.getAllProducts = async (limit, offset) => {
+module.exports.getAllProducts = async () => {
   console.log(chalk.blue('getAllProducts is called'));
-  console.log('limit: ', limit);
-  console.log('offset: ', offset);
+  // console.log('limit: ', limit);
+  // console.log('offset: ', offset);
   try {
     const productsDataQuery = `
     SELECT
@@ -79,11 +79,9 @@ module.exports.getAllProducts = async (limit, offset) => {
     p.product_name,
     p.description,
     p.price,
-    c.category_name
-  LIMIT ?
-  OFFSET ?;
+    c.category_name;
       `;
-    const results = await pool.query(productsDataQuery, [limit, offset]);
+    const results = await pool.query(productsDataQuery);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
