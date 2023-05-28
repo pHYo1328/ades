@@ -833,15 +833,8 @@ exports.processDeleteImagesByProductID = async (req, res, next) => {
 exports.processUpdateProductByID = async (req, res, next) => {
   console.log(chalk.blue('processUpdateProductByID running'));
   const { productID } = req.params;
-  const {
-    product_name,
-    price,
-    description,
-    category_id,
-    brand_id,
-    image_url,
-    quantity,
-  } = req.body;
+  const { product_name, price, description, category_id, brand_id, quantity } =
+    req.body;
   var floatPrice, intCategoryID, intBrandID, intQuantity;
   floatPrice = price ? parseFloat(price) : null;
   intCategoryID = category_id ? parseInt(category_id) : null;
@@ -862,7 +855,6 @@ exports.processUpdateProductByID = async (req, res, next) => {
     description == '' &&
     category_id == '' &&
     brand_id == '' &&
-    image_url == '' &&
     quantity == ''
   ) {
     return res.status(400).json({
@@ -878,7 +870,6 @@ exports.processUpdateProductByID = async (req, res, next) => {
       description,
       intCategoryID,
       intBrandID,
-      image_url,
       quantity,
       parseInt(productID)
     );
