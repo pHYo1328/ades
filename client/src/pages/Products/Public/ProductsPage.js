@@ -134,7 +134,7 @@ export default function ProductsPage() {
           <div class="col-2">
             <div class="input-group mb-3">
               <input
-                min="0"
+                min="1"
                 type="number"
                 class="form-control form-control-sm"
                 value={limit}
