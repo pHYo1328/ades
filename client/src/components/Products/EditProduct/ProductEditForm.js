@@ -5,6 +5,7 @@ import React from 'react';
 import { FadeLoader } from 'react-spinners';
 import axios from 'axios';
 import chalk from 'chalk';
+import { Link } from 'react-router-dom';
 
 export default function ProductEditForm() {
   const { productID } = useParams();
@@ -252,16 +253,13 @@ export default function ProductEditForm() {
             </button>
           </div>
           <div class="col-5 text-dark">
-            <button
-              type="button"
+            <Link
+              to='/products/admin'
               id="submit"
               class="btn btn-outline-danger mb-3 w-100"
-              onClick={() => {
-                window.location.href = `http://localhost:3000/products/admin`;
-              }}
             >
               Discard Changes
-            </button>
+            </Link>
           </div>
         </div>
       </form>
