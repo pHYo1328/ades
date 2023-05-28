@@ -99,13 +99,24 @@ export default function ProductDetails() {
               </h1>
             </div>
 
+            <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
+              <div>
+                <h3 className="sr-only">Description</h3>
+                <div className="space-y-6 text-left">
+                  <p className="text-base text-gray-900">
+                    {product.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <p className="text-3xl tracking-tight text-gray-900">
                 ${product.price}
               </p>
 
-              <button
+              {/* <button
                 data-modal-target="staticModal"
                 data-modal-toggle="staticModal"
                 class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -129,16 +140,69 @@ export default function ProductDetails() {
                     {product.rating_count} reviews
                   </p>
                 </div>
-              </button>
+              </button> */}
 
-              <div
+              <div class="row">
+                <div
+                  class="col-10"
+                  style={{
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    height: '300px',
+                    overflowY: 'scroll',
+                    background: '#c2d9ff',
+                  }}
+                >
+                  <div class="row">
+                    <div class="col-12">Reviews</div>
+                  </div>
+                  <div>
+                    <div class="flex items-center">
+                      <svg
+                        aria-hidden="true"
+                        class="w-5 h-5 text-yellow-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <title>Rating star</title>
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                      <p class="ml-2 text-sm font-bold text-gray-900 dark:text-black">
+                        {product.average_rating}
+                      </p>
+                      <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
+                      <p class="text-sm font-medium text-gray-900 dark:text-black">
+                        {product.rating_count} reviews
+                      </p>
+                    </div>
+                  </div>
+                  <ul role="list" class="divide-y divide-gray-100">
+                    {ratings ? (
+                      ratings.map((rating) => (
+                        <div class="d-flex flex-row row py-3 justify-content-around">
+                          <div class="col-6">
+                            <p class="text-sm font-semibold text-gray-900">
+                              {rating.comment}
+                            </p>
+                          </div>
+
+                        </div>
+                      ))
+                    ) : (
+                      <p>Loading...</p>
+                    )}
+                  </ul>
+                </div>
+              </div>
+
+              {/* <div
                 id="staticModal"
                 data-modal-backdrop="static"
                 tabindex="-1"
                 aria-hidden="true"
                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
-              >
-                <div class="relative w-full max-w-2xl max-h-full">
+              > */}
+              {/* <div class="relative w-full max-w-2xl max-h-full">
                   <div class="relative bg-white rounded-lg shadow">
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                       <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -183,9 +247,9 @@ export default function ProductDetails() {
                       </button>
                     </div>
                   </div>
-                </div>
-              </div>
-              <p>Inventory: {product.quantity}</p>
+                </div> */}
+              {/* </div> */}
+              {/* <p>Inventory: {product.quantity}</p> */}
               <div class="col-6">
                 <button
                   id="plusButton"
@@ -237,16 +301,7 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-              <div>
-                <h3 className="sr-only">Description</h3>
-                <div className="space-y-6 text-left">
-                  <p className="text-base text-gray-900">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
-            </div>
+            
           </div>
         ) : (
           <p>Loading...</p>

@@ -72,6 +72,10 @@ module.exports = (app, router) => {
     '/api/products/total/:categoryID/:brandID',
     productController.processGetTotalNumberOfProducts
   );
+  router.get(
+    '/api/products/rating/:productID',
+    productController.processGetAllRatingsByProductID
+  );
 
   // DELETE
   router.delete(
