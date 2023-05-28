@@ -13,6 +13,7 @@ const cld = new Cloudinary({
 
 export default function ProductsByBrand() {
   const [products, setProducts] = useState(null);
+  const [brand, setBrand] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const { brandID } = useParams();
@@ -29,12 +30,33 @@ export default function ProductsByBrand() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/brand/${brandID}`)
+      .then((response) => {
+        console.log(response);
+        setBrand(response.data.data.brand_name);
+        console.log(brand);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <Link to="/products" className="h2">
-          Products
-        </Link>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link to="/products">Products</Link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {brand}
+            </li>
+          </ol>
+        </nav>
+
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
@@ -47,7 +69,7 @@ export default function ProductsByBrand() {
                 // }}
               >
                 {/* <Link to={`/products/${product.product_id}`} key={product.product_id} className="group relative"> */}
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
