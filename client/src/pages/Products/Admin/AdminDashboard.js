@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { FadeLoader } from 'react-spinners';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 
@@ -233,7 +233,18 @@ export default function AdminDashboard() {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <div className="flex items-center justify-center h-screen">
+        <div className="mx-auto flex flex-col items-center">
+          <FadeLoader
+            color={'navy'}
+            loading={true}
+            size={100}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+          <p>Loading...</p>
+        </div>
+      </div>
       )}
 
       <div
@@ -354,7 +365,18 @@ export default function AdminDashboard() {
               </div>
             ))
           ) : (
-            <p>Loading...</p>
+            <div className="flex items-center justify-center h-screen">
+            <div className="mx-auto flex flex-col items-center">
+              <FadeLoader
+                color={'navy'}
+                loading={true}
+                size={100}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p>Loading...</p>
+            </div>
+          </div>
           )}
         </ul>
       </div>
@@ -427,7 +449,18 @@ export default function AdminDashboard() {
                 </div>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </ul>
         </div>
@@ -499,7 +532,18 @@ export default function AdminDashboard() {
                 </div>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </ul>
         </div>

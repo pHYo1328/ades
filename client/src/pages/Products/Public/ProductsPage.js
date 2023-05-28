@@ -5,6 +5,7 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import Pagination from '../../../components/Products/Pagination';
 import { Link } from 'react-router-dom';
+import { FadeLoader } from 'react-spinners';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -181,7 +182,18 @@ export default function ProductsPage() {
                   </option>
                 ))
               ) : (
-                <p>Loading...</p>
+                <div className="flex items-center justify-center h-screen">
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
+              </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -199,7 +211,18 @@ export default function ProductsPage() {
                   <option value={brand.brand_id}>{brand.brand_name}</option>
                 ))
               ) : (
+                <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
                 <p>Loading...</p>
+              </div>
+            </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -243,7 +266,18 @@ export default function ProductsPage() {
               </div>
             ))
           ) : (
-            <p>Loading...</p>
+            <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
           )}
         </div>
       </div>
