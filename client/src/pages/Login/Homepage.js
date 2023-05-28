@@ -40,7 +40,6 @@ function Home() {
     localStorage.removeItem('userid');
     localStorage.removeItem('roles');
     navigate('/');
-
   };
 
   // const handleResponseError = (response) => {

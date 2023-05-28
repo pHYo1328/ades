@@ -43,10 +43,13 @@ const Header = () => {
             <Link to="/admin" className="text-gray-800 hover:text-gray-600">
               Dashboard
             </Link>
-            <Link to="/products/create" className="text-gray-800 hover:text-gray-600">
+            <Link
+              to="/products/create"
+              className="text-gray-800 hover:text-gray-600"
+            >
               Create
             </Link>
-            
+
             <Link to="/">
               <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Log Out

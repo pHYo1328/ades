@@ -135,17 +135,17 @@ export default function AllBrandsAndCategories() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </div>
 
@@ -176,17 +176,17 @@ export default function AllBrandsAndCategories() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>

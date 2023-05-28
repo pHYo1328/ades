@@ -7,7 +7,7 @@ import ProductEditForm from '../../../components/Products/EditProduct/ProductEdi
 export default function ProductEdit() {
   const [editImage, setEditImage] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
@@ -20,8 +20,7 @@ export default function ProductEdit() {
       navigate('/homepage');
     }
   }, []);
-  
-  
+
   return (
     <div>
       <button

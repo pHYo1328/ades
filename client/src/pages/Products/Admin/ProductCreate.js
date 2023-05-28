@@ -24,7 +24,7 @@ export default function ProductCreate() {
     console.log('Selected image path:', path);
     setImagePath(path);
   };
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,20 +53,18 @@ export default function ProductCreate() {
       });
   }, []);
 
-    useEffect(() => {
-      const roles = JSON.parse(localStorage.getItem('roles'));
-      console.log(roles);
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        alert("you're not admin");
-        console.log('Redirecting to homepage-admin');
-        navigate('/homepage');
-      }
-    }, []);
-  
-  
+  useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem('roles'));
+    console.log(roles);
+    const isAdmin = roles.includes('admin');
+    console.log(isAdmin);
+    if (!isAdmin) {
+      // User does not have the required role(s), redirect them to the homepage or show an error message
+      alert("you're not admin");
+      console.log('Redirecting to homepage-admin');
+      navigate('/homepage');
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
@@ -140,14 +138,14 @@ export default function ProductCreate() {
         <label for="exampleFormControlInput1" class="form-label h6">
           Description
         </label>
-       
+
         <textarea
-                class="form-control form-control-sm"
-                placeholder="Description"
-                rows={3}
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
-              />
+          class="form-control form-control-sm"
+          placeholder="Description"
+          rows={3}
+          value={productDescription}
+          onChange={(e) => setProductDescription(e.target.value)}
+        />
       </div>
       <div class="row">
         <div class="mb-3 col-6">
@@ -197,17 +195,17 @@ export default function ProductCreate() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </select>
         </div>
@@ -228,17 +226,17 @@ export default function ProductCreate() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </select>
         </div>
