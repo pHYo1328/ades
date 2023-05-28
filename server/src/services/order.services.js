@@ -65,17 +65,35 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
     chalk.yellow('Inspecting data from controller:', customerID, orderStatus)
   );
   const orderBeforeDeliverQuery = `
-                      select orders.order_id,product.product_id,product.product_name,product.image_url,product.price, order_items.quantity,orders.shipping_address,shipping.shipping_method,shipping.shipping_id FROM product
+                      select orders.order_id,
+                      product.product_id,
+                      product.product_name,
+                      MAX(product_image.image_url) as image_url,
+                      product.price, 
+                      order_items.quantity,
+                      orders.shipping_address,
+                      shipping.shipping_method,
+                      shipping.shipping_id 
+                      FROM product
                       inner join order_items on order_items.product_id=product.product_id
                       inner join orders on orders.order_id= order_items.order_id
                       inner join shipping on shipping.shipping_id = orders.shipping_id
-                      where orders.customer_id=? and orders.order_status=?;
+                      left join product_image on product.product_id=product_image.product_id
+                      where orders.customer_id=? and orders.order_status=?
+                      GROUP BY orders.order_id, product.product_id, product.product_name, product.price, order_items.quantity, orders.shipping_address, shipping.shipping_method, shipping.shipping_id;
                     `;
   const orderAfterDeliverQuery = `
-                    select product.product_id,product.product_name,product.image_url,product.price, order_items.quantity FROM product
+                    select product.product_id,
+                    product.product_name,
+                    MAX(product_image.image_url) as image_url,
+                    product.price, 
+                    order_items.quantity 
+                    FROM product
                     inner join order_items on order_items.product_id=product.product_id
                     inner join  orders on orders.order_id= order_items.order_id
-                    where orders.customer_id=? and orders.order_status=?;
+                    left join product_image on product_image.product_id=product.product_id
+                    where orders.customer_id=? and orders.order_status=?
+                    GROUP BY product.product_id, product.product_name, product.price, order_items.quantity;
                     `;
   try {
     console.log(
