@@ -360,9 +360,7 @@ module.exports.getSearchResults = async (
 ) => {
   console.log(chalk.blue('getSearchResults is called'));
   try {
-    let searchResultsDataQuery =
-      // 'SELECT p.product_id, p.product_name, p.description, p.price, c.category_name, b.brand_name, p.image_url FROM product p, category c, brand b where c.category_id = p.category_id and p.brand_id = b.brand_id';
-      `
+    let searchResultsDataQuery = `
       SELECT
       p.product_id, 
         p.product_name, 
