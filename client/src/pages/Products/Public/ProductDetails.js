@@ -158,28 +158,26 @@ export default function ProductDetails() {
                               {rating.comment}
                             </p>
                           </div>
-
                         </div>
                       ))
                     ) : (
                       <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
+                        <div className="mx-auto flex flex-col items-center">
+                          <FadeLoader
+                            color={'navy'}
+                            loading={true}
+                            size={100}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                          />
+                          <p>Loading...</p>
+                        </div>
+                      </div>
                     )}
                   </ul>
                 </div>
               </div>
 
-             
               <div class="col-6">
                 <button
                   id="plusButton"
@@ -191,7 +189,7 @@ export default function ProductDetails() {
                 >
                   <i class="bi bi-plus-circle"></i>
                 </button>
-                <p>{cartQuantity}</p>
+                <p>{product.quantity}</p>
                 <button
                   id="minusButton"
                   onClick={() => {
@@ -230,22 +228,20 @@ export default function ProductDetails() {
                 />
               </div>
             </div>
-
-            
           </div>
         ) : (
           <div className="flex items-center justify-center h-screen">
-          <div className="mx-auto flex flex-col items-center">
-            <FadeLoader
-              color={'navy'}
-              loading={true}
-              size={100}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-            <p>Loading...</p>
+            <div className="mx-auto flex flex-col items-center">
+              <FadeLoader
+                color={'navy'}
+                loading={true}
+                size={100}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p>Loading...</p>
+            </div>
           </div>
-        </div>
         )}
       </div>
     </div>
