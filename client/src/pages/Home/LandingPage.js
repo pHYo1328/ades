@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { FadeLoader } from 'react-spinners';
 
 const cld = new Cloudinary({
   cloud: {
@@ -132,7 +133,18 @@ export default function LandingPage() {
                     </option>
                   ))
                 ) : (
-                  <p>Loading...</p>
+                  <div className="flex items-center justify-center h-screen">
+                  <div className="mx-auto flex flex-col items-center">
+                    <FadeLoader
+                      color={'navy'}
+                      loading={true}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p>Loading...</p>
+                  </div>
+                </div>
                 )}
               </select>
             </div>
@@ -152,7 +164,18 @@ export default function LandingPage() {
                     <option value={brand.brand_id}>{brand.brand_name}</option>
                   ))
                 ) : (
-                  <p>Loading...</p>
+                  <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
                 )}
               </select>
             </div>
@@ -246,7 +269,18 @@ export default function LandingPage() {
               </div>
             ))
           ) : (
-            <p>Loading...</p>
+            <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
           )}
         </div>
       </div>
