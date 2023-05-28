@@ -14,6 +14,7 @@ const createHTMLContent = (customerProducts) => {
         (product) =>
           `<p>${product.product_name} is available for u</p>
           <img src="https://res.cloudinary.com/ddoajstil/image/upload/${product.image_url}" alt="Product image">
+          <p>${product.description}</p>
           `
         // I will create a customized email here
       )
@@ -29,12 +30,12 @@ const sendEmail = (customer, customerProducts) => {
       replyTo: { email: 'techZero@gmail.com', name: 'techZero' },
       to: [
         {
-          name: `${customer.first_name} ${customer.last_name}`,
+          name: `${customer.username}`,
           email: `${customer.email}`,
         },
       ],
       htmlContent: createHTMLContent(customerProducts),
-      params: { bodyMessage: 'Made just for you!' }, // just testing
+      params: { bodyMessage: 'Made just for YOU!' }, // just testing
     })
     .then((data) => {
       console.log(data, customer);
@@ -46,24 +47,41 @@ const sendEmail = (customer, customerProducts) => {
     });
 };
 
+async function queryWithRetry(query, params, retries) {
+  try {
+    return await pool.query(query, params);
+  } catch (error) {
+    if (error.code === 'ETIMEDOUT' && retries > 0) {
+      console.log('Query timed out, retrying...');
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // wait 5 seconds before retrying
+      return await queryWithRetry(query, params, retries - 1);
+    } else {
+      throw error;
+    }
+  }
+}
+
 module.exports.updateProductsEmailSender = async () => {
   console.log(chalk.blue('Cron schedule Started'));
   const updateCheckingQuery =
     'SELECT MAX(created_at) AS latest_update FROM product';
   const fetchCustomerDetailsQuery = `
-                              SELECT customer.first_name,customer.last_name, customer.email,bookmark.brand_id
-                              FROM customer
-                              INNER JOIN bookmark on bookmark.customer_id = customer.customer_id
+                              SELECT users.email,users.username,bookmark.brand_id
+                              FROM users
+                              INNER JOIN bookmark on bookmark.customer_id = users.customer_id
                               WHERE bookmark.brand_id IN (
                               SELECT DISTINCT product.brand_id
                               FROM product 
                               WHERE product.created_at > ?)`;
   const fetchUpdatedProductsByBrandIDQuery = `
-                              select product_name,description,image_url,brand_id from product 
+                              select product.product_name,product.description,MAX(product_image.image_url) as image_url,product.brand_id from product
+                              left join product_image on product_image.product_id = product.product_id
                               where brand_id in (SELECT DISTINCT brand_id FROM product WHERE created_at > ?) 
-                              and created_at > ? ;`;
+                              and created_at > ?
+                              GROUP BY product.product_name, product.description, product.brand_id
+                              ;`;
   try {
-    const latestUpdateTime = await pool.query(updateCheckingQuery);
+    const latestUpdateTime = await queryWithRetry(updateCheckingQuery, [], 3);
     const latestUpdate = moment(
       new Date(latestUpdateTime[0][0].latest_update)
     ).format('YYYY-MM-DD HH:mm:ss');
@@ -72,11 +90,12 @@ module.exports.updateProductsEmailSender = async () => {
     if (new Date(latestUpdate).getTime() > new Date(previousUpdate).getTime()) {
       console.log(chalk.blue('there is updated brands'));
       await Promise.all([
-        pool.query(fetchCustomerDetailsQuery, [previousUpdate]),
-        pool.query(fetchUpdatedProductsByBrandIDQuery, [
-          previousUpdate,
-          previousUpdate,
-        ]),
+        queryWithRetry(fetchCustomerDetailsQuery, [previousUpdate], 3),
+        queryWithRetry(
+          fetchUpdatedProductsByBrandIDQuery,
+          [previousUpdate, previousUpdate],
+          3
+        ),
       ]).then(async ([customers, products]) => {
         if (customers[0].length > 0 && products[0].length > 0) {
           const emailPromises = customers[0].map((customer) => {
@@ -91,10 +110,14 @@ module.exports.updateProductsEmailSender = async () => {
         }
       });
     }
-
     previousUpdate = latestUpdate;
   } catch (error) {
-    console.error(error);
-    next(error);
+    if (error.code === 'ETIMEDOUT' && retries > 0) {
+      console.log('Query timed out, retrying...');
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // wait 5 seconds before retrying
+      return await queryWithRetry(retries - 1);
+    } else {
+      throw error;
+    }
   }
 };

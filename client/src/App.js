@@ -33,14 +33,18 @@ import Payment from './pages/Stripe/Payment';
 import RefundPayment from './pages/Stripe/Refund';
 import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategories';
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
-import AdminHeader from './components/header/AdminHeader'
+import AdminHeader from './components/header/AdminHeader';
 import './App.css';
 import './input.css';
 
 function App() {
   const location = useLocation();
-  const adminHeaderRoutes = ['/admin', '/products/edit/:productID', '/products/create']; // Specify the routes where the header should be admin headers
-  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden 
+  const adminHeaderRoutes = [
+    '/admin',
+    '/products/edit/:productID',
+    '/products/create',
+  ]; // Specify the routes where the header should be admin headers
+  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
@@ -49,8 +53,8 @@ function App() {
     <>
       <div className="App">
         <header className="App-header">
-         {/* {adminHeader ? <AdminHeader /> : <Header />} */}
-         {hideHeader ? null : (adminHeader ? <AdminHeader /> : <Header />)}         
+          {/* {adminHeader ? <AdminHeader /> : <Header />} */}
+          {hideHeader ? null : adminHeader ? <AdminHeader /> : <Header />}
 
           <Routes>
             <Route path="/" element={<LandingPage />} />

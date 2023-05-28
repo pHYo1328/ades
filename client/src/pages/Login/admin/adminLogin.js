@@ -37,7 +37,7 @@ function Login() {
           console.log('Admin login successful');
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('admin_id', data.userid);
-          localStorage.setItem('roles', JSON.stringify(data.roles)); 
+          localStorage.setItem('roles', JSON.stringify(data.roles));
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
           navigate('/verify-otp-admin');

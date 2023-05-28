@@ -81,50 +81,50 @@ export default function EditImage() {
 
   return (
     <div>
-      <div style={{ width: "200px", marginLeft: 'auto', marginRight: 'auto'}}>
-      <Carousel
-        activeIndex={index}
-        onSelect={handleSelect}
-        style={{ maxWidth: '500px', maxHeight: '200px', margin: '0 auto' }}
-      >
-        {images ? (
-          images.map((image) => (
-            <Carousel.Item>
-              <div style={{ position: 'relative' }}>
-                <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
-                  <button
-                    onClick={() => {
-                      const imageID = image.image_id;
-                      axios
-                        .delete(`${baseUrl}/api/products/images/${imageID}`)
-                        .then((res) => {
-                          const updatedImages = images.filter(
-                            (i) => i.image_id !== imageID
-                          );
-                          setImages(updatedImages);
-                        });
-                    }}
-                  >
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-                </Carousel.Caption>
-                <AdvancedImage cldImg={cld.image(image.image_url)} />
-              </div>
-            </Carousel.Item>
-          ))
-        ) : (
-          <div className="mx-auto flex flex-col items-center">
-            <FadeLoader
-              color={'navy'}
-              loading={true}
-              size={100}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-            <p>Loading...</p>
-          </div>
-        )}
-      </Carousel>
+      <div style={{ width: '200px', marginLeft: 'auto', marginRight: 'auto' }}>
+        <Carousel
+          activeIndex={index}
+          onSelect={handleSelect}
+          style={{ maxWidth: '500px', maxHeight: '200px', margin: '0 auto' }}
+        >
+          {images ? (
+            images.map((image) => (
+              <Carousel.Item>
+                <div style={{ position: 'relative' }}>
+                  <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
+                    <button
+                      onClick={() => {
+                        const imageID = image.image_id;
+                        axios
+                          .delete(`${baseUrl}/api/products/images/${imageID}`)
+                          .then((res) => {
+                            const updatedImages = images.filter(
+                              (i) => i.image_id !== imageID
+                            );
+                            setImages(updatedImages);
+                          });
+                      }}
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </Carousel.Caption>
+                  <AdvancedImage cldImg={cld.image(image.image_url)} />
+                </div>
+              </Carousel.Item>
+            ))
+          ) : (
+            <div className="mx-auto flex flex-col items-center">
+              <FadeLoader
+                color={'navy'}
+                loading={true}
+                size={100}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p>Loading...</p>
+            </div>
+          )}
+        </Carousel>
       </div>
       <div
         style={{
@@ -152,12 +152,12 @@ export default function EditImage() {
           class="btn btn-outline-primary mb-3 mt-4 w-50"
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           onClick={() => {
-            console.log('delete all images for the product')
-            console.log(productID)
+            console.log('delete all images for the product');
+            console.log(productID);
             axios
               .delete(`${baseUrl}/api/products/${productID}/images`)
               .then((res) => {
-                console.log('deleted')
+                console.log('deleted');
                 setImages();
               });
           }}

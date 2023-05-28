@@ -26,14 +26,14 @@ const OrderAdmin = () => {
       orderStatus: orderStatus,
     });
     console.log(result);
-    const updatedOrders = orders.map(order => {
+    const updatedOrders = orders.map((order) => {
       // If the order is in the list of selected orders, update its status
       if (orderIDs.includes(order.order_id)) {
-        return {...order, order_status: orderStatus};
+        return { ...order, order_status: orderStatus };
       }
       // If not, return the order as is
       return order;
-    })
+    });
     setOrders(updatedOrders);
     // Clear out the selected options
     setSelectedOptions([]);
