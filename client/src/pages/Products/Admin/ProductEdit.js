@@ -17,7 +17,7 @@ export default function ProductEdit() {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       alert("you're not admin");
       console.log('Redirecting to homepage-admin');
-      navigate('/homepage-admin');
+      navigate('/homepage');
     }
   }, []);
   
