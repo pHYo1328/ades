@@ -43,7 +43,7 @@ function Home() {
       console.error(error);
     }
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('userid');
+    localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
     navigate('/');
   };
