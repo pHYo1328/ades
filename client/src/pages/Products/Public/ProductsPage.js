@@ -21,7 +21,7 @@ export default function ProductsPage() {
   const [sort, setSort] = useState(0);
   const [limit, setLimit] = useState(10);
   const [totalProducts, setTotalProducts] = useState(0);
-  const [totalPages, setTotalPages] = useState(Math.ceil(totalProducts / limit));
+  const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [offset, setOffset] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -89,8 +89,10 @@ export default function ProductsPage() {
     console.log('total number of products for pages', totalProducts);
     console.log('limit for pages', limit);
     console.log('pages', Math.ceil(totalProducts/limit))
-    if(limit!=0){
+    if (limit !== 0 && Math.ceil(totalProducts/limit)>1) {
       setTotalPages(Math.ceil(totalProducts / limit));
+    } else {
+      setTotalPages(1); 
     }
   }, [totalProducts, limit]);
 
