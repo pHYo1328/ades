@@ -149,7 +149,7 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
     console.log(chalk.yellow(productData.length));
 
     if (productData.length === 0) {
-      response.statusCode = 404;
+      response.statusCode = 200;
       response.message = 'No categories or brands exist';
     }
 
@@ -589,14 +589,14 @@ exports.processGetTotalNumberOfProducts = async (req, res, next) => {
     const response = {
       statusCode: 200,
       ok: true,
-      message: 'Read product details successful',
+      message: 'Read total products details successful',
       data: data.total_products,
     };
 
     console.log(chalk.yellow(productData.length));
 
     if (productData.length === 0) {
-      response.statusCode = 404;
+      response.statusCode = 200;
       response.message = 'No categories or brands exist';
     }
 

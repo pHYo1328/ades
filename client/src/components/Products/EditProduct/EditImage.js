@@ -81,6 +81,7 @@ export default function EditImage() {
 
   return (
     <div>
+      <div style={{ width: "200px", marginLeft: 'auto', marginRight: 'auto'}}>
       <Carousel
         activeIndex={index}
         onSelect={handleSelect}
@@ -124,6 +125,7 @@ export default function EditImage() {
           </div>
         )}
       </Carousel>
+      </div>
       <div
         style={{
           width: '200px',
