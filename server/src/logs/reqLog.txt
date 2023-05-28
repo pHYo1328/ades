@@ -32506,3 +32506,17 @@
 20230528	17:50:20	962bfd1a-5499-4468-a9cc-6281779c9148	GET	http://localhost:3000	/api/category
 20230528	17:50:21	fb73ea95-a639-41bc-bba1-604a2f68a8be	GET	http://localhost:3000	/api/product/3
 20230528	17:50:21	4a99f06b-5824-4abf-8132-8064fbf4f972	GET	http://localhost:3000	/api/products/rating/3
+20230528	18:14:25	a179ad98-0f7a-4cb8-9928-dea619360611	GET	http://localhost:3000	/api/products/3/1/0/0/0
+20230528	18:14:28	ad75e1df-8d9c-406e-b10f-5c56393a87e5	GET	http://localhost:3000	/api/category
+20230528	18:14:28	47360947-6ab0-4933-8d88-be3659129112	GET	http://localhost:3000	/api/brands
+20230528	18:14:28	7ff2938b-3440-4fbe-a589-17e35f1c455e	GET	http://localhost:3000	/api/products/0/0/10/0/0
+20230528	18:14:28	88b6436e-fb6d-4733-adfd-e1a9908f10a0	GET	http://localhost:3000	/api/products/total/0/0
+20230528	18:14:31	026e51c6-ed87-4dc5-b40f-1ab39a59469e	GET	http://localhost:3000	/api/products/0/0/9/0/0
+20230528	18:14:31	9f817a19-a3f9-4513-a017-03fc8ff39f75	GET	http://localhost:3000	/api/products/0/0/8/0/0
+20230528	18:14:31	61ccc5ac-02ee-42b8-ba5c-80660c91eb9a	GET	http://localhost:3000	/api/products/0/0/7/0/0
+20230528	18:14:31	31fcd0fd-227a-438d-bf4d-a91a1a496b1c	GET	http://localhost:3000	/api/products/0/0/6/0/0
+20230528	18:14:32	8f9bd324-4a02-4f94-aab4-983422a43eeb	GET	http://localhost:3000	/api/products/0/0/5/0/0
+20230528	18:14:32	4d496415-3438-40fd-bb89-e94bccf6dc40	GET	http://localhost:3000	/api/products/0/0/4/0/0
+20230528	18:14:32	c9ccf037-28a4-4d59-ac10-b72c5ae8a0ce	GET	http://localhost:3000	/api/products/0/0/3/0/0
+20230528	18:14:33	378fbb55-0b8e-4cc2-a4a5-65c0afbcf852	GET	http://localhost:3000	/api/products/0/0/2/0/0
+20230528	18:14:33	b9232d0a-9c8e-46a1-8b6f-bb3acfcf8b0c	GET	http://localhost:3000	/api/products/0/0/1/0/0
