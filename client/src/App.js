@@ -39,14 +39,13 @@ import './input.css';
 
 function App() {
   const location = useLocation();
-  const adminHeaderRoutes = [
-    '/admin',
-    '/products/edit/:productID',
-    '/products/create',
-  ]; // Specify the routes where the header should be admin headers
+  const adminHeaderRoutes = ['/admin', '/products/edit/', '/products/create']; // Specify the routes where the header should be admin headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
-  const adminHeader = adminHeaderRoutes.includes(location.pathname);
+  // const adminHeader = adminHeaderRoutes.includes(location.pathname);
+  const adminHeader = adminHeaderRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
 
   return (

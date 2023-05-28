@@ -189,11 +189,11 @@ export default function ProductDetails() {
                 >
                   <i class="bi bi-plus-circle"></i>
                 </button>
-                <p>{product.quantity}</p>
+                <p>{cartQuantity}</p>
                 <button
                   id="minusButton"
                   onClick={() => {
-                    if (product.quantity >= 1) {
+                    if (product.quantity >= 1 && cartQuantity >= 1) {
                       setCartQuantity((cartQuantity -= 1));
                     }
                   }}
