@@ -95,6 +95,10 @@ module.exports = (app, router) => {
     '/api/products/images/:imageID',
     productController.processDeleteImagesByID
   );
+  router.delete(
+    '/api/products/:productID/images',
+    productController.processDeleteImagesByProductID
+  );
 
   // POST
   router.post('/api/products', productController.processCreateProduct);
@@ -107,6 +111,7 @@ module.exports = (app, router) => {
     productController.processCreateImageForProduct
   );
   router.post('/api/products/ratings', productController.processCreateRating);
+
   // PUT
   router.put(
     '/api/products/:productID',

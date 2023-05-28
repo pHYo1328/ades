@@ -140,13 +140,14 @@ export default function ProductCreate() {
         <label for="exampleFormControlInput1" class="form-label h6">
           Description
         </label>
-        <input
-          class="form-control form-control-sm"
-          placeholder="Description"
-          rows={3}
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
-        />
+       
+        <textarea
+                class="form-control form-control-sm"
+                placeholder="Description"
+                rows={3}
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
+              />
       </div>
       <div class="row">
         <div class="mb-3 col-6">
