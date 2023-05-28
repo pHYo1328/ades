@@ -287,13 +287,13 @@ const Cart = () => {
                 <td className="flex flew-row py-6">
                   <AdvancedImage
                     cldImg={cld.image(cartItem.image_url)}
-                    className="w-64 h-48 "
+                    className="w-48 h-48 "
                   />
                 </td>
                 <td>
                   <b>{cartItem.product_name}</b>
-                  <p>category: {cartItem.category_name}</p>
-                  <p>brand :{cartItem.brand_name}</p>
+                  <p>category: {cartItem.category}</p>
+                  <p>brand :{cartItem.brand}</p>
                 </td>
                 <td>${cartItem.price}</td>
                 <td>

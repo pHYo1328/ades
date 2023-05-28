@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 const UploadWidget = ({ onImageChange }) => {
   const [images, setImages] = useState([]);
 
@@ -10,6 +9,7 @@ const UploadWidget = ({ onImageChange }) => {
         {
           cloudName: 'ddoajstil',
           uploadPreset: 'q7grvgxu',
+          // accept: 'image/*'
         },
         function (error, result) {
           if (result && result.info && result.info.path) {

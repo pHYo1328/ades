@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
+import { FadeLoader } from 'react-spinners';
 
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
@@ -139,13 +140,14 @@ export default function ProductCreate() {
         <label for="exampleFormControlInput1" class="form-label h6">
           Description
         </label>
-        <input
-          class="form-control form-control-sm"
-          placeholder="Description"
-          rows={3}
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
-        />
+       
+        <textarea
+                class="form-control form-control-sm"
+                placeholder="Description"
+                rows={3}
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
+              />
       </div>
       <div class="row">
         <div class="mb-3 col-6">
@@ -194,7 +196,18 @@ export default function ProductCreate() {
                 </option>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </select>
         </div>
@@ -214,7 +227,18 @@ export default function ProductCreate() {
                 <option value={brand.brand_id}>{brand.brand_name}</option>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </select>
         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import api from '../../../index';
+import { FadeLoader } from 'react-spinners';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -133,7 +134,18 @@ export default function AllBrandsAndCategories() {
                 </div>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </div>
 
@@ -163,7 +175,18 @@ export default function AllBrandsAndCategories() {
                 </div>
               ))
             ) : (
-              <p>Loading...</p>
+              <div className="flex items-center justify-center h-screen">
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
             )}
           </div>
         </div>

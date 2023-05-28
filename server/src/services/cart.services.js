@@ -141,7 +141,19 @@ module.exports.deleteCartDataInMySqlDB = async (userId) => {
 
 module.exports.getCartProductDetails = async (productIDs) => {
   console.log(chalk.blue('getCartProductDetails is called'));
-  const productDetailsFetchQuery = `SELECT * FROM product WHERE product_id in ?`;
+  const productDetailsFetchQuery = `SELECT product.product_id,
+                                    product.product_name,
+                                    product.price,
+                                    MAX(product_image.image_url) as image_url,
+                                    category.category_name as category,
+                                    brand.brand_name as brand
+                                    FROM product 
+                                    INNER JOIN category ON product.category_id = category.category_id
+                                    INNER JOIN brand ON product.brand_id = brand.brand_id
+                                    LEFT JOIN product_image ON product_image.product_id = product.product_id 
+                                    WHERE product.product_id in ?
+                                    GROUP BY product.product_id, product.product_name, product.price, category.category_name, brand.brand_name;
+                                    `;
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query', productDetailsFetchQuery));
