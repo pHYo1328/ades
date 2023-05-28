@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import CartContext from '../../context/CartContext';
 import api from '../../index';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';

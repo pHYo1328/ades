@@ -19,7 +19,10 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
   };
 
   return (
-    <nav aria-label="Page navigation" style={{ display: 'flex', justifyContent: 'center' }}>
+    <nav
+      aria-label="Page navigation"
+      style={{ display: 'flex', justifyContent: 'center' }}
+    >
       <ul className="pagination">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
           <a

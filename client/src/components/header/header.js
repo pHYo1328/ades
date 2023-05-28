@@ -92,10 +92,10 @@ const Header = () => {
               </button>
             </Link>
             <Link to="/login-admin">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
-              Admin
-            </button>
-          </Link>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+                Admin
+              </button>
+            </Link>
           </div>
         </nav>
       </div>

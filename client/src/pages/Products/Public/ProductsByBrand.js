@@ -40,12 +40,12 @@ export default function ProductsByBrand() {
               <div
                 key={product.product_id}
                 className="group relative"
-              // onClick={() => {
-              //   const productID = product.product_id;
-              //   window.location.href = `/products/${productID}`;
-              // }}
+                // onClick={() => {
+                //   const productID = product.product_id;
+                //   window.location.href = `/products/${productID}`;
+                // }}
               >
-              {/* <Link to={`/products/${product.product_id}`} key={product.product_id} className="group relative"> */}
+                {/* <Link to={`/products/${product.product_id}`} key={product.product_id} className="group relative"> */}
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
@@ -57,7 +57,7 @@ export default function ProductsByBrand() {
                         {product.product_name}
                       </a> */}
                       <Link to={`/product/${product.product_id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
+                        <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
                       </Link>
                     </h3>
@@ -70,7 +70,7 @@ export default function ProductsByBrand() {
                   </p>
                 </div>
                 {/* </Link> */}
-                </div>
+              </div>
             ))
           ) : (
             <p>Loading...</p>

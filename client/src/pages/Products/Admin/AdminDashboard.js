@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -13,6 +13,8 @@ const cld = new Cloudinary({
 });
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState(null);
   const [statistics, setStatistics] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -26,6 +28,21 @@ export default function AdminDashboard() {
   const [category, setCategory] = useState(null);
   const [orderID, setOrderID] = useState(null);
 
+  useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem('roles'));
+    console.log(roles);
+    const isAdmin = roles.includes('admin');
+    console.log(isAdmin);
+    if (!isAdmin) {
+      // User does not have the required role(s), redirect them to the homepage or show an error message
+      alert("you're not admin");
+      console.log('Redirecting to homepage-admin');
+      navigate('/homepage-admin');
+    }
+  }, []);
+  
+  
+  
   const fetchCategories = () => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -522,7 +539,15 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+       
       </div>
-    </div>
+      <div className='flex justify-end mb-12'>
+              <Link to={'/admin/orderStatus'}>
+                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Go to Order Status Management</button>
+              </Link>
+            </div>
+</div>
+
+
   );
 }

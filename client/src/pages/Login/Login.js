@@ -31,11 +31,14 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('this is my' + data);
+        console.log('hi this is my', data);
+        console.log("hi");
         if (data.success) {
           console.log('Login successful');
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('userid', data.userid);
+          localStorage.setItem('roles', JSON.stringify(data.roles)); 
+          console.log("hfgd", JSON.stringify(data.roles))
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
           navigate('/verify-otp');
