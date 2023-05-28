@@ -6,6 +6,8 @@ import { AdvancedImage } from '@cloudinary/react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FadeLoader } from 'react-spinners';
 
+// const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
