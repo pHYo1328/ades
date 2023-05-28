@@ -194,15 +194,15 @@ export default function ProductEditForm() {
                     ))
                   ) : (
                     <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
+                      <FadeLoader
+                        color={'navy'}
+                        loading={true}
+                        size={100}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p>Loading...</p>
+                    </div>
                   )}
                 </select>
               </div>
@@ -225,15 +225,15 @@ export default function ProductEditForm() {
                     ))
                   ) : (
                     <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
+                      <FadeLoader
+                        color={'navy'}
+                        loading={true}
+                        size={100}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p>Loading...</p>
+                    </div>
                   )}
                 </select>
               </div>
@@ -254,7 +254,7 @@ export default function ProductEditForm() {
           </div>
           <div class="col-5 text-dark">
             <Link
-              to='/products/admin'
+              to="/products/admin"
               id="submit"
               class="btn btn-outline-danger mb-3 w-100"
             >

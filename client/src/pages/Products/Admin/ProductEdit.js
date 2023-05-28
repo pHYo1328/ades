@@ -7,7 +7,7 @@ import ProductEditForm from '../../../components/Products/EditProduct/ProductEdi
 export default function ProductEdit() {
   const [editImage, setEditImage] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
@@ -17,11 +17,10 @@ export default function ProductEdit() {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       alert("you're not admin");
       console.log('Redirecting to homepage-admin');
-      navigate('/homepage-admin');
+      navigate('/homepage');
     }
   }, []);
-  
-  
+
   return (
     <div>
       <button

@@ -37,12 +37,10 @@ export default function AdminDashboard() {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       alert("you're not admin");
       console.log('Redirecting to homepage-admin');
-      navigate('/homepage-admin');
+      navigate('/homepage');
     }
   }, []);
-  
-  
-  
+
   const fetchCategories = () => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -234,17 +232,17 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <div className="flex items-center justify-center h-screen">
-        <div className="mx-auto flex flex-col items-center">
-          <FadeLoader
-            color={'navy'}
-            loading={true}
-            size={100}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
-          <p>Loading...</p>
+          <div className="mx-auto flex flex-col items-center">
+            <FadeLoader
+              color={'navy'}
+              loading={true}
+              size={100}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+            <p>Loading...</p>
+          </div>
         </div>
-      </div>
       )}
 
       <div
@@ -366,17 +364,17 @@ export default function AdminDashboard() {
             ))
           ) : (
             <div className="flex items-center justify-center h-screen">
-            <div className="mx-auto flex flex-col items-center">
-              <FadeLoader
-                color={'navy'}
-                loading={true}
-                size={100}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p>Loading...</p>
+              <div className="mx-auto flex flex-col items-center">
+                <FadeLoader
+                  color={'navy'}
+                  loading={true}
+                  size={100}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p>Loading...</p>
+              </div>
             </div>
-          </div>
           )}
         </ul>
       </div>
@@ -450,17 +448,17 @@ export default function AdminDashboard() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </ul>
         </div>
@@ -533,17 +531,17 @@ export default function AdminDashboard() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </ul>
         </div>
@@ -583,15 +581,14 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-       
       </div>
-      <div className='flex justify-end mb-12'>
-              <Link to={'/admin/orderStatus'}>
-                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Go to Order Status Management</button>
-              </Link>
-            </div>
-</div>
-
-
+      <div className="flex justify-end mb-12">
+        <Link to={'/admin/orderStatus'}>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Go to Order Status Management
+          </button>
+        </Link>
+      </div>
+    </div>
   );
 }
