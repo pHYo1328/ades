@@ -35,7 +35,7 @@
     "eslint": "eslint .",
     "test": "jest",
     "prettier": "prettier --write .",
-    "auto" : "node cronScheduleServer.js"
+    "auto": "node cronScheduleServer.js"
   },
   "devDependencies": {
     "eslint": "^8.40.0",

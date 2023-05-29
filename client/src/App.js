@@ -40,7 +40,11 @@ import './input.css';
 
 function App() {
   const location = useLocation();
-  const adminHeaderRoutes = ['/admin', '/products/edit/:productID', '/products/create', '/homepage-admin']; // Specify the routes where the header should be admin headers
+  const adminHeaderRoutes = [
+    '/admin',
+    '/products/edit/:productID:productID',
+    '/products/create', '/homepage-admin',
+  ]; // Specify the routes where the header should be admin headers
   const SignedInHeaderRoutes = ['/homepage'];
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden 
 

@@ -77,6 +77,13 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query >>>', selectCartDataQuery));
     console.log(chalk.blue('Cart data values:', cartDataValues));
+
+    let rows;
+    if (cartData.length > 0) {
+      console.log(chalk.blue('Executing query >>>', addCartDataQuery));
+      rows = await pool.query(addCartDataQuery, [cartDataValues]);
+      console.log(chalk.green('Row inserted:' + rows.affectedRows));
+    }
     const existingCartData = await pool.query(selectCartDataQuery, [userId]);
     console.log(chalk.green('Existing cart data:', existingCartData));
     if (existingCartData[0].length > cartData.length) {
@@ -94,10 +101,7 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
         console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
       }
     }
-    console.log(chalk.blue('Executing query >>>', addCartDataQuery));
-    const [rows, fields] = await pool.query(addCartDataQuery, [cartDataValues]);
-    console.log(chalk.green('Row inserted:' + rows.affectedRows));
-    return rows.affectedRows;
+    return rows ? rows.affectedRows : 0;
   } catch (error) {
     console.error(chalk.red('Error in addCartDataToMySqlDB:', error));
     throw error;
