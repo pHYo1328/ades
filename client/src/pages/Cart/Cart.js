@@ -281,19 +281,18 @@ const Cart = () => {
   }, [cartData, productDetails]);
   return (
     <div className="flex flex-row">
-      <div className="mt-4 mb-48  w-3/5 ml-36">
+      <div className="mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-36">
         <h2 className="font-roboto py-4 flex flex-row">
-          {' '}
           My Shopping Cart <FaShoppingCart />
         </h2>
-        <table className="border-collapse w-full text-base">
-          <thead className="border-t-2 border-b-2 border-black">
+        <table className="border-collapse w-full text-base md:text-lg">
+          <thead className="border-t-2 border-b-2 border-black text-base md:text-xl">
             <tr>
-              <th>My Cart({cartData.length})</th>
-              <th>Product</th>
-              <th>Price</th>
-              <th className="text-center">Quantity</th>
-              <th className="w-40 text-center">Total</th>
+              <th className='w-1/6'>My Cart({cartData.length})</th>
+              <th className='w-1/4'>Product</th>
+              <th className='hidden lg:table-cell'>Price</th>
+              <th className="lg:w-1/12 text-center hidden sm:table-cell">Quantity</th>
+              <th className="lg:w-1/5 text-center hidden sm:table-cell">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -309,25 +308,26 @@ const Cart = () => {
                   key={`${cartItem.product_ID}-${index}`}
                   className=" border-b-2 border-grey"
                 >
-                  <td className="flex flew-row py-6 w-64 h-64 ">
+                  <td className="flex flew-row py-6 w-48 h-48 md:w-64 md:h-64 ">
                     <AdvancedImage
                       cldImg={cld.image(cartItem.image_url)}
                       className="rounded"
                     />
                   </td>
                   <td>
-                    <b>{cartItem.product_name}</b>
-                    <p>
-                      <b>category:</b> {cartItem.category}
+                    <b className='hidden md:block'>{cartItem.product_name}</b>
+                    <p className='block md:hidden'>{cartItem.product_name}</p>
+                    <p className='hidden md:block'>
+                      <b className='hidden lg:block'>category:</b> {cartItem.category}
                     </p>
-                    <p>
-                      <b>brand :</b>
+                    <p  className='hidden md:block'>
+                      <b className='hidden lg:block'>brand :</b>
                       {cartItem.brand}
                     </p>
-                  </td>
-                  <td>${cartItem.price}</td>
-                  <td>
-                    <div className="flex flex-row justify-evenly border-2 border-gray-400 rounded ">
+                    <div className='hidden md:block'>
+                      {cartItem.price}
+                    </div>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2">
                       <button
                         className="flex items-center justify-center "
                         onClick={() =>
@@ -356,14 +356,49 @@ const Cart = () => {
                         <FiPlus size={16} />
                       </button>
                     </div>
+                    <div className="w-20 text-center block md:hidden">
+                    <b>${cartItem.totalAmount}</b>
+                  </div>
                   </td>
-
-                  <td className="w-40 text-center">
+                  <td className='hidden lg:table-cell'>${cartItem.price}</td>
+                  <td>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded hidden md:flex flex-row">
+                      <button
+                        className="flex items-center justify-center "
+                        onClick={() =>
+                          minusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiMinus size={16} />
+                      </button>
+                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+                        {cartItem.quantity}
+                      </p>
+                      <button
+                        className="flex items-center justify-center"
+                        onClick={() =>
+                          plusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiPlus size={16} />
+                      </button>
+                    </div>
+                   
+                  </td>
+                  <td className="w-40 text-center hidden md:table-cell">
                     <b>${cartItem.totalAmount}</b>
                   </td>
                   <td className="pl-4">
                     <button
-                      className="flex items-center justify-center w-10 h-10 bg-red-600 rounded-full"
+                      className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full"
                       onClick={() =>
                         deleteButtonHandler(
                           cartData,
@@ -372,7 +407,8 @@ const Cart = () => {
                         )
                       }
                     >
-                      <AiFillDelete size={20} color="white" />
+                      <AiFillDelete size={20} color="white" className='hidden md:block' />
+                      <AiFillDelete size={16} color='white' className='block md:hidden'/>
                     </button>
                   </td>
                 </tr>
@@ -387,7 +423,8 @@ const Cart = () => {
           </tbody>
         </table>
       </div>
-      <div className="w-1/4 bg-stone-700 p-4 ml-12 mr-36 mt-5 rounded-lg shadow-lg">
+      <div className='mr-36 hidden lg:block'>
+      <div className="w-full bg-stone-700 p-4 ml-12  mt-5 rounded-lg shadow-lg ">
         <div className="space-y-4 ">
           <h1 className="text-lg font-bold text-white">Shipping Address</h1>
           <div className="flex flex-row items-center">
@@ -523,17 +560,19 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 w-full h-1/5 z-1 bg-white py-3">
+      </div>
+      <div className="fixed bottom-0 w-full h-1/5 z-10 bg-white py-3">
         <div className="py-6">
-          <button>
-            <Link
+        <Link
               to="/products"
-              className="ml-48 text-base flex flex-row text-blue-800 "
             >
-              <BsArrowLeft size={24} />
-              <b>Continue Shipping</b>
-            </Link>
+          <button className='ml-4 md:ml-48 text-base md:text-xl text-white bg-blue-800 hover:bg-blue-950 flex flex-row py-2 px-4 rounded'>
+            
+              <BsArrowLeft size={24} className='mr-5' />
+              <p>Continue Shopping</p>
+           
           </button>
+          </Link>
         </div>
       </div>
     </div>
