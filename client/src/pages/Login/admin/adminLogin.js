@@ -9,8 +9,6 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const onHandleSubmit = (e) => {
-    e.preventDefault();
-
     if (!username || !password) {
       setErrorMessage('Incorrect username or password');
       return errorMessage;
@@ -53,6 +51,13 @@ function Login() {
     console.log(username, password);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onHandleSubmit();
+    }
+  };
+
   return (
     <div className="h-screen flex items-center justify-center bg-indigo-950">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
@@ -72,6 +77,7 @@ function Login() {
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div>
@@ -84,6 +90,7 @@ function Login() {
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           {/* <div className="flex justify-end">
