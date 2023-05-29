@@ -113,7 +113,6 @@ export default function ProductEditForm() {
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
         encType="multipart/form-data"
       >
-        <h3 class="h3 text-center">EDIT PRODUCT</h3>
         {productData && (
           <div>
             <div class="mb-3">

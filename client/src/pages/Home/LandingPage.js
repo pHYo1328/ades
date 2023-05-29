@@ -7,8 +7,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { FadeLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
 
-// const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -243,7 +241,7 @@ export default function LandingPage() {
           {products ? (
             products.map((product) => (
               <div key={product.product_id} className="group relative">
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">

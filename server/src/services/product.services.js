@@ -673,13 +673,12 @@ module.exports.updateProductByID = async (
   description,
   category_id,
   brand_id,
-  image_url,
   quantity,
   product_id
 ) => {
   console.log(chalk.blue('updateProductByID is called'));
   const productUpdateQuery =
-    "UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id), image_url =  CONCAT(image_url, COALESCE(?, '')) where product_id = ?";
+    'UPDATE product SET product_name=COALESCE(?,product_name), price=COALESCE(?,price), description=COALESCE(?,description), category_id=COALESCE(?,category_id), brand_id=COALESCE(?,brand_id) where product_id = ?';
   const inventoryUpdateQuery =
     'UPDATE inventory SET quantity = COALESCE(?,quantity) where product_id = ?';
   console.log(chalk.blue('Creating connection... '));
@@ -698,7 +697,6 @@ module.exports.updateProductByID = async (
       description,
       category_id,
       brand_id,
-      image_url,
       product_id,
     ];
     console.log(chalk.blue('Executing query: '), productUpdateQuery);
