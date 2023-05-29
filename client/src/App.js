@@ -35,7 +35,6 @@ import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import Header from './components/header/header';
 import SignedInHeader from './components/header/signedInHeader';
 import AdminHeader from './components/header/AdminHeader'
-
 import './App.css';
 import './input.css';
 
