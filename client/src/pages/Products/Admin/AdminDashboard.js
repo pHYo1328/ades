@@ -28,16 +28,35 @@ export default function AdminDashboard() {
   const [category, setCategory] = useState(null);
   const [orderID, setOrderID] = useState(null);
 
+  // useEffect(() => {
+  //   const roles = JSON.parse(localStorage.getItem('roles'));
+  //   console.log(roles);
+  //   const isAdmin = roles.includes('admin');
+  //   console.log(isAdmin);
+  //   if (!isAdmin) {
+  //     // User does not have the required role(s), redirect them to the homepage or show an error message
+  //     // alert("you're not admin");
+  //     console.log('Redirecting to homepage-admin');
+  //     navigate('/homepage');
+  //   }
+  // }, []);
+
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
-    const isAdmin = roles.includes('admin');
-    console.log(isAdmin);
-    if (!isAdmin) {
+    if (!roles) {
       // User does not have the required role(s), redirect them to the homepage or show an error message
-      alert("you're not admin");
-      console.log('Redirecting to homepage-admin');
-      navigate('/homepage');
+      console.log('Redirecting to login');
+      navigate('/login');
+    } else {
+      const isAdmin = roles.includes('admin');
+      console.log(isAdmin);
+      if (!isAdmin) {
+        // User does not have the required role(s), redirect them to the homepage or show an error message
+        // alert("you're not admin");
+        console.log('Redirecting to homepage');
+        navigate('/homepage');
+      }
     }
   }, []);
   
