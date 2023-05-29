@@ -12,6 +12,7 @@ const cld = new Cloudinary({
 });
 export default function ProductsByCategory() {
   const [products, setProducts] = useState(null);
+  const [category, setCategory] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const { categoryID } = useParams();
@@ -28,17 +29,37 @@ export default function ProductsByCategory() {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/category/${categoryID}`)
+      .then((response) => {
+        console.log(response);
+        setCategory(response.data.data.category_name);
+        console.log(category);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <a href="/products" class="h2">
-          Products
-        </a>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link to="/products">Products</Link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {category}
+            </li>
+          </ol>
+        </nav>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
               <div key={product.product_id} className="group relative">
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">

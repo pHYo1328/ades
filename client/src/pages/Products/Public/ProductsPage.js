@@ -79,48 +79,48 @@ export default function ProductsPage() {
         console.error(error);
       });
   }, [categoryID, brandID]);
-  
+
   useEffect(() => {
     setTotalProducts(totalProducts);
     console.log('total number of products', totalProducts);
   }, [totalProducts]);
-  
+
   useEffect(() => {
     console.log('total number of products for pages', totalProducts);
     console.log('limit for pages', limit);
-    console.log('pages', Math.ceil(totalProducts/limit))
-    if (limit !== 0 && Math.ceil(totalProducts/limit)>1) {
+    console.log('pages', Math.ceil(totalProducts / limit));
+    if (limit !== 0 && Math.ceil(totalProducts / limit) > 1) {
       setTotalPages(Math.ceil(totalProducts / limit));
     } else {
-      setTotalPages(1); 
+      setTotalPages(1);
     }
   }, [totalProducts, limit]);
 
   useEffect(() => {
-    if(limit!=0){
+    if (limit != 0) {
       setTotalPages(totalPages);
     }
-    console.log('total page: ', totalPages)
-  }, [totalPages])
-  
+    console.log('total page: ', totalPages);
+  }, [totalPages]);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    console.log(page)
+    console.log(page);
     const calculatedOffset = limit * (page - 1);
-    console.log('calculated offset: ', calculatedOffset)
+    console.log('calculated offset: ', calculatedOffset);
     setOffset(calculatedOffset);
   };
 
   useEffect(() => {
     setOffset(offset);
     console.log('offset: ', offset);
-  }, [offset])
+  }, [offset]);
 
   useEffect(() => {
-    setCurrentPage(currentPage)
-    console.log('current page: ', currentPage)
-  }, [brandID, categoryID, limit])
-  
+    setCurrentPage(currentPage);
+    console.log('current page: ', currentPage);
+  }, [brandID, categoryID, limit]);
+
   return (
     <div className="bg-white w-full">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -182,17 +182,17 @@ export default function ProductsPage() {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
+                  <div className="mx-auto flex flex-col items-center">
+                    <FadeLoader
+                      color={'navy'}
+                      loading={true}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p>Loading...</p>
+                  </div>
                 </div>
-              </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -211,17 +211,17 @@ export default function ProductsPage() {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
+                  <div className="mx-auto flex flex-col items-center">
+                    <FadeLoader
+                      color={'navy'}
+                      loading={true}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p>Loading...</p>
+                  </div>
+                </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -231,11 +231,8 @@ export default function ProductsPage() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div
-                key={product.product_id}
-                className="group relative"
-              >
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <div key={product.product_id} className="group relative">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
@@ -287,7 +284,6 @@ export default function ProductsPage() {
           {currentPage} / {totalPages}
         </p>
       </div>
-      
     </div>
   );
 }

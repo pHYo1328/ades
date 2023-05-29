@@ -24,7 +24,7 @@ export default function ProductCreate() {
     console.log('Selected image path:', path);
     setImagePath(path);
   };
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +52,6 @@ export default function ProductCreate() {
         console.error(error);
       });
   }, []);
-
     // useEffect(() => {
     //   const roles = JSON.parse(localStorage.getItem('roles'));
     //   console.log(roles);
@@ -158,14 +157,14 @@ export default function ProductCreate() {
         <label for="exampleFormControlInput1" class="form-label h6">
           Description
         </label>
-       
+
         <textarea
-                class="form-control form-control-sm"
-                placeholder="Description"
-                rows={3}
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
-              />
+          class="form-control form-control-sm"
+          placeholder="Description"
+          rows={3}
+          value={productDescription}
+          onChange={(e) => setProductDescription(e.target.value)}
+        />
       </div>
       <div class="row">
         <div class="mb-3 col-6">
@@ -215,17 +214,17 @@ export default function ProductCreate() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </select>
         </div>
@@ -246,17 +245,17 @@ export default function ProductCreate() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </select>
         </div>

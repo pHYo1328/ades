@@ -60,7 +60,10 @@ const Header = () => {
             <Link to="/admin" className="text-gray-800 hover:text-gray-600">
               Dashboard
             </Link>
-            <Link to="/products/create" className="text-gray-800 hover:text-gray-600">
+            <Link
+              to="/products/create"
+              className="text-gray-800 hover:text-gray-600"
+            >
               Create
             </Link>
 
