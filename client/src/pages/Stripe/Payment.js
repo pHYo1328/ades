@@ -48,8 +48,9 @@ function Payment() {
       <h1>Payment form</h1>
       {clientSecret && stripePromise && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm />
           <AddressForm />
+          <CheckoutForm />
+        
         </Elements>
       )}
 

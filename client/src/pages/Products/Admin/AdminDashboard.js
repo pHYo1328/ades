@@ -27,6 +27,7 @@ export default function AdminDashboard() {
   const [categoryName, setCategoryName] = useState('');
   const [category, setCategory] = useState(null);
   const [orderID, setOrderID] = useState(null);
+  const [refunds, setRefunds] = useState(null);
 
   // useEffect(() => {
   //   const roles = JSON.parse(localStorage.getItem('roles'));
@@ -192,6 +193,23 @@ export default function AdminDashboard() {
       window.location.href = `/payment-refund/${orderID}`;
     }
   };
+
+  // const handlePartialRefund = async (event) => {
+  //   console.log(chalk.yellow('Partial refund is processing!'));
+  //   event.preventDefault();
+  //   axios
+  //     .post(`${baseUrl}/processPartialRefund/${productID}`)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setRefunds(response.data.data);
+  //       console.log(refunds);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+
+  //   window.alert('Giving partial refund now...');
+  // };
 
   return (
     <div class="row col-11" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
@@ -399,6 +417,19 @@ export default function AdminDashboard() {
                             );
                             setProducts(updatedProducts);
                           });
+
+                        axios
+                        .post(`${baseUrl}/processPartialRefund/${productID}`)
+                        .then((response) => {
+                          console.log(response);
+                          setRefunds(response.data.data);
+                          console.log(refunds);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
+                  
+                      window.alert('Giving partial refund now...');
                       }}
                     >
                       <i className="bi bi-trash-fill"></i>

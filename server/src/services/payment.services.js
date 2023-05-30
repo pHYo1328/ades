@@ -177,12 +177,13 @@ module.exports.addRefund = async (id, orderID, total, status) => {
   console.log(chalk.blue('addRefund is called'));
   const createRefundQuery =
     'INSERT INTO refund (refund_id, order_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
+
   const deletePaymentQuery = `DELETE FROM payment
   WHERE order_id = ?
     AND order_id IN (
       SELECT r.order_id
       FROM refund r
-      WHERE r.refunded_status = 'succeeded'
+      WHERE r.refunded_status = 'Fully Refunded'
     );
   `;
   const updateStatusQuery = `UPDATE orders
@@ -190,15 +191,16 @@ module.exports.addRefund = async (id, orderID, total, status) => {
    WHERE order_id = ? AND order_id IN (
    SELECT order_id
    FROM refund
-   WHERE refunded_status = 'succeeded'
+   WHERE refunded_status = 'Fully Refunded'
    );`;
   const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
   JOIN refund ON orders.order_id = refund.order_id
   SET inventory.quantity = inventory.quantity + order_items.quantity
-  WHERE refund.order_id = ? AND refund.refunded_status = 'succeeded' AND inventory.inventory_id > 0;
+  WHERE refund.order_id = ? AND refund.refunded_status = 'Fully Refunded' AND inventory.inventory_id > 0;
   `;
+
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
   console.log(
@@ -243,6 +245,56 @@ module.exports.getIdAndAmount = async (productID) => {
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getIdAndAmount: ', error));
+    throw error;
+  }
+};
+
+module.exports.addPartialRefund = async (id, orderID, total, status) => {
+  console.log(chalk.blue('addRefund is called'));
+  const createPartialRefundQuery =
+    'INSERT INTO refund (refund_id, order_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
+
+  const updatePaymentQuery = `UPDATE payment
+  SET payment_total = payment_total - (
+    SELECT refunded_amount
+    FROM refund
+    WHERE refunded_status = 'partially refunded'
+      AND order_id = ?
+  )
+  WHERE order_id = ?;  
+  `;
+  const updateStatusQuery = `UPDATE orders
+   SET order_status = 'partially refunded'
+   WHERE order_id = ? AND order_id IN (
+   SELECT order_id
+   FROM refund
+   WHERE refunded_status = 'Partially Refunded'
+   );`;
+
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to payment.services.js addPartialRefund function'
+    )
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+
+    await pool.query(createPartialRefundQuery, [id, orderID, total, status]);
+
+    const createRefundResult = await Promise.all([
+      pool.query(updatePaymentQuery, [orderID, orderID]),
+      pool.query(updateStatusQuery, [orderID]),
+    ]);
+    await connection.commit();
+    console.log(chalk.green(createRefundResult));
+
+    return createRefundResult[0].affectedRows > 0;
+  } catch (error) {
+    await connection.rollback();
+    console.error(chalk.red('Error in addPayment:', error));
     throw error;
   }
 };
