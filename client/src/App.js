@@ -13,6 +13,7 @@ import AdminRegister from './pages/Login/admin/adminRegister';
 import AdminLogin from './pages/Login/admin/adminLogin';
 import AdminForgotPassword from './pages/Login/admin/adminForgotPassword';
 import AdminOTPPage from './pages/Login/admin/adminOTPPage';
+import VerifyEmail from './pages/Login/ForgotPasswordEmail';
 
 import ProductDetails from './pages/Products/Public/ProductDetails';
 import SearchResults from './pages/Products/Public/SearchResults';
@@ -72,6 +73,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/verify-otp" element={<OTPPage />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot" element={<ForgotPassword />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/users" element={<UserInfo />} />

@@ -93,7 +93,7 @@ function Login() {
             <button
               type="button"
               className="text-sm text-gray-500 hover:text-gray-700"
-              onClick={() => navigate('/forgot')}
+              onClick={() => navigate('/verify-email')}
             >
               Forgot your password?
             </button>
