@@ -45,15 +45,8 @@ function Payment() {
 
   return (
     <>
-      <h1>Payment form</h1>
-      {clientSecret && stripePromise && (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <AddressForm />
-          <CheckoutForm />
-        
-        </Elements>
-      )}
-
+    <div className="flex flex-row">
+      <div className="mt-4 mb-48 sm:mb-64 w-full ml-4 lg:w-2/5 lg:ml-40">
       <h1>Order summary</h1>
       {payments && payments.length > 0 ? (
         <>
@@ -61,14 +54,11 @@ function Payment() {
             <div key={paymentData.order_id} className="group relative">
               <div>{paymentData.product_name}</div>
               <div>
+              <p className="text-sm font-medium text-gray-900 justify-start">
+                  {paymentData.quantity}
+                </p>
                 <p className="mt-1 text-sm text-gray-500">
                   {paymentData.price}
-                </p>
-                <p className="text-sm font-medium text-gray-900 justify-start">
-                  {paymentData.description}
-                </p>
-                <p className="text-sm font-medium text-gray-900 justify-start">
-                  {paymentData.quantity}
                 </p>
                 <p className="mt-1 text-sm text-gray-500">
                   {paymentData.price * paymentData.quantity}
@@ -102,6 +92,19 @@ function Payment() {
       ) : (
         <p>Loading...</p>
       )}
+      </div>
+      <div className="mt-4 mb-48 sm:mb-64 mr-7 w-full lg:w-2/5 lg:ml-2">
+      {clientSecret && stripePromise && (
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <AddressForm />
+
+         
+          <CheckoutForm />
+        
+        </Elements>
+      )}
+      </div>
+    </div>
     </>
   );
 }
