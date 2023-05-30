@@ -47,7 +47,6 @@ function Home() {
       }
     }
   }, []);
-  
 
   const redirectToUsers = () => {
     navigate('/users');

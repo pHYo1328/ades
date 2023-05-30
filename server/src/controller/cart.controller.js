@@ -85,7 +85,9 @@ exports.processDeleteCartData = async (req, res, next) => {
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
     const result = await Promise.all([
-      cartServices.deleteCartDataInRedis(userID).catch((error) => {console.error("redis error", error)}),
+      cartServices.deleteCartDataInRedis(userID).catch((error) => {
+        console.error('redis error', error);
+      }),
       cartServices.deleteCartDataInMySqlDB(userID),
     ]);
     console.log(
