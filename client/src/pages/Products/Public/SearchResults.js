@@ -48,16 +48,12 @@ export default function SearchResults() {
                 //   window.location.href = `/products/${productID}`;
                 // }}
               >
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
                     <h3 className="text-sm text-gray-700">
-                      {/* <a href={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </a> */}
                       <Link to={`/product/${product.product_id}`}>
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}

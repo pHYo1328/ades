@@ -98,7 +98,7 @@ export default function AllBrandsAndCategories() {
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <div class="col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
           <div class="row">
-            <div class="col-10">Brands</div>
+            <div class="col-10 h5 font-weight-bold">Brands</div>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
@@ -109,16 +109,14 @@ export default function AllBrandsAndCategories() {
                   key={brand.brand_id}
                 >
                   <div className="flex justify-between">
-                    <div className="text-left">
+                    <div className="text-left d-flex align-items-center">
                       <h3 className="text-sm text-gray-700">
-                        {/* <a href={`/brands/${brand.brand_id}`}>
-                          {brand.brand_name}
-                        </a> */}
                         <Link to={`/brands/${brand.brand_id}`}>
                           {brand.brand_name}
                         </Link>
                       </h3>
                     </div>
+
                     <div>
                       <button
                         onClick={() => bookmarkClickHandler(brand.brand_id)}
@@ -135,22 +133,24 @@ export default function AllBrandsAndCategories() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </div>
 
+          <hr class="mt-5"></hr>
+
           <div class="row mt-5">
-            <div class="col-10">Categories</div>
+            <div class="col-10 h5 font-weight-bold">Categories</div>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
@@ -161,11 +161,8 @@ export default function AllBrandsAndCategories() {
                   key={category.category_id}
                 >
                   <div className="flex justify-between">
-                    <div className="text-left">
+                    <div className="text-left flex items-center">
                       <h3 className="text-sm text-gray-700">
-                        {/* <a href={`/categories/${category.category_id}`}>
-                          {category.category_name}
-                        </a> */}
                         <Link to={`/categories/${category.category_id}`}>
                           {category.category_name}
                         </Link>
@@ -176,17 +173,17 @@ export default function AllBrandsAndCategories() {
               ))
             ) : (
               <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>

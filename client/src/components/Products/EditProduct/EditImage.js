@@ -81,87 +81,119 @@ export default function EditImage() {
 
   return (
     <div>
-      <Carousel
-        activeIndex={index}
-        onSelect={handleSelect}
-        style={{ maxWidth: '500px', maxHeight: '200px', margin: '0 auto' }}
-      >
-        {images ? (
-          images.map((image) => (
-            <Carousel.Item>
-              <div style={{ position: 'relative' }}>
-                <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
-                  <button
-                    onClick={() => {
-                      const imageID = image.image_id;
-                      axios
-                        .delete(`${baseUrl}/api/products/images/${imageID}`)
-                        .then((res) => {
-                          const updatedImages = images.filter(
-                            (i) => i.image_id !== imageID
-                          );
-                          setImages(updatedImages);
-                        });
-                    }}
-                  >
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-                </Carousel.Caption>
-                <AdvancedImage cldImg={cld.image(image.image_url)} />
-              </div>
-            </Carousel.Item>
-          ))
-        ) : (
-          <div className="mx-auto flex flex-col items-center">
-            <FadeLoader
-              color={'navy'}
-              loading={true}
-              size={100}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-            <p>Loading...</p>
-          </div>
-        )}
-      </Carousel>
       <div
-        style={{
-          width: '200px',
-          marginRight: 'auto',
-          marginLeft: 'auto',
-          marginTop: '100px',
-        }}
+        class="row"
+        style={{ width: '400px', margin: 'auto', marginTop: '50px' }}
       >
-        <UploadWidget onImageChange={handleImageChange} />
+        <div class="col-6">
+          <div style={{ width: '200px', margin: 'auto' }}>
+            <UploadWidget onImageChange={handleImageChange} />
+          </div>
+        </div>
+        <div class="col-6 d-flex align-items-center">
+          <div style={{ margin: 'auto', width: '200px' }}>
+            <button
+              type="submit"
+              id="submit"
+              class="btn btn-outline-primary ml-4 h-100 w-100"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="col-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-        <button
-          type="submit"
-          id="submit"
-          class="btn btn-outline-primary mb-3 mt-4 w-50"
-          onClick={handleSubmit}
-          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-        >
-          Submit
-        </button>
-      </div>
-      <div class="col-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+
+      <div
+        style={{ marginLeft: 'auto', marginRight: 'auto', width: '500px' }}
+        className="text-center"
+      >
         <button
           class="btn btn-outline-primary mb-3 mt-4 w-50"
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           onClick={() => {
-            console.log('delete all images for the product')
-            console.log(productID)
+            console.log('delete all images for the product');
+            console.log(productID);
             axios
               .delete(`${baseUrl}/api/products/${productID}/images`)
               .then((res) => {
-                console.log('deleted')
+                console.log('deleted');
                 setImages();
               });
           }}
         >
           Delete All Images
         </button>
+      </div>
+
+      <div
+        style={{
+          width: '400px',
+          height: '400px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+        class="mt-3"
+      >
+        <Carousel
+          activeIndex={index}
+          onSelect={handleSelect}
+          style={{ maxWidth: '100%', maxHeight: '200px', margin: '0 auto' }}
+        >
+          {images ? (
+            images.map((image) => (
+              <Carousel.Item>
+                <div style={{ position: 'relative' }}>
+                  <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <button
+                        onClick={() => {
+                          const imageID = image.image_id;
+                          axios
+                            .delete(`${baseUrl}/api/products/images/${imageID}`)
+                            .then((res) => {
+                              const updatedImages = images.filter(
+                                (i) => i.image_id !== imageID
+                              );
+                              setImages(updatedImages);
+                            });
+                        }}
+                        style={{
+                          borderRadius: '50%',
+                          backgroundColor: 'black',
+                          width: '30px',
+                          height: '30px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: 'none',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <i
+                          class="bi bi-trash-fill"
+                          style={{ color: 'white' }}
+                        ></i>
+                      </button>
+                    </div>
+                  </Carousel.Caption>
+                  <AdvancedImage cldImg={cld.image(image.image_url)} />
+                </div>
+              </Carousel.Item>
+            ))
+          ) : (
+            <div className="mx-auto flex flex-col items-center">
+              <FadeLoader
+                color={'navy'}
+                loading={true}
+                size={100}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p>Loading...</p>
+            </div>
+          )}
+        </Carousel>
       </div>
     </div>
   );

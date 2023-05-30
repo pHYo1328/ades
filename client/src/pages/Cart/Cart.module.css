@@ -1,0 +1,23 @@
+.delete-button-wrapper {
+  position: relative;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s;
+}
+
+.delete-button-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

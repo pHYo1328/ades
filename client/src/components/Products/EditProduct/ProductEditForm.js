@@ -5,6 +5,7 @@ import React from 'react';
 import { FadeLoader } from 'react-spinners';
 import axios from 'axios';
 import chalk from 'chalk';
+import { Link } from 'react-router-dom';
 
 export default function ProductEditForm() {
   const { productID } = useParams();
@@ -112,7 +113,6 @@ export default function ProductEditForm() {
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
         encType="multipart/form-data"
       >
-        <h3 class="h3 text-center">EDIT PRODUCT</h3>
         {productData && (
           <div>
             <div class="mb-3">
@@ -193,15 +193,15 @@ export default function ProductEditForm() {
                     ))
                   ) : (
                     <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
+                      <FadeLoader
+                        color={'navy'}
+                        loading={true}
+                        size={100}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p>Loading...</p>
+                    </div>
                   )}
                 </select>
               </div>
@@ -224,15 +224,15 @@ export default function ProductEditForm() {
                     ))
                   ) : (
                     <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
+                      <FadeLoader
+                        color={'navy'}
+                        loading={true}
+                        size={100}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p>Loading...</p>
+                    </div>
                   )}
                 </select>
               </div>
@@ -252,16 +252,13 @@ export default function ProductEditForm() {
             </button>
           </div>
           <div class="col-5 text-dark">
-            <button
-              type="button"
+            <Link
+              to="/products/admin"
               id="submit"
               class="btn btn-outline-danger mb-3 w-100"
-              onClick={() => {
-                window.location.href = `http://localhost:3000/products/admin`;
-              }}
             >
               Discard Changes
-            </button>
+            </Link>
           </div>
         </div>
       </form>

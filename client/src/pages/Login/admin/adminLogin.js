@@ -9,8 +9,6 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const onHandleSubmit = (e) => {
-    e.preventDefault();
-
     if (!username || !password) {
       setErrorMessage('Incorrect username or password');
       return errorMessage;
@@ -36,8 +34,8 @@ function Login() {
         if (data.success) {
           console.log('Admin login successful');
           localStorage.setItem('accessToken', data.accessToken);
-          localStorage.setItem('userid', data.userid);
-          localStorage.setItem('roles', JSON.stringify(data.roles)); 
+          localStorage.setItem('admin_id', data.userid);
+          localStorage.setItem('roles', JSON.stringify(data.roles));
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
           navigate('/verify-otp-admin');
@@ -51,6 +49,13 @@ function Login() {
         setErrorMessage('An error occurred. Please try again.');
       });
     console.log(username, password);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onHandleSubmit();
+    }
   };
 
   return (
@@ -72,6 +77,7 @@ function Login() {
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div>
@@ -84,6 +90,7 @@ function Login() {
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
           {/* <div className="flex justify-end">

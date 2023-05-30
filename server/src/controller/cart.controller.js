@@ -1,6 +1,5 @@
 const chalk = require('chalk');
 const cartServices = require('../services/cart.services');
-const productServices = require('../services/product.services');
 
 exports.processAddCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
@@ -86,7 +85,7 @@ exports.processDeleteCartData = async (req, res, next) => {
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
     const result = await Promise.all([
-      cartServices.deleteCartDataInRedis(userID),
+      cartServices.deleteCartDataInRedis(userID).catch((error) => {console.error("redis error", error)}),
       cartServices.deleteCartDataInMySqlDB(userID),
     ]);
     console.log(

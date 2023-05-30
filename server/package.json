@@ -34,7 +34,8 @@
     "dev": "nodemon server.js",
     "eslint": "eslint .",
     "test": "jest",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "auto": "node cronScheduleServer.js"
   },
   "devDependencies": {
     "eslint": "^8.40.0",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UpdateModal from '../../components/modal/updateModal';
+import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const UserInfo = () => {
@@ -8,6 +9,7 @@ const UserInfo = () => {
   const [usersPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const navigate = useNavigate();
 
   const url = `${baseUrl}/users`;
 
@@ -36,8 +38,24 @@ const UserInfo = () => {
         console.error(error);
       }
     };
-
+  
     fetchUsers();
+  }, []);
+  
+  useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem('roles'));
+    console.log(roles);
+    if (!roles) {
+      console.log('No role, going to login');
+      navigate('/login');
+    } else {
+      const isAdmin = roles.includes('admin');
+      console.log(isAdmin);
+      if (!isAdmin) {
+        console.log('Redirecting to homepage');
+        navigate('/homepage');
+      }
+    }
   }, []);
 
   const updateUser = async () => {

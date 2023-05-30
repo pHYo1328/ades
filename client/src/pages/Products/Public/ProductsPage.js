@@ -13,75 +13,18 @@ const cld = new Cloudinary({
 });
 
 export default function ProductsPage() {
-  const [statistics, setStatistics] = useState(null);
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
   const [categoryID, setCategoryID] = useState(0);
   const [brandID, setBrandID] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(Math.ceil(total / limit));
-  const [offset, setOffset] = useState(1);
   const [sort, setSort] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [offset, setOffset] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-
-  useEffect(() => {
-    axios
-      .get(
-        `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
-      )
-      .then((response) => {
-        console.log(response);
-        setProducts(response.data.data);
-        console.log(products);
-
-        if (limit == 0) {
-          setTotalPages(1);
-        } else {
-          setTotalPages(Math.ceil(total / limit));
-        }
-        console.log('products.length: ', total);
-        console.log('totalPages: ', totalPages);
-        console.log('limit', limit);
-        console.log('sort', sort);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [categoryID, brandID, sort, limit, currentPage]);
-
-  useEffect(() => {
-    setTotalPages(Math.ceil(total / limit));
-  }, [total]);
-
-  useEffect(() => {
-    setTotalPages(Math.ceil(total / limit));
-  }, [total]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [limit]);
-
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/products/total/${categoryID}/${brandID}`)
-      .then((response) => {
-        console.log(response);
-        setTotal(response.data.data);
-        console.log(total);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [categoryID, brandID]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    const calculatedOffset = limit * (page - 1) + 1;
-    setOffset(calculatedOffset);
-  };
 
   useEffect(() => {
     axios
@@ -111,16 +54,72 @@ export default function ProductsPage() {
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}/api/admin/statistics`)
+      .get(
+        `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
+      )
       .then((response) => {
         console.log(response);
-        setStatistics(response.data.data);
-        console.log(statistics);
+        setProducts(response.data.data);
+        console.log(products);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [categoryID, brandID, sort, limit, offset]);
+
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/api/products/total/${categoryID}/${brandID}`)
+      .then((response) => {
+        console.log('total number of products', response.data.data);
+        console.log(response.data.data);
+        setTotalProducts(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [categoryID, brandID]);
+
+  useEffect(() => {
+    setTotalProducts(totalProducts);
+    console.log('total number of products', totalProducts);
+  }, [totalProducts]);
+
+  useEffect(() => {
+    console.log('total number of products for pages', totalProducts);
+    console.log('limit for pages', limit);
+    console.log('pages', Math.ceil(totalProducts / limit));
+    if (limit !== 0 && Math.ceil(totalProducts / limit) > 1) {
+      setTotalPages(Math.ceil(totalProducts / limit));
+    } else {
+      setTotalPages(1);
+    }
+  }, [totalProducts, limit]);
+
+  useEffect(() => {
+    if (limit != 0) {
+      setTotalPages(totalPages);
+    }
+    console.log('total page: ', totalPages);
+  }, [totalPages]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    console.log(page);
+    const calculatedOffset = limit * (page - 1);
+    console.log('calculated offset: ', calculatedOffset);
+    setOffset(calculatedOffset);
+  };
+
+  useEffect(() => {
+    setOffset(offset);
+    console.log('offset: ', offset);
+  }, [offset]);
+
+  useEffect(() => {
+    setCurrentPage(currentPage);
+    console.log('current page: ', currentPage);
+  }, [brandID, categoryID, limit]);
 
   return (
     <div className="bg-white w-full">
@@ -137,11 +136,11 @@ export default function ProductsPage() {
           <div class="col-2">
             <div class="input-group mb-3">
               <input
-                min="0"
+                min="1"
                 type="number"
                 class="form-control form-control-sm"
                 value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value, 10))}
+                onChange={(e) => setLimit(parseInt(e.target.value))}
                 placeholder="Limit"
                 aria-describedby="basic-addon2"
               />
@@ -158,13 +157,13 @@ export default function ProductsPage() {
               aria-label=".form-select-sm example"
               onChange={(e) => setSort(e.target.value)}
             >
-              <option disabled selected value="0">
+              <option disabled selected value={0}>
                 Sort
               </option>
-              <option value="1">Price (Ascending)</option>
-              <option value="2">Price (Descending)</option>
-              <option value="3">Name (A-Z)</option>
-              <option value="4">Name (Z-A)</option>
+              <option value={1}>Price (Ascending)</option>
+              <option value={2}>Price (Descending)</option>
+              <option value={3}>Name (A-Z)</option>
+              <option value={4}>Name (Z-A)</option>
             </select>
           </div>
           <div class="col-2">
@@ -183,17 +182,17 @@ export default function ProductsPage() {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
+                  <div className="mx-auto flex flex-col items-center">
+                    <FadeLoader
+                      color={'navy'}
+                      loading={true}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p>Loading...</p>
+                  </div>
                 </div>
-              </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -212,17 +211,17 @@ export default function ProductsPage() {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
+                  <div className="mx-auto flex flex-col items-center">
+                    <FadeLoader
+                      color={'navy'}
+                      loading={true}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p>Loading...</p>
+                  </div>
+                </div>
               )}
               <option value={0}>All</option>
             </select>
@@ -232,24 +231,13 @@ export default function ProductsPage() {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {products ? (
             products.map((product) => (
-              <div
-                key={product.product_id}
-                className="group relative"
-                // onClick={() => {
-                //   const productID = product.product_id;
-                //   window.location.href = `/products/${productID}`;
-                // }}
-              >
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <div key={product.product_id} className="group relative">
+                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
                     <h3 className="text-sm text-gray-700">
-                      {/* <a href={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </a> */}
                       <Link to={`/product/${product.product_id}`}>
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
@@ -288,7 +276,6 @@ export default function ProductsPage() {
       >
         <Pagination
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
-          // totalPages={limit == 0 ? 0 : Math.ceil(products.length / limit)}
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}

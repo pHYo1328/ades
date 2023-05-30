@@ -11,6 +11,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaShoppingCart } from 'react-icons/fa';
 import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
@@ -80,8 +81,27 @@ const Cart = () => {
   const [orderId, setOrderId] = useState(null);
   const [checkoutSuccessful, setCheckoutSuccessful] = useState(false);
   const checkoutSuccessfulRef = useRef(checkoutSuccessful);
-  const customerID = localStorage.getItem('userid');
   const navigate = useNavigate();
+  useEffect(() => {
+    const roles = JSON.parse(localStorage.getItem('roles'));
+    console.log(roles);
+    if (!roles) {
+      // User does not have the required role(s), redirect them to the homepage or show an error message
+      // alert("you're not admin");
+      console.log('Redirecting to homepage-admin');
+      navigate('/login');
+    } else {
+      const isCustomer = roles.includes('customer');
+      console.log(isCustomer);
+      if (!isCustomer) {
+        // User does not have the required role(s), redirect them to the homepage or show an error message
+        // alert("you're not admin");
+        console.log('Redirecting to homepage-admin');
+        navigate('/login');
+      }
+    }
+  }, []);
+  const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
     const itemsDetailsToShow = cartData
       .map((cartItem) => {
@@ -215,7 +235,7 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
-      if (latestCartData.current.length > 0) {
+      if (latestCartData.current.length >= 0) {
         if (!checkoutSuccessfulRef.current) {
           api
             .post(`/api/cart/${customerID}`, {
@@ -260,139 +280,154 @@ const Cart = () => {
     }
   }, [cartData, productDetails]);
   return (
-    <div className="flex flex-row ">
-      <table className="border-collapse mt-4 mb-48 text-base w-3/5 ml-36">
-        <thead>
-          <tr>
-            <th>Your Cart({cartData.length})</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th className="text-center">Quantity</th>
-            <th className="pl-6">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? (
-            <tr className="flex justify-center items-center">
-              <LoadingIndicator />
+    <div className="flex flex-row">
+      <div className="mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-36">
+        <h2 className="font-roboto py-4 flex flex-row">
+          My Shopping Cart <FaShoppingCart />
+        </h2>
+        <table className="border-collapse w-full text-base md:text-lg">
+          <thead className="border-t-2 border-b-2 border-black text-base md:text-xl">
+            <tr>
+              <th className='w-1/6'>My Cart({cartData.length})</th>
+              <th className='w-1/4'>Product</th>
+              <th className='hidden lg:table-cell'>Price</th>
+              <th className="lg:w-1/12 text-center hidden sm:table-cell">Quantity</th>
+              <th className="lg:w-1/5 text-center hidden sm:table-cell">Total</th>
             </tr>
-          ) : cartProductData &&
-            cartData.length > 0 &&
-            productDetails.length > 0 ? (
-            cartProductData.map((cartItem, index) => (
-              <tr
-                key={`${cartItem.product_ID}-${index}`}
-                className="border-t-2 border-b-2 border-black"
-              >
-                <td className="flex flew-row py-6">
-                  <AdvancedImage
-                    cldImg={cld.image(cartItem.image_url)}
-                    className="w-64 h-48 "
-                  />
-                </td>
-                <td>
-                  <b>{cartItem.product_name}</b>
-                  <p>category: {cartItem.category_name}</p>
-                  <p>brand :{cartItem.brand_name}</p>
-                </td>
-                <td>${cartItem.price}</td>
-                <td>
-                  <div className="flex flex-row justify-evenly space-x-2">
-                    <button
-                      className="flex items-center justify-center w-8 h-8 bg-red-400 border-2 border-black"
-                      onClick={() =>
-                        minusButtonHandler(
-                          cartData,
-                          cartItem.product_id,
-                          setCartData
-                        )
-                      }
-                    >
-                      <FiMinus size={20} />
-                    </button>
-                    <p>{cartItem.quantity}</p>
-                    <button
-                      className="flex items-center justify-center w-8 h-8 bg-green-400 border-2 border-black"
-                      onClick={() =>
-                        plusButtonHandler(
-                          cartData,
-                          cartItem.product_id,
-                          setCartData
-                        )
-                      }
-                    >
-                      <FiPlus size={20} />
-                    </button>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr className="flex justify-center items-center">
+                <LoadingIndicator />
+              </tr>
+            ) : cartProductData &&
+              cartData.length > 0 &&
+              productDetails.length > 0 ? (
+              cartProductData.map((cartItem, index) => (
+                <tr
+                  key={`${cartItem.product_ID}-${index}`}
+                  className=" border-b-2 border-grey"
+                >
+                  <td className="flex flew-row py-6 w-48 h-48 md:w-64 md:h-64 ">
+                    <AdvancedImage
+                      cldImg={cld.image(cartItem.image_url)}
+                      className="rounded"
+                    />
+                  </td>
+                  <td>
+                    <b className='hidden md:block'>{cartItem.product_name}</b>
+                    <p className='block md:hidden'>{cartItem.product_name}</p>
+                    <p className='hidden md:block'>
+                      <b className='hidden lg:block'>category:</b> {cartItem.category}
+                    </p>
+                    <p  className='hidden md:block'>
+                      <b className='hidden lg:block'>brand :</b>
+                      {cartItem.brand}
+                    </p>
+                    <div className='hidden md:block'>
+                      {cartItem.price}
+                    </div>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2">
+                      <button
+                        className="flex items-center justify-center "
+                        onClick={() =>
+                          minusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiMinus size={16} />
+                      </button>
+                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+                        {cartItem.quantity}
+                      </p>
+                      <button
+                        className="flex items-center justify-center"
+                        onClick={() =>
+                          plusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiPlus size={16} />
+                      </button>
+                    </div>
+                    <div className="w-20 text-center block md:hidden">
+                    <b>${cartItem.totalAmount}</b>
                   </div>
-                </td>
-
-                <td className="pl-6">
-                  <b>${cartItem.totalAmount}</b>
-                </td>
-                <td className="pl-4">
-                  <button
-                    className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full"
-                    onClick={() =>
-                      deleteButtonHandler(
-                        cartData,
-                        cartItem.product_id,
-                        setCartData
-                      )
-                    }
-                  >
-                    <AiFillDelete size={24} color="red" />
-                  </button>
+                  </td>
+                  <td className='hidden lg:table-cell'>${cartItem.price}</td>
+                  <td>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded hidden md:flex flex-row">
+                      <button
+                        className="flex items-center justify-center "
+                        onClick={() =>
+                          minusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiMinus size={16} />
+                      </button>
+                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+                        {cartItem.quantity}
+                      </p>
+                      <button
+                        className="flex items-center justify-center"
+                        onClick={() =>
+                          plusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiPlus size={16} />
+                      </button>
+                    </div>
+                   
+                  </td>
+                  <td className="w-40 text-center hidden md:table-cell">
+                    <b>${cartItem.totalAmount}</b>
+                  </td>
+                  <td className="pl-4">
+                    <button
+                      className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full"
+                      onClick={() =>
+                        deleteButtonHandler(
+                          cartData,
+                          cartItem.product_id,
+                          setCartData
+                        )
+                      }
+                    >
+                      <AiFillDelete size={20} color="white" className='hidden md:block' />
+                      <AiFillDelete size={16} color='white' className='block md:hidden'/>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="flex justify-center item-center">
+                  There is nothing in your cart.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} className="flex justify-center item-center">
-                There is nothing in your cart.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5 rounded-lgz`">
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className='mr-36 hidden lg:block'>
+      <div className="w-full bg-stone-700 p-4 ml-12  mt-5 rounded-lg shadow-lg ">
         <div className="space-y-4 ">
           <h1 className="text-lg font-bold text-white">Shipping Address</h1>
-          <div className="flex flex-row item-center ">
-            <label
-              htmlFor="firstName"
-              className="block text-base font-medium text-white w-28"
-            >
-              First Name :
-            </label>
-            <input
-              required
-              type="text"
-              name="firstName"
-              value={address.firstName}
-              onChange={handleChange}
-              className="px-3 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="First Name"
-            />
-          </div>
-
-          <div className="flex flex-row">
-            <label
-              htmlFor="lastName"
-              className="block text-base font-medium text-white w-28"
-            >
-              Last Name :
-            </label>
-            <input
-              required
-              type="text"
-              name="lastName"
-              value={address.lastName}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="Last Name"
-            />
-          </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <label
               htmlFor="addressLine1"
               className="block text-base font-medium text-white w-28"
@@ -409,7 +444,7 @@ const Cart = () => {
               placeholder="Address Line 1"
             />
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <label
               htmlFor="addressLine2"
               className="block text-base font-medium text-white w-28"
@@ -426,7 +461,7 @@ const Cart = () => {
               placeholder="Address Line 2"
             />
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <label
               htmlFor="state"
               className="block text-base font-medium text-white w-28"
@@ -443,7 +478,7 @@ const Cart = () => {
               placeholder="State"
             />
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row items-center">
             <label
               htmlFor="postalCode"
               className="block text-base font-medium text-white w-28"
@@ -460,6 +495,47 @@ const Cart = () => {
               placeholder="Postal Code"
             />
           </div>
+          <label htmlFor="shippingMethods" className="text-white text-base">
+            Choose shipping methods:
+          </label>
+          <select
+            required
+            name="shippingMethods"
+            className="form-select form-select-sm"
+            onChange={(event) => {
+              setShippingFee(event.target.value);
+              setShippingId(event.target.selectedIndex);
+            }}
+          >
+            <option disabled selected value="0">
+              -- Shipping Method --
+            </option>
+            {shippingMethod ? (
+              shippingMethod.map((method) => (
+                <option key={method.shipping_id} value={method.fee}>
+                  {method.shipping_method}
+                </option>
+              ))
+            ) : (
+              <LoadingIndicator />
+            )}
+          </select>
+          <div className="flex flex-column text-base text-white border-t-2 border-b-2 border-white py-2">
+            <div className="flex flex-row justify-between">
+              <p className="uppercase">subTotal : </p>
+              <p>${totalAmount}</p>
+            </div>
+            <div className="flex flex-row justify-between">
+              <p>shipping</p>
+              <p> $ {shippingFee}</p>
+            </div>
+          </div>
+          <div className=" text-white border-b-2 border-white flex flex-row justify-between pb-3">
+            <p className="uppercase text-xl">Estimated total :</p>
+            <p className="text-base">
+              ${(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
+            </p>
+          </div>
           <div>
             <button
               onClick={() =>
@@ -471,7 +547,7 @@ const Cart = () => {
                   cartProductData
                 )
               }
-              className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
+              className="w-full px-3 py-2 bg-black text-white rounded-md text-base font-roboto"
             >
               Check out
             </button>
@@ -484,47 +560,19 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
-        <div className="flex flex-row justify-between">
-          <button>
-            <Link
+      </div>
+      <div className="fixed bottom-0 w-full h-1/5 z-10 bg-white py-3">
+        <div className="py-6">
+        <Link
               to="/products"
-              className="ml-48 text-base flex flex-row text-blue-800 "
             >
-              <BsArrowLeft size={24} />
-              <b>Continue Shipping</b>
-            </Link>
+          <button className='ml-4 md:ml-48 text-base md:text-xl text-white bg-blue-800 hover:bg-blue-950 flex flex-row py-2 px-4 rounded'>
+            
+              <BsArrowLeft size={24} className='mr-5' />
+              <p>Continue Shopping</p>
+           
           </button>
-          <div className="col-3">
-            <select
-              required
-              class="form-select form-select-sm"
-              onChange={(event) => {
-                setShippingFee(event.target.value);
-                setShippingId(event.target.selectedIndex);
-              }}
-            >
-              <option disabled selected value="0">
-                -- Shipping Method --
-              </option>
-              {shippingMethod ? (
-                shippingMethod.map((method) => (
-                  <option key={method.shipping_id} value={method.fee}>
-                    {method.shipping_method}
-                  </option>
-                ))
-              ) : (
-                <LoadingIndicator />
-              )}
-            </select>
-          </div>
-          <div className="flex flex-column text-base ">
-            <p>subTotal : ${totalAmount}</p>
-            <p>
-              total : $
-              {(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
-            </p>
-          </div>
+          </Link>
         </div>
       </div>
     </div>
