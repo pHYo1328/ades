@@ -84,7 +84,7 @@ const Cart = () => {
   const [showCheckout, setShowCheckout] = useState(false);
   const navigate = useNavigate();
   const handleContinueToCheckout = () => {
-    setShowCheckout(true);
+    setShowCheckout(!showCheckout);
   };
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
@@ -286,7 +286,7 @@ const Cart = () => {
   const checkoutDynamicClassName = `lg:mr-36 ${
     showCheckout ? 'block' : 'hidden lg:block'
   } mb-48 w-9/10 `;
-  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-36 ${
+  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-24 ${
     showCheckout ? 'hidden' : 'block'
   }`;
   return (
@@ -298,9 +298,9 @@ const Cart = () => {
         <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black">
           <thead className=" text-base border-b-2 md:text-xl">
             <tr>
-              <th className="w-1/6">My Cart({cartData.length})</th>
+              <th className="w-1/8">My Cart({cartData.length})</th>
               <th className="w-1/4">Product</th>
-              <th className="hidden lg:table-cell">Price</th>
+              <th className="hidden lg:table-cell w-1/6">Price</th>
               <th className="lg:w-1/12 text-center hidden sm:table-cell">
                 Quantity
               </th>
@@ -322,7 +322,7 @@ const Cart = () => {
                   key={`${cartItem.product_ID}-${index}`}
                   className=" border-b-2 border-grey"
                 >
-                  <td className="flex flew-row py-6 w-48 h-48 md:w-64 md:h-64 ">
+                  <td className="flex flew-row py-6 w-48 h-56 md:w-64 md:h-64 ">
                     <AdvancedImage
                       cldImg={cld.image(cartItem.image_url)}
                       className="rounded"
