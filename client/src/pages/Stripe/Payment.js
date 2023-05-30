@@ -45,70 +45,67 @@ function Payment() {
 
   return (
     <>
-    <div className="flex flex-row">
-      <div className="mt-4 mb-48 sm:mb-64 w-full ml-10 lg:w-2.5/5 lg:ml-38">
-      <h1>Order summary</h1>
-      {payments && payments.length > 0 ? (
-   <table style={{ marginTop: '20px', marginBottom: '20px' }}>
-    <thead>
-      <tr>
-        <th style={{width: '50%'}}>Product Name</th>
-        <th style={{width: '20%'}}>Qty</th>
-        <th style={{width: '20%'}}>Price</th>
-        <th style={{width: '20%'}}>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {payments.map((paymentData) => (
-        <tr key={paymentData.order_id}>
-          <td>{paymentData.product_name}</td>
-          <td>{paymentData.quantity}</td>
-          <td>{paymentData.price}</td>
-          <td>{paymentData.price * paymentData.quantity}</td>
-        </tr>
-      ))}
-      <tr key="payment-summary">
-      <td colSpan="4" style={{ textAlign: 'right'}}>
-          <p className="text-sm font-medium text-gray-900 justify-start">
-            Sub total: {payments[0].total_price}
-          </p>
-          <p className="text-sm font-medium text-gray-900 justify-start">
-            Shipping Method: {payments[0].shipping_method}
-          </p>
-          <p className="text-sm font-medium text-gray-900 justify-start">
-            Fee: {payments[0].fee}
-          </p>
-          <p className="text-sm font-medium text-gray-900 justify-start">
-            Pay:{' '}
-            {(
-              parseFloat(payments[0].total_price) +
-              parseFloat(payments[0].fee)
-            ).toFixed(2)}
-          </p>
-          <p className="text-sm font-medium text-gray-900 justify-start">
-            Shipping_address: {payments[0].shipping_address}
-          </p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-) : (
-  <p>Loading...</p>
-)}
+      <div className="flex flex-row">
+        <div className="mt-4 mb-48 sm:mb-64 w-full ml-10 lg:w-2.5/5 lg:ml-38">
+          <h1>Order summary</h1>
+          {payments && payments.length > 0 ? (
+            <table style={{ marginTop: '20px', marginBottom: '20px' }}>
+              <thead>
+                <tr>
+                  <th style={{ width: '50%' }}>Product Name</th>
+                  <th style={{ width: '20%' }}>Qty</th>
+                  <th style={{ width: '20%' }}>Price</th>
+                  <th style={{ width: '20%' }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {payments.map((paymentData) => (
+                  <tr key={paymentData.order_id}>
+                    <td>{paymentData.product_name}</td>
+                    <td>{paymentData.quantity}</td>
+                    <td>{paymentData.price}</td>
+                    <td>{paymentData.price * paymentData.quantity}</td>
+                  </tr>
+                ))}
+                <tr key="payment-summary">
+                  <td colSpan="4" style={{ textAlign: 'right' }}>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      Sub total: {payments[0].total_price}
+                    </p>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      Shipping Method: {payments[0].shipping_method}
+                    </p>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      Fee: {payments[0].fee}
+                    </p>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      Pay:{' '}
+                      {(
+                        parseFloat(payments[0].total_price) +
+                        parseFloat(payments[0].fee)
+                      ).toFixed(2)}
+                    </p>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      Shipping_address: {payments[0].shipping_address}
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
+        <div className="mt-4 mb-48 sm:mb-64 w-full mr-10 lg:w-2.5/5 lg:ml-20">
+          {clientSecret && stripePromise && (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <AddressForm />
 
+              <CheckoutForm />
+            </Elements>
+          )}
+        </div>
       </div>
-      <div className="mt-4 mb-48 sm:mb-64 w-full mr-10 lg:w-2.5/5 lg:ml-20">
-      {clientSecret && stripePromise && (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <AddressForm />
-
-         
-          <CheckoutForm />
-        
-        </Elements>
-      )}
-      </div>
-    </div>
     </>
   );
 }

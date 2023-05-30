@@ -419,17 +419,17 @@ export default function AdminDashboard() {
                           });
 
                         axios
-                        .post(`${baseUrl}/processPartialRefund/${productID}`)
-                        .then((response) => {
-                          console.log(response);
-                          setRefunds(response.data.data);
-                          console.log(refunds);
-                        })
-                        .catch((error) => {
-                          console.error(error);
-                        });
-                  
-                      window.alert('Giving partial refund now...');
+                          .post(`${baseUrl}/processPartialRefund/${productID}`)
+                          .then((response) => {
+                            console.log(response);
+                            setRefunds(response.data.data);
+                            console.log(refunds);
+                          })
+                          .catch((error) => {
+                            console.error(error);
+                          });
+
+                        window.alert('Giving partial refund now...');
                       }}
                     >
                       <i className="bi bi-trash-fill"></i>
