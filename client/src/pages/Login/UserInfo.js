@@ -38,10 +38,10 @@ const UserInfo = () => {
         console.error(error);
       }
     };
-  
+
     fetchUsers();
   }, []);
-  
+
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);

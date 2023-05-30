@@ -26,18 +26,18 @@ const Header = () => {
 
   const onHandleLogout = async () => {
     try {
-        await fetch(`${baseUrl}/logout`, {
-            method: 'PUT',
-            credentials: 'include',
-        });
+      await fetch(`${baseUrl}/logout`, {
+        method: 'PUT',
+        credentials: 'include',
+      });
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
     localStorage.removeItem('accessToken');
     localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
     navigate('/');
-};
+  };
 
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
@@ -67,10 +67,12 @@ const Header = () => {
               Create
             </Link>
 
-              <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg" onClick={onHandleLogout}>
-                Log Out
-              </button>
-          
+            <button
+              className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
+              onClick={onHandleLogout}
+            >
+              Log Out
+            </button>
           </div>
         </nav>
       </div>
