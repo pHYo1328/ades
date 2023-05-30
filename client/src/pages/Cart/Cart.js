@@ -11,6 +11,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaShoppingCart } from 'react-icons/fa';
 import api from '../../index';
 const cld = new Cloudinary({
   cloud: {
@@ -80,7 +81,11 @@ const Cart = () => {
   const [orderId, setOrderId] = useState(null);
   const [checkoutSuccessful, setCheckoutSuccessful] = useState(false);
   const checkoutSuccessfulRef = useRef(checkoutSuccessful);
+  const [showCheckout, setShowCheckout] = useState(false);
   const navigate = useNavigate();
+  const handleContinueToCheckout = () => {
+    setShowCheckout(true);
+  };
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
@@ -234,7 +239,7 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
-      if (latestCartData.current.length > 0) {
+      if (latestCartData.current.length >= 0) {
         if (!checkoutSuccessfulRef.current) {
           api
             .post(`/api/cart/${customerID}`, {
@@ -278,246 +283,245 @@ const Cart = () => {
       setIsLoading(false);
     }
   }, [cartData, productDetails]);
+  const checkoutDynamicClassName = `lg:mr-36 ${
+    showCheckout ? 'block' : 'hidden lg:block'
+  } mb-48 w-9/10 `;
+  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-36 ${
+    showCheckout ? 'hidden' : 'block'
+  }`;
   return (
-    <div className="flex flex-row ">
-      <table className="border-collapse mt-4 mb-48 text-base w-3/5 ml-36">
-        <thead>
-          <tr>
-            <th>Your Cart({cartData.length})</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th className="text-center">Quantity</th>
-            <th className="pl-6">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading ? (
-            <tr className="flex justify-center items-center">
-              <LoadingIndicator />
+    <div className="flex flex-row">
+      <div className={cartListDynamicClassName}>
+        <h2 className="font-roboto py-4 flex flex-row">
+          My Shopping Cart <FaShoppingCart />
+        </h2>
+        <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black">
+          <thead className=" text-base border-b-2 md:text-xl">
+            <tr>
+              <th className="w-1/6">My Cart({cartData.length})</th>
+              <th className="w-1/4">Product</th>
+              <th className="hidden lg:table-cell">Price</th>
+              <th className="lg:w-1/12 text-center hidden sm:table-cell">
+                Quantity
+              </th>
+              <th className="lg:w-1/5 text-center hidden sm:table-cell">
+                Total
+              </th>
             </tr>
-          ) : cartProductData &&
-            cartData.length > 0 &&
-            productDetails.length > 0 ? (
-            cartProductData.map((cartItem, index) => (
-              <tr
-                key={`${cartItem.product_ID}-${index}`}
-                className="border-t-2 border-b-2 border-black"
-              >
-                <td className="flex flew-row py-6">
-                  <AdvancedImage
-                    cldImg={cld.image(cartItem.image_url)}
-                    className="w-48 h-48 "
-                  />
-                </td>
-                <td>
-                  <b>{cartItem.product_name}</b>
-                  <p>category: {cartItem.category}</p>
-                  <p>brand :{cartItem.brand}</p>
-                </td>
-                <td>${cartItem.price}</td>
-                <td>
-                  <div className="flex flex-row justify-evenly space-x-2">
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr className="flex justify-center items-center">
+                <LoadingIndicator />
+              </tr>
+            ) : cartProductData &&
+              cartData.length > 0 &&
+              productDetails.length > 0 ? (
+              cartProductData.map((cartItem, index) => (
+                <tr
+                  key={`${cartItem.product_ID}-${index}`}
+                  className=" border-b-2 border-grey"
+                >
+                  <td className="flex flew-row py-6 w-48 h-48 md:w-64 md:h-64 ">
+                    <AdvancedImage
+                      cldImg={cld.image(cartItem.image_url)}
+                      className="rounded"
+                    />
+                  </td>
+                  <td>
+                    <b className="hidden md:block">{cartItem.product_name}</b>
+                    <p className="block md:hidden">{cartItem.product_name}</p>
+                    <p className="hidden md:flex flex-row">
+                      <b className="hidden lg:block">category:</b>{' '}
+                      {cartItem.category}
+                    </p>
+                    <p className="hidden md:flex flex-row">
+                      <b className="hidden lg:block">brand :</b>
+                      {cartItem.brand}
+                    </p>
+                    <div className="block lg:hidden">{cartItem.price}</div>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2">
+                      <button
+                        className="flex items-center justify-center "
+                        onClick={() =>
+                          minusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiMinus size={16} />
+                      </button>
+                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+                        {cartItem.quantity}
+                      </p>
+                      <button
+                        className="flex items-center justify-center"
+                        onClick={() =>
+                          plusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiPlus size={16} />
+                      </button>
+                    </div>
+                    <div className="w-20 text-center block md:hidden">
+                      <b>${cartItem.totalAmount}</b>
+                    </div>
+                  </td>
+                  <td className="hidden lg:table-cell">${cartItem.price}</td>
+                  <td>
+                    <div className=" justify-evenly border-2 border-gray-400 rounded hidden md:flex flex-row">
+                      <button
+                        className="flex items-center justify-center "
+                        onClick={() =>
+                          minusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiMinus size={16} />
+                      </button>
+                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+                        {cartItem.quantity}
+                      </p>
+                      <button
+                        className="flex items-center justify-center"
+                        onClick={() =>
+                          plusButtonHandler(
+                            cartData,
+                            cartItem.product_id,
+                            setCartData
+                          )
+                        }
+                      >
+                        <FiPlus size={16} />
+                      </button>
+                    </div>
+                  </td>
+                  <td className="w-40 text-center hidden md:table-cell">
+                    <b>${cartItem.totalAmount}</b>
+                  </td>
+                  <td className="pl-4">
                     <button
-                      className="flex items-center justify-center w-8 h-8 bg-red-400 border-2 border-black"
+                      className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full"
                       onClick={() =>
-                        minusButtonHandler(
+                        deleteButtonHandler(
                           cartData,
                           cartItem.product_id,
                           setCartData
                         )
                       }
                     >
-                      <FiMinus size={20} />
+                      <AiFillDelete
+                        size={20}
+                        color="white"
+                        className="hidden md:block"
+                      />
+                      <AiFillDelete
+                        size={16}
+                        color="white"
+                        className="block md:hidden"
+                      />
                     </button>
-                    <p>{cartItem.quantity}</p>
-                    <button
-                      className="flex items-center justify-center w-8 h-8 bg-green-400 border-2 border-black"
-                      onClick={() =>
-                        plusButtonHandler(
-                          cartData,
-                          cartItem.product_id,
-                          setCartData
-                        )
-                      }
-                    >
-                      <FiPlus size={20} />
-                    </button>
-                  </div>
-                </td>
-
-                <td className="pl-6">
-                  <b>${cartItem.totalAmount}</b>
-                </td>
-                <td className="pl-4">
-                  <button
-                    className="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full"
-                    onClick={() =>
-                      deleteButtonHandler(
-                        cartData,
-                        cartItem.product_id,
-                        setCartData
-                      )
-                    }
-                  >
-                    <AiFillDelete size={24} color="red" />
-                  </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="flex justify-center item-center">
+                  There is nothing in your cart.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} className="flex justify-center item-center">
-                There is nothing in your cart.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <div className="w-1/4  bg-black p-4 ml-12 mr-36 mt-5 rounded-lgz`">
-        <div className="space-y-4 ">
-          <h1 className="text-lg font-bold text-white">Shipping Address</h1>
-          <div className="flex flex-row item-center ">
-            <label
-              htmlFor="firstName"
-              className="block text-base font-medium text-white w-28"
-            >
-              First Name :
-            </label>
-            <input
-              required
-              type="text"
-              name="firstName"
-              value={address.firstName}
-              onChange={handleChange}
-              className="px-3 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="First Name"
-            />
-          </div>
-
-          <div className="flex flex-row">
-            <label
-              htmlFor="lastName"
-              className="block text-base font-medium text-white w-28"
-            >
-              Last Name :
-            </label>
-            <input
-              required
-              type="text"
-              name="lastName"
-              value={address.lastName}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="Last Name"
-            />
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="addressLine1"
-              className="block text-base font-medium text-white w-28"
-            >
-              Address line 1 :
-            </label>
-            <input
-              required
-              type="text"
-              name="addressLine1"
-              value={address.addressLine1}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="Address Line 1"
-            />
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="addressLine2"
-              className="block text-base font-medium text-white w-28"
-            >
-              Address line 2:
-            </label>
-            <input
-              required
-              type="text"
-              name="addressLine2"
-              value={address.addressLine2}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="Address Line 2"
-            />
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="state"
-              className="block text-base font-medium text-white w-28"
-            >
-              State :
-            </label>
-            <input
-              required
-              type="text"
-              name="state"
-              value={address.state}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="State"
-            />
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="postalCode"
-              className="block text-base font-medium text-white w-28"
-            >
-              Postal Code :
-            </label>
-            <input
-              required
-              type="number"
-              name="postalCode"
-              value={address.postalCode}
-              onChange={handleChange}
-              className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
-              placeholder="Postal Code"
-            />
-          </div>
-          <div>
-            <button
-              onClick={() =>
-                checkOutHandler(
-                  customerID,
-                  address,
-                  totalAmount,
-                  shippingId,
-                  cartProductData
-                )
-              }
-              className="w-full px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
-            >
-              Check out
-            </button>
-            <ToastContainer
-              limit={2}
-              newestOnTop={true}
-              position="top-center"
-              style={{ width: '600px', height: '200px' }}
-            />
-          </div>
-        </div>
+            )}
+          </tbody>
+        </table>
       </div>
-      <div className="fixed bottom-0  w-3/4 h-1/5 z-1 bg-white py-3">
-        <div className="flex flex-row justify-between">
-          <button>
-            <Link
-              to="/products"
-              className="ml-48 text-base flex flex-row text-blue-800 "
-            >
-              <BsArrowLeft size={24} />
-              <b>Continue Shipping</b>
-            </Link>
-          </button>
-          <div className="col-3">
+      <div className={checkoutDynamicClassName}>
+        <div className="w-full bg-stone-700 p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
+          <div className="space-y-4 ">
+            <h1 className="text-lg font-bold text-white">Shipping Address</h1>
+            <div className="flex flex-row items-center">
+              <label
+                htmlFor="addressLine1"
+                className="block text-base font-medium text-white w-28"
+              >
+                Address line 1 :
+              </label>
+              <input
+                required
+                type="text"
+                name="addressLine1"
+                value={address.addressLine1}
+                onChange={handleChange}
+                className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+                placeholder="Address Line 1"
+              />
+            </div>
+            <div className="flex flex-row items-center">
+              <label
+                htmlFor="addressLine2"
+                className="block text-base font-medium text-white w-28"
+              >
+                Address line 2:
+              </label>
+              <input
+                required
+                type="text"
+                name="addressLine2"
+                value={address.addressLine2}
+                onChange={handleChange}
+                className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+                placeholder="Address Line 2"
+              />
+            </div>
+            <div className="flex flex-row items-center">
+              <label
+                htmlFor="state"
+                className="block text-base font-medium text-white w-28"
+              >
+                State :
+              </label>
+              <input
+                required
+                type="text"
+                name="state"
+                value={address.state}
+                onChange={handleChange}
+                className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+                placeholder="State"
+              />
+            </div>
+            <div className="flex flex-row items-center">
+              <label
+                htmlFor="postalCode"
+                className="block text-base font-medium text-white w-28"
+              >
+                Postal Code :
+              </label>
+              <input
+                required
+                type="number"
+                name="postalCode"
+                value={address.postalCode}
+                onChange={handleChange}
+                className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+                placeholder="Postal Code"
+              />
+            </div>
+            <label htmlFor="shippingMethods" className="text-white text-base">
+              Choose shipping methods:
+            </label>
             <select
               required
-              class="form-select form-select-sm"
+              name="shippingMethods"
+              className="form-select form-select-sm"
               onChange={(event) => {
                 setShippingFee(event.target.value);
                 setShippingId(event.target.selectedIndex);
@@ -536,15 +540,75 @@ const Cart = () => {
                 <LoadingIndicator />
               )}
             </select>
-          </div>
-          <div className="flex flex-column text-base ">
-            <p>subTotal : ${totalAmount}</p>
-            <p>
-              total : $
-              {(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
-            </p>
+            <div className="flex flex-column text-base text-white border-t-2 border-b-2 border-white py-2">
+              <div className="flex flex-row justify-between">
+                <p className="uppercase">subTotal : </p>
+                <p>${totalAmount}</p>
+              </div>
+              <div className="flex flex-row justify-between">
+                <p>shipping</p>
+                <p> $ {shippingFee}</p>
+              </div>
+            </div>
+            <div className=" text-white border-b-2 border-white flex flex-row justify-between pb-3">
+              <p className="uppercase text-xl">Estimated total :</p>
+              <p className="text-base">
+                $
+                {(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}
+              </p>
+            </div>
+            <div>
+              <button
+                onClick={() =>
+                  checkOutHandler(
+                    customerID,
+                    address,
+                    totalAmount,
+                    shippingId,
+                    cartProductData
+                  )
+                }
+                className="w-full px-3 py-2 bg-black text-white rounded-md text-base font-roboto"
+              >
+                Check out
+              </button>
+              <ToastContainer
+                limit={2}
+                newestOnTop={true}
+                position="top-center"
+                style={{ width: '600px', height: '200px' }}
+              />
+            </div>
           </div>
         </div>
+      </div>
+      <div className="fixed bottom-0 w-full h-1/5 z-10 bg-white py-3">
+        {!showCheckout ? (
+          <div className="py-6 flex flex-row justify-around lg:justify-normal">
+            <Link to="/products">
+              <button className="ml-4 lg:ml-48 text-sm md:text-xl py-2 px-2 text-white bg-green-800 hover:bg-green-900 flex flex-row  rounded items-center">
+                <BsArrowLeft size={24} className="mr-1 lg:mr-5" />
+                <p>Continue Shopping</p>
+              </button>
+            </Link>
+            <button
+              className="block lg:hidden text-sm md:text-xl py-2 px-2 md:py-2 md:px-4 border-green-800 border-2 hover:border-green-950 rounded"
+              onClick={handleContinueToCheckout}
+            >
+              Continue to Checkout
+            </button>
+          </div>
+        ) : (
+          <div className="py-6 flex flex-row justify-around lg:justify-normal">
+            <button
+              className="ml-4 lg:ml-48 text-sm md:text-xl py-2 px-2 text-white bg-green-800 hover:bg-green-900 flex flex-row  rounded items-center"
+              onClick={handleContinueToCheckout}
+            >
+              <BsArrowLeft size={24} className="mr-1 lg:mr-5" />
+              <p>Go back to Cart Lists</p>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

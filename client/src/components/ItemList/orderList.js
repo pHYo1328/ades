@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../index';
 import { useNavigate } from 'react-router-dom';
+import { Cloudinary } from '@cloudinary/url-gen';
+import { AdvancedImage } from '@cloudinary/react';
+import { FaEdit } from 'react-icons/fa';
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: 'ddoajstil',
+  },
+});
 const OrderList = ({
   items,
   setItems,
@@ -117,9 +125,9 @@ const OrderList = ({
     <ul>
       {clearedItems.map((item, index) => (
         <li key={index}>
-          <div className="py-3 mx-6 my-6 shadow-md">
+          <div className="py-3 mx-6 my-6 shadow-lg shadow-cyan-500/50 rounded">
             <div className="flex flex-row justify-around text-xl">
-              <p>{item.order_id}</p>
+              <p>order ID : {item.order_id}</p>
               {editingIndex === index ? (
                 <div className="flex flex-row space-x-12 w-1/2">
                   <input
@@ -156,10 +164,15 @@ const OrderList = ({
               ) : (
                 <div className="flex flex-row space-x-12">
                   <>
-                    <p>{item.shipping_address}</p>
-                    <p>{item.shipping_method}</p>
+                    <p>Address : {item.shipping_address}</p>
+                    <p>Shipping Method : {item.shipping_method}</p>
                   </>
-                  <button onClick={() => handleEditClick(index)}>Edit</button>
+                  <button
+                    onClick={() => handleEditClick(index)}
+                    className="bg-gray-600 hover:bg-gray-800 py-2 px-4 rounded text-white flex flex-row items-center"
+                  >
+                    <FaEdit className="mr-3"></FaEdit>Edit
+                  </button>
                   {renderButton && (
                     <button
                       onClick={() => {
@@ -176,26 +189,37 @@ const OrderList = ({
             {item.order_items.length > 0 && (
               <div className="mt-4 text-xl">
                 {item.order_items.map((orderItem, orderIndex) => (
-                  <div
-                    key={orderIndex}
-                    className="flex items-center mt-2 justify-around"
-                  >
-                    <p>{orderItem.product_name}</p>
-                    <p>{orderItem.product_id}</p>
-                    <p>{orderItem.price}</p>
+                  <div key={orderIndex}>
+                    <div className="flex items-center mt-2 justify-around">
+                      <AdvancedImage
+                        cldImg={cld.image(orderItem.image_url)}
+                        className="w-48 h-48 rounded"
+                      />
+                      <div>
+                        <p>{orderItem.product_name}</p>
+                        <p>quantity : {orderItem.quantity}</p>
+                        <p>${orderItem.price}</p>
+                      </div>
+                    </div>
 
-                    <button
-                      onClick={() =>
-                        handleDeleteItem(
-                          item.order_id,
-                          orderItem.product_id,
-                          orderItem.quantity
-                        )
-                      }
-                      className="ml-4 text-red-500"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex flex-col items-end px-4">
+                      <p>
+                        item total: $
+                        {(orderItem.price * orderItem.quantity).toFixed(2)}
+                      </p>
+                      <button
+                        onClick={() =>
+                          handleDeleteItem(
+                            item.order_id,
+                            orderItem.product_id,
+                            orderItem.quantity
+                          )
+                        }
+                        className="my-3 text-white bg-red-600 px-4 py-2 rounded text-base hover:bg-red-800"
+                      >
+                        cancel order
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

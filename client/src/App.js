@@ -35,18 +35,23 @@ import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategori
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import Header from './components/header/header';
 import SignedInHeader from './components/header/signedInHeader';
-import AdminHeader from './components/header/AdminHeader'
+import AdminHeader from './components/header/AdminHeader';
 import './App.css';
 import './input.css';
 
 function App() {
   const location = useLocation();
-  const adminHeaderRoutes = ['/admin', '/products/edit/:productID', '/products/create', '/homepage-admin']; // Specify the routes where the header should be admin headers
+  const adminHeaderRoutes = [
+    '/admin',
+    '/products/edit/:productID:productID',
+    '/products/create',
+    '/homepage-admin',
+  ]; // Specify the routes where the header should be admin headers
   const SignedInHeaderRoutes = ['/homepage'];
-  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden 
+  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
-  const signedInHeader = SignedInHeaderRoutes.includes(location.pathname); 
+  const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
   let headerComponent = null;
 
@@ -63,10 +68,10 @@ function App() {
     <>
       <div className="App">
         <header className="App-header">
-         {/* {adminHeader ? <AdminHeader /> : <Header />} */}
-         {/* {hideHeader ? null : (adminHeader ? <AdminHeader /> : <Header />)}          */}
-         {headerComponent}
-         
+          {/* {adminHeader ? <AdminHeader /> : <Header />} */}
+          {/* {hideHeader ? null : (adminHeader ? <AdminHeader /> : <Header />)}          */}
+          {headerComponent}
+
           <Routes>
             <Route path="/" element={<LandingPage />} />
 
