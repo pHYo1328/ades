@@ -249,7 +249,7 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 
-  router.get('/users', getUserInfo.retrieveUserInformation);
+  router.get('/users', getUserInfo.retrieveUsersInformation);
 
   router.put('/updateUser', updateUser.updateUser);
 
