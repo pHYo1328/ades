@@ -12,8 +12,8 @@ const UserProfile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Customer-Id': localStorage.getItem('userid'),
           },
-          body: JSON.stringify({ customer_id: localStorage.getItem('userid') }),
         });
 
         const data = await response.json();
@@ -39,7 +39,7 @@ const UserProfile = () => {
               </tr>
             </thead>
             <tbody>
-              <User key={user.id} user={user} />
+              <User user={user} />
             </tbody>
           </table>
         )}
