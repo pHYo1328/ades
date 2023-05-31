@@ -23,6 +23,7 @@ const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
+const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -260,6 +261,8 @@ module.exports = (app, router) => {
   router.delete('/deleteUser', deleteUser.deleteUser);
 
   router.post('/verify-email', verificationEmail.sendForgotPasswordEmail);
+
+  router.get('/user-profile', customerProfile.userProfileInformation);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
