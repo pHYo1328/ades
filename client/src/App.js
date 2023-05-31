@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Home from './pages/Login/Home';
-
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/Login/ForgetPassword';
 import Register from './pages/Login/Register';
@@ -13,6 +13,7 @@ import AdminRegister from './pages/Login/admin/adminRegister';
 import AdminLogin from './pages/Login/admin/adminLogin';
 import AdminForgotPassword from './pages/Login/admin/adminForgotPassword';
 import AdminOTPPage from './pages/Login/admin/adminOTPPage';
+import VerifyEmail from './pages/Login/ForgotPasswordEmail';
 
 import ProductDetails from './pages/Products/Public/ProductDetails';
 import SearchResults from './pages/Products/Public/SearchResults';
@@ -35,19 +36,32 @@ import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import Header from './components/header/header';
 import SignedInHeader from './components/header/signedInHeader';
 import AdminHeader from './components/header/AdminHeader';
+import UserProfile from './pages/Login/UserProfile';
 import './App.css';
 import './input.css';
 
 function App() {
   const location = useLocation();
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const adminHeaderRoutes = [
     '/admin',
     '/products/edit/:productID:productID',
     '/products/create',
     '/homepage-admin',
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/homepage'];
+  const SignedInHeaderRoutes = ['/homepage']; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
+
+  // useEffect(() => {
+  //   const userIsSignedIn = checkUserIsSignedIn();
+
+  //   setIsSignedIn(userIsSignedIn);
+  // }, []);
+
+  // const checkUserIsSignedIn = () => {
+  //   const userId = localStorage.getItem('userid');
+  //   return userId !== null;
+  // };
 
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
   const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
@@ -63,6 +77,16 @@ function App() {
   } else {
     headerComponent = <Header />;
   }
+
+  // if (hideHeader) {
+  //   headerComponent = null; // Hide the header
+  // } else if (adminHeader) {
+  //   headerComponent = <AdminHeader />;
+  // } else if (isSignedIn) {
+  //   headerComponent = <SignedInHeader />;
+  // } else {
+  //   headerComponent = <Header />;
+  // }
   return (
     <>
       <div className="App">
@@ -77,9 +101,11 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/verify-otp" element={<OTPPage />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot" element={<ForgotPassword />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/users" element={<UserInfo />} />
+            <Route path="/user-profile" element={<UserProfile />} />
 
             <Route path="/homepage-admin" element={<AdminHomepage />} />
             <Route path="/register-admin" element={<AdminRegister />} />
