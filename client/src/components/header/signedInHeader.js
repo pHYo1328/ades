@@ -47,6 +47,10 @@ const SignedInHeader = () => {
     };
   }, []);
 
+  // if (!isSignedIn) {
+  //   return null; 
+  // }
+
   return (
     <header className="bg-white shadow">
       <div className="container mx-auto px-4 py-6">

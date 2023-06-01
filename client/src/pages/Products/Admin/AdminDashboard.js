@@ -194,6 +194,23 @@ export default function AdminDashboard() {
     }
   };
 
+  // const handlePartialRefund = async (event) => {
+  //   console.log(chalk.yellow('Partial refund is processing!'));
+  //   event.preventDefault();
+  //   axios
+  //     .post(`${baseUrl}/processPartialRefund/${productID}`)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setRefunds(response.data.data);
+  //       console.log(refunds);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+
+  //   window.alert('Giving partial refund now...');
+  // };
+
   return (
     <div class="row col-11" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
       <div class="row" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
@@ -236,7 +253,7 @@ export default function AdminDashboard() {
                 style={{ background: '#f0f7df' }}
               >
                 <h4 className="h4">Total Revenue</h4>
-                <p>${statistics.total_payment}</p>
+                <p>{statistics.total_payment}</p>
               </div>
             </div>
           </div>
@@ -271,7 +288,7 @@ export default function AdminDashboard() {
       <div
         class="row my-2 mx-auto p-0"
         style={{
-          height: '400px',
+          height: '300px',
           overflowY: 'scroll',
           background: '#c2d9ff',
           width: '90%',
@@ -295,14 +312,14 @@ export default function AdminDashboard() {
             className="row align-items-center col-11"
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
-            <div className="col-9 h5 font-weight-bold">Products</div>
-            <div className="col-3">
+            <div className="col-10 h5 font-weight-bold">Products</div>
+            <div className="col-2">
               <Link
                 to="/products/create"
-                className="btn btn-info w-100 col-12 text-dark mr-2"
+                className="btn btn-success w-100 col-6 text-dark mr-2"
                 id="createButton"
               >
-                Create <i class="bi bi-plus-circle"></i>
+                Create
               </Link>
             </div>
           </div>
@@ -311,9 +328,9 @@ export default function AdminDashboard() {
           {products ? (
             products.map((product) => (
               <div className="d-flex flex-row py-3 justify-content-around">
-                <div className="col-2 border-r-2 border-white pl-2 pr-3 mr-3">
+                <div className="col-2">
                   <AdvancedImage
-                    className="h-30 w-30 flex-none bg-gray-50 rounded-lg"
+                    className="h-20 w-20 flex-none bg-gray-50"
                     cldImg={cld.image(product.image_url)}
                   />
                 </div>
@@ -324,9 +341,6 @@ export default function AdminDashboard() {
                   <p className="mt-1 truncate text-xs leading-5 text-gray-500">
                     {product.category_name} - {product.brand_name}
                   </p>
-                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    <i class="bi bi-tags-fill"></i> ${product.price}
-                  </p>
                 </div>
 
                 <div className="col-4 d-flex justify-content-end align-items-center">
@@ -335,6 +349,29 @@ export default function AdminDashboard() {
                       class="row col-12"
                       style={{ marginLeft: 'auto', marginRight: 'auto' }}
                     >
+                      <button
+                        class="col-4"
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        id="plusButton"
+                        onClick={() => {
+                          const productID = product.product_id;
+                          axios
+                            .put(
+                              `${baseUrl}/api/products/inventory/plus/${productID}`
+                            )
+                            .then((response) => {
+                              console.log('Increase button is clicked');
+                              fetchProducts();
+                              fetchStatistics();
+                            })
+                            .catch((error) => {
+                              console.error(error);
+                            });
+                        }}
+                      >
+                        <i class="bi bi-plus-circle"></i>
+                      </button>
+                      <p class="col-4 text-center">{product.quantity}</p>
                       <button
                         class="col-4"
                         id="minusButton"
@@ -359,33 +396,10 @@ export default function AdminDashboard() {
                       >
                         <i class="bi bi-dash-circle"></i>
                       </button>
-                      <p class="col-4 text-center">{product.quantity}</p>
-                      <button
-                        class="col-4"
-                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                        id="plusButton"
-                        onClick={() => {
-                          const productID = product.product_id;
-                          axios
-                            .put(
-                              `${baseUrl}/api/products/inventory/plus/${productID}`
-                            )
-                            .then((response) => {
-                              console.log('Increase button is clicked');
-                              fetchProducts();
-                              fetchStatistics();
-                            })
-                            .catch((error) => {
-                              console.error(error);
-                            });
-                        }}
-                      >
-                        <i class="bi bi-plus-circle"></i>
-                      </button>
                     </div>
                   </div>
 
-                  <div className="d-flex align-items-center pr-4">
+                  <div className="d-flex align-items-center">
                     <Link
                       to={`/products/edit/${product.product_id}`}
                       className="mr-2"
@@ -395,34 +409,27 @@ export default function AdminDashboard() {
                     <button
                       onClick={() => {
                         const productID = product.product_id;
-                        const confirmed = window.confirm(
-                          'Are you sure you want to delete?'
-                        );
-                        if (confirmed) {
-                          axios
-                            .delete(`${baseUrl}/api/products/${productID}`)
-                            .then((res) => {
-                              const updatedProducts = products.filter(
-                                (p) => p.product_id !== productID
-                              );
-                              setProducts(updatedProducts);
-                            });
+                        axios
+                          .delete(`${baseUrl}/api/products/${productID}`)
+                          .then((res) => {
+                            const updatedProducts = products.filter(
+                              (p) => p.product_id !== productID
+                            );
+                            setProducts(updatedProducts);
+                          });
 
-                          axios
-                            .post(
-                              `${baseUrl}/processPartialRefund/${productID}`
-                            )
-                            .then((response) => {
-                              console.log(response);
-                              setRefunds(response.data.data);
-                              console.log(refunds);
-                            })
-                            .catch((error) => {
-                              console.error(error);
-                            });
+                        axios
+                          .post(`${baseUrl}/processPartialRefund/${productID}`)
+                          .then((response) => {
+                            console.log(response);
+                            setRefunds(response.data.data);
+                            console.log(refunds);
+                          })
+                          .catch((error) => {
+                            console.error(error);
+                          });
 
-                          window.alert('Giving partial refund now...');
-                        }
+                        window.alert('Giving partial refund now...');
                       }}
                     >
                       <i className="bi bi-trash-fill"></i>
@@ -449,229 +456,206 @@ export default function AdminDashboard() {
       </div>
 
       <div
-        class="row my-2 mx-auto p-0"
+        className="row col-12 justify-content-center my-2 mx-0"
         style={{ marginRight: 'auto', marginLeft: 'auto' }}
       >
         <div
-          class="col-12 justify-content-between d-flex"
-          style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
+          class="col-5 p-0 mx-4"
+          style={{
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
         >
           <div
-            class="col-5 p-0"
+            class="py-2"
             style={{
-              height: '300px',
-              overflowY: 'scroll',
-              background: '#c2d9ff',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              borderRadius: '8px',
+              position: 'sticky',
+              top: '0',
+              background: '#dff7ec',
+              width: '100%',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             }}
           >
             <div
-              class="py-2"
-              style={{
-                position: 'sticky',
-                top: '0',
-                background: '#dff7ec',
-                width: '100%',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}
+              className="row align-items-center col-11"
+              style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div
-                className="row align-items-center col-11"
-                style={{ marginLeft: 'auto', marginRight: 'auto' }}
-              >
-                <div className="col-10 h5 font-weight-bold">Brands</div>
+              <div className="col-10 h5 font-weight-bold">Brands</div>
+            </div>
+            <div
+              class="row col-12 mt-3"
+              style={{ marginLeft: 'auto', marginRight: 'auto' }}
+            >
+              <div class="col-8">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Brand Name"
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                />
               </div>
-              <div
-                class="row col-12 mt-3"
-                style={{ marginLeft: 'auto', marginRight: 'auto' }}
-              >
-                <div class="col-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Brand Name"
-                    value={brandName}
-                    onChange={(e) => setBrandName(e.target.value)}
-                  />
-                </div>
-                <div class="col-4">
-                  <button
-                    class="btn btn-info w-100 col-6 text-dark mr-2"
-                    onClick={handleSubmitBrand}
-                  >
-                    Create <i class="bi bi-plus-circle"></i>
-                  </button>
-                </div>
+              <div class="col-4">
+                <button
+                  class="btn btn-outline-success w-100"
+                  onClick={handleSubmitBrand}
+                >
+                  Add
+                </button>
               </div>
             </div>
-            <ul
-              role="list"
-              class="divide-y divide-gray-100"
-              style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
-            >
-              {brands ? (
-                brands.map((brand) => (
-                  <div class="d-flex flex-row row py-3 justify-content-around">
-                    <div class="col-6">
-                      <p class="text-sm font-semibold leading-6 text-gray-900">
-                        {brand.brand_name}
-                      </p>
-                    </div>
-                    <div class="col-4 d-flex justify-content-end">
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const brandID = brand.brand_id;
-                          const confirmed = window.confirm(
-                            'Are you sure you want to delete?'
-                          );
-                          if (confirmed) {
-                            axios
-                              .delete(`${baseUrl}/api/brands/${brandID}`)
-                              .then((res) => {
-                                const updatedBrands = brands.filter(
-                                  (b) => b.brand_id !== brandID
-                                );
-                                setBrands(updatedBrands);
-                                fetchBrands();
-                                fetchProducts();
-                              });
-                          }
-                        }}
-                      >
-                        <i class="bi bi-trash-fill"></i>
-                      </button>
-                    </div>
+          </div>
+          <ul role="list" class="divide-y divide-gray-100">
+            {brands ? (
+              brands.map((brand) => (
+                <div class="d-flex flex-row row py-3 justify-content-around">
+                  <div class="col-6">
+                    <p class="text-sm font-semibold leading-6 text-gray-900">
+                      {brand.brand_name}
+                    </p>
                   </div>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-screen">
-                  <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
+                  <div class="col-4 d-flex justify-content-end">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const brandID = brand.brand_id;
+                        axios
+                          .delete(`${baseUrl}/api/brands/${brandID}`)
+                          .then((res) => {
+                            const updatedBrands = brands.filter(
+                              (b) => b.brand_id !== brandID
+                            );
+                            setBrands(updatedBrands);
+                            fetchBrands();
+                            fetchProducts();
+                          });
+                      }}
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
                   </div>
                 </div>
-              )}
-            </ul>
-          </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-screen">
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
+              </div>
+            )}
+          </ul>
+        </div>
 
+        <div
+          class="col-5 p-0 mx-4"
+          style={{
+            height: '300px',
+            overflowY: 'scroll',
+            background: '#c2d9ff',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <div
-            class="col-5 p-0"
+            class="py-2"
             style={{
-              height: '300px',
-              overflowY: 'scroll',
-              background: '#c2d9ff',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              borderRadius: '8px',
+              position: 'sticky',
+              top: '0',
+              background: '#dff7ec',
+              width: '100%',
               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             }}
           >
             <div
-              class="py-2"
-              style={{
-                position: 'sticky',
-                top: '0',
-                background: '#dff7ec',
-                width: '100%',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}
+              className="row align-items-center col-11"
+              style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div
-                className="row align-items-center col-11"
-                style={{ marginLeft: 'auto', marginRight: 'auto' }}
-              >
-                <div className="col-10 h5 font-weight-bold">Categories</div>
-              </div>
+              <div className="col-10 h5 font-weight-bold">Categories</div>
+            </div>
 
-              <div
-                class="row col-12"
-                style={{ marginLeft: 'auto', marginRight: 'auto' }}
-              >
-                <div class="col-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Category Name"
-                    value={categoryName}
-                    onChange={(e) => setCategoryName(e.target.value)}
-                  />
-                </div>
-                <div class="col-4">
-                  <button
-                    class="btn btn-info w-100 col-6 text-dark mr-2"
-                    onClick={handleSubmitCategory}
-                  >
-                    Create <i class="bi bi-plus-circle"></i>
-                  </button>
-                </div>
+            <div
+              class="row col-12"
+              style={{ marginLeft: 'auto', marginRight: 'auto' }}
+            >
+              <div class="col-8">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Category Name"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                />
+              </div>
+              <div class="col-4">
+                <button
+                  class="btn btn-outline-success w-100"
+                  onClick={handleSubmitCategory}
+                >
+                  Add
+                </button>
               </div>
             </div>
-            <ul
-              role="list"
-              class="divide-y divide-gray-100"
-              style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
-            >
-              {categories ? (
-                categories.map((category) => (
-                  <div class="d-flex flex-row row py-3 justify-content-around">
-                    <div class="col-6">
-                      <p class="text-sm font-semibold leading-6 text-gray-900">
-                        {category.category_name}
-                      </p>
-                    </div>
-                    <div class="col-4 d-flex justify-content-end">
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const categoryID = category.category_id;
-                          const confirmed = window.confirm(
-                            'Are you sure you want to delete?'
-                          );
-                          if (confirmed) {
-                            axios
-                              .delete(`${baseUrl}/api/categories/${categoryID}`)
-                              .then((res) => {
-                                const updatedCategories = categories.filter(
-                                  (c) => c.category_id !== categoryID
-                                );
-                                setCategories(updatedCategories);
-                                fetchCategories();
-                                fetchProducts();
-                              });
-                          }
-                        }}
-                      >
-                        <i class="bi bi-trash-fill"></i>
-                      </button>
-                    </div>
+          </div>
+          <ul role="list" class="divide-y divide-gray-100">
+            {categories ? (
+              categories.map((category) => (
+                <div class="d-flex flex-row row py-3 justify-content-around">
+                  <div class="col-6">
+                    <p class="text-sm font-semibold leading-6 text-gray-900">
+                      {category.category_name}
+                    </p>
                   </div>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-screen">
-                  <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
+                  <div class="col-4 d-flex justify-content-end">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const categoryID = category.category_id;
+                        axios
+                          .delete(`${baseUrl}/api/categories/${categoryID}`)
+                          .then((res) => {
+                            const updatedCategories = categories.filter(
+                              (c) => c.category_id !== categoryID
+                            );
+                            setCategories(updatedCategories);
+                            fetchCategories();
+                            fetchProducts();
+                          });
+                      }}
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
                   </div>
                 </div>
-              )}
-            </ul>
-          </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-screen">
+                <div className="mx-auto flex flex-col items-center">
+                  <FadeLoader
+                    color={'navy'}
+                    loading={true}
+                    size={100}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p>Loading...</p>
+                </div>
+              </div>
+            )}
+          </ul>
         </div>
       </div>
 
@@ -680,7 +664,7 @@ export default function AdminDashboard() {
         style={{ marginRight: 'auto', marginLeft: 'auto' }}
       >
         <div
-          class="col-11 p-0 mx-4"
+          class="col-5 p-0 mx-4"
           style={{
             background: '#c2d9ff',
             marginLeft: 'auto',
@@ -721,23 +705,22 @@ export default function AdminDashboard() {
             </div>
             <div class="col-4">
               <button
-                class="btn btn-info w-100 col-6 text-dark mr-2"
+                class="btn btn-outline-success w-100"
                 onClick={handleSearchOrder}
               >
-                Search <i class="bi bi-search"></i>
+                Search
               </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-12">
-        <div className="flex justify-center mb-12">
-          <Link to={'/admin/orderStatus'}>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-              Go to Order Status Management
-            </button>
-          </Link>
+        <div class="col-5">
+          <div className="flex justify-end mb-12">
+            <Link to={'/admin/orderStatus'}>
+              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Go to Order Status Management
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

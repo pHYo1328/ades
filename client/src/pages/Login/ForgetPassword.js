@@ -63,7 +63,7 @@ function ForgetPassword() {
         onSubmit={onHandleSubmit}
       >
         <div className="flex items-center mb-8">
-          <button
+          {/* <button
             className="text-gray-600 rounded-full p-2 mr-4"
             onClick={() => navigate('/login')}
           >
@@ -81,7 +81,7 @@ function ForgetPassword() {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </button> */}
           <h2 className="text-2xl font-bold text-gray-800">Forgot Password</h2>
         </div>
 

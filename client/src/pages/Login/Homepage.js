@@ -26,6 +26,11 @@ function Home() {
       return [];
     }
   };
+  
+  const handleUserProfile = () => {
+    navigate('/user-profile');
+  };
+
 
   const onHandleLogout = async () => {
     try {
@@ -59,6 +64,9 @@ function Home() {
               <h1 className="text-5xl font-bold mb-5">Home page</h1>
               <button className="btn btn-secondary" onClick={onHandleLogout}>
                 Sign out
+              </button>
+              <button className="btn btn-secondary" onClick={handleUserProfile}>
+                User Profile
               </button>
             </div>
           </div>

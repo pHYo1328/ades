@@ -22,6 +22,8 @@ const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
+const verificationEmail = require('../controller/emailVerificationController');
+const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -127,38 +129,69 @@ module.exports = (app, router) => {
   );
 
   // PHYO
-
-  router.post('/api/cart/:userID', cartController.processAddCartData);
-
+  //Get
   router.get(
     '/api/cart/:userID',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartData
   );
-
-  router.delete(
-    '/api/cart/:userID',
-    //verifyAccessToken.verifyToken,
-    cartController.processDeleteCartData
-  );
-
   router.get(
     '/api/cartdetails/getCartProductData',
     //verifyAccessToken.verifyToken,
     cartController.processGetCartProductData
   );
-
+  router.get(
+    '/api/inventory/checkQuantity',
+    inventoryController.processCheckInventory
+  );
+  router.get(
+    '/api/admin/order',
+    orderController.processGetOrderDetailsForAdmin
+  );
+  router.get(
+    '/api/order/getOrderDetailByOrderStatus',
+    //verifyAccessToken.verifyToken,
+    orderController.processGetOrderDetailsByOrderStatus
+  );
+  router.get(
+    '/api/bookmark/:customerId',
+    bookmarkController.processFetchBookmarks
+  );
+  router.get(
+    '/api/shipping',
+    //verifyAccessToken.verifyToken,
+    shippingController.processFetchShippingMethod
+  );
+  // post
+  router.post('/api/cart/:userID', cartController.processAddCartData);
   router.post(
     '/api/order/:customerId',
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
+  router.post('/api/bookmark', bookmarkController.processAddBookMark);
 
-  router.get(
-    '/api/payment/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByID
+  // PUT
+  router.put('/api/admin/order', orderController.processUpdateOrderStatus);
+  router.put(
+    '/api/order/updateShippingDetails/:customerID',
+    //verifyAccessToken.verifyToken,
+    orderController.processUpdateShippingDetails
   );
+
+  //DELETE
+  router.delete(
+    '/api/cart/:userID',
+    //verifyAccessToken.verifyToken,
+    cartController.processDeleteCartData
+  );
+  router.delete(
+    '/api/order',
+    //verifyAccessToken.verifyToken,
+    orderController.processCancelOrder
+  );
+
+  //Carolyn
   router.get(
     '/api/payment_received/getListsByDeliStatus/',
     // verifyAccessToken.verifyToken,
@@ -171,51 +204,15 @@ module.exports = (app, router) => {
   );
 
   router.get(
-    '/api/inventory/checkQuantity',
-    inventoryController.processCheckInventory
+    '/api/payment/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByID
   );
+
   router.get(
     '/api/paymentTotal/:orderID',
     //verifyAccessToken.verifyToken,
     paymentController.processGetPaymentTotal
-  );
-
-  router.get(
-    '/api/order/getOrderDetailByOrderStatus',
-    //verifyAccessToken.verifyToken,
-    orderController.processGetOrderDetailsByOrderStatus
-  );
-
-  router.get(
-    '/api/admin/order',
-    orderController.processGetOrderDetailsForAdmin
-  );
-
-  router.put('/api/admin/order', orderController.processUpdateOrderStatus);
-
-  router.put(
-    '/api/order/updateShippingDetails/:customerID',
-    //verifyAccessToken.verifyToken,
-    orderController.processUpdateShippingDetails
-  );
-
-  router.delete(
-    '/api/order',
-    //verifyAccessToken.verifyToken,
-    orderController.processCancelOrder
-  );
-
-  router.get(
-    '/api/shipping',
-    //verifyAccessToken.verifyToken,
-    shippingController.processFetchShippingMethod
-  );
-
-  router.post('/api/bookmark', bookmarkController.processAddBookMark);
-
-  router.get(
-    '/api/bookmark/:customerId',
-    bookmarkController.processFetchBookmarks
   );
   router.get('/config', checkoutController.getConfig);
 
@@ -252,20 +249,21 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 
-  router.get('/users', getUserInfo.retrieveUserInformation);
+  router.get('/users', getUserInfo.retrieveUsersInformation);
 
   router.put('/updateUser', updateUser.updateUser);
 
   router.delete('/deleteUser', deleteUser.deleteUser);
+
+  router.post('/verify-email', verificationEmail.sendForgotPasswordEmail);
+
+  router.get('/user-profile', customerProfile.userProfileInformation);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put(
-    '/forgot-admin',
-    forgotPasswordAdminController.handleForgotPassword
-  );
+  router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };

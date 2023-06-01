@@ -7,6 +7,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const onHandleSubmit = () => {
     if (!username || !password) {
@@ -35,10 +36,12 @@ function Login() {
           localStorage.setItem('userid', data.userid);
           localStorage.setItem('roles', JSON.stringify(data.roles));
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+          // setIsSignedIn(true); //add to logout
           setErrorMessage('');
           navigate('/verify-otp');
         } else {
           setErrorMessage('Incorrect username or password');
+          alert('Incorrect username or password');
         }
       })
       .catch((error) => {
@@ -93,7 +96,7 @@ function Login() {
             <button
               type="button"
               className="text-sm text-gray-500 hover:text-gray-700"
-              onClick={() => navigate('/forgot')}
+              onClick={() => navigate('/verify-email')}
             >
               Forgot your password?
             </button>
