@@ -8,6 +8,7 @@ import api from '../../../index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FadeLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -20,10 +21,14 @@ export default function ProductDetails() {
   const [ratings, setRatings] = useState(null);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
+  const navigate = useNavigate();
   const customerId = localStorage.getItem('userid');
   const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
-    if (quantity === 0) {
+    if(!customerId){
+      navigate('/login');
+    }
+    else if (quantity === 0) {
       toast.error('Please select quantity', {
         autoClose: 3000,
         pauseOnHover: true,

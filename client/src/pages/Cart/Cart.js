@@ -156,6 +156,14 @@ const Cart = () => {
     }
     let isStockAvailable = true;
     let alertString = [];
+    if(!cartProductData){
+      toast.error('Please add items to cart to checkout', {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
+      return;
+    }
     const productIDs = cartProductData.map((item) => item.product_id);
     const cartData = cartProductData.map((item) => ({
       productId: item.product_id,
