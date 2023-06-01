@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-
 //To be done, email verification password change.
 function Register() {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Register() {
     const url = `${baseUrl}/verify-email`;
 
     const body = {
-      email: email
+      email: email,
     };
 
     fetch(url, {
@@ -30,7 +29,7 @@ function Register() {
       .catch((error) => {
         console.error(error);
       });
-    console.log("email sent to ", email);
+    console.log('email sent to ', email);
   };
 
   return (
@@ -59,7 +58,9 @@ function Register() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Email Verification</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Email Verification
+          </h2>
         </div>
 
         <div className="mb-6">

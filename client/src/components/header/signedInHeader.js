@@ -48,7 +48,7 @@ const SignedInHeader = () => {
   }, []);
 
   // if (!isSignedIn) {
-  //   return null; 
+  //   return null;
   // }
 
   return (

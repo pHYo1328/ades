@@ -81,7 +81,6 @@ const Header = () => {
               </button>
               {isUserPanelOpen && (
                 <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
-                  <div className="flex flex-row">
                     <Link to="/orderToPay">
                       <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                         <FaWallet className="inline-block mr-2" />
@@ -94,8 +93,6 @@ const Header = () => {
                         to ship
                       </button>
                     </Link>
-                  </div>
-                  <div className="flex flex-row">
                     <Link to="/orderToDeliver">
                       <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                         <RiTruckLine className="inline-block mr-2" />
@@ -108,7 +105,6 @@ const Header = () => {
                         completed
                       </button>
                     </Link>
-                  </div>
                 </div>
               )}
             </div>

@@ -21,13 +21,13 @@ const VerifyOTP = () => {
       if (response.ok) {
         // OTP verification successful
         console.log('Successful OTP verification for admin');
-        alert("successful OTP");
+        alert('successful OTP');
         navigate('/homepage-admin');
       } else {
         // Invalid OTP
-        alert("Invalid OTP");
+        alert('Invalid OTP');
         console.log('Invalid OTP!');
-      } 
+      }
     } catch (error) {
       console.error(error);
       // Handle error
