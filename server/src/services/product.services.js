@@ -99,6 +99,7 @@ module.exports.getProductsByCategoryOrBrand = async (
   sort
 ) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
+  console.log(limit, offset);
   try {
     let productsDataQuery = `
   SELECT
@@ -409,6 +410,7 @@ module.exports.getSearchResults = async (
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
+    // console.log('results: ', results);
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getSearchResults: ', error));
