@@ -39621,3 +39621,21 @@
 >>>>>>> 8b9f332192107808ab2bc049fc28db48b7220dd6
 20230601	16:15:30	61474227-e77b-4f47-bb22-bb2d688b17e7	GET	http://localhost:3000	/api/product/4
 20230601	16:15:30	dc6b7912-51f0-47ca-8957-7845e6ec3643	GET	http://localhost:3000	/api/products/rating/4
+20230601	16:25:42	df590ff1-9be1-4920-9f79-08b4f5d3513b	GET	http://localhost:3000	/api/category
+20230601	16:25:42	553ab1b0-a487-4c4d-ae35-5d45768cbe61	GET	http://localhost:3000	/api/brands
+20230601	16:25:42	a8eba121-ee28-4cd2-8070-b34010b95ed4	GET	http://localhost:3000	/api/products/total/0/0
+20230601	16:25:42	279bb31b-ef2d-4e3f-8aab-2b25c1c360fd	GET	http://localhost:3000	/api/products/0/0/10/0/0
+20230601	16:25:49	6610a328-321a-4664-93f6-c54157a088dc	GET	http://localhost:3000	/api/products/new
+20230601	16:25:49	21d65358-c10c-49e6-a48e-43c2fd47bfdf	GET	http://localhost:3000	/api/brands
+20230601	16:25:49	9d0b6ded-fd74-4be2-a595-ef4818591668	GET	http://localhost:3000	/api/category
+20230601	16:25:55	6f0cfd41-8333-4cfc-aac0-ac334aee1509	GET	http://localhost:3000	/api/search?product_name=wheate
+20230601	16:26:15	801a1d94-6c57-4d47-a90c-d4918f15801c	GET	http://localhost:3000	/api/category
+20230601	16:26:15	c80d90fa-e0fe-45d6-a217-0e4b6a237ed2	GET	http://localhost:3000	/api/brands
+20230601	16:26:15	b160f352-a174-4824-853f-d3632a735c03	GET	http://localhost:3000	/api/products/0/0/10/0/0
+20230601	16:26:15	d7025328-0c91-4489-a153-d3fd237044d1	GET	http://localhost:3000	/api/products/total/0/0
+20230601	16:26:16	7ff1c924-e532-4385-a334-900ddaed32e1	GET	http://localhost:3000	/api/product/15
+20230601	16:26:16	eef7827e-8d88-4310-aa7f-d55be6dd27d2	GET	http://localhost:3000	/api/products/rating/15
+20230601	16:26:59	c855930d-1bba-4cf7-915d-f1552b5d1ffd	GET	http://localhost:3000	/api/products/rating/15
+20230601	16:26:59	55b917d8-b325-44d6-95a3-59f471086356	GET	http://localhost:3000	/api/product/15
+20230601	16:27:02	7ba8d84d-16fe-470c-9006-8d18b124a012	GET	http://localhost:3000	/api/product/15
+20230601	16:27:02	8c536cc8-1083-41e2-be32-b21ee50c7883	GET	http://localhost:3000	/api/products/rating/15
