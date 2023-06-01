@@ -1,4 +1,3 @@
-const { user } = require('../config/config');
 const pool = require('../config/database');
 const chalk = require('chalk');
 

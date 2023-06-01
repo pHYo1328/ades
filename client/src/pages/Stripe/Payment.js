@@ -45,7 +45,7 @@ function Payment() {
 
   return (
     <>
-      <div className="flex flex-row">
+      <div className="flex flex-row"style={{ height: '800px' }}>
         <div className="mt-4 mb-48 sm:mb-64 w-full ml-10 lg:w-2.5/5 lg:ml-38">
           <h1>Order summary</h1>
           {payments && payments.length > 0 ? (
@@ -68,24 +68,24 @@ function Payment() {
                   </tr>
                 ))}
                 <tr key="payment-summary">
-                  <td colSpan="4" style={{ textAlign: 'right' }}>
-                    <p className="text-sm font-medium text-gray-900 justify-start">
+                  <td colSpan="4" style={{ textAlign: 'right', paddingTop: '130px' }}>
+                    <p className="text-lg font-medium text-gray-900 justify-start">
                       Sub total: {payments[0].total_price}
                     </p>
-                    <p className="text-sm font-medium text-gray-900 justify-start">
+                    <p className="text-lg font-medium text-gray-900 justify-start">
                       Shipping Method: {payments[0].shipping_method}
                     </p>
-                    <p className="text-sm font-medium text-gray-900 justify-start">
+                    <p className="text-lg font-medium text-gray-900 justify-start">
                       Fee: {payments[0].fee}
                     </p>
-                    <p className="text-sm font-medium text-gray-900 justify-start">
+                    <p className="text-lg font-medium text-gray-900 justify-start">
                       Pay:{' '}
                       {(
                         parseFloat(payments[0].total_price) +
                         parseFloat(payments[0].fee)
                       ).toFixed(2)}
                     </p>
-                    <p className="text-sm font-medium text-gray-900 justify-start">
+                    <p className="text-lg font-medium text-gray-900 justify-start">
                       Shipping_address: {payments[0].shipping_address}
                     </p>
                   </td>

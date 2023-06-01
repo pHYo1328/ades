@@ -22,6 +22,8 @@ const shippingController = require('../controller/shipping.controller');
 const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
+const verificationEmail = require('../controller/emailVerificationController');
+const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -247,20 +249,21 @@ module.exports = (app, router) => {
 
   router.post('/verify-otp', verifyOTPController.verifyOTP);
 
-  router.get('/users', getUserInfo.retrieveUserInformation);
+  router.get('/users', getUserInfo.retrieveUsersInformation);
 
   router.put('/updateUser', updateUser.updateUser);
 
   router.delete('/deleteUser', deleteUser.deleteUser);
+
+  router.post('/verify-email', verificationEmail.sendForgotPasswordEmail);
+
+  router.get('/user-profile', customerProfile.userProfileInformation);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put(
-    '/forgot-admin',
-    forgotPasswordAdminController.handleForgotPassword
-  );
+  router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
 };

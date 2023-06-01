@@ -1,6 +1,6 @@
 const loginService = require('../services/login.services');
 
-const retrieveUserInformation = async (req, res) => {
+const retrieveUsersInformation = async (req, res) => {
   try {
     const users = await loginService.retrieveUsersInfo();
     console.log('got users info');
@@ -11,4 +11,4 @@ const retrieveUserInformation = async (req, res) => {
   }
 };
 
-module.exports = { retrieveUserInformation };
+module.exports = { retrieveUsersInformation };
