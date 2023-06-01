@@ -38,7 +38,7 @@ const minusButtonHandler = (cartData, productID, updateCartData) => {
   updateCartData([...updatedCart]);
 };
 
-const deleteButtonHandler = (cartData, productID, updateCartData) => {
+const deleteButtonHandler = (cartData, productID, updateCartData,setTotalAmount) => {
   confirmAlert({
     title: 'Confirm to delete',
     message: 'Are you sure you want to delete this item?',
@@ -51,6 +51,11 @@ const deleteButtonHandler = (cartData, productID, updateCartData) => {
           );
           console.log(filteredProducts);
           updateCartData(filteredProducts);
+          const overallTotalAmount = filteredProducts.reduce(
+            (total, item) => total + parseFloat(item.totalAmount),
+            0
+          ).toFixed(2);
+          setTotalAmount(overallTotalAmount);
         },
       },
       {
@@ -66,7 +71,7 @@ const Cart = () => {
   const [productDetails, setProductsDetails] = useState(null);
   const latestCartData = useRef(cartData);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0.00);
   const [address, setAddress] = useState({
     firstName: '',
     lastName: '',
@@ -75,7 +80,7 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
-  const [shippingFee, setShippingFee] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0.00);
   const [shippingMethod, setShippingMethod] = useState(null);
   const [shippingId, setShippingId] = useState(null);
   const [orderId, setOrderId] = useState(null);
@@ -298,7 +303,7 @@ const Cart = () => {
         <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black">
           <thead className=" text-base border-b-2 md:text-xl">
             <tr>
-              <th className="w-1/8">My Cart({cartData.length})</th>
+              <th className="w-1/8">My Cart</th>
               <th className="w-1/4">Product</th>
               <th className="hidden lg:table-cell w-1/6">Price</th>
               <th className="lg:w-1/12 text-center hidden sm:table-cell">
@@ -415,7 +420,8 @@ const Cart = () => {
                         deleteButtonHandler(
                           cartData,
                           cartItem.product_id,
-                          setCartData
+                          setCartData,
+                          setTotalAmount
                         )
                       }
                     >
@@ -546,8 +552,8 @@ const Cart = () => {
                 <p>${totalAmount}</p>
               </div>
               <div className="flex flex-row justify-between">
-                <p>shipping</p>
-                <p> $ {shippingFee}</p>
+                <p>shipping : </p>
+                <p> ${shippingFee}</p>
               </div>
             </div>
             <div className=" text-white border-b-2 border-white flex flex-row justify-between pb-3">
