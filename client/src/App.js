@@ -7,13 +7,14 @@ import Register from './pages/Login/Register';
 import OTPPage from './pages/Login/OTPPage';
 import Homepage from './pages/Login/Homepage';
 import UserInfo from './pages/Login/UserInfo';
+import VerifyEmail from './pages/Login/ForgotPasswordEmail';
 
 import AdminHomepage from './pages/Login/admin/adminHomepage';
 import AdminRegister from './pages/Login/admin/adminRegister';
 import AdminLogin from './pages/Login/admin/adminLogin';
 import AdminForgotPassword from './pages/Login/admin/adminForgotPassword';
 import AdminOTPPage from './pages/Login/admin/adminOTPPage';
-import VerifyEmail from './pages/Login/ForgotPasswordEmail';
+import AdminVerifyEmail from './pages/Login/admin/adminForgotPasswordEmail';
 
 import ProductDetails from './pages/Products/Public/ProductDetails';
 import SearchResults from './pages/Products/Public/SearchResults';
@@ -112,6 +113,7 @@ function App() {
             <Route path="/login-admin" element={<AdminLogin />} />
             <Route path="/forgot-admin" element={<AdminForgotPassword />} />
             <Route path="/verify-otp-admin" element={<AdminOTPPage />} />
+            <Route path="/verify-email-admin" element={<AdminVerifyEmail />} />
 
             <Route path="/product/:productID" element={<ProductDetails />} />
             <Route path="/products" element={<ProductsPage />} />

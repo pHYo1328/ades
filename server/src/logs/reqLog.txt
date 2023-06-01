@@ -40732,3 +40732,24 @@
 =======
 >>>>>>> b387939e1f47574d0ec938f25a5d59481bd3b4f6
 >>>>>>> 183164ab4c8addde2582f2174c8caff83e2daba5
+20230602	01:32:04	e6c9e252-25ad-4e99-a29c-294b922adf72	GET	http://localhost:3000	/api/category
+20230602	01:32:04	ac4c48dc-2baf-4896-b42c-6add7c30b2cf	GET	http://localhost:3000	/api/brands
+20230602	01:32:04	6b048a23-070b-41ed-ba9b-9488f290fbc2	GET	http://localhost:3000	/api/products/new
+20230602	01:36:20	f37544fb-690a-4dba-bc35-c3f52eff26e3	GET	http://localhost:3000	/api/brands
+20230602	01:36:20	ca08a5d0-3975-44a0-b2c3-6778195ac420	GET	http://localhost:3000	/api/category
+20230602	01:36:20	35015d9c-c757-4083-90b2-231b3deb7ac4	GET	http://localhost:3000	/api/products/new
+20230602	01:36:30	d3efe780-f4c5-484f-aabd-3d5230de9893	OPTIONS	http://localhost:3000	/verify-email-admin
+20230602	01:36:30	c3989917-926a-4beb-8e93-e0d5480bcfdc	POST	http://localhost:3000	/verify-email-admin
+20230602	01:37:55	bf7e14de-9d0c-4693-8f14-60310a9b34e1	OPTIONS	http://localhost:3000	/forgot-admin
+20230602	01:37:55	4dda6533-89bf-4289-8a9c-1a4848fc589d	PUT	http://localhost:3000	/forgot-admin
+20230602	01:38:02	b58870ab-9a25-4ea1-9a87-ec2c5d6584b9	OPTIONS	http://localhost:3000	/forgot-admin
+20230602	01:38:02	c02a21ef-6a19-4cc9-bc9a-83d5ffa3d632	PUT	http://localhost:3000	/forgot-admin
+20230602	01:38:16	b7dfd029-94e4-452a-825d-8a6d513192be	OPTIONS	http://localhost:3000	/login-admin
+20230602	01:38:16	ebf4f4b7-d3a1-465c-9a7d-e7c0457c0fb4	POST	http://localhost:3000	/login-admin
+20230602	01:38:44	3643bf1d-27cf-420c-80ea-d1c000a8153a	OPTIONS	http://localhost:3000	/verify-otp-admin
+20230602	01:38:44	8f955334-4494-4071-ba25-df399fdac1b8	POST	http://localhost:3000	/verify-otp-admin
+20230602	01:38:58	c9e77365-6eab-47e2-a26d-caff459a10cf	OPTIONS	http://localhost:3000	/logout-admin
+20230602	01:38:58	9bbabb5c-5042-4134-bc7e-42de17116876	PUT	http://localhost:3000	/logout-admin
+20230602	01:38:58	92fc0366-4bce-401b-89f4-643b0cf71586	GET	http://localhost:3000	/api/brands
+20230602	01:38:58	9921aef0-923a-4d10-98e2-e6615f7a7235	GET	http://localhost:3000	/api/products/new
+20230602	01:38:58	96bb221f-85b3-458f-bdc9-9ca98a938276	GET	http://localhost:3000	/api/category

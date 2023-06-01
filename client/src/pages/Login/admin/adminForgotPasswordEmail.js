@@ -10,7 +10,7 @@ function Register() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
-    const url = `${baseUrl}/verify-email`;
+    const url = `${baseUrl}/verify-email-admin`;
 
     const body = {
       email: email
@@ -26,11 +26,11 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        alert("email sent");
+        alert("admin email sent");
       })
       .catch((error) => {
         console.error(error);
-      });
+      }); 
     console.log("email sent to ", email);
   };
 
@@ -43,7 +43,7 @@ function Register() {
         <div className="flex items-center mb-8">
           <button
             className="text-gray-600 rounded-full p-2 mr-4"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/login-admin')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@ function Register() {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold text-gray-800">Email Verification</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Admin Email Verification</h2>
         </div>
 
         <div className="mb-6">
@@ -70,7 +70,7 @@ function Register() {
           <input
             id="email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter your admin email"
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

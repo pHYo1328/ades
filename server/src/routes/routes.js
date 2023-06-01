@@ -23,6 +23,7 @@ const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
+const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
@@ -266,4 +267,5 @@ module.exports = (app, router) => {
   router.put('/logout-admin', logoutAdminController.handleLogout);
   router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
+  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
 };
