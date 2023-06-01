@@ -21,8 +21,10 @@ const VerifyOTP = () => {
       console.log(response);
       if (response.ok) {
         console.log('Successful OTP verification');
+        alert("successful OTP");
         navigate('/homepage');
       } else {
+        alert("Invalid OTP");
         console.log('Invalid OTP');
       }
     } catch (error) {
@@ -40,7 +42,7 @@ const VerifyOTP = () => {
             OTP
           </label>
           <input
-            type="text"
+            type="number"
             id="otp"
             name="otp"
             value={otp}
