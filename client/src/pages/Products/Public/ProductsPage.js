@@ -13,6 +13,7 @@ const cld = new Cloudinary({
 });
 
 export default function ProductsPage() {
+  const [resetPage, setResetPage] = useState(true);
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -52,19 +53,41 @@ export default function ProductsPage() {
       });
   }, []);
 
+  const handlePageChange = (page) => {
+    setResetPage(false);
+    setCurrentPage(page);
+    console.log(page);
+    const calculatedOffset = limit * (page - 1);
+    console.log('calculated offset: ', calculatedOffset);
+    setOffset(calculatedOffset);
+  };
+
   useEffect(() => {
+    console.log('jhrn');
+    if (resetPage) {
+      setCurrentPage(1);
+    }
+    setOffset(limit * (currentPage - 1));
+    console.log(offset);
+    console.log(limit);
+    console.log(
+      `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
+    );
     axios
       .get(
         `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
       )
       .then((response) => {
         console.log(response);
+        console.log('short');
+        console.log(response.data.data);
         setProducts(response.data.data);
         console.log(products);
       })
       .catch((error) => {
         console.error(error);
       });
+    setResetPage(true);
   }, [categoryID, brandID, sort, limit, offset]);
 
   useEffect(() => {
@@ -74,6 +97,7 @@ export default function ProductsPage() {
         console.log('total number of products', response.data.data);
         console.log(response.data.data);
         setTotalProducts(response.data.data);
+        setOffset(0);
       })
       .catch((error) => {
         console.error(error);
@@ -81,15 +105,10 @@ export default function ProductsPage() {
   }, [categoryID, brandID]);
 
   useEffect(() => {
-    setTotalProducts(totalProducts);
-    console.log('total number of products', totalProducts);
-  }, [totalProducts]);
-
-  useEffect(() => {
     console.log('total number of products for pages', totalProducts);
     console.log('limit for pages', limit);
     console.log('pages', Math.ceil(totalProducts / limit));
-    if (limit !== 0 && Math.ceil(totalProducts / limit) > 1) {
+    if (limit !== 0 && Math.ceil(totalProducts / limit) >= 1) {
       setTotalPages(Math.ceil(totalProducts / limit));
     } else {
       setTotalPages(1);
@@ -102,24 +121,6 @@ export default function ProductsPage() {
     }
     console.log('total page: ', totalPages);
   }, [totalPages]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    console.log(page);
-    const calculatedOffset = limit * (page - 1);
-    console.log('calculated offset: ', calculatedOffset);
-    setOffset(calculatedOffset);
-  };
-
-  useEffect(() => {
-    setOffset(offset);
-    console.log('offset: ', offset);
-  }, [offset]);
-
-  useEffect(() => {
-    setCurrentPage(currentPage);
-    console.log('current page: ', currentPage);
-  }, [brandID, categoryID, limit]);
 
   return (
     <div className="bg-white w-full">
