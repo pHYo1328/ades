@@ -145,6 +145,13 @@ module.exports.addRefund = async (id, orderID, total, status) => {
   SET inventory.quantity = inventory.quantity + order_items.quantity
   WHERE refund.order_id = ? AND refund.refunded_status = 'Fully Refunded' AND inventory.inventory_id > 0;
   `;
+  const deleteOrderItemQuery = `DELETE FROM order_items
+  WHERE order_id IN (
+    SELECT r.order_id
+    FROM refund r
+    WHERE r.order_id = ?
+      AND r.refunded_status = 'Fully Refunded'
+  );`;
 
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
@@ -163,6 +170,7 @@ module.exports.addRefund = async (id, orderID, total, status) => {
       pool.query(deletePaymentQuery, [orderID]),
       pool.query(updateStatusQuery, [orderID]),
       pool.query(updateInventoryQuery, [orderID]),
+      pool.query(deleteOrderItemQuery, [orderID]),
     ]);
     await connection.commit();
     console.log(chalk.green(createRefundResult));
@@ -195,6 +203,7 @@ module.exports.getIdAndAmount = async (productID) => {
   }
 };
 
+//partial refund
 module.exports.addPartialRefund = async (id, orderID, total, status) => {
   console.log(chalk.blue('addRefund is called'));
   const createPartialRefundQuery =
@@ -216,6 +225,14 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
    FROM refund
    WHERE refunded_status = 'Partially Refunded'
    );`;
+  const deleteOrderItemsQuery = `DELETE FROM order_items
+  WHERE order_id = ?
+    AND status = 'Unavailable'
+    AND order_id IN (
+      SELECT order_id
+      FROM refund
+    );
+  `;
 
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
@@ -233,6 +250,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
     const createRefundResult = await Promise.all([
       pool.query(updatePaymentQuery, [orderID, orderID]),
       pool.query(updateStatusQuery, [orderID]),
+      pool.query(deleteOrderItemsQuery, [orderID]),
     ]);
     await connection.commit();
     console.log(chalk.green(createRefundResult));
