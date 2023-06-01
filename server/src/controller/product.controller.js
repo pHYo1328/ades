@@ -1039,7 +1039,7 @@ exports.processCreateRating = async (req, res, next) => {
       message: 'Rating score has to be a number greater than 0',
     });
   }
-  console.log(chalk.yellow(req.body));
+  //console.log(chalk.yellow(req.body));
   try {
     const createdRatingData = await productServices.createRating(
       comment,

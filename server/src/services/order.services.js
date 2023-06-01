@@ -72,8 +72,9 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                       product.price, 
                       order_items.quantity,
                       orders.shipping_address,
+                      orders.order_date,
                       shipping.shipping_method,
-                      shipping.shipping_id 
+                      shipping.shipping_id
                       FROM product
                       inner join order_items on order_items.product_id=product.product_id
                       inner join orders on orders.order_id= order_items.order_id
@@ -83,17 +84,20 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                       GROUP BY orders.order_id, product.product_id, product.product_name, product.price, order_items.quantity, orders.shipping_address, shipping.shipping_method, shipping.shipping_id;
                     `;
   const orderAfterDeliverQuery = `
-                    select product.product_id,
+                    select orders.order_id,
+                    product.product_id,
                     product.product_name,
                     MAX(product_image.image_url) as image_url,
                     product.price, 
-                    order_items.quantity 
+                    order_items.quantity ,
+                    orders.shipping_start_at,
+                    orders.completed_at
                     FROM product
                     inner join order_items on order_items.product_id=product.product_id
                     inner join  orders on orders.order_id= order_items.order_id
                     left join product_image on product_image.product_id=product.product_id
                     where orders.customer_id=? and orders.order_status=?
-                    GROUP BY product.product_id, product.product_name, product.price, order_items.quantity;
+                    GROUP BY orders.order_id,product.product_id, product.product_name, product.price, order_items.quantity;
                     `;
   try {
     console.log(
@@ -158,8 +162,8 @@ module.exports.updateOrderStatus = async (data) => {
   console.log(chalk.blue('updateOrderStatus is called'));
   const { orderIDs, orderStatus } = data;
   console.log(orderStatus);
-  const updatePaidOrderStatusQuery = `UPDATE orders set order_status = ?,shipping_start_at = NOW() WHERE order_id in (?)`;
-  const updateDeliveringOrderStatusQuery = `UPDATE orders set order_status = ?,completed_at = NOW() WHERE order_id in(?)`;
+  const updatePaidOrderStatusQuery = `UPDATE orders set order_status = ?,shipping_start_at = UTC_TIMESTAMP() WHERE order_id in (?)`;
+  const updateDeliveringOrderStatusQuery = `UPDATE orders set order_status = ?,completed_at = UTC_TIMESTAMP() WHERE order_id in(?)`;
   try {
     console.log(
       chalk.blue(
@@ -198,8 +202,7 @@ module.exports.updateShippingDetails = async (data) => {
   const { customerID, orderId, shippingAddr, shippingMethod } = data;
   const updateShippingDetailsQuery = `
                     UPDATE orders
-                    SET shipping_address = ?,
-                    shipping_id=?
+                    SET shipping_address = ?
                     WHERE customer_id = ? and order_id= ?;
                     `;
   try {
@@ -209,7 +212,7 @@ module.exports.updateShippingDetails = async (data) => {
         'database is connected in order.services.js updateShippingDetails function'
       )
     );
-    const dataRequired = [shippingAddr, shippingMethod, customerID, orderId];
+    const dataRequired = [shippingAddr, customerID, orderId];
     console.log(
       chalk.blue('Executing query >>>>>>'),
       updateShippingDetailsQuery

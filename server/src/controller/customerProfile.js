@@ -1,7 +1,7 @@
 const customerService = require('../services/customer.services');
 
 const userProfileInformation = async (req, res) => {
-  console.log("inside user profile controller");
+  console.log('inside user profile controller');
   try {
     const customer_id = req.headers['customer-id'];
     console.log(customer_id);

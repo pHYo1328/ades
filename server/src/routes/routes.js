@@ -193,16 +193,6 @@ module.exports = (app, router) => {
   );
 
   //Carolyn
-  router.get(
-    '/api/payment_received/getListsByDeliStatus/',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetListsByDeliStatus
-  );
-  router.put(
-    '/api/admin/updateDeliByID/:paymentID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processUpdateDeliByID
-  );
 
   router.get(
     '/api/payment/:orderID',
@@ -215,24 +205,40 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     paymentController.processGetPaymentTotal
   );
-  router.get('/config', checkoutController.getConfig);
+
+  router.get(
+    '/api/idAndAmount/:productID',
+    //verifyAccessToken.verifyToken,
+    paymentController.processGetIDAndAmount
+  );
+
+  router.get(
+    '/config', 
+    checkoutController.getConfig
+  );
 
   router.post(
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
+  
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
-    router.post('/processRefund/:orderID', checkoutController.processRefund);
+    router.post(
+      '/processRefund/:orderID', 
+      checkoutController.processRefund
+  );
 
   router.post(
     '/processPartialRefund/:productID',
     checkoutController.processRefund
   );
+
+
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
@@ -265,7 +271,10 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
   router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
 };

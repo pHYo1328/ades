@@ -10,6 +10,7 @@ const pool = mysql2.createPool({
   ssl: {
     rejectUnauthorized: false,
   },
+  timezone: '+00:00',
 });
 
 module.exports = pool;

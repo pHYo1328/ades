@@ -44,69 +44,6 @@ exports.processGetPaymentByID = async (req, res, next) => {
   }
 };
 
-//get all payment which haven't done delivery
-
-exports.processGetListsByDeliStatus = async (req, res, next) => {
-  console.log(chalk.blue('processGetListsByDeliStatus running'));
-
-  try {
-    const deliveryData = await paymentServices.getListsByDeliStatus();
-
-    if (deliveryData) {
-      console.log(chalk.yellow('Payment data: ', deliveryData));
-
-      return res.status(200).json({
-        statusCode: 200,
-        ok: true,
-        message: "orders haven't started the delivery yet",
-        deliveryData,
-      });
-    }
-  } catch (error) {
-    console.error(chalk.red('Error in getPaymentByID: ', error));
-    return next(error);
-  }
-};
-
-//updating delivery_status
-
-exports.processUpdateDeliByID = async (req, res, next) => {
-  console.log(chalk.blue('processUpdateDeliByID running'));
-  const { paymentID } = req.params;
-  const { delivery_status } = req.body;
-
-  try {
-    if (isNaN(parseInt(paymentID))) {
-      const error = new Error('invalid orderID');
-      error.status = 400;
-      throw error;
-    }
-    const updateDeliveryStatus = await paymentServices.updateDeliByID(
-      delivery_status,
-      paymentID
-    );
-
-    if (!updateDeliveryStatus) {
-      const error = new Error('No order exists');
-      error.status = 404;
-      throw error;
-    }
-    if (updateDeliveryStatus) {
-      console.log(chalk.yellow('Delivery data: ', updateDeliveryStatus));
-
-      return res.status(200).json({
-        statusCode: 200,
-        ok: true,
-        message: 'Update delivery status successful',
-        updateDeliveryStatus,
-      });
-    }
-  } catch (error) {
-    console.error(chalk.red('Error in updateDeliByID: ', error));
-    return next(error);
-  }
-};
-
 //payment data
 
 exports.processGetPaymentTotal = async (req, res, next) => {
@@ -120,23 +57,55 @@ exports.processGetPaymentTotal = async (req, res, next) => {
       throw error;
     }
 
-    const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
-    if (!createdPaymentTotal || createdPaymentTotal[0].payment_total === null) {
+    const paymentTotal = await paymentServices.getPaymentTotal(orderID);
+    if (!paymentTotal || paymentTotal[0].payment_total === null) {
       const error = new Error('No payment exists');
       error.status = 404;
       throw error;
     }
 
-    console.log(chalk.yellow('Payment_total data: ', createdPaymentTotal));
+    console.log(chalk.yellow('Payment_total data: ', paymentTotal));
 
     return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Read payment total successful',
-      createdPaymentTotal,
+      paymentTotal,
     });
   } catch (error) {
     console.error(chalk.red('Error in getPaymentTotal: ', error));
+    return next(error);
+  }
+};
+
+exports.processGetIDAndAmount = async (req, res, next) => {
+  console.log(chalk.blue('processGetIDAndAmount running'));
+  const { productID } = req.params;
+
+  try {
+    if (!productID) {
+      const error = new Error('invalid productID');
+      error.status = 400;
+      throw error;
+    }
+
+    const idAndAmount = await paymentServices.getIdAndAmount(productID);
+    if (idAndAmount.length == 0) {
+      const error = new Error('No payment exists');
+      error.status = 404;
+      throw error;
+    }
+
+    console.log(chalk.yellow('Payment_total data: ', idAndAmount));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read refund data is successful',
+      idAndAmount,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getIDAndAmount: ', error));
     return next(error);
   }
 };
