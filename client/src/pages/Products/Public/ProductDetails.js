@@ -154,19 +154,6 @@ export default function ProductDetails() {
                 >
                   <button
                     class="col-4"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                    id="plusButton"
-                    onClick={() => {
-                      if (product.quantity > cartQuantity) {
-                        setCartQuantity((cartQuantity += 1));
-                      }
-                    }}
-                  >
-                    <i class="bi bi-plus-circle"></i>
-                  </button>
-                  <p class="col-4 text-center">{cartQuantity}</p>
-                  <button
-                    class="col-4"
                     id="minusButton"
                     style={{ marginLeft: 'auto', marginRight: 'auto' }}
                     onClick={() => {
@@ -176,6 +163,19 @@ export default function ProductDetails() {
                     }}
                   >
                     <i class="bi bi-dash-circle"></i>
+                  </button>
+                  <p class="col-4 text-center">{cartQuantity}</p>
+                  <button
+                    class="col-4"
+                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                    id="plusButton"
+                    onClick={() => {
+                      if (product.quantity > cartQuantity) {
+                        setCartQuantity((cartQuantity += 1));
+                      }
+                    }}
+                  >
+                    <i class="bi bi-plus-circle"></i>
                   </button>
                 </div>
               </div>

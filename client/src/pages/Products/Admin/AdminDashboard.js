@@ -351,29 +351,6 @@ export default function AdminDashboard() {
                     >
                       <button
                         class="col-4"
-                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                        id="plusButton"
-                        onClick={() => {
-                          const productID = product.product_id;
-                          axios
-                            .put(
-                              `${baseUrl}/api/products/inventory/plus/${productID}`
-                            )
-                            .then((response) => {
-                              console.log('Increase button is clicked');
-                              fetchProducts();
-                              fetchStatistics();
-                            })
-                            .catch((error) => {
-                              console.error(error);
-                            });
-                        }}
-                      >
-                        <i class="bi bi-plus-circle"></i>
-                      </button>
-                      <p class="col-4 text-center">{product.quantity}</p>
-                      <button
-                        class="col-4"
                         id="minusButton"
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
                         onClick={() => {
@@ -395,6 +372,29 @@ export default function AdminDashboard() {
                         }}
                       >
                         <i class="bi bi-dash-circle"></i>
+                      </button>
+                      <p class="col-4 text-center">{product.quantity}</p>
+                      <button
+                        class="col-4"
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        id="plusButton"
+                        onClick={() => {
+                          const productID = product.product_id;
+                          axios
+                            .put(
+                              `${baseUrl}/api/products/inventory/plus/${productID}`
+                            )
+                            .then((response) => {
+                              console.log('Increase button is clicked');
+                              fetchProducts();
+                              fetchStatistics();
+                            })
+                            .catch((error) => {
+                              console.error(error);
+                            });
+                        }}
+                      >
+                        <i class="bi bi-plus-circle"></i>
                       </button>
                     </div>
                   </div>
