@@ -13,7 +13,8 @@ async function queryWithRetry(query, params, retries) {
   }
 }
 
-module.exports.getLatestUpdate = async()=> {const updateCheckingQuery =
+module.exports.getLatestUpdate = async () => {
+  const updateCheckingQuery =
     'SELECT MAX(created_at) AS latest_update FROM product';
   try {
     const latestUpdateTime = await queryWithRetry(updateCheckingQuery, [], 3);

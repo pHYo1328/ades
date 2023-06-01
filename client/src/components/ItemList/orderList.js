@@ -26,22 +26,13 @@ const OrderList = ({
     setEditedShippingAddress(items[index].shipping_address);
     setEditedShippingMethod(items[index].shipping_id);
   };
-
-  // Create a lookup for shipping methodsx
-  const shippingMethodLookup = shippingMethods.reduce((lookup, method) => {
-    lookup[method.shipping_id] = method.shipping_method;
-    return lookup;
-  }, {});
-
   const handleSaveClick = async (orderId) => {
     console.log('Edited Shipping Address:', editedShippingAddress);
-    console.log('Edited Shipping Method:', editedShippingMethod);
     const result = await api.put(
       `/api/order/updateShippingDetails/${customerID}`,
       {
         orderId: orderId,
         shippingAddr: editedShippingAddress,
-        shippingMethod: editedShippingMethod,
       }
     );
     console.log(result);
@@ -52,7 +43,6 @@ const OrderList = ({
         ? {
             ...item,
             shipping_address: editedShippingAddress,
-            shipping_method: shippingMethodLookup[editedShippingMethod],
           }
         : item
     );
@@ -125,8 +115,8 @@ const OrderList = ({
     <ul>
       {clearedItems.map((item, index) => (
         <li key={index}>
-          <div className="py-3 mx-6 my-6 shadow-lg shadow-cyan-500/50 rounded">
-            <div className="flex flex-row justify-around text-xl">
+          <div className="mx-4 my-3 shadow-md shadow-gray-900  p-6 rounded-lg">
+            <div className="flex flex-row justify-around text-base">
               <p>order ID : {item.order_id}</p>
               {editingIndex === index ? (
                 <div className="flex flex-row space-x-12 w-1/2">
@@ -136,28 +126,10 @@ const OrderList = ({
                     onChange={(event) =>
                       setEditedShippingAddress(event.target.value)
                     }
-                    className="border border-gray-300 rounded px-2 py-1 mt-2 flex-grow"
+                    className="border border-gray-300 rounded px-2 flex-grow"
                   />
-                  <select
-                    value={editedShippingMethod}
-                    onChange={(event) =>
-                      setEditedShippingMethod(event.target.value)
-                    }
-                    className="border border-gray-300 rounded px-2 py-1 mt-2 flex-grow text-base"
-                  >
-                    <option disabled selected value="">
-                      Select a method
-                    </option>
-                    {shippingMethods.map((method) => (
-                      <option
-                        key={method.shipping_id}
-                        value={method.shipping_id}
-                      >
-                        {method.shipping_method}
-                      </option>
-                    ))}
-                  </select>
-                  <button onClick={() => handleSaveClick(item.order_id)}>
+                  <p>Shipping Method : {item.shipping_method}</p>
+                  <button onClick={() => handleSaveClick(item.order_id)} className='bg-green-700 px-4 py-2 rounded text-white'>
                     Save
                   </button>
                 </div>
@@ -169,7 +141,7 @@ const OrderList = ({
                   </>
                   <button
                     onClick={() => handleEditClick(index)}
-                    className="bg-gray-600 hover:bg-gray-800 py-2 px-4 rounded text-white flex flex-row items-center"
+                    className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center"
                   >
                     <FaEdit className="mr-3"></FaEdit>Edit
                   </button>
@@ -178,7 +150,7 @@ const OrderList = ({
                       onClick={() => {
                         navigate(`/payment/${item.order_id}`);
                       }}
-                      className="bg-green-600 p-3"
+                      className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded"
                     >
                       Pay
                     </button>
@@ -190,7 +162,7 @@ const OrderList = ({
               <div className="mt-4 text-xl">
                 {item.order_items.map((orderItem, orderIndex) => (
                   <div key={orderIndex}>
-                    <div className="flex items-center mt-2 justify-around">
+                    <div className="flex items-center mt-2 justify-between px-5">
                       <AdvancedImage
                         cldImg={cld.image(orderItem.image_url)}
                         className="w-48 h-48 rounded"
