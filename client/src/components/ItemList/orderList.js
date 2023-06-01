@@ -5,6 +5,10 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import { FaEdit,FaClipboard,FaWalking, FaWallet,FaMapMarkedAlt } from 'react-icons/fa';
 import { RiTruckLine } from 'react-icons/ri';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -19,12 +23,10 @@ const OrderList = ({
 }) => {
   const [editingIndex, setEditingIndex] = useState(-1);
   const [editedShippingAddress, setEditedShippingAddress] = useState('');
-  const [editedShippingMethod, setEditedShippingMethod] = useState('');
   const navigate = useNavigate();
   const handleEditClick = (index) => {
     setEditingIndex(index);
     setEditedShippingAddress(items[index].shipping_address);
-    setEditedShippingMethod(items[index].shipping_id);
   };
   const handleSaveClick = async (orderId) => {
     console.log('Edited Shipping Address:', editedShippingAddress);
@@ -85,23 +87,77 @@ const OrderList = ({
     return combinedOrders;
   };
   const clearedItems = combineOrders(items);
+  
   const handleDeleteItem = async (orderId, productId, quantity) => {
-    console.log(orderId, productId);
-    try {
-      const result = await api.delete(
-        `/api/order?orderId=${orderId}&productID=${productId}&quantity=${quantity}&orderStatus=${orderStatus}`
-      );
-      console.log('Deleted Item:', orderId, productId);
-      console.log(result);
-      // Remove the deleted item from state
-      const updatedItemList = items.filter(
-        (item) => item.order_id !== orderId || item.product_id !== productId
-      );
-      setItems(updatedItemList);
-    } catch (error) {
-      console.error('Error deleting item:', error);
-    }
+    confirmAlert({
+      title: 'Confirm to cancel the order',
+      message: 'Are you sure you want to cancel this item?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async() => {
+            try {
+              const result = await api.delete(
+                `/api/order?orderId=${orderId}&productID=${productId}&quantity=${quantity}&orderStatus=${orderStatus}`
+              );
+              console.log('Deleted Item:', orderId, productId);
+              console.log(result);
+              // Remove the deleted item from state
+              const updatedItemList = items.filter(
+                (item) => item.order_id !== orderId || item.product_id !== productId
+              );
+              setItems(updatedItemList);
+            } catch (error) {
+              console.error('Error deleting item:', error);
+            }
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   };
+  const payButtonHandler = async (orderId) => {
+    console.log(orderId);
+    let isStockAvailable =true;
+    const products= items
+    .filter((item) => item.order_id === orderId)
+    const productIds= products.map((item) => item.product_id);
+    console.log(productIds);
+    const productIdsWithQuantity = products.map((item) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+    }));
+    console.log(productIdsWithQuantity);
+    api
+      .get(`/api/inventory/checkQuantity?productIDs=${productIds.join(',')}`)
+      .then((response) => {
+        console.log(response.data.data);
+        response.data.data.forEach((inventory) => {
+          const quantityIndex = productIdsWithQuantity.findIndex(
+            (item) => item.productId == inventory.product_id
+          ); if (
+            quantityIndex !== -1 &&
+            inventory.quantity < productIdsWithQuantity[quantityIndex].quantity
+          ) {
+            isStockAvailable = false;
+          }
+
+          if(!isStockAvailable){
+            toast.warn("Sorry,items in your orders are no more stock. Please cancel", {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
+          }
+          else{
+            navigate(`/payment/${orderId}`)
+          }
+
+        })})
+  }
 
   if (items.length === 0) {
     return (
@@ -152,7 +208,7 @@ const OrderList = ({
                   {renderButton && (
                     <button
                       onClick={() => {
-                        navigate(`/payment/${item.order_id}`);
+                        payButtonHandler(item.order_id);
                       }}
                       className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center"
                     >

@@ -10,6 +10,7 @@ exports.processAddBookMark = async (req, res, next) => {
     brandIds
   );
   try {
+    // if customerId and brands are nulls return as invalid IDs
     if (isNaN(parseInt(customerId)) || !brandIds) {
       const error = new Error('Invaild ID parameters');
       error.status = 400;
@@ -25,7 +26,7 @@ exports.processAddBookMark = async (req, res, next) => {
         'Inspect result variable from processAddBookMark service',
         result
       )
-    );
+    );  
     return res.status(200).send({
       message: 'bookmark record is inserted',
       data: result,
