@@ -61,7 +61,7 @@ const Header = () => {
               className="text-gray-800 hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
             >
               <MdComputer />
-              <p className="text-2xl">products</p>
+              <p className="text-2xl">Products</p>
             </Link>
             <Link
               to="/cart"
