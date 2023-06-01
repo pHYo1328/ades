@@ -23,6 +23,7 @@ const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
+const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
@@ -211,33 +212,25 @@ module.exports = (app, router) => {
     paymentController.processGetIDAndAmount
   );
 
-  router.get(
-    '/config', 
-    checkoutController.getConfig
-  );
+  router.get('/config', checkoutController.getConfig);
 
   router.post(
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-  
+
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
-    router.post(
-      '/processRefund/:orderID', 
-      checkoutController.processRefund
-  );
+    router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
-    checkoutController.processRefund
+    checkoutController.processPartialRefund
   );
-
-
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
@@ -275,4 +268,5 @@ module.exports = (app, router) => {
     forgotPasswordAdminController.handleForgotPassword
   );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
+  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
 };

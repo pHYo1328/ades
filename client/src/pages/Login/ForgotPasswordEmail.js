@@ -26,6 +26,7 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        alert("email sent");
       })
       .catch((error) => {
         console.error(error);
@@ -68,7 +69,7 @@ function Register() {
           </label>
           <input
             id="email"
-            type="text"
+            type="email"
             placeholder="Enter your email"
             className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={email}

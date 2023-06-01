@@ -103,7 +103,7 @@ function Login() {
           <div className="flex justify-end">
             <button
               className="text-sm text-gray-500 hover:text-gray-700"
-              onClick={() => navigate('/forgot-admin')}
+              onClick={() => navigate('/verify-email-admin')}
             >
               Forgot your password?
             </button>
