@@ -38,12 +38,12 @@ function Login() {
           localStorage.setItem('roles', JSON.stringify(data.roles));
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
-          alert("successful admin login")
+          alert('successful admin login');
           navigate('/verify-otp-admin');
         } else {
           console.log('Admin login failed');
           setErrorMessage('Incorrect username or password');
-          alert("Incorrect username or password")
+          alert('Incorrect username or password');
         }
       })
       .catch((error) => {
