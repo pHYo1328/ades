@@ -12,6 +12,7 @@ const cld = new Cloudinary({
 });
 
 export default function SearchResults() {
+  const [hasResults, setHasResults] = useState(false);
   const [products, setProducts] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
@@ -23,6 +24,8 @@ export default function SearchResults() {
       .then((response) => {
         console.log('response: ', response);
         setProducts(response.data.data);
+        setHasResults(true);
+        console.log(response.data);
         console.log(products);
       })
       .catch((error) => {
@@ -38,37 +41,47 @@ export default function SearchResults() {
         </h2>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-          {products ? (
-            products.map((product) => (
-              <div
-                key={product.product_id}
-                className="group relative"
-                // onClick={() => {
-                //   const productID = product.product_id;
-                //   window.location.href = `/products/${productID}`;
-                // }}
-              >
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                  <AdvancedImage cldImg={cld.image(product.image_url)} />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div className="text-left">
-                    <h3 className="text-sm text-gray-700">
-                      <Link to={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.brand_name}
+          {hasResults ? (
+            products ? (
+              products.map((product) => (
+                <div
+                  key={product.product_id}
+                  className="group relative"
+                  // onClick={() => {
+                  //   const productID = product.product_id;
+                  //   window.location.href = `/products/${productID}`;
+                  // }}
+                >
+                  <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
+                    <AdvancedImage cldImg={cld.image(product.image_url)} />
+                  </div>
+                  <div className="mt-4 flex justify-between">
+                    <div className="text-left">
+                      <h3 className="text-sm text-gray-700">
+                        <Link to={`/product/${product.product_id}`}>
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0"
+                          />
+                          {product.product_name}
+                        </Link>
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.brand_name}
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      {product.price}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
-                  </p>
                 </div>
+              ))
+            ) : (
+              <div>
+                {' '}
+                <p>No results found</p>{' '}
               </div>
-            ))
+            )
           ) : (
             <div className="flex items-center justify-center h-screen">
               <div className="mx-auto flex flex-col items-center">
