@@ -99,6 +99,7 @@ module.exports.getProductsByCategoryOrBrand = async (
   sort
 ) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
+  console.log(limit, offset);
   try {
     let productsDataQuery = `
   SELECT
