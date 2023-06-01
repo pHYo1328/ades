@@ -25,10 +25,9 @@ export default function ProductDetails() {
   const customerId = localStorage.getItem('userid');
   const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
-    if(!customerId){
+    if (!customerId) {
       navigate('/login');
-    }
-    else if (quantity === 0) {
+    } else if (quantity === 0) {
       toast.error('Please select quantity', {
         autoClose: 3000,
         pauseOnHover: true,
@@ -177,6 +176,8 @@ export default function ProductDetails() {
                     onClick={() => {
                       if (product.quantity > cartQuantity) {
                         setCartQuantity((cartQuantity += 1));
+                      } else {
+                        window.alert('No more inventory!');
                       }
                     }}
                   >

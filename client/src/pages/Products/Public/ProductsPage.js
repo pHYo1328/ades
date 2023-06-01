@@ -63,7 +63,6 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    console.log('jhrn');
     if (resetPage) {
       setCurrentPage(1);
     }
