@@ -2,12 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-import { FaClipboard } from 'react-icons/fa';
+import { FaClipboard, FaWallet } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { format, utcToZonedTime } from 'date-fns-tz';
-import {
-  RiTruckLine,
-} from 'react-icons/ri';
+import { RiTruckLine } from 'react-icons/ri';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -63,8 +61,8 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
       window.alert('Please fill in all the fields');
     } else {
       const requestBody = {
-        comment: ratingComment[index],
-        rating_score: rating[index],
+        comment: ratingComment,
+        rating_score: rating,
         product_id: productID,
         customer_id: customerID,
       };
@@ -84,26 +82,15 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
       return Intl.DateTimeFormat().resolvedOptions().timeZone;
     } else {
       // Fallback to a default time zone if Intl API is not supported
-      console.log("Intl API is not supported")
+      console.log('Intl API is not supported');
       return 'UTC';
     }
   };
-
   const userTimeZone = getUserTimeZone();
-  const utcTime = '2023-06-01T05:50:42.000Z';
-
-// Convert UTC time to Singapore time
-const singaporeTime = utcToZonedTime(utcTime, userTimeZone);
-
-// Format the Singapore time as per your requirement
-const formattedTime = format(singaporeTime, 'yyyy-MM-dd HH:mm:ss');
-
-console.log('Singapore Time:', formattedTime);
-  console.log('userTimeZone', userTimeZone);
   if (items.length === 0) {
     return (
-      <div className="flex item-center">
-        <h2>No Items</h2>
+      <div className='flex items-center justify-center align-middle py-5'>
+        <h2>No Items {renderRating ? (`delivered to you`):(`is delivering to you`)}</h2>
       </div>
     );
   }
@@ -112,46 +99,83 @@ console.log('Singapore Time:', formattedTime);
     <ul>
       {items.map((item, index) => (
         <li key={index}>
-          <div className="mx-4 my-3 shadow-md shadow-gray-900 text-base p-6 rounded-lg">
-            <div className='block md:flex flex-row justify-between'>
-            <p className='flex flex-row items-center text-sm sm:text-base space-x-1'><FaClipboard className='text-green-700'/>Order ID :{item.order_id}</p>
-          <p className='flex flex-row items-center text-sm sm:text-base space-x-1'><RiTruckLine className='text-green-700 text-xl'/>
-              {renderRating? <span>shipping arrived at : {format(utcToZonedTime(item.completed_at, userTimeZone), "yyyy-MM-dd HH:mm:ss")}</span>
-              : <span>shipping started at : {format(utcToZonedTime(item.shipping_start_at, userTimeZone), "yyyy-MM-dd HH:mm:ss")}</span>}
-              </p>
-            </div>
-            <div className="block md:flex flex-row justify-between items-center lg:mx-12">
-              <div className="block sm:flex items-center p-2">
-              <AdvancedImage
-                        cldImg={cld.image(item.image_url)}
-                        className="w-48 h-48 rounded"
-                      />
-                <div className='px-4 flex flex-col'>
-                  <p>{item.product_name}</p>
+          <div className="mx-4 my-3 shadow-md shadow-gray-900 text-lg p-6 rounded-lg">
+            <p className="flex flex-row items-center text-sm sm:text-lg space-x-1">
+              <FaClipboard className="text-green-700" />
+              Order ID :{item.order_id}
+            </p>
+            <div className="block md:flex flex-row items-center lg:mx-12 justify-between">
+              <div className="block sm:flex flex-row items-center p-2">
+                <AdvancedImage
+                  cldImg={cld.image(item.image_url)}
+                  className="w-48 h-48 rounded"
+                />
+                <div className="px-4 flex flex-col">
+                  <b>{item.product_name}</b>
                   <p>price : ${item.price}</p>
                   <p>quantity : {item.quantity}</p>
                 </div>
               </div>
-              
-              {renderRating && (
-                <div className='flex flex-col space-y-4'>
-                <Link to={`/product/${item.product_id}`}>
-                <button className='bg-green-700 px-4 py-2 hover:bg-green-900 rounded text-white w-40'>Buy again</button>
-                </Link>
-                <button
-                  onClick={() => {
-                    handleRateItemClick(index);
-                    setProductID(item.product_id);
-                    setIndex(index)
-                    ;
-                  }}
-                  className='py-2 px-4 rounded border-2 border-green-600 hover:border-green-800'
+              <div className="block md:flex flex-col">
+                <p className="flex flex-row items-center text-sm sm:text-lg space-x- pb-2">
+                  <FaWallet className="text-green-700 text-xl" />
+                  payment at :{' '}
+                  {format(
+                    utcToZonedTime(item.payment_date, userTimeZone),
+                    'yyyy-MM-dd HH:mm:ss'
+                  )}
+                </p>
+                <p className="flex flex-row items-center text-sm sm:text-lg space-x-1 pb-2">
+                  <RiTruckLine className="text-green-700 text-xl" />
+
+                  <p>
+                    shipping started at :{' '}
+                    {format(
+                      utcToZonedTime(item.shipping_start_at, userTimeZone),
+                      'yyyy-MM-dd HH:mm:ss'
+                    )}
+                  </p>
+                </p>
+                {item.completed_at ? (
+                  <p className="flex flex-row items-center text-sm sm:text-lg space-x-1 pb-2">
+                    <RiTruckLine className="text-green-700 text-xl" />
+                    shipping arrived at:{' '}
+                    {format(
+                      utcToZonedTime(item.completed_at, userTimeZone),
+                      'yyyy-MM-dd HH:mm:ss'
+                    )}
+                  </p>
+                ) : (
+                  <span></span>
+                )}
+              </div>
+              {!renderRating && (
+                <a
+                  href="mailto:235756ksp@gmail.com?subject=Hello&body=I%20wanted%20to%20say%20hi!"
+                  className="text-xl bg-red-600 hover:bg-red-800 text-white w-40 rounded text-center py-2 px-4 items-end"
                 >
-                  Rate this item
-                </button>
+                  Contact us{' '}
+                </a>
+              )}
+              {renderRating && (
+                <div className="flex flex-col space-y-4">
+                  <Link to={`/product/${item.product_id}`}>
+                    <button className="bg-green-700 px-4 py-2 hover:bg-green-900 rounded text-white w-40">
+                      Buy again
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleRateItemClick(index);
+                      setProductID(item.product_id);
+                      setIndex(index);
+                    }}
+                    className="py-2 px-4 rounded border-2 border-green-600 hover:border-green-800"
+                  >
+                    Rate this item
+                  </button>
                 </div>
               )}
-
             </div>
             {showRatingForm[index] && (
               <div className="flex flex-col mt-2 items-center">

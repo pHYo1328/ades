@@ -21,10 +21,10 @@ const VerifyOTP = () => {
       console.log(response);
       if (response.ok) {
         console.log('Successful OTP verification');
-        alert("successful OTP");
+        alert('successful OTP');
         navigate('/homepage');
       } else {
-        alert("Invalid OTP");
+        alert('Invalid OTP');
         console.log('Invalid OTP');
       }
     } catch (error) {

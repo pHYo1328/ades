@@ -64,7 +64,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
   console.log(
     chalk.yellow('Inspecting data from controller:', customerID, orderStatus)
   );
-  const orderBeforeDeliverQuery = `
+  const orderBeforePaidQuery = `
                       select orders.order_id,
                       product.product_id,
                       product.product_name,
@@ -73,17 +73,16 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                       order_items.quantity,
                       orders.shipping_address,
                       orders.order_date,
-                      shipping.shipping_method,
-                      shipping.shipping_id
+                      shipping.shipping_method
                       FROM product
                       inner join order_items on order_items.product_id=product.product_id
                       inner join orders on orders.order_id= order_items.order_id
                       inner join shipping on shipping.shipping_id = orders.shipping_id
                       left join product_image on product.product_id=product_image.product_id
                       where orders.customer_id=? and orders.order_status=?
-                      GROUP BY orders.order_id, product.product_id, product.product_name, product.price, order_items.quantity, orders.shipping_address, shipping.shipping_method, shipping.shipping_id;
+                      GROUP BY orders.order_id, product.product_id, product.product_name, product.price, order_items.quantity, orders.shipping_address, shipping.shipping_method;
                     `;
-  const orderAfterDeliverQuery = `
+  const orderAfterPaidQuery = `
                     select orders.order_id,
                     product.product_id,
                     product.product_name,
@@ -91,13 +90,18 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     product.price, 
                     order_items.quantity ,
                     orders.shipping_start_at,
-                    orders.completed_at
+                    orders.shipping_address,
+                    shipping.shipping_method,
+                    orders.completed_at,
+                    payment.payment_date
                     FROM product
                     inner join order_items on order_items.product_id=product.product_id
                     inner join  orders on orders.order_id= order_items.order_id
+                    inner join payment on payment.order_id = orders.order_id
+                    inner join shipping on shipping.shipping_id = orders.shipping_id
                     left join product_image on product_image.product_id=product.product_id
                     where orders.customer_id=? and orders.order_status=?
-                    GROUP BY orders.order_id,product.product_id, product.product_name, product.price, order_items.quantity;
+                    GROUP BY orders.order_id, product.product_id, product.product_name, product.price, order_items.quantity, payment.payment_date;
                     `;
   try {
     console.log(
@@ -106,27 +110,22 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
         'database is connected in order.services.js getOrderDetailsByOrderStatus function'
       )
     );
-    if (
-      orderStatus === OrderStatus.ORDER_RECEIVED ||
-      orderStatus === OrderStatus.ORDER_PAID
-    ) {
-      console.log(
-        chalk.blue('Executing query >>>>>>'),
-        orderBeforeDeliverQuery
-      );
+    if (orderStatus === OrderStatus.ORDER_RECEIVED) {
+      console.log(chalk.blue('Executing query >>>>>>'), orderBeforePaidQuery);
       const dataRequired = [customerID, orderStatus.key];
-      const result = await pool.query(orderBeforeDeliverQuery, dataRequired);
+      const result = await pool.query(orderBeforePaidQuery, dataRequired);
       console.log(
         chalk.green('Fetched Data according to order status >>>', result)
       );
       return result[0];
     } else if (
       orderStatus === OrderStatus.ORDER_DELIVERED ||
-      orderStatus === OrderStatus.ORDER_DELIVERING
+      orderStatus === OrderStatus.ORDER_DELIVERING ||
+      orderStatus === OrderStatus.ORDER_PAID
     ) {
       const dataRequired = [customerID, orderStatus.key];
-      console.log(chalk.blue('Executing query >>>>>>'), orderAfterDeliverQuery);
-      const result = await pool.query(orderAfterDeliverQuery, dataRequired);
+      console.log(chalk.blue('Executing query >>>>>>'), orderAfterPaidQuery);
+      const result = await pool.query(orderAfterPaidQuery, dataRequired);
       console.log(
         chalk.green('Fetched Data according to deliver status >>>', result)
       );
@@ -140,7 +139,16 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
 
 module.exports.getOrderDetailsForAdmin = async () => {
   console.log(chalk.blue('getOrderDetailsForAdmin is called'));
-  const orderQuery = `SELECT * FROM orders WHERE order_status in ("paid","delivering");`;
+  const orderQuery = `SELECT orders.order_id,
+                      orders.order_status,
+                      payment.payment_date,
+                      orders.shipping_address,
+                      orders.shipping_start_at
+                      FROM orders
+                      inner join payment on payment.order_id=orders.order_id 
+                      WHERE order_status in ("paid","delivering")
+                      ORDER BY payment.payment_date
+                      ;`;
   try {
     console.log(
       chalk.blue(
