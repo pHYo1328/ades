@@ -4,7 +4,9 @@ const sendForgotPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const response = await verificationEmailServices.ForgotPasswordEmailSender(email);
+    const response = await verificationEmailServices.ForgotPasswordEmailSender(
+      email
+    );
     res.status(200).json(response);
   } catch (error) {
     console.error(error);

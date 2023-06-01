@@ -184,14 +184,13 @@ exports.processUpdateOrderStatus = async (req, res, next) => {
 exports.processUpdateShippingDetails = async (req, res, next) => {
   console.log(chalk.blue('processUpdateShippingDetails is running'));
   const { customerID } = req.params;
-  const { orderId, shippingAddr, shippingMethod } = req.body;
+  const { orderId, shippingAddr } = req.body;
   console.log(chalk.yellow('Inspect customerID variable :', customerID));
   console.log(
     chalk.yellow(
       'Inspect req body variables',
       orderId,
       shippingAddr,
-      shippingMethod
     )
   );
   try {
@@ -203,8 +202,7 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
     if (
       !orderId ||
       !shippingAddr ||
-      !shippingAddr.trim() ||
-      isNaN(parseInt(shippingMethod))
+      !shippingAddr.trim()
     ) {
       const error = new Error('Invalid information parameter');
       error.status = 400;
@@ -213,8 +211,7 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
     const data = {
       customerID: customerID,
       orderId: orderId,
-      shippingAddr: shippingAddr,
-      shippingMethod: shippingMethod,
+      shippingAddr: shippingAddr
     };
     const result = await orderServices.updateShippingDetails(data);
     console.log(

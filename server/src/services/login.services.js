@@ -259,4 +259,3 @@ module.exports.retrieveUsersInfo = async () => {
 //     throw error;
 //   }
 // };
-
