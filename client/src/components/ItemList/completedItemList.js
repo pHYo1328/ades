@@ -63,8 +63,8 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
       window.alert('Please fill in all the fields');
     } else {
       const requestBody = {
-        comment: ratingComment,
-        rating_score: rating,
+        comment: ratingComment[index],
+        rating_score: rating[index],
         product_id: productID,
         customer_id: customerID,
       };

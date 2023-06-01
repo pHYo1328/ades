@@ -38,10 +38,12 @@ function Login() {
           localStorage.setItem('roles', JSON.stringify(data.roles));
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           setErrorMessage('');
+          alert('successful admin login');
           navigate('/verify-otp-admin');
         } else {
           console.log('Admin login failed');
           setErrorMessage('Incorrect username or password');
+          alert('Incorrect username or password');
         }
       })
       .catch((error) => {
@@ -109,8 +111,9 @@ function Login() {
 
           <div>
             <button
-              type="submit"
+              type="button"
               className="mt-4 w-full px-4 py-2 rounded-md shadow-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+              onClick={onHandleSubmit}
             >
               Log in
             </button>

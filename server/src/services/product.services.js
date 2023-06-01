@@ -99,6 +99,7 @@ module.exports.getProductsByCategoryOrBrand = async (
   sort
 ) => {
   console.log(chalk.blue('getProductsByCategoryOrBrand is called'));
+  console.log(limit, offset);
   try {
     let productsDataQuery = `
   SELECT
@@ -832,8 +833,8 @@ module.exports.createProduct = async (
 module.exports.createRating = async (
   comment,
   rating_score,
-  product_id,
-  customer_id
+  customer_id,
+  product_id
 ) => {
   console.log(chalk.blue('createRating is called'));
   try {
