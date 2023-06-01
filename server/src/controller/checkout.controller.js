@@ -9,6 +9,7 @@ exports.getConfig = (req, res) => {
   });
 };
 
+//creating the payment intent with stripe
 exports.createPaymentIntent = async (req, res) => {
   console.log(chalk.blue('create payment intent'));
   try {
@@ -49,6 +50,7 @@ exports.createPaymentIntent = async (req, res) => {
   }
 };
 
+//processing refund
 exports.processRefund = async (req, res) => {
   console.log(chalk.blue('refund'));
   try {
@@ -88,6 +90,7 @@ exports.processRefund = async (req, res) => {
   }
 };
 
+//processing partial refund
 exports.processPartialRefund = async (req, res) => {
   console.log(chalk.blue('partial refund'));
   try {
@@ -134,8 +137,8 @@ exports.processPartialRefund = async (req, res) => {
 };
 
 let endpointSecret;
-// endpointSecret = 'whsec_05c75be9817cfda85befac88dc648b626e771f1ace528d4b93d71795b53da0f7';
 
+//creating webhook for getting data inside inside database
 exports.createWebhooks = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let data;
