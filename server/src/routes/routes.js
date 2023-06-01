@@ -23,6 +23,7 @@ const getUserInfo = require('../controller/customerInfo');
 const updateUser = require('../controller/updateUserController');
 const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
+const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 
 //MIDDLEWARES
@@ -228,7 +229,7 @@ module.exports = (app, router) => {
 
   router.post(
     '/processPartialRefund/:productID',
-    checkoutController.processRefund
+    checkoutController.processPartialRefund
   );
 
   router.get('^/$|/index(.html)?', (req, res) => {
@@ -267,4 +268,5 @@ module.exports = (app, router) => {
     forgotPasswordAdminController.handleForgotPassword
   );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
+  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
 };
