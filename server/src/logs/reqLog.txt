@@ -40598,7 +40598,42 @@
 20230601	18:08:30	a0a520cf-64bf-4e91-8ac4-1eeea5ce10b0	GET	http://localhost:3000	/api/category
 =======
 >>>>>>> f2b5ce73d3b06665bf679a0f02983505ebc7f88a
+<<<<<<< HEAD
+20230601	18:31:26	e5ffd922-618e-4b23-93be-99833398ccf4	GET	http://localhost:3000	/api/products/new
+20230601	18:31:26	f1c2cb51-f838-4645-a4c0-1cadb8398fb3	GET	http://localhost:3000	/api/brands
+20230601	18:31:26	e909ec96-4abd-428c-b7e8-38d83566678e	GET	http://localhost:3000	/api/category
+20230601	18:31:32	2f2a990b-992b-4b4e-906e-0a4926bf7e7f	OPTIONS	http://localhost:3000	/login-admin
+20230601	18:31:32	08fcb332-c15e-4926-96af-d30e15a38a95	POST	http://localhost:3000	/login-admin
+20230601	18:33:52	d1a246be-973d-460d-97f5-1fc8fd4ca48c	GET	http://localhost:3000	/api/products/new
+20230601	18:33:52	e42d80df-48ce-4330-b605-bc9556bf3c4a	GET	http://localhost:3000	/api/brands
+20230601	18:33:52	4a0e37e8-ba9b-452f-883e-fb6ad886aabd	GET	http://localhost:3000	/api/category
+20230601	18:33:58	44264d87-99f8-4b0e-8fdd-98470646073f	OPTIONS	http://localhost:3000	/login
+20230601	18:33:58	2f66acdc-be0f-419d-b262-eb9f2e71a3df	POST	http://localhost:3000	/login
+20230601	18:34:35	b0f3b5e7-cdb2-41ce-87d5-85bc5d1a4f55	OPTIONS	http://localhost:3000	/verify-otp
+20230601	18:34:35	c4d9cead-f6ef-4360-8d71-212ffcf8e76f	POST	http://localhost:3000	/verify-otp
+20230601	18:34:37	7d73b5cf-8358-482c-82f9-802200d656c4	OPTIONS	http://localhost:3000	/user-profile
+20230601	18:34:37	4380002c-d913-4daf-97fd-ffc4d18a2197	GET	http://localhost:3000	/user-profile
+20230601	18:34:39	09f9821d-5d39-4215-a037-9ee4586f9da9	OPTIONS	http://localhost:3000	/logout
+20230601	18:34:39	1fff73b0-8771-4841-86be-33e59b72c135	PUT	http://localhost:3000	/logout
+20230601	18:34:39	9bce3987-32fa-4f83-9794-adf57f0b76a7	GET	http://localhost:3000	/api/products/new
+20230601	18:34:39	a1e12cc7-7cd4-40d5-8d94-f5fbdd8f1c61	GET	http://localhost:3000	/api/brands
+20230601	18:34:39	b3f8552e-82c1-43ae-a7d5-f7491db29194	GET	http://localhost:3000	/api/category
+20230601	18:34:46	ae3ecd47-14b8-49ce-a810-868f16451e6a	OPTIONS	http://localhost:3000	/login-admin
+20230601	18:34:46	ab5dee0b-f219-4ec6-8a19-8636ea5de70d	POST	http://localhost:3000	/login-admin
+20230601	18:35:11	f518db4f-d7be-4113-aedb-43e59d0d1f56	OPTIONS	http://localhost:3000	/verify-otp-admin
+20230601	18:35:11	7fbdafc7-2579-4937-8f43-7d553d56ad4c	POST	http://localhost:3000	/verify-otp-admin
+20230601	18:35:13	585092b4-285c-4f48-9775-2d63df25a11f	OPTIONS	http://localhost:3000	/logout-admin
+20230601	18:35:13	1969f1ca-0a63-4ec1-9289-8d00f81f8077	PUT	http://localhost:3000	/logout-admin
+20230601	18:35:13	177bdc01-5f3f-4258-b64e-ec2dbbaf62de	GET	http://localhost:3000	/api/products/new
+20230601	18:35:13	a7ec10b2-7852-4424-ac25-814eecad61cc	GET	http://localhost:3000	/api/brands
+20230601	18:35:13	edd0048a-12cf-4ca1-a68f-63ddad58d723	GET	http://localhost:3000	/api/category
+20230601	18:35:17	6a471d26-6f16-42b5-a3d1-6d2ba54f1178	OPTIONS	http://localhost:3000	/login
+20230601	18:35:17	d66ebdee-f1ec-42ee-b400-abec12efaa3b	POST	http://localhost:3000	/login
+20230601	18:35:26	eee7aabf-0172-48c7-a4d8-f2e0fb9f836f	OPTIONS	http://localhost:3000	/login-admin
+20230601	18:35:26	d3365f64-9e4e-4bcc-a6a2-571a21386b3c	POST	http://localhost:3000	/login-admin
+=======
 >>>>>>> e092c29e4ab1a48fde633feee90d29594fa12397
+<<<<<<< HEAD
 20230601	18:14:17	a9c602ef-b603-467e-bdc9-7aa2c2870bcc	GET	http://localhost:3000	/api/products/new
 20230601	18:14:17	65fdae1c-5262-44f9-a244-5f0f5df1cf1f	GET	http://localhost:3000	/api/brands
 20230601	18:14:17	665d1856-72c3-488b-b5f1-eeced0eeae96	GET	http://localhost:3000	/api/category
@@ -40694,3 +40729,6 @@
 20230601	18:36:25	2a401c26-84a5-49c5-9c9d-57c4912ec54e	GET	http://localhost:3000	/api/admin/statistics
 20230601	18:37:25	e47026f8-e64c-439e-a731-0d63c850b82b	GET	http://localhost:3000	/api/admin/statistics
 20230601	18:38:25	5bb46bca-809a-472f-a824-054d9bb3b837	GET	http://localhost:3000	/api/admin/statistics
+=======
+>>>>>>> b387939e1f47574d0ec938f25a5d59481bd3b4f6
+>>>>>>> 183164ab4c8addde2582f2174c8caff83e2daba5
