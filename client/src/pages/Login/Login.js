@@ -38,6 +38,7 @@ function Login() {
           document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
           // setIsSignedIn(true); //add to logout
           setErrorMessage('');
+          alert("successful login");
           navigate('/verify-otp');
         } else {
           setErrorMessage('Incorrect username or password');
