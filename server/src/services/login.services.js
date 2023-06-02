@@ -94,8 +94,8 @@ module.exports.findUserByUsername = async (username) => {
     userId
   ) => {
     const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
+    // updates refreshToken and create new array for the refreshToken for the same user
     const values = [...newRefreshTokenArray, newRefreshToken, userId];
-
     try {
       const result = await pool.query(updateQuery, values);
       return result;
