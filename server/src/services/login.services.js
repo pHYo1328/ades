@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-// create new user
+// creates new user
 module.exports.registerUser = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
@@ -84,26 +84,26 @@ module.exports.findUserByUsername = async (username) => {
   const query = 'SELECT * FROM users WHERE username = ?';
   const [foundUser] = await pool.query(query, [username]);
   console.log('find user by username found!');
-  return foundUser;
+  return foundUser;  
 };
 
-// Update refreshToken for a user
-module.exports.updateRefreshToken = async (
-  newRefreshTokenArray,
-  newRefreshToken,
-  userId
-) => {
-  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
-  const values = [...newRefreshTokenArray, newRefreshToken, userId];
+  // Update refreshToken for a user
+  module.exports.updateRefreshToken = async (
+    newRefreshTokenArray,
+    newRefreshToken,
+    userId
+  ) => {
+    const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
+    const values = [...newRefreshTokenArray, newRefreshToken, userId];
 
-  try {
-    const result = await pool.query(updateQuery, values);
-    return result;
-  } catch (error) {
-    console.error('Error updating refreshToken:', error);
-    throw error;
-  }
-};
+    try {
+      const result = await pool.query(updateQuery, values);
+      return result;
+    } catch (error) {
+      console.error('Error updating refreshToken:', error);
+      throw error;
+    }
+  };
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
