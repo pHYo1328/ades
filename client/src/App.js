@@ -28,6 +28,7 @@ import OrderToDeliver from './pages/Order/OrderToDeliver/OrderToDeliver';
 import OrderToPay from './pages/Order/OrderToPay/OrderToPay';
 import OrderAdmin from './pages/Order/Admin/OrderAdmin';
 import LandingPage from './pages/Home/LandingPage';
+import UserLandingPage from './pages/Home/LandingPageLoggedIn';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
 import Payment from './pages/Stripe/Payment';
@@ -51,7 +52,7 @@ function App() {
     '/homepage-admin',
   ]; // Specify the routes where the header should be admin headers
   const SignedInHeaderRoutes = ['/homepage']; // Specify the routes where the header should be signed in headers
-  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
+  const hiddenHeaderRoutes = ['/userLanding']; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
   //   const userIsSignedIn = checkUserIsSignedIn();
@@ -98,6 +99,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/userLanding" element={<UserLandingPage />} />
 
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
