@@ -16,6 +16,8 @@ export default function ProductsByCategory() {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const { categoryID } = useParams();
+
+  // get all products by category ID
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/category/${categoryID}`)
@@ -29,6 +31,7 @@ export default function ProductsByCategory() {
       });
   }, []);
 
+  // get the category name
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category/${categoryID}`)
@@ -56,6 +59,7 @@ export default function ProductsByCategory() {
           </ol>
         </nav>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+          {/* shows all the products by Category ID, if exists */}
           {products ? (
             products.map((product) => (
               <div key={product.product_id} className="group relative">

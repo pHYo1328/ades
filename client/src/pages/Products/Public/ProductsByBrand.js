@@ -17,6 +17,8 @@ export default function ProductsByBrand() {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const { brandID } = useParams();
+
+  // get all products by brand ID
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/brand/${brandID}`)
@@ -30,6 +32,7 @@ export default function ProductsByBrand() {
       });
   }, []);
 
+  // get the brand name
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brand/${brandID}`)
@@ -58,27 +61,16 @@ export default function ProductsByBrand() {
         </nav>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+          {/* get the products by brand, if exists */}
           {products ? (
             products.map((product) => (
-              <div
-                key={product.product_id}
-                className="group relative"
-                // onClick={() => {
-                //   const productID = product.product_id;
-                //   window.location.href = `/products/${productID}`;
-                // }}
-              >
-                {/* <Link to={`/products/${product.product_id}`} key={product.product_id} className="group relative"> */}
+              <div key={product.product_id} className="group relative">
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div className="text-left">
                     <h3 className="text-sm text-gray-700">
-                      {/* <a href={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </a> */}
                       <Link to={`/product/${product.product_id}`}>
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.product_name}
@@ -92,7 +84,6 @@ export default function ProductsByBrand() {
                     {product.price}
                   </p>
                 </div>
-                {/* </Link> */}
               </div>
             ))
           ) : (

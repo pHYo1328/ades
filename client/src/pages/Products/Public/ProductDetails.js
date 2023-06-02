@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
@@ -62,6 +61,7 @@ export default function ProductDetails() {
     }
   };
 
+  // get the details + images of the product by product ID
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -74,6 +74,8 @@ export default function ProductDetails() {
         console.error(error);
       });
   }, []);
+
+  // get the ratings by product ID
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/rating/${productID}`)
@@ -93,9 +95,12 @@ export default function ProductDetails() {
       style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
     >
       <div className="pt-6">
+        {/* shows the details of the product, if the product exists */}
         {product ? (
           <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
+            {/* shows all the images of the product */}
             {product.image_url.map((url, index) => (
+              // shows the image from Cloudinary
               <AdvancedImage key={index} cldImg={cld.image(url)} />
             ))}
 
@@ -161,6 +166,7 @@ export default function ProductDetails() {
                     id="minusButton"
                     style={{ marginLeft: 'auto', marginRight: 'auto' }}
                     onClick={() => {
+                      // minus the quantity by 1 when the user clicks on the minus icon
                       if (product.quantity >= 1 && cartQuantity >= 1) {
                         setCartQuantity((cartQuantity -= 1));
                       }
@@ -168,12 +174,15 @@ export default function ProductDetails() {
                   >
                     <i class="bi bi-dash-circle"></i>
                   </button>
+                  {/* shows the quantity of products that the user has in the cart, will change as the user makes changes by using the icons */}
                   <p class="col-4 text-center">{cartQuantity}</p>
                   <button
                     class="col-4"
                     style={{ marginLeft: 'auto', marginRight: 'auto' }}
                     id="plusButton"
                     onClick={() => {
+                      // plus the quantity by 1 when the user clicks on the button
+                      // disable the button and show alert when the quantity in the cart exceeds the inventory
                       if (product.quantity > cartQuantity) {
                         setCartQuantity((cartQuantity += 1));
                       } else {
@@ -232,6 +241,7 @@ export default function ProductDetails() {
                   </div>
 
                   <ul role="list" class="divide-y divide-gray-100">
+                    {/* shows all the ratings of the product by product ID */}
                     {ratings ? (
                       ratings.map((rating) => (
                         <div class="d-flex flex-row row py-3 justify-content-around">
