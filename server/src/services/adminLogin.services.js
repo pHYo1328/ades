@@ -182,6 +182,7 @@ module.exports.verifyOTP = async (otp) => {
       } else {
         // Invalid OTP
         console.log('ITS WRONG');
+        
         return false;
       }
     } else {
