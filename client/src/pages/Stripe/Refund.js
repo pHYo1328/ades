@@ -12,7 +12,7 @@ function RefundPayment() {
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}/api/payment/${orderID}`)
+      .get(`${baseUrl}/api/paymentByStatus/${orderID}`)
       .then((response) => {
         console.log(response);
         setPayments(response.data.data);
@@ -20,6 +20,7 @@ function RefundPayment() {
       })
       .catch((error) => {
         console.error(error);
+        
       });
   }, []);
 
@@ -32,20 +33,26 @@ function RefundPayment() {
   const handleRefund = async (event) => {
     console.log(chalk.yellow('Refund button is clicked!'));
     event.preventDefault();
-    axios
-      .post(`${baseUrl}/processRefund/${orderID}`)
-      .then((response) => {
-        console.log(response);
-        setRefunds(response.data.data);
-        console.log(refunds);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    window.alert('Giving refund now...');
+  
+    // Display a confirmation dialog
+    const confirmed = window.confirm('Are you sure you want to process the refund?');
+  
+    if (confirmed) {
+      axios
+        .post(`${baseUrl}/processRefund/${orderID}`)
+        .then((response) => {
+          console.log(response);
+          setRefunds(response.data.data);
+          console.log(refunds);
+          window.alert('Refund has been processed successfully.');
+        })
+        .catch((error) => {
+          console.error(error);
+          window.alert('Error occurred while processing refund.');
+        });
+    }
   };
-
+  
   return (
     <>
       <h1>The details of order</h1>

@@ -44,6 +44,50 @@ exports.processGetPaymentByID = async (req, res, next) => {
   }
 };
 
+//get payment by status
+
+exports.processGetPaymentByStatus = async (req, res, next) => {
+  console.log(chalk.blue('processGetPaymentByStatus running'));
+
+  const { orderID } = req.params;
+
+  try {
+    if (!orderID) {
+      const error = new Error('invalid orderID');
+      error.status = 400;
+      throw error;
+    }
+    const paymentData = await paymentServices.getPaymentByStatus(orderID);
+    if (paymentData.length == 0) {
+      const error = new Error('No order exists');
+      error.status = 404;
+      throw error;
+    }
+    if (paymentData) {
+      console.log(chalk.yellow('Order data: ', paymentData));
+      const payments = paymentData.map((payment) => ({
+        product_name: payment.product_name,
+        price: payment.price,
+        description: payment.description,
+        quantity: payment.quantity,
+        total_price: payment.total_price,
+        shipping_method: payment.shipping_method,
+        fee: payment.fee,
+        shipping_address: payment.shipping_address,
+      }));
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'Read order details successful',
+        data: payments,
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red('Error in getPaymentByStatus: ', error));
+    return next(error);
+  }
+};
+
 //payment data
 
 exports.processGetPaymentTotal = async (req, res, next) => {

@@ -225,6 +225,13 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
+
+  router.get(
+    '/api/paymentByStatus/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByStatus
+  );
+
     router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
