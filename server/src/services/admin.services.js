@@ -6,19 +6,17 @@ const chalk = require('chalk');
 // UPDATE USER INFO
 module.exports.updateUser = async (username, email, password, userid) => {
   console.log(chalk.blue('User updated successfully'));
-  console.log('sql', userid);
   try {
-    console.log("I'm inside try-catch");
-    // Update the user information
+    // Update the user's information
     const updateUserQuery =
       'UPDATE users SET username = ?, email = ?, password = ? WHERE customer_id = ?;';
     await pool.query(updateUserQuery, [username, email, password, userid]);
     console.log(username, email, userid);
-    // Fetch the updated user from the database
+    // Fetch the updated user from the database to display
     const getUserQuery = 'SELECT * FROM users WHERE customer_id = ?;';
     console.log('sql userid', userid);
     const [updatedUser] = await pool.query(getUserQuery, [userid]);
-    console.log(chalk.green('this is my userid', userid));
+    console.log(chalk.green('this is my userid', userid)); // inputted userid
 
     return updatedUser;
   } catch (error) {
@@ -48,7 +46,6 @@ module.exports.updateUser = async (username, email, password, userid) => {
 // Delete user
 module.exports.deleteUser = async (userid) => {
   console.log(chalk.blue('User deleted successfully'));
-  console.log('delete user targeted userid', userid);
   const orderDeleteQuery =
     'DELETE FROM orders WHERE customer_id = ? AND order_status NOT IN ("paid", "delivering");';
   const productOrderDeleteQuery =
@@ -61,22 +58,20 @@ module.exports.deleteUser = async (userid) => {
   );
   try {
     console.log(chalk.blue('Running SQL >>>>>>'));
-    console.log('does this work', userid);
     await connection.beginTransaction();
-    // Run the delete queries concurrently
+    // Run the delete queries concurrently 
     await Promise.all([
       pool.query(orderDeleteQuery, [userid]),
       pool.query(productOrderDeleteQuery),
       pool.query(userDeleteQuery, [userid]),
     ]);
-    console.log('try catch ', userid);
-    await connection.commit();
+    await connection.commit(); // commit all changes after Promise.All runs successfully
     console.log(
       chalk.green('User and all involving orders deleted successfully')
     );
     return true;
   } catch (error) {
-    await connection.rollback();
+    await connection.rollback(); // else rollback if errors are met
     console.error(chalk.red('Error in deleteUser:', error));
     throw error;
   } finally {
