@@ -102,7 +102,7 @@ exports.processPartialRefund = async (req, res) => {
     const refundPromises = idAndAmount.map(async (row) => {
       const transactionID = row.transaction_id;
       const refundAmount = parseInt(Math.round(row.refund_total * 100));
-     
+
       try {
         // Process the refund using Stripe
         const refund = await stripe.refunds.create({
@@ -154,7 +154,6 @@ exports.processPartialRefund = async (req, res) => {
     });
   }
 };
-
 
 let endpointSecret;
 
@@ -228,13 +227,13 @@ exports.createWebhooks = async (req, res) => {
     console.log('ID:', id);
     console.log('Status:', status);
     const total = (amount * 0.01).toFixed(2);
-    const refund_total =  (amount_refunded * 0.01).toFixed(2);
+    const refund_total = (amount_refunded * 0.01).toFixed(2);
     console.log('Amount:', total);
     console.log('Order ID:', metadata.order_id);
 
     let refundStatus;
     if (amount_refunded < amount) {
-      refundStatus = 'Partially Refunded';
+      refundStatus = 'partially Refunded';
       try {
         await paymentServices.addPartialRefund(
           id,
@@ -247,7 +246,7 @@ exports.createWebhooks = async (req, res) => {
         console.error('Error storing refund details in the database:', error);
       }
     } else {
-      refundStatus = 'Fully Refunded';
+      refundStatus = 'fully Refunded';
       try {
         await paymentServices.addRefund(
           id,

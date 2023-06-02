@@ -189,8 +189,18 @@ export default function AdminDashboard() {
     if (!orderID) {
       window.alert('Please fill in the order_id to process refund');
     } else {
-      console.log(orderID);
-      window.location.href = `/payment-refund/${orderID}`;
+      try {
+        const response = await axios.get(`${baseUrl}/api/paymentByStatus/${orderID}`);
+        console.log(response);
+  
+        // Check if order exists
+        if (response.data && response.data.data.length > 0) {
+          window.location.href = `/payment-refund/${orderID}`;
+        } 
+      } catch (error) {
+        console.error(error);
+        window.alert('Order does not exist for fully refunding');
+      }
     }
   };
 
@@ -703,7 +713,7 @@ export default function AdminDashboard() {
               className="row align-items-center col-11"
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div className="col-10 h5 font-weight-bold">Refund</div>
+              <div className="col-10 h5 font-weight-bold">Fully Refund</div>
             </div>
           </div>
           <div

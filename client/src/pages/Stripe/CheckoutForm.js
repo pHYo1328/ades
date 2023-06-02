@@ -1,14 +1,18 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
+import {  useNavigate } from 'react-router-dom';
+
 
 export default function CheckoutForm({ clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -23,17 +27,24 @@ export default function CheckoutForm({ clientSecret }) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/products`,
+        return_url: window.location.origin,
       },
     });
 
-    if (error.type === 'card_error' || error.type === 'validation_error') {
-      setMessage(error.message);
+    if (error) {
+      if (error.type === 'card_error' || error.type === 'validation_error') {
+        setMessage(error.message);
+      } else {
+        setMessage('An unexpected error occurred.');
+      }
     } else {
-      setMessage('An unexpected error occured.');
-    }
+      // Payment succeeded, navigate to the homepage
+      navigate('/');
+    }  
 
+   
     setIsProcessing(false);
+    
   };
 
   return (
