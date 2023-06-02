@@ -32,14 +32,10 @@
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('userid', data.userid);
-            localStorage.setItem('roles', JSON.stringify(data.roles));
-            document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
-            // setIsSignedIn(true); //add to logout
+
             setErrorMessage('');
             alert("successful login");
-            navigate('/verify-otp');
+            navigate('/verify-otp', { state: data });
           } else {
             setErrorMessage('Incorrect username or password');
             alert('Incorrect username or password');

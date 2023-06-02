@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [otp, setOTP] = useState('');
 
   const handleSubmit = async (e) => {
@@ -22,12 +23,18 @@ const VerifyOTP = () => {
         // OTP verification successful
         console.log('Successful OTP verification for admin');
         alert("successful OTP");
+        const data = location.state; //pass data from AdminLogin.js
+
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('admin_id', data.userid);
+        localStorage.setItem('roles', JSON.stringify(data.roles));
+        document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/homepage-admin');
       } else {
         // Invalid OTP
         alert("Invalid OTP");
         console.log('Invalid OTP!');
-      } 
+      }
     } catch (error) {
       console.error(error);
       // Handle error
