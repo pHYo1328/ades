@@ -8,6 +8,7 @@ const allowedOrigins = [
   'https://techzero-one.onrender.com',
   'https://techzero-v1-1.onrender.com',
   'https://techzero-v2-1.onrender.com',
+  'https://techzero-v2.onrender.com',
 ];
 
 module.exports = allowedOrigins;
