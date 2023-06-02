@@ -31,7 +31,7 @@ const VerifyOTP = () => {
         localStorage.setItem('userid', data.userid);
         localStorage.setItem('roles', JSON.stringify(data.roles));
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
-        navigate('/homepage');
+        navigate('/userLanding');
       } else {
         alert('Invalid OTP');
         console.log('Invalid OTP');
