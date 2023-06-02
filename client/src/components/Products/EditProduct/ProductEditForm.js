@@ -73,11 +73,9 @@ export default function ProductEditForm() {
   console.log(productData);
 
   const handleSubmit = async (event) => {
-    // setSubmitClicked(true);
     event.preventDefault();
 
     console.log(chalk.yellow('submit button is clicked!'));
-    // submitClicked=true;
 
     const requestBody = {
       product_name: productName,
@@ -100,8 +98,6 @@ export default function ProductEditForm() {
         console.log(response);
         setProduct(response.data.data);
         console.log(product);
-        // setSubmitClicked(false);
-        // fetchProducts();
       });
 
     window.alert('Changes saved!');
