@@ -107,6 +107,7 @@ module.exports.findUserByUsername = async (username) => {
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
+  // query to remove refreshToken by making it NULL 
   const logoutQuery =
     'UPDATE users SET refreshToken = NULL WHERE refreshToken = ? AND refreshToken IS NOT NULL';
   try {
