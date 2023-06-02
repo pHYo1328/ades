@@ -232,7 +232,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
   SET payment_total = payment_total - (
     SELECT refunded_amount
     FROM refund
-    WHERE refunded_status = 'partially refunded'
+    WHERE refunded_status = 'partially Refunded'
       AND order_id = ?
   )
   WHERE order_id = ?;  
