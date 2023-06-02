@@ -11,19 +11,17 @@ const handleNewAdmin = async (req, res) => {
     // encrypt the password
     const hashedPwd = await bcrypt.hash(password, 10);
 
-    // register the new user
+    // registers the new admin
     const result = await adminLoginServices.registerAdmin(
       username,
-
       email,
-
       hashedPwd,
       'admin'
     );
 
     console.log(result);
 
-    res.status(201).json({ success: `New admin ${username} created!` });
+    res.status(201).json({ success: `New admin ${username} created!` });  //Admin successfully created
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

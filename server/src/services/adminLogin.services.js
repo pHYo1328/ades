@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 module.exports.registerAdmin = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-    // insert the new user
+    // insert the new admin
     const registerAdminQuery =
       'INSERT INTO admin (username, email, password, roles) VALUES (?, ?, ?, ?);';
     const results = await pool.query(registerAdminQuery, [

@@ -11,7 +11,7 @@ const handleNewUser = async (req, res) => {
     // encrypt the password
     const hashedPwd = await bcrypt.hash(password, 10);
 
-    // register the new user
+    // registers the new user
     const result = await loginServices.registerUser(
       username,
       email,
@@ -21,7 +21,7 @@ const handleNewUser = async (req, res) => {
 
     console.log(result);
 
-    res.status(201).json({ success: `New user ${username} created!` });
+    res.status(201).json({ success: `New user ${username} created!` }); //User successfully created
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
