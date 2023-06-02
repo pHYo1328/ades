@@ -103,6 +103,8 @@ export default function ProductEditForm() {
         // setSubmitClicked(false);
         // fetchProducts();
       });
+
+    window.alert('Changes saved!');
   };
 
   return (
