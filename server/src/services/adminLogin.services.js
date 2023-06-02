@@ -117,11 +117,11 @@ module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM admin WHERE email = ?';
   const updatePasswordQuery = 'UPDATE admin SET password = ? WHERE email = ?';
   try {
-    // Get the previous hashed password
+    // Get the previous hashed password 
     const [rows] = await pool.query(getPasswordQuery, [email]);
 
     if (rows.length === 0) {
-      // User not found
+      // User is not found
       console.log('Admin not found');
       return false;
     }
@@ -131,20 +131,20 @@ module.exports.forgotPassword = async (email, newPassword) => {
     console.log(previousHashedPwd);
     console.log(newPassword);
 
-    // Compare the new hashed password with the previous hashed password
+    // Compare the new hashed password with the previous hashed password 
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
-      // password is the same as the previous password
+      // if password is the same as the previous password
       console.log(
         'New password is the same as the previous password for admin'
       );
       return false;
     }
 
-    // Encrypt the new password
+    // Encrypt the new password 
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
-    // Update the password
+    // Update the password into the database
     const updateResult = await pool.query(updatePasswordQuery, [
       hashedPwd,
       email,
@@ -152,11 +152,11 @@ module.exports.forgotPassword = async (email, newPassword) => {
 
     if (updateResult.affectedRows === 0) {
       console.log('Password update failed');
-      return false; // prob due to email
+      return false; // prob due to wrong email
     }
 
     console.log('Password updated successfully');
-    return true; // Password updated successfully
+    return true; // Password updated successfully 
   } catch (error) {
     console.error('Error in updating password: ', error);
     throw error;
@@ -182,7 +182,7 @@ module.exports.verifyOTP = async (otp) => {
       } else {
         // Invalid OTP
         console.log('ITS WRONG');
-        
+
         return false;
       }
     } else {
