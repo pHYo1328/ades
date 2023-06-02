@@ -31,7 +31,7 @@ module.exports.loginAdmin = async (username) => {
     const loginAdminQuery =
       'SELECT admin_id,username,password,roles FROM admin WHERE username = ?';
     const results = await pool.query(loginAdminQuery, [username]);
-    console.log(chalk.red(JSON.stringify(results[0])));
+    console.log(chalk.red(JSON.stringify(results[0]))); // prints out the admin logged in
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in logging admin in: ', error));
@@ -173,15 +173,16 @@ module.exports.verifyOTP = async (otp) => {
 
     const rows = result[0];
     if (rows.length > 0) {
-      const savedOTP = rows[0].otp;
+      const savedOTP = rows[0].otp; //finds OTP from database
 
-      if (otp === savedOTP) {
+      if (otp === savedOTP) { // compares OTP with inputted OTP
         // OTP verification successful
         console.log('otp same as db otp for admin');
         return true;
       } else {
         // Invalid OTP
         console.log('ITS WRONG');
+        
         return false;
       }
     } else {

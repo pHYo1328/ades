@@ -42,7 +42,7 @@ module.exports.loginUser = async (username) => {
     const loginUserQuery =
       'SELECT customer_id,username,password,roles FROM users WHERE username = ?';
     const results = await pool.query(loginUserQuery, [username]);
-    console.log(chalk.red(JSON.stringify(results[0])));
+    console.log(chalk.red(JSON.stringify(results[0])));  // prints out the user logged in
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in logging user in: ', error));
@@ -182,9 +182,9 @@ module.exports.verifyOTP = async (otp) => {
 
     const rows = result[0];
     if (rows.length > 0) {
-      const savedOTP = rows[0].otp;
+      const savedOTP = rows[0].otp; // finds otp from database
 
-      if (otp === savedOTP) {
+      if (otp === savedOTP) { // compares OTP with inputted OTP
         // OTP verification successful
         console.log('otp same as db otp');
         return true;
@@ -195,7 +195,6 @@ module.exports.verifyOTP = async (otp) => {
       }
     } else {
       // User not found or OTP not saved
-      console.log('not here LOL');
       return false;
     }
   } catch (error) {
