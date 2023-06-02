@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const inventoryServices = require('../services/inventory.services');
 
+// controller for fetching all infos from inventory
 exports.processCheckInventory = async (req, res, next) => {
   console.log(chalk.blue('processCheckInventory is running'));
   const productIDs = req.query.productIDs.split(',');

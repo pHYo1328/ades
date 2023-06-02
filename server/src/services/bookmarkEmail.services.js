@@ -1,4 +1,6 @@
 const pool = require('../config/database');
+
+// try to refetch gor three times before show error
 async function queryWithRetry(query, params, retries) {
   try {
     return await pool.query(query, params);
@@ -13,6 +15,7 @@ async function queryWithRetry(query, params, retries) {
   }
 }
 
+// fetch the latest date of data insertion 
 module.exports.getLatestUpdate = async () => {
   const updateCheckingQuery =
     'SELECT MAX(created_at) AS latest_update FROM product';
@@ -25,6 +28,7 @@ module.exports.getLatestUpdate = async () => {
   }
 };
 
+// fetch customerDetails according to the brand id
 module.exports.getCustomerDetails = async (previousUpdate) => {
   const fetchCustomerDetailsQuery = `
     SELECT users.email,users.username,bookmark.brand_id
@@ -47,6 +51,7 @@ module.exports.getCustomerDetails = async (previousUpdate) => {
   }
 };
 
+// select the new inserted products from that particular brand
 module.exports.getUpdatedProductsByBrandID = async (previousUpdate) => {
   const fetchUpdatedProductsByBrandIDQuery = `
     select product.product_name,product.description,MAX(product_image.image_url) as image_url,product.brand_id from product

@@ -29,6 +29,7 @@ const OrderList = ({
     setEditedShippingAddress(items[index].shipping_address);
   };
   const handleSaveClick = async (orderId) => {
+    // when user clicks save, update the database with modified shipping addresses
     console.log('Edited Shipping Address:', editedShippingAddress);
     const result = await api.put(
       `/api/order/updateShippingDetails/${customerID}`,
@@ -40,6 +41,7 @@ const OrderList = ({
     console.log(result);
 
     setEditingIndex(-1);
+    // re render the UI
     const updatedItemList = items.map((item) =>
       item.order_id === orderId
         ? {
@@ -52,6 +54,9 @@ const OrderList = ({
   };
 
   const combineOrders = (orders) => {
+    // to organize the data from database, use reduce and find to bulid 2 dimensional array
+    // first accumulator with [] and find the order id 
+    // if order id found make it push to existing order array or make a new array
     const combinedOrders = orders.reduce((acc, order) => {
       const existingOrder = acc.find((o) => o.order_id === order.order_id);
 
@@ -103,6 +108,7 @@ const OrderList = ({
               console.log('Deleted Item:', orderId, productId);
               console.log(result);
               // Remove the deleted item from state
+              // re render the UI
               const updatedItemList = items.filter(
                 (item) => item.order_id !== orderId || item.product_id !== productId
               );
@@ -119,6 +125,10 @@ const OrderList = ({
       ],
     });
   };
+
+  // same concept with inventory checking in cart
+  // fetch all items according to order list and check quantity
+  // if one item cannot make it, must cancel that order item
   const payButtonHandler = async (orderId) => {
     console.log(orderId);
     let isStockAvailable =true;

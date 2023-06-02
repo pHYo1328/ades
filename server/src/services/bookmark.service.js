@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const pool = require('../config/database');
 
+// overwriting bookmark data in database
 module.exports.addBookMark = async (data) => {
   console.log(chalk.blue('addBookMark is called'));
   const { customerId, brandIds } = data;
@@ -12,13 +13,20 @@ module.exports.addBookMark = async (data) => {
   try {
     console.log(chalk.blue('Creating connection...'));
     let result = null;
+
+    //if brand id data is bigger than , means user never unbookmarked anything
     if (brandIds.length > 0) {
+
+      // first insert all data ignore duplicate
       console.log(chalk.blue('Executing query', addBookmarkQuery));
       result = await pool.query(addBookmarkQuery, [brandIdsData]);
       console.log(chalk.green('Result:', result));
+
+      // then clear everything that is not inside new bookmark brand id data
       console.log(chalk.blue('Executing query', deleteBookmarkQuery));
       await pool.query(deleteBookmarkQuery, [customerId, brandIds]);
     } else {
+      // else delete all data from database
       console.log(chalk.blue('Executing query', deleteAllBookmarkQuery));
       await pool.query(deleteAllBookmarkQuery, [customerId]);
     }
@@ -29,6 +37,8 @@ module.exports.addBookMark = async (data) => {
   }
 };
 
+
+// fetch all bookmark data from database for a particular customer
 module.exports.fetchBookmarkByCustomerID = async (data) => {
   console.log(chalk.blue('fetcherBookmarkByCustomerID is called'));
   const { customerId } = data;
