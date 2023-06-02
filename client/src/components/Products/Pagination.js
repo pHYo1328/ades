@@ -25,6 +25,7 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
     >
       <ul className="pagination">
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+          {/* changes to previous page as the user clicks on the icon */}
           <a
             className="page-link"
             href="#"
@@ -40,6 +41,7 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
             currentPage === totalPages ? 'disabled' : ''
           }`}
         >
+          {/* changes to next page as the user clicks on the icon */}
           <a
             className="page-link"
             href="#"

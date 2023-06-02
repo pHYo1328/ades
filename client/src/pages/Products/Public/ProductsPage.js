@@ -27,6 +27,7 @@ export default function ProductsPage() {
   const [offset, setOffset] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
+  // get all category for drop down selection
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -40,6 +41,7 @@ export default function ProductsPage() {
       });
   }, []);
 
+  // get all brands for drop down selection
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -53,6 +55,7 @@ export default function ProductsPage() {
       });
   }, []);
 
+  // changes the offset and current page as the user changes the page using pagination
   const handlePageChange = (page) => {
     setResetPage(false);
     setCurrentPage(page);
@@ -62,6 +65,7 @@ export default function ProductsPage() {
     setOffset(calculatedOffset);
   };
 
+  // gets the products based on the filters input by user
   useEffect(() => {
     if (resetPage) {
       setCurrentPage(1);
@@ -89,6 +93,7 @@ export default function ProductsPage() {
     setResetPage(true);
   }, [categoryID, brandID, sort, limit, offset]);
 
+  // get the total number of products based on the filters input by user
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/total/${categoryID}/${brandID}`)
@@ -103,6 +108,7 @@ export default function ProductsPage() {
       });
   }, [categoryID, brandID]);
 
+  // change the total number of pages, based on limit and total number of products
   useEffect(() => {
     console.log('total number of products for pages', totalProducts);
     console.log('limit for pages', limit);
@@ -114,6 +120,7 @@ export default function ProductsPage() {
     }
   }, [totalProducts, limit]);
 
+  // if limit is n ot 0, set the total number of pages
   useEffect(() => {
     if (limit != 0) {
       setTotalPages(totalPages);
@@ -174,6 +181,7 @@ export default function ProductsPage() {
               <option disabled selected value="0">
                 -- CATEGORY --
               </option>
+              {/* shows all the categories for drop down select */}
               {categories ? (
                 categories.map((category) => (
                   <option value={category.category_id}>
@@ -205,6 +213,7 @@ export default function ProductsPage() {
               <option disabled selected value>
                 -- BRAND --
               </option>
+              {/* shows all the brands for drop down select */}
               {brands ? (
                 brands.map((brand) => (
                   <option value={brand.brand_id}>{brand.brand_name}</option>
@@ -229,6 +238,7 @@ export default function ProductsPage() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+          {/* shows all the products, based on the filter input */}
           {products ? (
             products.map((product) => (
               <div key={product.product_id} className="group relative">
@@ -274,12 +284,14 @@ export default function ProductsPage() {
         class="pb-5 mb-5"
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
       >
+        {/* handles pagination */}
         <Pagination
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
+        {/* shows the current page that the user is at */}
         <p class="text-center h6 mt-4">
           {currentPage} / {totalPages}
         </p>

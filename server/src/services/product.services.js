@@ -3,7 +3,7 @@ const chalk = require('chalk');
 
 // GET
 
-// get product by ID (done)
+// get product by ID
 module.exports.getProductByID = async (productID) => {
   console.log(chalk.blue('getProductByID is called'));
   try {
@@ -48,11 +48,9 @@ module.exports.getProductByID = async (productID) => {
   }
 };
 
-// get all products (done)
+// get all products
 module.exports.getAllProducts = async () => {
   console.log(chalk.blue('getAllProducts is called'));
-  // console.log('limit: ', limit);
-  // console.log('offset: ', offset);
   try {
     const productsDataQuery = `
     SELECT
@@ -90,7 +88,7 @@ module.exports.getAllProducts = async () => {
   }
 };
 
-// get products by category or brand (done)
+// get products by category or brand
 module.exports.getProductsByCategoryOrBrand = async (
   categoryID,
   brandID,
@@ -172,7 +170,7 @@ module.exports.getProductsByCategoryOrBrand = async (
   }
 };
 
-// get products by category (done)
+// get products by category
 module.exports.getProductsByCategoryID = async (categoryID) => {
   console.log(chalk.blue('getProductsByCategoryID is called'));
   console.log(chalk.blue(categoryID));
@@ -206,7 +204,7 @@ module.exports.getProductsByCategoryID = async (categoryID) => {
   }
 };
 
-// get products by brand (done)
+// get products by brand
 module.exports.getProductsByBrandID = async (brandID) => {
   console.log(chalk.blue('getProductsByBrandID is called'));
   try {
@@ -238,7 +236,7 @@ GROUP BY
   }
 };
 
-// get 5 newest product arrivals (done)
+// get 5 newest product arrivals
 module.exports.getNewArrivals = async () => {
   console.log(chalk.blue('getNewArrivals is called'));
   try {
@@ -309,7 +307,7 @@ module.exports.getCategoryByID = async (categoryID) => {
   }
 };
 
-// get all ratings (done)
+// get all ratings
 module.exports.getAllRatingsByProductID = async (productID) => {
   console.log(chalk.blue('getAllRatingsByProductID is called'));
   try {
@@ -323,7 +321,7 @@ module.exports.getAllRatingsByProductID = async (productID) => {
   }
 };
 
-// get all brands (done)
+// get all brands
 module.exports.getAllBrands = async () => {
   console.log(chalk.blue('getAllBrands is called'));
   try {
@@ -337,7 +335,7 @@ module.exports.getAllBrands = async () => {
   }
 };
 
-// get all category (done)
+// get all category
 module.exports.getAllCategory = async () => {
   console.log(chalk.blue('getAllCategory is called'));
   try {
@@ -351,7 +349,7 @@ module.exports.getAllCategory = async () => {
   }
 };
 
-// search results (done)
+// search results
 module.exports.getSearchResults = async (
   product_name,
   category_id,
@@ -410,7 +408,6 @@ module.exports.getSearchResults = async (
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
-    // console.log('results: ', results);
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getSearchResults: ', error));
@@ -496,7 +493,6 @@ module.exports.getImagesByProductID = async (productID) => {
 module.exports.deleteProductByID = async (productID) => {
   console.log(chalk.blue('deleteProductByID is called'));
   const orderItemsDeleteQuery =
-    // 'DELETE from order_items where product_id = ?;';
     'UPDATE order_items SET status = "Unavailable" WHERE product_id =?';
   const ordersDeleteQuery =
     'DELETE FROM orders WHERE order_id NOT IN (SELECT DISTINCT order_id FROM order_items);';

@@ -5,7 +5,7 @@ const productServices = require('../services/product.services');
 
 // GET
 
-// // Get product by ID (done)
+// // Get product by ID
 exports.processGetProductByID = async (req, res, next) => {
   const { productID } = req.params;
   console.log(chalk.blue('processGetProductByID running'));
@@ -58,16 +58,11 @@ exports.processGetProductByID = async (req, res, next) => {
   }
 };
 
-// get all products (done)
+// get all products
 exports.processGetAllProducts = async (req, res, next) => {
-  // const { limit, offset } = req.query;
   console.log(chalk.blue('processGetAllProducts running'));
   try {
-    const productData = await productServices
-      .getAllProducts
-      // parseInt(limit),
-      // parseInt(offset)
-      ();
+    const productData = await productServices.getAllProducts();
     if (!productData || productData.length === 0) {
       return res.status(404).json({
         statusCode: 404,
@@ -98,11 +93,10 @@ exports.processGetAllProducts = async (req, res, next) => {
   }
 };
 
-// get products by category or brand (done)
+// get products by category or brand
 exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
   console.log(chalk.blue('processGetProductsByCategoryOrBrand running'));
   const { categoryID, brandID, limit, offset, sort } = req.params;
-  // let { limit, offset } = req.query;
   if (!categoryID || !brandID) {
     return res.status(400).json({
       statusCode: 400,
@@ -117,8 +111,6 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       message: 'Category ID or Brand ID is not a number',
     });
   }
-  // limit = limit || 0;
-  // offset = offset || 10;
 
   try {
     const productData = await productServices.getProductsByCategoryOrBrand(
@@ -160,7 +152,7 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
   }
 };
 
-// get products by category (done)
+// get products by category
 exports.processGetProductsByCategoryID = async (req, res, next) => {
   console.log(chalk.blue('processGetProductsByCategoryID running'));
   const { categoryID } = req.params;
@@ -214,7 +206,7 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
   }
 };
 
-// get products by brand (done)
+// get products by brand
 exports.processGetProductsByBrandID = async (req, res, next) => {
   console.log(chalk.blue('processGetProductsByBrandID running'));
   const { brandID } = req.params;
@@ -268,7 +260,7 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
   }
 };
 
-// get 5 newest product arrivals (done)
+// get 5 newest product arrivals
 exports.processGetNewArrivals = async (req, res, next) => {
   console.log(chalk.blue('processGetNewArrivals running'));
   try {
@@ -302,7 +294,7 @@ exports.processGetNewArrivals = async (req, res, next) => {
   }
 };
 
-// get brand name by brand ID (done)
+// get brand name by brand ID
 exports.processGetBrandByID = async (req, res, next) => {
   console.log(chalk.blue('processGetBrandByID running'));
 
@@ -341,7 +333,7 @@ exports.processGetBrandByID = async (req, res, next) => {
   }
 };
 
-// get category name by category ID (done)
+// get category name by category ID
 exports.processGetCategoryByID = async (req, res, next) => {
   console.log(chalk.blue('processGetCategoryByID running'));
 
@@ -379,7 +371,7 @@ exports.processGetCategoryByID = async (req, res, next) => {
   }
 };
 
-// get all ratings (done)
+// get all ratings
 exports.processGetAllRatingsByProductID = async (req, res, next) => {
   console.log(chalk.blue('processGetAllRatingsByProductID running'));
   const { productID } = req.params;
@@ -414,7 +406,7 @@ exports.processGetAllRatingsByProductID = async (req, res, next) => {
   }
 };
 
-// get all brands (done)
+// get all brands
 exports.processGetAllBrands = async (req, res, next) => {
   console.log(chalk.blue('processGetAllBrands running'));
   try {
@@ -444,7 +436,7 @@ exports.processGetAllBrands = async (req, res, next) => {
   }
 };
 
-// get all category (done)
+// get all category
 exports.processGetAllCategory = async (req, res, next) => {
   console.log(chalk.blue('processGetAllCategory running'));
   try {
@@ -474,7 +466,7 @@ exports.processGetAllCategory = async (req, res, next) => {
   }
 };
 
-// search results (done)
+// search results
 exports.processGetSearchResults = async (req, res, next) => {
   console.log(chalk.blue('processGetSearchResults running'));
   const { product_name, category_id, brand_id, max_price, min_price } =
@@ -640,7 +632,7 @@ exports.processGetImagesByProductID = async (req, res, next) => {
 
 // DELETE
 
-// Delete product by ID (done)
+// Delete product by ID
 exports.processDeleteProductByID = async (req, res, next) => {
   console.log(chalk.blue('processDeleteProductByID running'));
 
@@ -679,7 +671,7 @@ exports.processDeleteProductByID = async (req, res, next) => {
   }
 };
 
-// Delete brand by ID (done)
+// Delete brand by ID
 exports.processDeleteBrandByID = async (req, res, next) => {
   console.log(chalk.blue('processDeleteBrandByID running'));
 
@@ -718,7 +710,7 @@ exports.processDeleteBrandByID = async (req, res, next) => {
   }
 };
 
-// Delete category by ID (done)
+// Delete category by ID
 exports.processDeleteCategoryByID = async (req, res, next) => {
   console.log(chalk.blue('processDeleteCategoryByID running'));
 
@@ -1039,7 +1031,6 @@ exports.processCreateRating = async (req, res, next) => {
       message: 'Rating score has to be a number greater than 0',
     });
   }
-  //console.log(chalk.yellow(req.body));
   try {
     const createdRatingData = await productServices.createRating(
       comment,

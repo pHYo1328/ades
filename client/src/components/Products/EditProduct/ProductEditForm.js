@@ -23,8 +23,8 @@ export default function ProductEditForm() {
   const [productBrand, setProductBrand] = useState();
   const [productQuantity, setProductQuantity] = useState();
 
+  // gets the details of the product by productID
   const getProducts = () => {
-    console.log('134');
     console.log(productID);
     axios
       .get(`${baseUrl}/api/product/${productID}`)
@@ -38,6 +38,7 @@ export default function ProductEditForm() {
       });
   };
 
+  // gets all the category names to show in drop down select
   const getCategories = () => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -51,6 +52,7 @@ export default function ProductEditForm() {
       });
   };
 
+  // gets all the brand names to show in drop down select
   const getBrands = () => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -72,6 +74,7 @@ export default function ProductEditForm() {
 
   console.log(productData);
 
+  // changes the details of the product as the user clicks on submit button
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -100,6 +103,7 @@ export default function ProductEditForm() {
         console.log(product);
       });
 
+    // alter the user about the changes saved
     window.alert('Changes saved!');
   };
 
@@ -111,6 +115,7 @@ export default function ProductEditForm() {
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
         encType="multipart/form-data"
       >
+        {/* shows the details of the product if the product exists */}
         {productData && (
           <div>
             <div class="mb-3">
@@ -178,6 +183,7 @@ export default function ProductEditForm() {
                   class="form-select form-select-sm"
                   onChange={(e) => setProductCategory(e.target.value)}
                 >
+                  {/* shows all the categories for the drop down */}
                   {categories ? (
                     categories.map((category) => (
                       <option
@@ -211,6 +217,7 @@ export default function ProductEditForm() {
                   class="form-select form-select-sm"
                   onChange={(e) => setProductBrand(e.target.value)}
                 >
+                  {/* shows all the brands for the drop down */}
                   {brands ? (
                     brands.map((brand) => (
                       <option
