@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 const orderServices = require('../services/order.services');
 const { OrderStatus } = require('../config/orderStatus.enum');
+
+// controller for adding order
 exports.processAddCustomerOrder = async (req, res, next) => {
   console.log(chalk.blue('processAddCustomerOrder is running'));
   const { customerId } = req.params;
@@ -65,6 +67,7 @@ exports.processAddCustomerOrder = async (req, res, next) => {
   }
 };
 
+// controller for getting customers orders by order status
 exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
   console.log(chalk.blue('processGetOrderDetailsByOrderStatus is running'));
   const { customerID, orderStatus } = req.query;
@@ -78,6 +81,8 @@ exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
       throw error;
     }
     let status = null;
+
+    // create enum here
     switch (orderStatus) {
       case 'order_received':
         status = OrderStatus.ORDER_RECEIVED;
@@ -119,6 +124,7 @@ exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
   }
 };
 
+// controller to fetch order details for administration
 exports.processGetOrderDetailsForAdmin = async (req, res, next) => {
   console.log(chalk.blue('processGetOrderDetailsForAdmin is running'));
   try {
@@ -141,6 +147,7 @@ exports.processGetOrderDetailsForAdmin = async (req, res, next) => {
   }
 };
 
+// controller to update order status
 exports.processUpdateOrderStatus = async (req, res, next) => {
   console.log(chalk.blue('ProcessUpdateOrderStatus is running'));
   const { orderIDs, orderStatus } = req.body;
@@ -181,6 +188,7 @@ exports.processUpdateOrderStatus = async (req, res, next) => {
   }
 };
 
+// controller for updating shipping details
 exports.processUpdateShippingDetails = async (req, res, next) => {
   console.log(chalk.blue('processUpdateShippingDetails is running'));
   const { customerID } = req.params;
@@ -229,6 +237,8 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
   }
 };
 
+
+// controller for cancel the particular order items
 exports.processCancelOrder = async (req, res, next) => {
   console.log(chalk.blue('processCancelOrder is running'));
   const { orderId, productID, quantity, orderStatus } = req.query;

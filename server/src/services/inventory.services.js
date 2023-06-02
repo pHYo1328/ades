@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const pool = require('../config/database');
 
+// select product id and quantity for inventory checking
 module.exports.checkInventory = async (productIDs) => {
   console.log(chalk.blue('checkInventory is called'));
   const checkInventoryQuery = `
