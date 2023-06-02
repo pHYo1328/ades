@@ -26,11 +26,10 @@ function Home() {
       return [];
     }
   };
-  
+
   const handleUserProfile = () => {
     navigate('/user-profile');
   };
-
 
   const onHandleLogout = async () => {
     try {

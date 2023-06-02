@@ -212,33 +212,25 @@ module.exports = (app, router) => {
     paymentController.processGetIDAndAmount
   );
 
-  router.get(
-    '/config', 
-    checkoutController.getConfig
-  );
+  router.get('/config', checkoutController.getConfig);
 
   router.post(
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-  
+
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
-    router.post(
-      '/processRefund/:orderID', 
-      checkoutController.processRefund
-  );
+    router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
-    checkoutController.processRefund
+    checkoutController.processPartialRefund
   );
-
-
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

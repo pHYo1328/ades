@@ -33,7 +33,7 @@ const VerifyOTP = () => {
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/homepage');
       } else {
-        alert("Invalid OTP");
+        alert('Invalid OTP');
         console.log('Invalid OTP');
       }
     } catch (error) {

@@ -101,40 +101,60 @@ exports.processPartialRefund = async (req, res) => {
     // Process partial refunds for each order
     const refundPromises = idAndAmount.map(async (row) => {
       const transactionID = row.transaction_id;
-      const refundAmount = row.refund_total;
+      const refundAmount = parseInt(Math.round(row.refund_total * 100));
+     
+      try {
+        // Process the refund using Stripe
+        const refund = await stripe.refunds.create({
+          payment_intent: transactionID,
+          amount: refundAmount,
+          metadata: {
+            order_id: row.order_id,
+          },
+        });
 
-      // Process the refund using Stripe
-      const refund = await stripe.refunds.create({
-        payment_intent: transactionID,
-        amount: refundAmount,
-        metadata: {
-          order_id: row.order_id,
-        },
-      });
-
-      // Return the refund details
-      return {
-        orderID: row.order_id,
-        refundId: refund.id,
-        amountRefunded: refund.amount,
-        currency: refund.currency,
-        status: refund.status,
-      };
+        // Return the refund details
+        return {
+          orderID: row.order_id,
+          refundId: refund.id,
+          amountRefunded: refund.amount,
+          currency: refund.currency,
+          status: refund.status,
+        };
+      } catch (error) {
+        console.error(chalk.red('Error processing refund: ', error));
+        // If there was an error processing the refund, you can handle it here
+        // For example, you can log the error, return an error response, etc.
+        return {
+          orderID: row.order_id,
+          error: error.message,
+        };
+      }
     });
 
-    // Wait for all refunds to complete
-    const refunds = await Promise.all(refundPromises);
+    // Wait for all refund promises to resolve
+    const refundResults = await Promise.all(refundPromises);
 
-    res.send(refunds);
+    // Return the refund results
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Partial refunds processed successfully',
+      refundResults,
+    });
   } catch (error) {
-    console.error('Error processing refund:', error);
-    return res.status(500).send({
-      error: {
-        message: 'An error occurred while processing the refund.',
-      },
+    console.error(chalk.red('Error in processPartialRefund: ', error));
+    // Handle any errors that occurred during the refund process
+    // For example, you can return an error response here
+    return res.status(500).json({
+      statusCode: 500,
+      ok: false,
+      message: 'An error occurred during partial refunds',
+      error: error.message,
     });
   }
 };
+
 
 let endpointSecret;
 
@@ -201,21 +221,44 @@ exports.createWebhooks = async (req, res) => {
     } catch (error) {
       console.error('Error storing payment details in the database:', error);
     }
-  } else if (eventType == 'charge.refund.updated') {
-    const { id, status, amount, metadata } = data;
+  } else if (eventType == 'charge.refunded') {
+    const { id, status, amount, amount_refunded, metadata } = data;
 
     console.log('Payment refunded. Event data:');
     console.log('ID:', id);
     console.log('Status:', status);
     const total = (amount * 0.01).toFixed(2);
+    const refund_total =  (amount_refunded * 0.01).toFixed(2);
     console.log('Amount:', total);
     console.log('Order ID:', metadata.order_id);
 
-    try {
-      await paymentServices.addRefund(id, metadata.order_id, total, status);
-      console.log('Refund details stored in the database successfully');
-    } catch (error) {
-      console.error('Error storing refund details in the database:', error);
+    let refundStatus;
+    if (amount_refunded < amount) {
+      refundStatus = 'Partially Refunded';
+      try {
+        await paymentServices.addPartialRefund(
+          id,
+          metadata.order_id,
+          refund_total,
+          refundStatus
+        );
+        console.log('Refund details stored in the database successfully');
+      } catch (error) {
+        console.error('Error storing refund details in the database:', error);
+      }
+    } else {
+      refundStatus = 'Fully Refunded';
+      try {
+        await paymentServices.addRefund(
+          id,
+          metadata.order_id,
+          total,
+          refundStatus
+        );
+        console.log('Refund details stored in the database successfully');
+      } catch (error) {
+        console.error('Error storing refund details in the database:', error);
+      }
     }
   }
 

@@ -38,7 +38,12 @@ const minusButtonHandler = (cartData, productID, updateCartData) => {
   updateCartData([...updatedCart]);
 };
 
-const deleteButtonHandler = (cartData, productID, updateCartData,setTotalAmount) => {
+const deleteButtonHandler = (
+  cartData,
+  productID,
+  updateCartData,
+  setTotalAmount
+) => {
   confirmAlert({
     title: 'Confirm to delete',
     message: 'Are you sure you want to delete this item?',
@@ -51,10 +56,9 @@ const deleteButtonHandler = (cartData, productID, updateCartData,setTotalAmount)
           );
           console.log(filteredProducts);
           updateCartData(filteredProducts);
-          const overallTotalAmount = filteredProducts.reduce(
-            (total, item) => total + parseFloat(item.totalAmount),
-            0
-          ).toFixed(2);
+          const overallTotalAmount = filteredProducts
+            .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
+            .toFixed(2);
           setTotalAmount(overallTotalAmount);
         },
       },
@@ -71,7 +75,7 @@ const Cart = () => {
   const [productDetails, setProductsDetails] = useState(null);
   const latestCartData = useRef(cartData);
   const [isLoading, setIsLoading] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0.00);
+  const [totalAmount, setTotalAmount] = useState(0.0);
   const [address, setAddress] = useState({
     firstName: '',
     lastName: '',
@@ -80,7 +84,7 @@ const Cart = () => {
     state: '',
     postalCode: '',
   });
-  const [shippingFee, setShippingFee] = useState(0.00);
+  const [shippingFee, setShippingFee] = useState(0.0);
   const [shippingMethod, setShippingMethod] = useState(null);
   const [shippingId, setShippingId] = useState(null);
   const [orderId, setOrderId] = useState(null);
@@ -156,7 +160,7 @@ const Cart = () => {
     }
     let isStockAvailable = true;
     let alertString = [];
-    if(!cartProductData){
+    if (!cartProductData) {
       toast.error('Please add items to cart to checkout', {
         autoClose: 3000,
         pauseOnHover: true,

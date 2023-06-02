@@ -32,7 +32,7 @@ const VerifyOTP = () => {
         navigate('/homepage-admin');
       } else {
         // Invalid OTP
-        alert("Invalid OTP");
+        alert('Invalid OTP');
         console.log('Invalid OTP!');
       }
     } catch (error) {
