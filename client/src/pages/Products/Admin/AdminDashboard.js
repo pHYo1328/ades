@@ -29,19 +29,6 @@ export default function AdminDashboard() {
   const [orderID, setOrderID] = useState(null);
   const [refunds, setRefunds] = useState(null);
 
-  // useEffect(() => {
-  //   const roles = JSON.parse(localStorage.getItem('roles'));
-  //   console.log(roles);
-  //   const isAdmin = roles.includes('admin');
-  //   console.log(isAdmin);
-  //   if (!isAdmin) {
-  //     // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     // alert("you're not admin");
-  //     console.log('Redirecting to homepage-admin');
-  //     navigate('/homepage');
-  //   }
-  // }, []);
-
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
@@ -61,6 +48,7 @@ export default function AdminDashboard() {
     }
   }, []);
 
+  // get all categories
   const fetchCategories = () => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -74,6 +62,7 @@ export default function AdminDashboard() {
       });
   };
 
+  // get all brands
   const fetchBrands = () => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -87,6 +76,7 @@ export default function AdminDashboard() {
       });
   };
 
+  // get all products
   const fetchProducts = () => {
     axios
       .get(`${baseUrl}/api/allProducts`)
@@ -100,6 +90,7 @@ export default function AdminDashboard() {
       });
   };
 
+  // get all brands, categories, and products concurrently
   useEffect(() => {
     const fetchData = async () => {
       const fetchProductsPromise = fetchProducts();
@@ -115,6 +106,7 @@ export default function AdminDashboard() {
     fetchData();
   }, []);
 
+  // get the statistics
   const fetchStatistics = () => {
     axios
       .get(`${baseUrl}/api/admin/statistics`)
@@ -126,6 +118,7 @@ export default function AdminDashboard() {
       });
   };
 
+  // refresh the statistics every 1 minute
   useEffect(() => {
     fetchStatistics();
     const intervalId = setInterval(fetchStatistics, 60 * 1000);
@@ -134,6 +127,7 @@ export default function AdminDashboard() {
     };
   }, [products]);
 
+  // add new brand
   const handleSubmitBrand = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
@@ -158,6 +152,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // add new category
   const handleSubmitCategory = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
@@ -182,6 +177,7 @@ export default function AdminDashboard() {
     }
   };
 
+  // search the order by id
   const handleSearchOrder = async (event) => {
     console.log(chalk.yellow('Search button is clicked!'));
     event.preventDefault();
@@ -189,8 +185,20 @@ export default function AdminDashboard() {
     if (!orderID) {
       window.alert('Please fill in the order_id to process refund');
     } else {
-      console.log(orderID);
-      window.location.href = `/payment-refund/${orderID}`;
+      try {
+        const response = await axios.get(
+          `${baseUrl}/api/paymentByStatus/${orderID}`
+        );
+        console.log(response);
+
+        // Check if order exists
+        if (response.data && response.data.data.length > 0) {
+          window.location.href = `/payment-refund/${orderID}`;
+        }
+      } catch (error) {
+        console.error(error);
+        window.alert('Order does not exist for fully refunding');
+      }
     }
   };
 
@@ -200,6 +208,7 @@ export default function AdminDashboard() {
         <h4 class="h4 font-weight-bold text-center mt-4">Admin Dashboard</h4>
       </div>
 
+      {/* shows the statistics */}
       {statistics ? (
         <div
           className="row col-11 my-2 justify-content-center"
@@ -296,6 +305,7 @@ export default function AdminDashboard() {
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div className="col-9 h5 font-weight-bold">Products</div>
+            {/* link to ProductCreate page when admin clicks on create button */}
             <div className="col-3">
               <Link
                 to="/products/create"
@@ -308,6 +318,7 @@ export default function AdminDashboard() {
           </div>
         </div>
         <ul role="list" class="divide-y divide-gray-100">
+          {/* shows all products */}
           {products ? (
             products.map((product) => (
               <div className="d-flex flex-row py-3 justify-content-around">
@@ -341,6 +352,7 @@ export default function AdminDashboard() {
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
                         onClick={() => {
                           if (product.quantity >= 1) {
+                            // minus the inventory by 1 when the admin clicks on the minus icon
                             const productID = product.product_id;
                             axios
                               .put(
@@ -359,12 +371,14 @@ export default function AdminDashboard() {
                       >
                         <i class="bi bi-dash-circle"></i>
                       </button>
+                      {/* the quantity will change as the admin makes changes to the inventory */}
                       <p class="col-4 text-center">{product.quantity}</p>
                       <button
                         class="col-4"
                         style={{ marginLeft: 'auto', marginRight: 'auto' }}
                         id="plusButton"
                         onClick={() => {
+                          // plus the inventory by 1 when the admin clicks on the plus button
                           const productID = product.product_id;
                           axios
                             .put(
@@ -386,6 +400,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="d-flex align-items-center pr-4">
+                    {/* link to ProductEdit page as the admin clicks on the pencil icon to edit */}
                     <Link
                       to={`/products/edit/${product.product_id}`}
                       className="mr-2"
@@ -394,10 +409,13 @@ export default function AdminDashboard() {
                     </Link>
                     <button
                       onClick={() => {
+                        // deletes the product when the admin clicks on the trash icon to delete
                         const productID = product.product_id;
+                        // confirm whether the admin wants to delete or not, to prevent accidental deletions
                         const confirmed = window.confirm(
                           'Are you sure you want to delete?'
                         );
+                        // if deletion is confirmed by admin, delete the product by using productID
                         if (confirmed) {
                           axios
                             .delete(`${baseUrl}/api/products/${productID}`)
@@ -408,6 +426,7 @@ export default function AdminDashboard() {
                               setProducts(updatedProducts);
                             });
 
+                          // give partial refund to customers who ordered the deleted products
                           axios
                             .post(
                               `${baseUrl}/processPartialRefund/${productID}`
@@ -497,6 +516,7 @@ export default function AdminDashboard() {
                     onChange={(e) => setBrandName(e.target.value)}
                   />
                 </div>
+                {/* adds new brand when clicked on create button */}
                 <div class="col-4">
                   <button
                     class="btn btn-info w-100 col-6 text-dark mr-2"
@@ -512,6 +532,7 @@ export default function AdminDashboard() {
               class="divide-y divide-gray-100"
               style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
             >
+              {/* shows all brands */}
               {brands ? (
                 brands.map((brand) => (
                   <div class="d-flex flex-row row py-3 justify-content-around">
@@ -523,11 +544,14 @@ export default function AdminDashboard() {
                     <div class="col-4 d-flex justify-content-end">
                       <button
                         onClick={(e) => {
+                          // delete the brand when the admin clicks on the trash icon to delete
                           e.preventDefault();
                           const brandID = brand.brand_id;
+                          // confirm the deletion of brand, to prevent accidental deletions
                           const confirmed = window.confirm(
                             'Are you sure you want to delete?'
                           );
+                          // if confirmed, proceed to delete
                           if (confirmed) {
                             axios
                               .delete(`${baseUrl}/api/brands/${brandID}`)
@@ -607,6 +631,7 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div class="col-4">
+                  {/* adds new category when clicked on create button */}
                   <button
                     class="btn btn-info w-100 col-6 text-dark mr-2"
                     onClick={handleSubmitCategory}
@@ -621,6 +646,7 @@ export default function AdminDashboard() {
               class="divide-y divide-gray-100"
               style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
             >
+              {/* shows all categories */}
               {categories ? (
                 categories.map((category) => (
                   <div class="d-flex flex-row row py-3 justify-content-around">
@@ -632,11 +658,14 @@ export default function AdminDashboard() {
                     <div class="col-4 d-flex justify-content-end">
                       <button
                         onClick={(e) => {
+                          // delete the category when clicked on trash icon to delete
                           e.preventDefault();
                           const categoryID = category.category_id;
+                          // confirm deletion to prevent accidental deletions
                           const confirmed = window.confirm(
                             'Are you sure you want to delete?'
                           );
+                          // if confirmed, proceed to delete
                           if (confirmed) {
                             axios
                               .delete(`${baseUrl}/api/categories/${categoryID}`)
@@ -703,7 +732,7 @@ export default function AdminDashboard() {
               className="row align-items-center col-11"
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div className="col-10 h5 font-weight-bold">Refund</div>
+              <div className="col-10 h5 font-weight-bold">Fully Refund</div>
             </div>
           </div>
           <div
@@ -719,6 +748,7 @@ export default function AdminDashboard() {
                 onChange={(e) => setOrderID(e.target.value)}
               />
             </div>
+            {/* give full refund to the customer based on the order ID */}
             <div class="col-4">
               <button
                 class="btn btn-info w-100 col-6 text-dark mr-2"
@@ -733,6 +763,7 @@ export default function AdminDashboard() {
 
       <div class="col-12">
         <div className="flex justify-center mb-12">
+          {/* link to go to orderStatus to manage the status of orders */}
           <Link to={'/admin/orderStatus'}>
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
               Go to Order Status Management

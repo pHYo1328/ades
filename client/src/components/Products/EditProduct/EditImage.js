@@ -27,15 +27,18 @@ export default function EditImage() {
   const [imagePath, setImagePath] = useState('');
   const [image, setImage] = useState('');
 
+  // changes the index of carousel
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
 
+  // sets the image path when the user uploads an image
   const handleImageChange = (path) => {
     console.log('Selected image path:', path);
     setImagePath(path);
   };
 
+  // updates the images when the user clicks on submit
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
@@ -66,6 +69,7 @@ export default function EditImage() {
     }
   };
 
+  // gets all the images of the product
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/${productID}/images`)
@@ -112,6 +116,7 @@ export default function EditImage() {
           class="btn btn-outline-primary mb-3 mt-4 w-50"
           style={{ marginLeft: 'auto', marginRight: 'auto' }}
           onClick={() => {
+            // delete all images of the product
             console.log('delete all images for the product');
             console.log(productID);
             axios
@@ -140,6 +145,7 @@ export default function EditImage() {
           onSelect={handleSelect}
           style={{ maxWidth: '100%', maxHeight: '200px', margin: '0 auto' }}
         >
+          {/* shows all the images if exists */}
           {images ? (
             images.map((image) => (
               <Carousel.Item>
@@ -148,6 +154,7 @@ export default function EditImage() {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
                         onClick={() => {
+                          // delete the image at the index by using imageID
                           const imageID = image.image_id;
                           axios
                             .delete(`${baseUrl}/api/products/images/${imageID}`)
@@ -177,6 +184,7 @@ export default function EditImage() {
                       </button>
                     </div>
                   </Carousel.Caption>
+                  {/* shows the image from Cloudinary */}
                   <AdvancedImage cldImg={cld.image(image.image_url)} />
                 </div>
               </Carousel.Item>

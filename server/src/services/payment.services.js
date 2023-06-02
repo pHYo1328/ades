@@ -115,7 +115,26 @@ module.exports.getPaymentIntentByID = async (order_id) => {
     throw error;
   }
 };
-
+//get payment for fully refund
+module.exports.getPaymentByStatus = async (order_id) => {
+  console.log(chalk.blue('getPaymentByStatus is called'));
+  try {
+    const paymentDataQuery = `SELECT p.product_name, p.price, p.description, i.quantity, o.total_price, s.shipping_method, s.fee, o.shipping_address
+    FROM product AS p, order_items AS i, orders AS o, shipping AS s
+    WHERE o.order_id = ?
+      AND o.order_id = i.order_id
+      AND s.shipping_id = o.shipping_id
+      AND p.product_id = i.product_id
+      AND o.order_status = 'paid';
+    `;
+    const results = await pool.query(paymentDataQuery, [order_id]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getPaymentByStatus: ', error));
+    throw error;
+  }
+};
 //Creating refund data into database
 
 module.exports.addRefund = async (id, orderID, total, status) => {
@@ -128,7 +147,7 @@ module.exports.addRefund = async (id, orderID, total, status) => {
     AND order_id IN (
       SELECT r.order_id
       FROM refund r
-      WHERE r.refunded_status = 'Fully Refunded'
+      WHERE r.refunded_status = 'fully Refunded'
     );
   `;
   const updateStatusQuery = `UPDATE orders
@@ -136,21 +155,21 @@ module.exports.addRefund = async (id, orderID, total, status) => {
    WHERE order_id = ? AND order_id IN (
    SELECT order_id
    FROM refund
-   WHERE refunded_status = 'Fully Refunded'
+   WHERE refunded_status = 'fully Refunded'
    );`;
   const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
   JOIN refund ON orders.order_id = refund.order_id
   SET inventory.quantity = inventory.quantity + order_items.quantity
-  WHERE refund.order_id = ? AND refund.refunded_status = 'Fully Refunded' AND inventory.inventory_id > 0;
+  WHERE refund.order_id = ? AND refund.refunded_status = 'fully Refunded' AND inventory.inventory_id > 0;
   `;
   const deleteOrderItemQuery = `DELETE FROM order_items
   WHERE order_id IN (
     SELECT r.order_id
     FROM refund r
     WHERE r.order_id = ?
-      AND r.refunded_status = 'Fully Refunded'
+      AND r.refunded_status = 'fully Refunded'
   );`;
 
   console.log(chalk.blue('Creating connection...'));
@@ -213,7 +232,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
   SET payment_total = payment_total - (
     SELECT refunded_amount
     FROM refund
-    WHERE refunded_status = 'partially refunded'
+    WHERE refunded_status = 'partially Refunded'
       AND order_id = ?
   )
   WHERE order_id = ?;  
@@ -223,7 +242,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
    WHERE order_id = ? AND order_id IN (
    SELECT order_id
    FROM refund
-   WHERE refunded_status = 'Partially Refunded'
+   WHERE refunded_status = 'partially Refunded'
    );`;
   const deleteOrderItemsQuery = `DELETE FROM order_items
   WHERE order_id = ?

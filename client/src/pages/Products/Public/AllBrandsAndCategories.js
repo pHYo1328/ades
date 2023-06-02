@@ -11,6 +11,7 @@ export default function AllBrandsAndCategories() {
   const bookmarkedBrandsRef = useRef([]);
   const customerId = localStorage.getItem('userid');
 
+  // get all brands
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -24,6 +25,7 @@ export default function AllBrandsAndCategories() {
       });
   }, []);
 
+  // get all categories
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -37,6 +39,7 @@ export default function AllBrandsAndCategories() {
       });
   }, []);
 
+  // add to customer's bookmarked brands when the customer clicks on the bookmark button
   useEffect(() => {
     api
       .get(`/api/bookmark/${customerId}`)
@@ -102,6 +105,7 @@ export default function AllBrandsAndCategories() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+            {/* shows all brands */}
             {brands ? (
               brands.map((brand) => (
                 <div
@@ -111,6 +115,7 @@ export default function AllBrandsAndCategories() {
                   <div className="flex justify-between">
                     <div className="text-left d-flex align-items-center">
                       <h3 className="text-sm text-gray-700">
+                        {/* link to ProductsByBrand to show all the products related to the brand */}
                         <Link to={`/brands/${brand.brand_id}`}>
                           {brand.brand_name}
                         </Link>
@@ -118,6 +123,7 @@ export default function AllBrandsAndCategories() {
                     </div>
 
                     <div>
+                      {/* bookmark button */}
                       <button
                         onClick={() => bookmarkClickHandler(brand.brand_id)}
                       >
@@ -154,6 +160,7 @@ export default function AllBrandsAndCategories() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+            {/* shows all categories */}
             {categories ? (
               categories.map((category) => (
                 <div
@@ -163,6 +170,7 @@ export default function AllBrandsAndCategories() {
                   <div className="flex justify-between">
                     <div className="text-left flex items-center">
                       <h3 className="text-sm text-gray-700">
+                        {/* goes to ProductsByCategory to show all the products related to the category */}
                         <Link to={`/categories/${category.category_id}`}>
                           {category.category_name}
                         </Link>
