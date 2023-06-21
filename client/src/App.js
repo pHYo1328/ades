@@ -51,7 +51,7 @@ function App() {
     '/products/create',
     '/homepage-admin',
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/homepage', '/products', '/userLanding', '/user-profile']; // Specify the routes where the header should be signed in headers
+  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/userLanding', '/user-profile']; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
@@ -100,7 +100,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/userLanding" element={<UserLandingPage />} />
+            {/* <Route path="/userLanding" element={<UserLandingPage />} /> */}
 
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
