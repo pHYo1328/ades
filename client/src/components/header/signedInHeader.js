@@ -36,6 +36,7 @@ const SignedInHeader = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userid');
     localStorage.removeItem('roles');
+    localStorage.removeItem('isSignedIn');
     navigate('/');
   };
 
@@ -114,6 +115,12 @@ const SignedInHeader = () => {
             <Link to="/login-admin">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Admin
+              </button>
+            </Link>
+            
+            <Link to="/user-profile">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+                User Profile
               </button>
             </Link>
           </div>
