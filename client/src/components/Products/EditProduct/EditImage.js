@@ -81,7 +81,7 @@ export default function EditImage() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [images]);
 
   return (
     <div>
@@ -153,17 +153,23 @@ export default function EditImage() {
                   <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <button
+                        // disabled={images.length <= 1} 
                         onClick={() => {
-                          // delete the image at the index by using imageID
-                          const imageID = image.image_id;
-                          axios
-                            .delete(`${baseUrl}/api/products/images/${imageID}`)
-                            .then((res) => {
-                              const updatedImages = images.filter(
-                                (i) => i.image_id !== imageID
-                              );
-                              setImages(updatedImages);
-                            });
+                          if (images.length > 1) {
+                            // Delete the image at the index by using imageID
+                            const imageID = image.image_id;
+                            axios
+                              .delete(`${baseUrl}/api/products/images/${imageID}`)
+                              .then((res) => {
+                                const updatedImages = images.filter(
+                                  (i) => i.image_id !== imageID
+                                );
+                                setImages(updatedImages);
+                              });
+                          } else {
+                            // Show an alert when trying to delete the only image
+                             window.alert("Each product should have at least one image.");
+                          }
                         }}
                         style={{
                           borderRadius: '50%',
