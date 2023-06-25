@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cld = new Cloudinary({
   cloud: {
@@ -133,7 +135,11 @@ export default function AdminDashboard() {
     event.preventDefault();
 
     if (!brandName) {
-      window.alert('Please fill in the name of the brand');
+      toast.error(`Please enter the name of the brand.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         name: brandName,
@@ -144,10 +150,24 @@ export default function AdminDashboard() {
         .post(`${baseUrl}/api/products/admin/type`, requestBody)
         .then((response) => {
           console.log(response);
-          setBrand(response.data.data);
-          console.log(brand);
-          fetchBrands();
-          setBrandName('');
+          if (response.status == 409) {
+            console.log("duplicate");
+            toast.error(`Category or brand already exists.`, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
+          } else {
+            setBrand(response.data.data);
+            toast.success(`Brand created.`, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
+            console.log(brand);
+            fetchBrands();
+            setBrandName('');
+          }
         });
     }
   };
@@ -158,7 +178,11 @@ export default function AdminDashboard() {
     event.preventDefault();
 
     if (!categoryName) {
-      window.alert('Please fill in the name of the category');
+      toast.error(`Please enter the name of the category.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         name: categoryName,
@@ -172,9 +196,18 @@ export default function AdminDashboard() {
           console.log("RESPONSE STATUS CODE: ", response.status);
           if (response.status == 409) {
             console.log("duplicate");
-            window.alert('Category or brand already exists!');
-          }  else {
+            toast.error(`Category or brand already exists.`, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
+          } else {
             setCategory(response.data.data);
+            toast.success(`Category created.`, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { 'font-size': '16px' },
+            });
             console.log(category);
             fetchCategories();
             setCategoryName('');
@@ -189,7 +222,11 @@ export default function AdminDashboard() {
     event.preventDefault();
 
     if (!orderID) {
-      window.alert('Please fill in the order_id to process refund');
+      toast.error(`Please fill in the order_id to process refund.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       try {
         const response = await axios.get(
@@ -203,13 +240,25 @@ export default function AdminDashboard() {
         }
       } catch (error) {
         console.error(error);
-        window.alert('Order does not exist for fully refunding');
+        toast.error(`Order does not exist for fully refunding.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { 'font-size': '16px' },
+        });
       }
     }
   };
 
   return (
     <div class="row col-11" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
+
+      <ToastContainer
+        limit={2}
+        newestOnTop={true}
+        position="top-center"
+      />
+
+
       <div class="row" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
         <h4 class="h4 font-weight-bold text-center mt-4">Admin Dashboard</h4>
       </div>
@@ -366,6 +415,11 @@ export default function AdminDashboard() {
                               )
                               .then((response) => {
                                 console.log('Decrease button is clicked');
+                                toast.success(`Inventory level updated.`, {
+                                  autoClose: 3000,
+                                  pauseOnHover: true,
+                                  style: { 'font-size': '16px' },
+                                });
                                 fetchProducts();
                                 fetchStatistics();
                               })
@@ -392,6 +446,11 @@ export default function AdminDashboard() {
                             )
                             .then((response) => {
                               console.log('Increase button is clicked');
+                              toast.success(`Inventory level updated.`, {
+                                autoClose: 3000,
+                                pauseOnHover: true,
+                                style: { 'font-size': '16px' },
+                              });
                               fetchProducts();
                               fetchStatistics();
                             })
@@ -429,6 +488,11 @@ export default function AdminDashboard() {
                               const updatedProducts = products.filter(
                                 (p) => p.product_id !== productID
                               );
+                              toast.success(`Product deleted.`, {
+                                autoClose: 3000,
+                                pauseOnHover: true,
+                                style: { 'font-size': '16px' },
+                              });
                               setProducts(updatedProducts);
                             });
 
@@ -446,7 +510,11 @@ export default function AdminDashboard() {
                               console.error(error);
                             });
 
-                          window.alert('Giving partial refund now...');
+                          toast.success(`Giving partial refund now.`, {
+                            autoClose: 3000,
+                            pauseOnHover: true,
+                            style: { 'font-size': '16px' },
+                          });
                         }
                       }}
                     >
@@ -565,6 +633,11 @@ export default function AdminDashboard() {
                                 const updatedBrands = brands.filter(
                                   (b) => b.brand_id !== brandID
                                 );
+                                toast.success(`Brand deleted.`, {
+                                  autoClose: 3000,
+                                  pauseOnHover: true,
+                                  style: { 'font-size': '16px' },
+                                });
                                 setBrands(updatedBrands);
                                 fetchBrands();
                                 fetchProducts();
@@ -679,6 +752,11 @@ export default function AdminDashboard() {
                                 const updatedCategories = categories.filter(
                                   (c) => c.category_id !== categoryID
                                 );
+                                toast.success(`Category created.`, {
+                                  autoClose: 3000,
+                                  pauseOnHover: true,
+                                  style: { 'font-size': '16px' },
+                                });
                                 setCategories(updatedCategories);
                                 fetchCategories();
                                 fetchProducts();
@@ -777,6 +855,8 @@ export default function AdminDashboard() {
           </Link>
         </div>
       </div>
+
+
     </div>
   );
 }

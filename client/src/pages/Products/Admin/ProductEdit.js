@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 import EditImage from '../../../components/Products/EditProduct/EditImage';
 import ProductEditForm from '../../../components/Products/EditProduct/ProductEditForm';
+
 export default function ProductEdit() {
   const [editImage, setEditImage] = useState(false);
   const navigate = useNavigate();

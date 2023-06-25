@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
-import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading/Loading';
 import Product from '../../../components/Products/Product/Product';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
 
 export default function SearchResults() {
   const [hasResults, setHasResults] = useState(false);
@@ -41,7 +32,6 @@ export default function SearchResults() {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           Search Results
         </h2>
-
 
         {/* if the product has results, show the products */}
         {hasResults ? (

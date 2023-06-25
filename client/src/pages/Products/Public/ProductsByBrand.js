@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
 import { Link } from 'react-router-dom';
 import Product from '../../../components/Products/Product/Product';
 import Loading from '../../../components/Loading/Loading';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
 
 export default function ProductsByBrand() {
   const [products, setProducts] = useState(null);

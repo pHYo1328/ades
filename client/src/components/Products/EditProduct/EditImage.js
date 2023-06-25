@@ -5,7 +5,8 @@ import axios from 'axios';
 import chalk from 'chalk';
 
 import Carousel from 'react-bootstrap/Carousel';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 
@@ -43,7 +44,11 @@ export default function EditImage() {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
     if (!imagePath || !productID) {
-      window.alert('Please fill in all fields.');
+      toast.error(`Please fill in all the fields.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         product_id: productID,
@@ -62,6 +67,11 @@ export default function EditImage() {
         })
         .then((response) => {
           console.log(response);
+          toast.success(`Image updated.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
           setImage(response.data.data);
           console.log(image);
           window.location.reload();
@@ -123,6 +133,11 @@ export default function EditImage() {
               .delete(`${baseUrl}/api/products/${productID}/images`)
               .then((res) => {
                 console.log('deleted');
+                toast.success(`Images deleted.`, {
+                  autoClose: 3000,
+                  pauseOnHover: true,
+                  style: { 'font-size': '16px' },
+                });
                 setImages();
               });
           }}
@@ -130,6 +145,12 @@ export default function EditImage() {
           Delete All Images
         </button>
       </div>
+
+      <ToastContainer
+        limit={2}
+        newestOnTop={true}
+        position="top-center"
+      />
 
       <div
         style={{
@@ -164,11 +185,20 @@ export default function EditImage() {
                                 const updatedImages = images.filter(
                                   (i) => i.image_id !== imageID
                                 );
+                                toast.success(`Image deleted.`, {
+                                  autoClose: 3000,
+                                  pauseOnHover: true,
+                                  style: { 'font-size': '16px' },
+                                });
                                 setImages(updatedImages);
                               });
                           } else {
                             // Show an alert when trying to delete the only image
-                             window.alert("Each product should have at least one image.");
+                            toast.error(`Each product should have at least one image.`, {
+                              autoClose: 3000,
+                              pauseOnHover: true,
+                              style: { 'font-size': '16px' },
+                            });
                           }
                         }}
                         style={{
