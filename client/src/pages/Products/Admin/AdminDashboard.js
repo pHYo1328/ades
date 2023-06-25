@@ -168,11 +168,17 @@ export default function AdminDashboard() {
       axios
         .post(`${baseUrl}/api/products/admin/type`, requestBody)
         .then((response) => {
-          console.log(response);
-          setCategory(response.data.data);
-          console.log(category);
-          fetchCategories();
-          setCategoryName('');
+          console.log("RESPONSE", response);
+          console.log("RESPONSE STATUS CODE: ", response.status);
+          if (response.status == 409) {
+            console.log("duplicate");
+            window.alert('Category or brand already exists!');
+          }  else {
+            setCategory(response.data.data);
+            console.log(category);
+            fetchCategories();
+            setCategoryName('');
+          }
         });
     }
   };
