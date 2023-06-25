@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
 import Loading from '../../../components/Loading/Loading';
 import Product from '../../../components/Products/Product/Product';
 import { Link } from 'react-router-dom';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
+
 export default function ProductsByCategory() {
   const [products, setProducts] = useState(null);
   const [category, setCategory] = useState(null);

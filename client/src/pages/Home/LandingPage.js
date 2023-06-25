@@ -34,34 +34,6 @@ export default function LandingPage() {
       });
   }, []);
 
-  // gets all the brand names for drop down select
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/brands`)
-      .then((response) => {
-        console.log(response);
-        setBrands(response.data.data);
-        console.log(brands);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // gets all the category names for drop down select
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/category`)
-      .then((response) => {
-        console.log(response);
-        setCategories(response.data.data);
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
   return (
     <div
       className="bg-white w-full"

@@ -5,6 +5,8 @@ import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
 import Categories from '../../../components/Products/Product/Categories';
 import Brands from '../../../components/Products/Product/Brands';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function ProductCreate() {
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -24,8 +26,6 @@ export default function ProductCreate() {
   };
 
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
@@ -60,11 +60,23 @@ export default function ProductCreate() {
       !productPrice ||
       !productQuantity
     ) {
-      window.alert('Please fill in all fields.');
+      toast.error(`Please fill in all the fields.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else if (isNaN(productQuantity) || productQuantity < 0) {
-      window.alert('Inventory must be a value not less than 0.');
+      toast.error(`Inventory must be a value not less than 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else if (isNaN(productPrice) || productPrice <= 0) {
-      window.alert('Price must be a value not less than or equal to 0.');
+      toast.error(`Price must be a value not less than or equal to 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         name: productName,
@@ -75,10 +87,6 @@ export default function ProductCreate() {
         quantity: productQuantity,
         image: imagePath,
       };
-
-      console.log('path test');
-      console.log(imagePath);
-
       console.log(requestBody);
       axios
         .post(`${baseUrl}/api/products`, requestBody, {
@@ -87,6 +95,11 @@ export default function ProductCreate() {
           },
         })
         .then((response) => {
+          toast.success(`Product created.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
@@ -184,6 +197,11 @@ export default function ProductCreate() {
         >
           Submit
         </button>
+        <ToastContainer
+          limit={2}
+          newestOnTop={true}
+          position="top-center"
+        />
       </div>
     </form>
   );
