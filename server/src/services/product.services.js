@@ -358,6 +358,7 @@ module.exports.getSearchResults = async (
   min_price
 ) => {
   console.log(chalk.blue('getSearchResults is called'));
+
   try {
     let searchResultsDataQuery = `
       SELECT
@@ -384,11 +385,11 @@ module.exports.getSearchResults = async (
           OR p.description RLIKE ?)`;
       queryInput.push(product_name, product_name, product_name, product_name);
     }
-    if (category_id) {
+    if (category_id && category_id != 0) {
       searchResultsDataQuery += ` AND p.category_id = ?`;
       queryInput.push(category_id);
     }
-    if (brand_id) {
+    if (brand_id && brand_id != 0) {
       searchResultsDataQuery += ` AND p.brand_id = ?`;
       queryInput.push(brand_id);
     }
