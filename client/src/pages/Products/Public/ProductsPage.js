@@ -224,38 +224,42 @@ export default function ProductsPage() {
 
         {/* shows all the products, based on the filter input */}
         {products ? (
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-            {products.map((product) => (
-              <div key={product.product_id} className="group relative">
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                  <AdvancedImage cldImg={cld.image(product.image_url)} />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div className="text-left">
-                    <h3 className="text-sm text-gray-700">
-                      <Link to={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.brand_name}
+          products.length > 0 ? (
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+              {products.map((product) => (
+                <div key={product.product_id} className="group relative">
+                  <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
+                    <AdvancedImage cldImg={cld.image(product.image_url)} />
+                  </div>
+                  <div className="mt-4 flex justify-between">
+                    <div className="text-left">
+                      <h3 className="text-sm text-gray-700">
+                        <Link to={`/product/${product.product_id}`}>
+                          <span aria-hidden="true" className="absolute inset-0" />
+                          {product.product_name}
+                        </Link>
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.brand_name}
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 justify-start">
+                      {product.price}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
-                  </p>
                 </div>
-              </div>
-            ))
-            }
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-40 text-center text-gray-500">No results found</p>
+          )
         ) : (
           // Loading component (full screen)
           <div className="flex items-center justify-center h-screen">
             <Loading />
           </div>
         )}
+
       </div>
 
 

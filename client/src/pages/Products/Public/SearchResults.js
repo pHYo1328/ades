@@ -44,10 +44,10 @@ export default function SearchResults() {
 
         {/* if the product has results, show the products */}
         {hasResults ? (
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-            {products ? (
-              // Shows all the product results
-              products.map((product) => (
+          products ? (
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+              {/* Shows all the product results */}
+              {products.map((product) => (
                 <div key={product.product_id} className="group relative">
                   <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                     {/* Get the product image from Cloudinary */}
@@ -61,23 +61,19 @@ export default function SearchResults() {
                           {product.product_name}
                         </Link>
                       </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {product.brand_name}
-                      </p>
+                      <p className="mt-1 text-sm text-gray-500">{product.brand_name}</p>
                     </div>
                     <p className="text-sm font-medium text-gray-900 justify-start">
                       {product.price}
                     </p>
                   </div>
                 </div>
-              ))
-            ) : (
-              // If no results match the search
-              <div>
-                <p>No results found</p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            // If no results match the search
+            <p className="mt-40 text-center text-gray-500">No results found</p>
+          )
         ) : (
           // Loading component (full screen)
           <div className="flex items-center justify-center h-screen">
@@ -86,7 +82,7 @@ export default function SearchResults() {
         )}
 
       </div>
-    </div>
+    </div >
 
   );
 }
