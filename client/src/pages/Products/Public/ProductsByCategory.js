@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-import { FadeLoader } from 'react-spinners';
+import Loading from '../../../components/Loading/Loading';
 import { Link } from 'react-router-dom';
 const cld = new Cloudinary({
   cloud: {
@@ -58,10 +58,11 @@ export default function ProductsByCategory() {
             </li>
           </ol>
         </nav>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-          {/* shows all the products by Category ID, if exists */}
-          {products ? (
-            products.map((product) => (
+
+        {/* shows all the products by Category ID, if exists */}
+        {products ? (
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+            {products.map((product) => (
               <div key={product.product_id} className="group relative">
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
@@ -84,21 +85,14 @@ export default function ProductsByCategory() {
                 </div>
               </div>
             ))
-          ) : (
-            <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
-          )}
-        </div>
+            }
+          </div>
+        ) : (
+          // Loading component (full screen)
+          <div className="flex items-center justify-center h-screen">
+            <Loading />
+          </div>
+        )}
       </div>
     </div>
   );

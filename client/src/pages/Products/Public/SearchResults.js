@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
+import Loading from '../../../components/Loading/Loading';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -41,25 +41,23 @@ export default function SearchResults() {
           Search Results
         </h2>
 
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-          {/* if the product has results, show the products */}
-          {hasResults ? (
-            products ? (
-              // shows all the product results
+
+        {/* if the product has results, show the products */}
+        {hasResults ? (
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+            {products ? (
+              // Shows all the product results
               products.map((product) => (
                 <div key={product.product_id} className="group relative">
                   <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                    {/* get the product image from Cloudinary */}
+                    {/* Get the product image from Cloudinary */}
                     <AdvancedImage cldImg={cld.image(product.image_url)} />
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div className="text-left">
                       <h3 className="text-sm text-gray-700">
                         <Link to={`/product/${product.product_id}`}>
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0"
-                          />
+                          <span aria-hidden="true" className="absolute inset-0" />
                           {product.product_name}
                         </Link>
                       </h3>
@@ -74,27 +72,21 @@ export default function SearchResults() {
                 </div>
               ))
             ) : (
-              // if not results match the search
+              // If no results match the search
               <div>
                 <p>No results found</p>
               </div>
-            )
-          ) : (
-            <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          // Loading component (full screen)
+          <div className="flex items-center justify-center h-screen">
+            <Loading />
+          </div>
+        )}
+
       </div>
     </div>
+
   );
 }

@@ -6,8 +6,8 @@ import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../../components/Loading/Loading';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -256,17 +256,9 @@ export default function ProductDetails() {
                         </div>
                       ))
                     ) : (
+                      // Loading component (full screen)
                       <div className="flex items-center justify-center h-screen">
-                        <div className="mx-auto flex flex-col items-center">
-                          <FadeLoader
-                            color={'navy'}
-                            loading={true}
-                            size={100}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                          />
-                          <p>Loading...</p>
-                        </div>
+                        <Loading />
                       </div>
                     )}
                   </ul>
@@ -275,17 +267,9 @@ export default function ProductDetails() {
             </div>
           </div>
         ) : (
+          // Loading component (full screen)
           <div className="flex items-center justify-center h-screen">
-            <div className="mx-auto flex flex-col items-center">
-              <FadeLoader
-                color={'navy'}
-                loading={true}
-                size={100}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p>Loading...</p>
-            </div>
+            <Loading />
           </div>
         )}
       </div>

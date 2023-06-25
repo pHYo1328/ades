@@ -28,7 +28,6 @@ import OrderToDeliver from './pages/Order/OrderToDeliver/OrderToDeliver';
 import OrderToPay from './pages/Order/OrderToPay/OrderToPay';
 import OrderAdmin from './pages/Order/Admin/OrderAdmin';
 import LandingPage from './pages/Home/LandingPage';
-import UserLandingPage from './pages/Home/LandingPageLoggedIn';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
 import Payment from './pages/Stripe/Payment';

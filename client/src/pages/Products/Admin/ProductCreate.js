@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
-import { FadeLoader } from 'react-spinners';
-
+import Loading from '../../../components/Loading/Loading';
 export default function ProductCreate() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -205,17 +204,9 @@ export default function ProductCreate() {
                 </option>
               ))
             ) : (
+              // Loading component (full screen)
               <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
+                <Loading />
               </div>
             )}
           </select>
@@ -237,17 +228,9 @@ export default function ProductCreate() {
                 <option value={brand.brand_id}>{brand.brand_name}</option>
               ))
             ) : (
+              // Loading component (full screen)
               <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
+                <Loading />
               </div>
             )}
           </select>

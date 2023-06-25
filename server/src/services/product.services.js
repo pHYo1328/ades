@@ -777,7 +777,6 @@ module.exports.updateInventoryDown = async (product_id) => {
 // POST
 
 // create product
-// create product
 module.exports.createProduct = async (
   name,
   price,
@@ -895,8 +894,18 @@ module.exports.createBrandOrCategory = async (name, type) => {
     console.log(chalk.green(results[0]));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red('Error in createBrandOrCategory: ', error));
-    throw error;
+    if (
+      error.sqlState === '23000' &&
+      error.sqlMessage.includes('Duplicate entry')
+    ) {
+      console.log(chalk.red('Duplicate entry error:', error.sqlMessage));
+      return -1;
+    }
+    // throw error;
+    else {
+      console.error(chalk.red('Error in createBrandOrCategory: ', error));
+      throw error;
+    }
   }
 };
 
