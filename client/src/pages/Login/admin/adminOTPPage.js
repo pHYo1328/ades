@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -7,9 +7,15 @@ const VerifyOTP = () => {
   const location = useLocation();
   const [otp, setOTP] = useState('');
 
+  useEffect(() => {
+    const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true';
+    if (isAdminSignedIn) {
+      navigate('/homepage-admin');
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch(`${baseUrl}/verify-otp-admin`, {
         method: 'POST',
@@ -28,6 +34,7 @@ const VerifyOTP = () => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('admin_id', data.userid);
         localStorage.setItem('roles', JSON.stringify(data.roles));
+        localStorage.setItem('isAdminSignedIn', 'true');
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/homepage-admin');
       } else {

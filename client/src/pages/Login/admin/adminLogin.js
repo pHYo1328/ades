@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -7,6 +7,13 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true';
+    if (isAdminSignedIn) {
+      navigate('/homepage-admin');
+    } 
+  }, []);
 
   const onHandleSubmit = (e) => {
     if (!username || !password) {
