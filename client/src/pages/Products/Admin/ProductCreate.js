@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
-import { FadeLoader } from 'react-spinners';
-
+import Categories from '../../../components/Products/Product/Categories';
+import Brands from '../../../components/Products/Product/Brands';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function ProductCreate() {
-  const [brands, setBrands] = useState(null);
-  const [categories, setCategories] = useState(null);
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
@@ -26,34 +26,6 @@ export default function ProductCreate() {
   };
 
   const navigate = useNavigate();
-
-  // get all categories for drop down select
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/category`)
-      .then((response) => {
-        console.log(response);
-        setCategories(response.data.data);
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // get all brands for drop down select
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/brands`)
-      .then((response) => {
-        console.log(response);
-        setBrands(response.data.data);
-        console.log(brands);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
@@ -88,11 +60,23 @@ export default function ProductCreate() {
       !productPrice ||
       !productQuantity
     ) {
-      window.alert('Please fill in all fields.');
+      toast.error(`Please fill in all the fields.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else if (isNaN(productQuantity) || productQuantity < 0) {
-      window.alert('Inventory must be a value not less than 0.');
+      toast.error(`Inventory must be a value not less than 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else if (isNaN(productPrice) || productPrice <= 0) {
-      window.alert('Price must be a value not less than or equal to 0.');
+      toast.error(`Price must be a value not less than or equal to 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         name: productName,
@@ -103,10 +87,6 @@ export default function ProductCreate() {
         quantity: productQuantity,
         image: imagePath,
       };
-
-      console.log('path test');
-      console.log(imagePath);
-
       console.log(requestBody);
       axios
         .post(`${baseUrl}/api/products`, requestBody, {
@@ -115,6 +95,11 @@ export default function ProductCreate() {
           },
         })
         .then((response) => {
+          toast.success(`Product created.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
@@ -190,67 +175,13 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Category
           </label>
-          <select
-            class="form-select form-select-sm"
-            onChange={(e) => setProductCategory(e.target.value)}
-          >
-            <option disabled selected value>
-              -- CATEGORY --
-            </option>
-            {/* shows all categories */}
-            {categories ? (
-              categories.map((category) => (
-                <option value={category.category_id}>
-                  {category.category_name}
-                </option>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
-              </div>
-            )}
-          </select>
+          <Categories setCategoryID={setProductCategory} all={false} />
         </div>
         <div class="mb-3 col-6">
           <label for="exampleFormControlInput1" class="form-label h6">
             Brand
           </label>
-          <select
-            class="form-select form-select-sm"
-            onChange={(e) => setProductBrand(e.target.value)}
-          >
-            <option disabled selected value>
-              -- BRAND --
-            </option>
-            {/* shows all brands */}
-            {brands ? (
-              brands.map((brand) => (
-                <option value={brand.brand_id}>{brand.brand_name}</option>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
-              </div>
-            )}
-          </select>
+          <Brands setBrandID={setProductBrand} all={false} />
         </div>
       </div>
       <div class="mb-3">
@@ -266,6 +197,11 @@ export default function ProductCreate() {
         >
           Submit
         </button>
+        <ToastContainer
+          limit={2}
+          newestOnTop={true}
+          position="top-center"
+        />
       </div>
     </form>
   );

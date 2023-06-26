@@ -6,8 +6,9 @@ import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../../../components/Loading/Loading';
+
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -174,6 +175,7 @@ export default function ProductDetails() {
                   >
                     <i class="bi bi-dash-circle"></i>
                   </button>
+
                   {/* shows the quantity of products that the user has in the cart, will change as the user makes changes by using the icons */}
                   <p class="col-4 text-center">{cartQuantity}</p>
                   <button
@@ -186,12 +188,21 @@ export default function ProductDetails() {
                       if (product.quantity > cartQuantity) {
                         setCartQuantity((cartQuantity += 1));
                       } else {
-                        window.alert('No more inventory!');
+                        toast.error(`No more inventory!`, {
+                          autoClose: 3000,
+                          pauseOnHover: true,
+                          style: { 'font-size': '16px' },
+                        });
                       }
                     }}
                   >
                     <i class="bi bi-plus-circle"></i>
                   </button>
+                  <ToastContainer
+                    limit={2}
+                    newestOnTop={true}
+                    position="top-center"
+                  />
                 </div>
               </div>
               {product.quantity <= 0 ? (
@@ -256,17 +267,9 @@ export default function ProductDetails() {
                         </div>
                       ))
                     ) : (
+                      // Loading component (full screen)
                       <div className="flex items-center justify-center h-screen">
-                        <div className="mx-auto flex flex-col items-center">
-                          <FadeLoader
-                            color={'navy'}
-                            loading={true}
-                            size={100}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                          />
-                          <p>Loading...</p>
-                        </div>
+                        <Loading />
                       </div>
                     )}
                   </ul>
@@ -275,17 +278,9 @@ export default function ProductDetails() {
             </div>
           </div>
         ) : (
+          // Loading component (full screen)
           <div className="flex items-center justify-center h-screen">
-            <div className="mx-auto flex flex-col items-center">
-              <FadeLoader
-                color={'navy'}
-                loading={true}
-                size={100}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p>Loading...</p>
-            </div>
+            <Loading />
           </div>
         )}
       </div>

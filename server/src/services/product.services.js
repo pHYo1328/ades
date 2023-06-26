@@ -358,6 +358,7 @@ module.exports.getSearchResults = async (
   min_price
 ) => {
   console.log(chalk.blue('getSearchResults is called'));
+
   try {
     let searchResultsDataQuery = `
       SELECT
@@ -384,11 +385,11 @@ module.exports.getSearchResults = async (
           OR p.description RLIKE ?)`;
       queryInput.push(product_name, product_name, product_name, product_name);
     }
-    if (category_id) {
+    if (category_id && category_id != 0) {
       searchResultsDataQuery += ` AND p.category_id = ?`;
       queryInput.push(category_id);
     }
-    if (brand_id) {
+    if (brand_id && brand_id != 0) {
       searchResultsDataQuery += ` AND p.brand_id = ?`;
       queryInput.push(brand_id);
     }
@@ -651,14 +652,33 @@ module.exports.deleteImageByID = async (imageID) => {
 // delete all images by product id
 module.exports.deleteImagesByProductID = async (productID) => {
   console.log(chalk.blue('deleteImagesByProductID is called'));
+  const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
+  const addDefaultImageQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js deleteImagesByProductID function'
+    )
+  );
   try {
-    const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
-    const results = await pool.query(deleteImageQuery, [productID]);
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+    let imageValues = [[[productID, 'ades/product_default_image_gr1qpm']]];
+    await pool.query(deleteImageQuery, [productID]);
+
+    const results = await connection.query(addDefaultImageQuery, imageValues);
+
+    await connection.commit();
+
     console.log(chalk.green(results[0].affectedRows));
     return results[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in deleteImageByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -802,8 +822,17 @@ module.exports.createProduct = async (
     );
     const productID = productResult[0].insertId;
 
-    let imageValues = [image.map((i) => [productID, i])];
-    console.log(chalk.blue(imageValues));
+    let imageValues;
+
+    if (image.length > 0) {
+      imageValues = [image.map((i) => [productID, i])];
+    } else {
+      imageValues = [[[productID, 'ades/product_default_image_gr1qpm']]];
+    }
+
+    console.log('image length: ', imageValues.length);
+
+    console.log(chalk.blue('images', imageValues));
     await connection.query(imageCreateQuery, imageValues);
 
     const inventoryData = [productID, quantity];
@@ -866,8 +895,18 @@ module.exports.createBrandOrCategory = async (name, type) => {
     console.log(chalk.green(results[0]));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red('Error in createBrandOrCategory: ', error));
-    throw error;
+    if (
+      error.sqlState === '23000' &&
+      error.sqlMessage.includes('Duplicate entry')
+    ) {
+      console.log(chalk.red('Duplicate entry error:', error.sqlMessage));
+      return -1;
+    }
+    // throw error;
+    else {
+      console.error(chalk.red('Error in createBrandOrCategory: ', error));
+      throw error;
+    }
   }
 };
 

@@ -1065,14 +1065,22 @@ exports.processCreateBrandOrCategory = async (req, res, next) => {
   console.log(req.body);
   try {
     const createdData = await productServices.createBrandOrCategory(name, type);
-    console.log(chalk.yellow(createdData));
+    console.log(chalk.yellow('createdData:', createdData));
+    if (createdData == -1) {
+      console.log(chalk.yellow('createdData:', createdData));
+      return res.status(409).json({
+        statusCode: 409,
+        ok: true,
+        message: 'Duplicate',
+      });
+    }
     return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Create successful',
     });
   } catch (error) {
-    console.error(chalk.red(error.code));
+    console.error(chalk.red('error code', error.code));
     console.error(chalk.red('Error in createBrandOrCategory: ', error));
     return next(error);
   }

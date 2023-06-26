@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
 import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
+import Product from '../../../components/Products/Product/Product';
+import Loading from '../../../components/Loading/Loading';
 
 export default function ProductsByBrand() {
   const [products, setProducts] = useState(null);
@@ -60,47 +54,21 @@ export default function ProductsByBrand() {
           </ol>
         </nav>
 
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-          {/* get the products by brand, if exists */}
-          {products ? (
-            products.map((product) => (
-              <div key={product.product_id} className="group relative">
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                  <AdvancedImage cldImg={cld.image(product.image_url)} />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div className="text-left">
-                    <h3 className="text-sm text-gray-700">
-                      <Link to={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.brand_name}
-                    </p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
-                  </p>
-                </div>
-              </div>
+
+        {/* get the products by brand, if exists */}
+        {products ? (
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+            {products.map((product) => (
+              <Product product={product} />
             ))
-          ) : (
-            <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
-            </div>
-          )}
-        </div>
+            }
+          </div>
+        ) : (
+          // Loading component (full screen)
+          <div className="flex items-center justify-center h-screen">
+            <Loading />
+          </div>
+        )}
       </div>
     </div>
   );
