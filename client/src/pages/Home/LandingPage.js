@@ -10,14 +10,20 @@ import Categories from '../../components/Products/Product/Categories';
 
 export default function LandingPage() {
   const [products, setProducts] = useState(null);
-  const [brands, setBrands] = useState(null);
-  const [categories, setCategories] = useState(null);
 
   const [productName, setProductName] = useState();
   const [productMinPrice, setProductMinPrice] = useState();
   const [productMaxPrice, setProductMaxPrice] = useState();
   const [productCategory, setProductCategory] = useState();
   const [productBrand, setProductBrand] = useState();
+
+  const [categoryKey, setCategoryKey] = useState(0);
+  const [brandKey, setBrandKey] = useState(0);
+
+  useEffect(() => {
+    setCategoryKey((prevKey) => prevKey + 1);
+    setBrandKey((prevKey) => prevKey + 1);
+  }, [])
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   // get 5 latest arrivals
@@ -89,12 +95,12 @@ export default function LandingPage() {
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              <Categories setCategoryID={setProductCategory} all={true} />
+              <Categories setCategoryID={setProductCategory} all={true} key={categoryKey} />
             </div>
           </div>
           <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
             <div class="input-field first w-100">
-              <Brands setBrandID={setProductBrand} all={true} />
+              <Brands setBrandID={setProductBrand} all={true} key={brandKey} />
             </div>
           </div>
           <div class=" col-2 text-black">
@@ -121,6 +127,14 @@ export default function LandingPage() {
                   url += `?${queryParams.join('&')}`;
                   window.location.href = url;
                 }
+
+                // setProductName('');
+                // setProductMinPrice('');
+                // setProductMaxPrice('');
+                // setProductCategory(null);
+                // setProductBrand(null);
+                // setCategoryKey((prevKey) => prevKey + 1);
+                // setBrandKey((prevKey) => prevKey + 1);
               }}
             >
               Search
