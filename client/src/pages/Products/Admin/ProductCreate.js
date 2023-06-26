@@ -20,6 +20,9 @@ export default function ProductCreate() {
   const [productQuantity, setProductQuantity] = useState(null);
   const [imagePath, setImagePath] = useState('');
 
+  const [categoryKey, setCategoryKey] = useState(0);
+  const [brandKey, setBrandKey] = useState(0);
+
   const handleImageChange = (path) => {
     console.log('Selected image path:', path);
     setImagePath(path);
@@ -103,7 +106,15 @@ export default function ProductCreate() {
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
-          window.location.reload();
+          // window.location.reload();
+          setProductName('');
+          setProductDescription('');
+          setProductPrice('');
+          setProductQuantity('');
+          setProductCategory(null);
+          setProductBrand(null);
+          setCategoryKey((prevKey) => prevKey + 1);
+          setBrandKey((prevKey) => prevKey + 1);
         });
     }
   };
@@ -175,13 +186,13 @@ export default function ProductCreate() {
           <label for="exampleFormControlInput1" class="form-label h6">
             Category
           </label>
-          <Categories setCategoryID={setProductCategory} all={false} />
+          <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
         </div>
         <div class="mb-3 col-6">
           <label for="exampleFormControlInput1" class="form-label h6">
             Brand
           </label>
-          <Brands setBrandID={setProductBrand} all={false} />
+          <Brands setBrandID={setProductBrand} all={false} key={brandKey} />
         </div>
       </div>
       <div class="mb-3">
