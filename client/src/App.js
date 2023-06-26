@@ -51,7 +51,7 @@ function App() {
     '/products/create',
     '/homepage-admin',
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/userLanding', '/user-profile']; // Specify the routes where the header should be signed in headers
+  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/user-profile']; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
@@ -66,7 +66,8 @@ function App() {
   // };
 
   const isSignedIn = localStorage.getItem('isSignedIn') === 'true'; // Get the isSignedIn status from localStorage
-
+  const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true' //Get the isAdminSignedIn status from localstorage
+  
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
   const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
@@ -75,7 +76,7 @@ function App() {
   if (hideHeader) {
     headerComponent = null;
   } else if (adminHeader) {
-    headerComponent = isSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
+    headerComponent = isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
   } else if (signedInHeader) {
     headerComponent = isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
   } else {
