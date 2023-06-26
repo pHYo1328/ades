@@ -52,20 +52,20 @@ function Home() {
     navigate('/users');
   };
 
-  const onHandleLogout = async () => {
-    try {
-      await fetch(`${baseUrl}/logout-admin`, {
-        method: 'PUT',
-        credentials: 'include',
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('admin_id');
-    localStorage.removeItem('roles');
-    navigate('/');
-  };
+  // const onHandleLogout = async () => {
+  //   try {
+  //     await fetch(`${baseUrl}/logout-admin`, {
+  //       method: 'PUT',
+  //       credentials: 'include',
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  //   localStorage.removeItem('accessToken');
+  //   localStorage.removeItem('admin_id');
+  //   localStorage.removeItem('roles');
+  //   navigate('/');
+  // };
 
   // const handleResponseError = (response) => {
   //   if (response.status === 403) {
@@ -84,9 +84,6 @@ function Home() {
               <h1 className="text-5xl font-bold mb-5">Admin Home page</h1>
               <button className="btn btn-primary" onClick={redirectToUsers}>
                 View all users
-              </button>
-              <button className="btn btn-secondary" onClick={onHandleLogout}>
-                Sign out
               </button>
               <Link to="/admin">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">

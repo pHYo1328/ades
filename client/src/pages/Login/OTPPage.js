@@ -9,12 +9,12 @@ const VerifyOTP = () => {
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
   
-  // useEffect(() => {
-  //   const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
-  //   if (isUserSignedIn) {
-  //     navigate('/userLanding');
-  //   }
-  // }, []);
+  useEffect(() => {
+    const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
+    if (isUserSignedIn) {
+      navigate('/');
+    }
+  }, []);
   
   const handleSubmit = async (e) => {
     e.preventDefault();

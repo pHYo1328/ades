@@ -36,6 +36,7 @@ const Header = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
+    localStorage.removeItem('isAdminSignedIn');
     navigate('/');
   };
 

@@ -8,6 +8,13 @@ function Login() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+   useEffect(() => {
+    const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
+    if (isUserSignedIn) {
+      navigate('/');
+    }
+  }, []);
+
   const onHandleSubmit = () => {
     if (!username || !password) {
       setErrorMessage('Incorrect username or password');
