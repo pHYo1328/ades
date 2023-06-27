@@ -94,94 +94,84 @@ export default function ProductsPage() {
 
   return (
     <div className="bg-white w-full">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div class="row">
-          <div class="col-4">
-            <h2
-              className="text-2xl font-bold tracking-tight text-gray-900 text-center"
-              class="h2"
-            >
-              Products
-            </h2>
-          </div>
-          <div class="col-2">
-            <div class="input-group mb-3">
-              <input
-                min="1"
-                type="number"
-                class="form-control form-control-sm"
-                value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
-                placeholder="Limit"
-                aria-describedby="basic-addon2"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">
-                  Products/Page
-                </span>
+      <div className="bg-white w-11/12 mx-auto">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="flex flex-wrap items-center mb-10">
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 text-left">
+                Products
+              </h2>
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <div className="flex items-center">
+                <input
+                  min="1"
+                  type="number"
+                  className="border border-gray-300 rounded-md py-2 px-3 w-full"
+                  value={limit}
+                  onChange={(e) => setLimit(parseInt(e.target.value))}
+                  placeholder="Limit"
+                  aria-describedby="basic-addon2"
+                />
+                <span className="ml-2 text-sm text-gray-600">Products/Page</span>
               </div>
             </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <select
+                className="form-select form-select-md w-full"
+                aria-label=".form-select-sm example"
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option disabled selected value={0}>
+                  Sort
+                </option>
+                <option value={1}>Price (Ascending)</option>
+                <option value={2}>Price (Descending)</option>
+                <option value={3}>Name (A-Z)</option>
+                <option value={4}>Name (Z-A)</option>
+              </select>
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <Categories setCategoryID={setCategoryID} all={true} />
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <Brands setBrandID={setBrandID} all={true} />
+            </div>
           </div>
-          <div class="col-2">
-            <select
-              class="form-select form-select-sm"
-              aria-label=".form-select-sm example"
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option disabled selected value={0}>
-                Sort
-              </option>
-              <option value={1}>Price (Ascending)</option>
-              <option value={2}>Price (Descending)</option>
-              <option value={3}>Name (A-Z)</option>
-              <option value={4}>Name (Z-A)</option>
-            </select>
-          </div>
-          <div class="col-2">
-            <Categories setCategoryID={setCategoryID} all={true} />
-          </div>
-          <div class="col-2">
-            <Brands setBrandID={setBrandID} all={true} />
-          </div>
+
+          {/* shows all the products, based on the filter input */}
+          {products ? (
+            products.length > 0 ? (
+              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+                {products.map((product) => (
+                  <Product product={product} />
+                ))}
+              </div>
+            ) : (
+              <p className="mt-40 text-center text-gray-500">No results found</p>
+            )
+          ) : (
+            // Loading component (full screen)
+            <div className="flex items-center justify-center h-screen">
+              <Loading />
+            </div>
+          )}
         </div>
 
-        {/* shows all the products, based on the filter input */}
-        {products ? (
-          products.length > 0 ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {products.map((product) => (
-                <Product product={product} />
-              ))}
-            </div>
-          ) : (
-            <p className="mt-40 text-center text-gray-500">No results found</p>
-          )
-        ) : (
-          // Loading component (full screen)
-          <div className="flex items-center justify-center h-screen">
-            <Loading />
-          </div>
-        )}
-
-      </div>
-
-
-      <div
-        class="pb-5 mb-5"
-        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-      >
-        {/* handles pagination */}
-        <Pagination
-          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-        {/* shows the current page that the user is at */}
-        <p class="text-center h6 mt-4">
-          {currentPage} / {totalPages}
-        </p>
+        <div className="pb-5 mb-5 mx-auto">
+          {/* handles pagination */}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+          {/* shows the current page that the user is at */}
+          <p className="text-center text-sm mt-4">
+            {currentPage} / {totalPages}
+          </p>
+        </div>
       </div>
     </div>
+
   );
 }

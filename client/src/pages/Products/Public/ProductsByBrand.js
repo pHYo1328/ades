@@ -42,33 +42,33 @@ export default function ProductsByBrand() {
 
   return (
     <div className="bg-white w-full">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <Link to="/products">Products</Link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              {brand}
-            </li>
-          </ol>
-        </nav>
+      <div className="bg-white w-11/12 mx-auto">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <Link to="/products"><h2 className="text-2xl font-bold tracking-tight text-gray-900 text-left">Products</h2></Link>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                {brand}
+              </li>
+            </ol>
+          </nav>
 
-
-        {/* get the products by brand, if exists */}
-        {products ? (
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-            {products.map((product) => (
-              <Product product={product} />
-            ))
-            }
-          </div>
-        ) : (
-          // Loading component (full screen)
-          <div className="flex items-center justify-center h-screen">
-            <Loading />
-          </div>
-        )}
+          {/* Get the products by brand, if they exist */}
+          {products ? (
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+              {products.map((product) => (
+                <Product product={product} />
+              ))}
+            </div>
+          ) : (
+            // Loading component (full screen)
+            <div className="flex items-center justify-center h-screen">
+              <Loading />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

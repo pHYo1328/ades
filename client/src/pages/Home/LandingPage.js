@@ -46,7 +46,7 @@ export default function LandingPage() {
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto" >
         <div className="mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <h3 className="text-center text-black font-bold mb-3">WELCOME TO TECHZERO</h3>
+          <h3 className="text-center text-black font-bold mb-5 text-xxl">WELCOME TO TECHZERO</h3>
 
           <div className="flex justify-center">
             <div className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12">
@@ -101,7 +101,7 @@ export default function LandingPage() {
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
               <button
                 type="button"
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
+                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
                 ref={searchButtonRef}
                 onClick={() => {
                   let url = '/search';
@@ -132,7 +132,7 @@ export default function LandingPage() {
             </div>
             <div className="w-2/12 ml-3">
               <Dropdown>
-                <Dropdown.Toggle className="bg-white text-black hover:bg-blue-600 hover:text-white border-gray-300 px-2 py-2 rounded-md text-gray-700 font-semibold w-full text-sm">
+                <Dropdown.Toggle className="bg-dark-blue text-white hover:bg-light-blue border-gray-300 px-2 py-2 rounded-md text-gray-700 font-semibold w-full text-sm">
                   All
                 </Dropdown.Toggle>
 

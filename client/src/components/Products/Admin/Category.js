@@ -60,10 +60,8 @@ export default function Category({ fetchProducts }) {
                     console.log(category);
                     fetchCategories();
                     setCategoryName('');
-                    // }
                 })
                 .catch((response) => {
-                    // console.log("no rizz")
                     if (response.response.status == 409) {
                         console.log("duplicate");
                         toast.error(`Category or brand already exists.`, {

@@ -29,25 +29,30 @@ export default function ProductEdit() {
   }, []);
 
   return (
-    <div class="pb-3">
-      <h3 class="h3 text-center mt-5 mb-5">EDIT PRODUCT</h3>
+    <div className="bg-white w-full h-auto">
+      <div className="bg-white w-11/12 mx-auto">
+        <div className="sm:w-11/12 md:w-8/12 lg:w-8/12 mt-5 mx-auto bg-peach p-5 rounded-md mb-5">
+          <h3 className="text-center text-2xl font-bold mb-6">EDIT PRODUCT</h3>
 
-      <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '400px' }}>
-        {/* toggle button to toggle between ProductEditForm and EditImage components */}
-        <button
-          className="btn btn-outline-success w-100"
-          onClick={() => {
-            setEditImage(!editImage);
-          }}
-        >
-          <div className="flex items-center justify-center">
-            <div>Update&nbsp;</div>
-            <div>{!editImage ? <p>Images</p> : <p>Product Details</p>}</div>
+          <div className="mx-auto lg:w-6/12 md:w-9/12 sm:w-11/12 mb-10">
+            {/* toggle button to toggle between ProductEditForm and EditImage components */}
+            <button
+              className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm"
+              onClick={() => {
+                setEditImage(!editImage);
+              }}
+            >
+              <div className="flex items-center justify-center">
+                <div>Update&nbsp;</div>
+                <div>{!editImage ? <p>Images</p> : <p>Product Details</p>}</div>
+              </div>
+            </button>
           </div>
-        </button>
-      </div>
 
-      {!editImage ? <ProductEditForm /> : <EditImage />}
+          {!editImage ? <ProductEditForm /> : <EditImage />}
+        </div>
+      </div>
     </div>
+
   );
 }

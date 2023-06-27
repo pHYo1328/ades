@@ -97,94 +97,87 @@ export default function AllBrandsAndCategories() {
   }, [customerId]);
 
   return (
-    <div className="bg-white w-full text-dark text-left container-fluid align-items-center">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div class="col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-          <div class="row">
-            <div class="col-10 h5 font-weight-bold">Brands</div>
-          </div>
+    <div className="bg-white w-full">
+      <div className="bg-white w-11/12 mx-auto text-dark text-left">
+        <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
 
-
-          {/* shows all brands */}
-          {brands ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {brands.map((brand) => (
-                <div
-                  className="group relative border border-gray-300 rounded p-4"
-                  key={brand.brand_id}
-                >
-                  <div className="flex justify-between">
-                    <div className="text-left d-flex align-items-center">
-                      <h3 className="text-sm text-gray-700">
-                        {/* link to ProductsByBrand to show all the products related to the brand */}
-                        <Link to={`/brands/${brand.brand_id}`}>
-                          {brand.brand_name}
-                        </Link>
-                      </h3>
-                    </div>
-
-                    <div>
-                      {/* bookmark button */}
-                      <button
-                        onClick={() => bookmarkClickHandler(brand.brand_id)}
-                      >
-                        <i
-                          className={`bi bi-bookmark${bookmarkStatus[brand.brand_id] ? '-fill' : ''
-                            }`}
-                        ></i>
-                      </button>
+          {/* Brands */}
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold mb-6">Brands</h2>
+            {brands ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                {brands.map((brand) => (
+                  <div
+                    className="group relative border border-gray-300 rounded p-4"
+                    key={brand.brand_id}
+                  >
+                    <div className="flex justify-between">
+                      <div className="text-left">
+                        <h3 className="text-sm text-gray-700">
+                          {/* link to ProductsByBrand to show all the products related to the brand */}
+                          <Link to={`/brands/${brand.brand_id}`}>
+                            {brand.brand_name}
+                          </Link>
+                        </h3>
+                      </div>
+                      <div>
+                        {/* bookmark button */}
+                        <button
+                          onClick={() => bookmarkClickHandler(brand.brand_id)}
+                        >
+                          <i
+                            className={`bi bi-bookmark${bookmarkStatus[brand.brand_id] ? '-fill' : ''}`}
+                          ></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-              }
-            </div>
-          ) : (
-            // Loading component (full screen)
-            <div className="flex items-center justify-center">
-              <Loading />
-            </div>
-          )}
-        </div>
-
-        <hr class="mt-5 mb-5"></hr>
-
-        <div class="col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-          <div class="row">
-            <div class="col-10 h5 font-weight-bold">Categories</div>
+                ))}
+              </div>
+            ) : (
+              // Loading component (full screen)
+              <div className="flex items-center justify-center">
+                <Loading />
+              </div>
+            )}
           </div>
 
+          <hr className="my-10" />
 
-          {/* shows all categories */}
-          {categories ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {categories.map((category) => (
-                <div
-                  className="group relative border border-gray-300 rounded p-4"
-                  key={category.category_id}
-                >
-                  <div className="flex justify-between">
-                    <div className="text-left flex items-center">
-                      <h3 className="text-sm text-gray-700">
-                        {/* goes to ProductsByCategory to show all the products related to the category */}
-                        <Link to={`/categories/${category.category_id}`}>
-                          {category.category_name}
-                        </Link>
-                      </h3>
+          {/* Categories */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6">Categories</h2>
+            {categories ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                {categories.map((category) => (
+                  <div
+                    className="group relative border border-gray-300 rounded p-4"
+                    key={category.category_id}
+                  >
+                    <div className="flex justify-between">
+                      <div className="text-left">
+                        <h3 className="text-sm text-gray-700">
+                          {/* goes to ProductsByCategory to show all the products related to the category */}
+                          <Link to={`/categories/${category.category_id}`}>
+                            {category.category_name}
+                          </Link>
+                        </h3>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-              }
-            </div>
-          ) : (
-            // Loading component (full screen)
-            <div className="flex items-center justify-center">
-              <Loading />
-            </div>
-          )}
+                ))}
+              </div>
+            ) : (
+              // Loading component (full screen)
+              <div className="flex items-center justify-center">
+                <Loading />
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </div>
+
   );
 }
