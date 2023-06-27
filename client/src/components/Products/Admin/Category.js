@@ -50,23 +50,27 @@ export default function Category({ fetchProducts }) {
                 .then((response) => {
                     console.log("RESPONSE", response);
                     console.log("RESPONSE STATUS CODE: ", response.status);
-                    if (response.status == 409) {
+
+                    setCategory(response.data.data);
+                    toast.success(`Category created.`, {
+                        autoClose: 3000,
+                        pauseOnHover: true,
+                        style: { 'font-size': '16px' },
+                    });
+                    console.log(category);
+                    fetchCategories();
+                    setCategoryName('');
+                    // }
+                })
+                .catch((response) => {
+                    // console.log("no rizz")
+                    if (response.response.status == 409) {
                         console.log("duplicate");
                         toast.error(`Category or brand already exists.`, {
                             autoClose: 3000,
                             pauseOnHover: true,
                             style: { 'font-size': '16px' },
                         });
-                    } else {
-                        setCategory(response.data.data);
-                        toast.success(`Category created.`, {
-                            autoClose: 3000,
-                            pauseOnHover: true,
-                            style: { 'font-size': '16px' },
-                        });
-                        console.log(category);
-                        fetchCategories();
-                        setCategoryName('');
                     }
                 });
         }

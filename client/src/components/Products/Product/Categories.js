@@ -22,7 +22,7 @@ export default function Categories({ setCategoryID, all, edit = false, productDa
 
     return (
         <select
-            class="form-select form-select-sm"
+            className="form-select form-select-md w-full"
             onChange={(e) => setCategoryID(e.target.value)}
         >
             <option disabled selected value="0">

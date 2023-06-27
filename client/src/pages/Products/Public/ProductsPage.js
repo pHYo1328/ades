@@ -6,7 +6,6 @@ import Product from '../../../components/Products/Product/Product';
 import Brands from '../../../components/Products/Product/Brands';
 import Categories from '../../../components/Products/Product/Categories';
 
-
 export default function ProductsPage() {
   const [resetPage, setResetPage] = useState(true);
   const [products, setProducts] = useState(null);

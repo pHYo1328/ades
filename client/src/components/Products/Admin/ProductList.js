@@ -1,12 +1,9 @@
 import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
-
 import Product from './Product';
 import Loading from '../../Loading/Loading';
 
 
-export default function ProductList(props, { fetchProducts, fetchStatistics, setRefunds }) {
-    const { products, statistics, refunds } = props;
+export default function ProductList({ products, refunds, setProducts, setRefunds, fetchProducts, fetchStatistics }) {
 
     return (
         <div
@@ -53,7 +50,7 @@ export default function ProductList(props, { fetchProducts, fetchStatistics, set
                 {/* shows all products */}
                 {products ? (
                     products.map((product) => (
-                        <Product product={product} products={products} refunds={refunds} statistics={statistics} fetchProducts={fetchProducts} fetchStatistics={fetchStatistics} setRefunds={setRefunds} />
+                        <Product product={product} products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={setRefunds} setProducts={setProducts} />
                     ))
                 ) : (
                     // Loading component (full screen)

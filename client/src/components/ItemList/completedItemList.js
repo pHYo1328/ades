@@ -94,7 +94,7 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
   if (items.length === 0) {
     return (
       <div className='flex items-center justify-center align-middle py-5'>
-        <h2>No Items {renderRating ? (`delivered to you`):(`is delivering to you`)}</h2>
+        <h2>No Items {renderRating ? (`delivered to you`) : (`is delivering to you`)}</h2>
       </div>
     );
   }
@@ -187,11 +187,10 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
                   {Array.from({ length: 5 }, (_, i) => (
                     <span
                       key={i}
-                      className={`${
-                        i < (rating[index] || 0)
+                      className={`${i < (rating[index] || 0)
                           ? 'text-yellow-500'
                           : 'text-gray-400'
-                      } mr-1`}
+                        } mr-1`}
                       onClick={() => handleRatingClick(index, i + 1)}
                     >
                       &#9733;
