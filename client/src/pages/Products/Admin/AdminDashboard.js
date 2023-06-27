@@ -113,105 +113,77 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div class="row col-11" style={{ marginRight: 'auto', marginLeft: 'auto' }}>
+    <div className="bg-white w-full">
+      <div className="bg-white w-11/12 mx-auto">
 
-      <ToastContainer
-        limit={2}
-        newestOnTop={true}
-        position="top-center"
-      />
+        <ToastContainer
+          limit={2}
+          newestOnTop={true}
+          position="top-center"
+        />
 
-      <div class="row" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-        <h4 class="h4 font-weight-bold text-center mt-4">Admin Dashboard</h4>
-      </div>
-
-      <Statistics statistics={statistics} key={statisticsKey} />
-
-      <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
-
-      <div
-        class="row my-2 mx-auto p-0"
-        style={{ marginRight: 'auto', marginLeft: 'auto' }}
-      >
-        <div
-          class="col-12 justify-content-between d-flex"
-          style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
-        >
-          <Brand fetchProducts={() => fetchProducts()} />
-
-          <Category fetchProducts={() => fetchProducts()} />
+        <div className="flex justify-center mx-auto">
+          <h3 className="text-center text-black font-bold mb-4 mt-3 text-xxl">Admin Dashboard</h3>
         </div>
-      </div>
 
-      <div
-        className="row col-12 justify-content-center my-2 mx-0"
-        style={{ marginRight: 'auto', marginLeft: 'auto' }}
-      >
-        <div
-          class="col-11 p-0 mx-4"
-          style={{
-            background: '#c2d9ff',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <div
-            class="py-2"
-            style={{
-              position: 'sticky',
-              top: '0',
-              background: '#dff7ec',
-              width: '100%',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            }}
-          >
-            <div
-              className="row align-items-center col-11"
-              style={{ marginLeft: 'auto', marginRight: 'auto' }}
-            >
-              <div className="col-10 h5 font-weight-bold">Fully Refund</div>
-            </div>
+        <Statistics statistics={statistics} key={statisticsKey} />
+
+        <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+
+        <div className="col-span-12 mx-auto flex flex-wrap justify-center text-center mb-4">
+          <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 px-2">
+            <Brand fetchProducts={() => fetchProducts()} />
           </div>
-          <div
-            class="row col-12 mt-4 mb-4"
-            style={{ marginLeft: 'auto', marginRight: 'auto' }}
-          >
-            <div class="col-8">
+          <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 px-2">
+            <Category fetchProducts={() => fetchProducts()} />
+          </div>
+        </div>
+
+
+        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
+
+          <div className="flex items-center justify-between mb-3 mt-3 ">
+            <div className="w-9/12 text-left ml-10 text-xl font-bold">Fully Refund</div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-3 py-2">
+            <div className="flex items-center w-full sm:w-full md:w-3/4 lg:w-3/4 text-left text-xl px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
               <input
                 type="text"
-                class="form-control"
-                placeholder="Enter order_id..."
+                className="border border-gray-300 rounded-md w-full"
+                placeholder="Enter Order ID"
                 value={orderID}
                 onChange={(e) => setOrderID(e.target.value)}
               />
             </div>
-            {/* give full refund to the customer based on the order ID */}
-            <div class="col-4">
+
+            <div className="flex items-center w-full sm:w-full md:w-1/4 lg:w-1/4 px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
               <button
-                class="btn btn-info w-100 col-6 text-dark mr-2"
+                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
                 onClick={handleSearchOrder}
               >
-                Search <i class="bi bi-search"></i>
+                Search <i className="bi bi-search"></i>
               </button>
             </div>
           </div>
+
         </div>
-      </div>
 
-      <div class="col-12">
-        <div className="flex justify-center mb-12">
-          {/* link to go to orderStatus to manage the status of orders */}
-          <Link to={'/admin/orderStatus'}>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-              Go to Order Status Management
-            </button>
-          </Link>
+
+        <div className="col-span-12">
+
+          <div className="flex justify-center mb-12">
+            {/* link to go to orderStatus to manage the status of orders */}
+            <Link to={'/admin/orderStatus'}>
+              <button className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-md">
+                Go to Order Status Management
+              </button>
+            </Link>
+          </div>
         </div>
+
+
       </div>
-
-
-    </div>
+    </div >
   );
 }
