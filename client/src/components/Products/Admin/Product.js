@@ -19,7 +19,7 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
 
     return (
         <div className="d-flex flex-row py-3 justify-content-around h-30 w-30">
-            <div className="w-1/6 aspect-square border-r-2 border-white pl-2 pr-3 mr-3 h-30 ">
+            <div className="w-2/6 sm:w-2/6 md:w-2/6 lg:w-1/6 aspect-square border-r-2 border-white pl-2 pr-3 mr-3 h-30 ">
                 <AdvancedImage
                     className="h-full w-full bg-gray-50 rounded-lg object-cover"
                     cldImg={cld.image(product.image_url)}
