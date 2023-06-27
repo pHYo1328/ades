@@ -4,7 +4,6 @@ import chalk from 'chalk';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
-// import { cloudinary_cloud_name } from '../../../../../server/src/config/config';
 
 export default function Brand({ fetchProducts }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
@@ -63,8 +62,6 @@ export default function Brand({ fetchProducts }) {
 
                 })
                 .catch((response) => {
-                    // console.log("no rizz")
-                    // console.log(response.response.status)
                     if (response.response.status == 409) {
                         console.log("duplicate");
                         toast.error(`Category or brand already exists.`, {

@@ -28,33 +28,32 @@ export default function SearchResults() {
 
   return (
     <div className="bg-white w-full">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          Search Results
-        </h2>
+      <div className="w-11/12 mx-auto">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <h2 className="text-2xl font-bold mb-6">Search Results</h2>
 
-        {/* if the product has results, show the products */}
-        {hasResults ? (
-          products ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {/* Shows all the product results */}
-              {products.map((product) => (
-                <Product product={product} />
-              ))}
-            </div>
+          {/* If the product has results, show the products */}
+          {hasResults ? (
+            products ? (
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {products.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              // If no results match the search
+              <p className="mt-40 text-center text-gray-500">No results found</p>
+            )
           ) : (
-            // If no results match the search
-            <p className="mt-40 text-center text-gray-500">No results found</p>
-          )
-        ) : (
-          // Loading component (full screen)
-          <div className="flex items-center justify-center h-screen">
-            <Loading />
-          </div>
-        )}
+            // Loading component (full screen)
+            <div className="flex items-center justify-center h-screen">
+              <Loading />
+            </div>
+          )}
 
+        </div>
       </div>
-    </div >
+    </div>
 
   );
 }
