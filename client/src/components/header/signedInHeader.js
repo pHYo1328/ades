@@ -49,25 +49,25 @@ const SignedInHeader = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-tertiary shadow">
       <div className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="text-lg font-bold text-gray-800">
+            <Link to="/" className="text-lg font-bold text-white">
               TECHZERO
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            <Link to="/products" className="text-gray-800 hover:text-gray-600">
+            <Link to="/products" className="text-white hover:text-gray-600">
               Products
             </Link>
-            <Link to="/cart" className="text-gray-800 hover:text-gray-600">
+            <Link to="/cart" className="text-white hover:text-gray-600">
               Cart
             </Link>
             <div className="relative" ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}
-                className="text-gray-800 hover:text-gray-600"
+                className="text-white hover:text-gray-600"
               >
                 User
               </button>
