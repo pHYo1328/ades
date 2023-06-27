@@ -5,8 +5,6 @@ import { AdvancedImage } from '@cloudinary/react';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-
-
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -20,6 +18,7 @@ const UserProfile = () => {
   const [editingPassword, setEditingPassword] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
   const url = `${baseUrl}/user-profile`;
+  const url2 = `${baseUrl}/update-userProfile`;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,6 +41,39 @@ const UserProfile = () => {
     fetchUser();
   }, []);
 
+  const updateUserProfile = async () => {
+    
+    try {
+      
+      const response = await fetch(url2, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      console.log('User information updated successfully.');
+    } catch (error) {
+      console.error('Error updating user information:', error);
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    setUser({ ...user, username: e.target.value });
+  };
+
+  const handleEmailChange = (e) => {
+    setUser({ ...user, email: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setUser({ ...user, password: e.target.value });
+  };
+
+
   return (
     <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
       <div className="flex h-screen w-screen m-3">
@@ -49,7 +81,7 @@ const UserProfile = () => {
           <nav className="p-4">
             <ul className="space-y-2">
               <li className="py-2">
-                <a href="#" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Profile Page</a>
+                <a href="/user-profile" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Profile Page</a>
               </li>
               <li className="py-2">
                 <a href="#" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Order History</a>
@@ -70,7 +102,7 @@ const UserProfile = () => {
                             type="text"
                             className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingUsername ? 'opacity-100' : 'opacity-0 scale-95'}`}
                             value={user.username}
-                            onChange={(e) => setUser({ ...user, username: e.target.value })}
+                            onChange={handleUsernameChange}
                             onBlur={() => setEditingUsername(false)}
                           />
                         ) : (
@@ -88,7 +120,7 @@ const UserProfile = () => {
                           type="email"
                           className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingEmail ? 'opacity-100' : 'opacity-0 scale-95'}`}
                           value={user.email}
-                          onChange={(e) => setUser({ ...user, email: e.target.value })}
+                          onChange={handleEmailChange}
                           onBlur={() => setEditingEmail(false)}
                         />
                       ) : (
@@ -103,38 +135,28 @@ const UserProfile = () => {
                       {editingPassword ? (
                         <input
                           type="password"
-                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingPassword ? 'opacity-100' : 'opacity-0 scale-95'}`}
-                          value={user.password}
-                          onChange={(e) => setUser({ ...user, password: e.target.value })}
+                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingPassword ? 'opacity-100' : 'opacity-0 scale-95'}`}                         
+                          onChange={handlePasswordChange}
                           onBlur={() => setEditingPassword(false)}
                         />
                       ) : (
-                        <span className="text-base">{'*'.repeat(user.password.length)}</span>
-                      )
-                      }
-                      <BiEdit 
-                      className={`ml-3 mt-1 text-base transition-all duration-300 ${editingPassword ? 'opacity-0' : 'opacity-100'}`}
-                      onClick={() => setEditingPassword(true)} />
+                        <button
+                            className="text-base text-blue-500 underline hover:text-blue-800"
+                            onClick={() => setEditingPassword(true)}
+                          >
+                            Change Password
+                          </button>
+                      )}
+                      
                     </div>
-                    <div className="flex items-center">
-                      <span className="font-semibold w-28 text-lg">Address:</span>
-                      {editingAddress ? (
-                        <input
-                          type="text"
-                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingAddress ? 'opacity-100' : 'opacity-0 scale-95'}`}
-                          value={user.username}
-                          onChange={(e) => setUser({ ...user, username: e.target.value })}
-                          onBlur={() => setEditingAddress(false)}
-                        />
-                      ) : (
-                        <span className="text-base">Address to be inserted</span>
-                      )
-                      }
-                      <BiEdit 
-                      className={`ml-3 mt-1 text-base transition-all duration-300 ${editingAddress ? 'opacity-0' : 'opacity-100'}`}
-                      onClick={() => setEditingAddress(true)} />
-                    </div>
+                    
                   </div>
+                  <button
+                    className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
+                    onClick={updateUserProfile}
+                  >
+                    Save
+                  </button>
                 </div>
               )}
             </div>
@@ -168,3 +190,22 @@ const UserProfile = () => {
 // };
 
 export default UserProfile;
+
+{/* <div className="flex items-center">
+                      <span className="font-semibold w-28 text-lg">Address:</span>
+                      {editingAddress ? (
+                        <input
+                          type="text"
+                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingAddress ? 'opacity-100' : 'opacity-0 scale-95'}`}
+                          value={user.username}
+                          onChange={(e) => setUser({ ...user, username: e.target.value })}
+                          onBlur={() => setEditingAddress(false)}
+                        />
+                      ) : (
+                        <span className="text-base">Address to be inserted</span>
+                      )
+                      }
+                      <BiEdit 
+                      className={`ml-3 mt-1 text-base transition-all duration-300 ${editingAddress ? 'opacity-0' : 'opacity-100'}`}
+                      onClick={() => setEditingAddress(true)} />
+                    </div> */}
