@@ -7,10 +7,11 @@ const bcrypt = require('bcrypt');
 module.exports.registerUser = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-    //  // Check if the username already exists in the database
+
+     //  // Check if the username already exists in the database
     // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
     // const usernameExists = await pool.query(checkUsernameQuery, [username]);
-    // const count = usernameExists[0].count;
+    // const count = usernameExists[0].count; 
 
     // if (count > 0) {
     //   // Throw an error with status code 500
@@ -18,7 +19,9 @@ module.exports.registerUser = async (username, email, password, roles) => {
     //   error.status = 500;
     //   throw error;
     // }
+
     // insert the new user
+
     const registerUserQuery =
       'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
     const results = await pool.query(registerUserQuery, [
@@ -29,6 +32,7 @@ module.exports.registerUser = async (username, email, password, roles) => {
     ]);
     console.log(chalk.green(results));
     return results;
+
   } catch (error) {
     console.error(chalk.red('Error in registering new user: ', error)); //username prob already exists in database
     throw error;

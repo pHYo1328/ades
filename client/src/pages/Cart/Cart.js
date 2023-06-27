@@ -496,7 +496,7 @@ const Cart = () => {
         </table>
       </div>
       <div className={checkoutDynamicClassName}>
-        <div className="w-full bg-stone-700 p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
+        <div className="w-full bg-light-blue p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
           <div className="space-y-4 ">
             <h1 className="text-lg font-bold text-white">Shipping Address</h1>
             <div className="flex flex-row items-center">
@@ -620,7 +620,7 @@ const Cart = () => {
                     cartProductData
                   )
                 }
-                className="w-full px-3 py-2 bg-black text-white rounded-md text-base font-roboto"
+                className="w-full px-3 py-2 bg-dark-blue text-white rounded-md text-base font-roboto"
               >
                 Check out
               </button>

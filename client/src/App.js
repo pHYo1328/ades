@@ -49,8 +49,9 @@ function App() {
     '/products/edit/:productID:productID',
     '/products/create',
     '/homepage-admin',
+    '/users'
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/user-profile']; // Specify the routes where the header should be signed in headers
+  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/user-profile', '/cart', '/orderDelivered']; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
