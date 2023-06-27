@@ -112,11 +112,11 @@ const SignedInHeader = () => {
               Log out
             </button>
 
-            <Link to="/login-admin">
+            {/* <Link to="/login-admin">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Admin
               </button>
-            </Link>
+            </Link> */}
             
             <Link to="/user-profile">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
