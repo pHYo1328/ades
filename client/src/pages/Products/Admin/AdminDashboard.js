@@ -170,7 +170,8 @@ export default function AdminDashboard() {
         </div>
 
 
-        <div class="col-12">
+        <div className="col-span-12">
+
           <div className="flex justify-center mb-12">
             {/* link to go to orderStatus to manage the status of orders */}
             <Link to={'/admin/orderStatus'}>
