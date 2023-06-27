@@ -30,7 +30,7 @@ export default function Product(props) {
                     </p>
                 </div>
                 <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
+                    ${product.price}
                 </p>
             </div>
         </div>

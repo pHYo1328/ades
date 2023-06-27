@@ -11,9 +11,9 @@ const cld = new Cloudinary({
     },
 });
 
-export default function Product(props, { fetchProducts, fetchStatistics, setProducts, setRefunds }) {
+export default function Product({ product, products, refunds, setProducts, setRefunds, fetchProducts, fetchStatistics }) {
 
-    const { product, products, refunds } = props;
+    // const { product, products, refunds, setProducts, setRefunds } = props;
 
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -127,15 +127,17 @@ export default function Product(props, { fetchProducts, fetchStatistics, setProd
                                 axios
                                     .delete(`${baseUrl}/api/products/${productID}`)
                                     .then((res) => {
-                                        const updatedProducts = products.filter(
-                                            (p) => p.product_id !== productID
-                                        );
+                                        // const updatedProducts = products.filter(
+                                        //     (p) => p.product_id !== productID
+                                        // );
                                         toast.success(`Product deleted.`, {
                                             autoClose: 3000,
                                             pauseOnHover: true,
                                             style: { 'font-size': '16px' },
                                         });
-                                        setProducts(updatedProducts);
+                                        // setProducts(updatedProducts);
+                                        fetchProducts();
+                                        fetchStatistics();
                                     });
 
                                 // give partial refund to customers who ordered the deleted products

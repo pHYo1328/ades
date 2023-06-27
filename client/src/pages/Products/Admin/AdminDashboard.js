@@ -55,7 +55,7 @@ export default function AdminDashboard() {
       });
   };
 
-  useEffect(() => { fetchProducts() })
+  useEffect(() => { fetchProducts() }, [])
 
   // get the statistics
   const fetchStatistics = () => {
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
 
       <Statistics statistics={statistics} key={statisticsKey} />
 
-      <ProductList products={products} refunds={refunds} statistics={statistics} fetchProducts={fetchProducts} fetchStatistics={fetchStatistics} setRefunds={setRefunds} />
+      <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
 
       <div
         class="row my-2 mx-auto p-0"
@@ -137,9 +137,9 @@ export default function AdminDashboard() {
           class="col-12 justify-content-between d-flex"
           style={{ marginRight: 'auto', marginLeft: 'auto', width: '100%' }}
         >
-          <Brand fetchProducts={fetchProducts()} />
+          <Brand fetchProducts={() => fetchProducts()} />
 
-          <Category fetchProducts={fetchProducts()} />
+          <Category fetchProducts={() => fetchProducts()} />
         </div>
       </div>
 

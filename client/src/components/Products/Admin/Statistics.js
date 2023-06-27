@@ -12,10 +12,6 @@ export default function Statistics(props) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
     // const [statistics, setStatistics] = useState(null);
-
-
-
-
     return (
         <div>
             {/* shows the statistics */}
