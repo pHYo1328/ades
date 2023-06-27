@@ -3,3 +3,4 @@ sonar-project.properties
 .scannerwork/
 /node_modules
 /server/src/logs/reqLog.txt
+server/src/logs/reqLog.txt
