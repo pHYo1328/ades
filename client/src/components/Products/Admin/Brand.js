@@ -75,114 +75,86 @@ export default function Brand({ fetchProducts }) {
     };
 
     return (
-        <div
-            class="col-5 p-0"
-            style={{
-                height: '300px',
-                overflowY: 'scroll',
-                background: '#c2d9ff',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            }}
-        >
-            <div
-                class="py-2"
-                style={{
-                    position: 'sticky',
-                    top: '0',
-                    background: '#dff7ec',
-                    width: '100%',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}
-            >
-                <div
-                    className="row align-items-center col-11"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                    <div className="col-10 h5 font-weight-bold">Brands</div>
+        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4">
+            <div className="flex justify-center">
+                <div className="text-center text-xl mt-3 mb-3 font-bold">Brands</div>
+            </div>
+
+            <div className="flex flex-row justify-center mt-2 mb-4 mx-auto space-x-4">
+                <div className="w-3/5">
+                    <input
+                        type="text"
+                        className="border border-gray-300 rounded-md py-2 px-3 w-full"
+                        placeholder="Brand Name"
+                        value={brandName}
+                        onChange={(e) => setBrandName(e.target.value)}
+                    />
                 </div>
-                <div
-                    class="row col-12 mt-3"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                    <div class="col-8">
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Brand Name"
-                            value={brandName}
-                            onChange={(e) => setBrandName(e.target.value)}
-                        />
-                    </div>
-                    {/* adds new brand when clicked on create button */}
-                    <div class="col-4">
-                        <button
-                            class="btn btn-info w-100 col-6 text-dark mr-2"
-                            onClick={handleSubmitBrand}
-                        >
-                            Create <i class="bi bi-plus-circle"></i>
-                        </button>
-                    </div>
+                {/* adds new brand when clicked on create button */}
+                <div className="w-1/5">
+                    <button
+                        className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm h-100"
+                        onClick={handleSubmitBrand}
+                    >
+                        <i className="bi bi-plus-circle"></i>
+                    </button>
                 </div>
             </div>
-            <ul
-                role="list"
-                class="divide-y divide-gray-100"
-                style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
-            >
-                {/* shows all brands */}
-                {brands ? (
-                    brands.map((brand) => (
-                        <div class="d-flex flex-row row py-3 justify-content-around">
-                            <div class="col-6">
-                                <p class="text-sm font-semibold leading-6 text-gray-900">
-                                    {brand.brand_name}
-                                </p>
-                            </div>
-                            <div class="col-4 d-flex justify-content-end">
-                                <button
-                                    onClick={(e) => {
-                                        // delete the brand when the admin clicks on the trash icon to delete
-                                        e.preventDefault();
-                                        const brandID = brand.brand_id;
-                                        // confirm the deletion of brand, to prevent accidental deletions
-                                        const confirmed = window.confirm(
-                                            'Are you sure you want to delete?'
-                                        );
-                                        // if confirmed, proceed to delete
-                                        if (confirmed) {
-                                            axios
-                                                .delete(`${baseUrl}/api/brands/${brandID}`)
-                                                .then((res) => {
-                                                    const updatedBrands = brands.filter(
-                                                        (b) => b.brand_id !== brandID
-                                                    );
-                                                    toast.success(`Brand deleted.`, {
-                                                        autoClose: 3000,
-                                                        pauseOnHover: true,
-                                                        style: { 'font-size': '16px' },
+
+            <div className="overflow-y-scroll max-h-80">
+                <ul role="list" className="divide-y divide-gray-100 px-4 sm:px-4 md:px-3 lg:px-1">
+                    {/* shows all brands */}
+                    {brands ? (
+                        brands.map((brand) => (
+                            <li className="flex flex-row py-3 justify-between px-3">
+
+                                <div className="col-span-10 flex items-center">
+                                    <p className="text-sm font-semibold text-gray-900">{brand.brand_name}</p>
+                                </div>
+
+                                <div className="col-span-2 flex items-center">
+                                    <button
+                                        className="flex items-center"
+                                        onClick={(e) => {
+                                            // delete the brand when the admin clicks on the trash icon to delete
+                                            e.preventDefault();
+                                            const brandID = brand.brand_id;
+                                            // confirm the deletion of brand, to prevent accidental deletions
+                                            const confirmed = window.confirm('Are you sure you want to delete?');
+                                            // if confirmed, proceed to delete
+                                            if (confirmed) {
+                                                axios
+                                                    .delete(`${baseUrl}/api/brands/${brandID}`)
+                                                    .then((res) => {
+                                                        const updatedBrands = brands.filter((b) => b.brand_id !== brandID);
+                                                        toast.success(`Brand deleted.`, {
+                                                            autoClose: 3000,
+                                                            pauseOnHover: true,
+                                                            style: { 'font-size': '16px' },
+                                                        });
+                                                        setBrands(updatedBrands);
+                                                        fetchBrands();
+                                                        fetchProducts();
                                                     });
-                                                    setBrands(updatedBrands);
-                                                    fetchBrands();
-                                                    fetchProducts();
-                                                });
-                                        }
-                                    }}
-                                >
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
+                                            }
+                                        }}
+                                    >
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+
+                            </li>
+
+
+                        ))
+                    ) : (
+                        // Loading component (full screen)
+                        <div className="flex items-center justify-center h-screen">
+                            <Loading />
                         </div>
-                    ))
-                ) : (
-                    // Loading component (full screen)
-                    <div className="flex items-center justify-center h-screen">
-                        <Loading />
-                    </div>
-                )}
-            </ul>
+                    )}
+                </ul>
+            </div>
         </div>
     );
 }

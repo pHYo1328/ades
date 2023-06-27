@@ -15,7 +15,7 @@ export default function Rating(props) {
             .then((response) => {
                 console.log(response);
                 setRatings(response.data.data);
-                console.log("ratings");
+                console.log('ratings');
                 console.log(ratings);
             })
             .catch((error) => {
@@ -25,7 +25,6 @@ export default function Rating(props) {
 
     return (
         <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4">
-
             <div className="flex justify-center">
                 <div className="text-center text-xl mt-3 mb-3 font-bold">Reviews</div>
             </div>
@@ -35,15 +34,15 @@ export default function Rating(props) {
                     {/* shows all the ratings of the product by product ID */}
                     {ratings ? (
                         ratings.map((rating) => (
-                            <li className="flex flex-row py-3 justify-around ">
-                                <div className="col-2">
-                                    <i className="pl-2 sm:pl-2 md:pl-1 lg:pl-1 bi bi-person-circle"></i>
+                            <li className="flex flex-row py-3 justify-around">
+                                <div className="col-span-2">
+                                    <i className="bi bi-person-circle"></i>
                                 </div>
-                                <div className="col-7 flex items-center">
+                                <div className="col-span-7 flex items-center">
                                     <p className="text-sm font-semibold text-gray-900">{rating.comment}</p>
                                 </div>
 
-                                <div className="col-3 flex items-center">
+                                <div className="col-span-3 flex items-center">
                                     <div className="flex items-center">
                                         <svg
                                             aria-hidden="true"
@@ -66,11 +65,9 @@ export default function Rating(props) {
                         <div className="flex items-center justify-center h-screen">
                             <Loading />
                         </div>
-                    )
-                    }
-                </ul >
-            </div >
-        </div >
-
+                    )}
+                </ul>
+            </div>
+        </div>
     );
 }
