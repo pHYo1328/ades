@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // creates new user
-module.exports.registerUser = async (username, email, password, roles) => {
+module.exports.registerUser = async (username, email, password, roles, image_url) => {
   console.log(chalk.blue('User registered successfully'));
   try {
 
-     //  // Check if the username already exists in the database
+    //  // Check if the username already exists in the database
     // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
     // const usernameExists = await pool.query(checkUsernameQuery, [username]);
     // const count = usernameExists[0].count; 
@@ -23,12 +23,13 @@ module.exports.registerUser = async (username, email, password, roles) => {
     // insert the new user
 
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
+      'INSERT INTO users (username, email, password, roles, image_url) VALUES (?, ?, ?, ?, ?);';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
       password,
       roles,
+      image_url
     ]);
     console.log(chalk.green(results));
     return results;
@@ -88,26 +89,26 @@ module.exports.findUserByUsername = async (username) => {
   const query = 'SELECT * FROM users WHERE username = ?';
   const [foundUser] = await pool.query(query, [username]);
   console.log('find user by username found!');
-  return foundUser;  
+  return foundUser;
 };
 
-  // Update refreshToken for a user
-  module.exports.updateRefreshToken = async (
-    newRefreshTokenArray,
-    newRefreshToken,
-    userId
-  ) => {
-    const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
-    // updates refreshToken and create new array for the refreshToken for the same user
-    const values = [...newRefreshTokenArray, newRefreshToken, userId];
-    try {
-      const result = await pool.query(updateQuery, values);
-      return result;
-    } catch (error) {
-      console.error('Error updating refreshToken:', error);
-      throw error;
-    }
-  };
+// Update refreshToken for a user
+module.exports.updateRefreshToken = async (
+  newRefreshTokenArray,
+  newRefreshToken,
+  userId
+) => {
+  const updateQuery = 'UPDATE users SET refreshToken = ? WHERE customer_id = ?';
+  // updates refreshToken and create new array for the refreshToken for the same user
+  const values = [...newRefreshTokenArray, newRefreshToken, userId];
+  try {
+    const result = await pool.query(updateQuery, values);
+    return result;
+  } catch (error) {
+    console.error('Error updating refreshToken:', error);
+    throw error;
+  }
+};
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {

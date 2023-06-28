@@ -9,7 +9,9 @@ export default function ProductList({ products, refunds, setProducts, setRefunds
         <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
 
             <div className="flex items-center justify-between mb-3 mt-3">
-                <div className="w-9/12 text-left ml-10 text-xl font-bold">Products</div>
+                <div className="w-6/12 text-left ml-10 text-xl font-bold">Products</div>
+
+
 
                 <div className="w-3/12 mr-10">
                     <Link
