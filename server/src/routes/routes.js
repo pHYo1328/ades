@@ -226,13 +226,13 @@ module.exports = (app, router) => {
     checkoutController.createWebhooks
   ),
 
-  router.get(
-    '/api/paymentByStatus/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByStatus
-  );
+    router.get(
+      '/api/paymentByStatus/:orderID',
+      // verifyAccessToken.verifyToken,
+      paymentController.processGetPaymentByStatus
+    );
 
-    router.post('/processRefund/:orderID', checkoutController.processRefund);
+  router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
@@ -267,12 +267,14 @@ module.exports = (app, router) => {
 
   router.put('/update-userProfile', customerProfile.updateUserProfile);
 
+  router.put('/update-userProfileImage', customerProfile.updateProfileImage);
+
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin',forgotPasswordAdminController.handleForgotPassword);
+  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
   router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
 };
