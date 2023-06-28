@@ -1,12 +1,17 @@
+import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
+import DeleteModal from '../../modal/DeleteModal';
 
 export default function Brand({ fetchProducts }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+    const createButtonRef = useRef(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
     const [brands, setBrands] = useState(null);
     const [brandName, setBrandName] = useState('');
@@ -88,11 +93,19 @@ export default function Brand({ fetchProducts }) {
                         placeholder="Brand Name"
                         value={brandName}
                         onChange={(e) => setBrandName(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                createButtonRef.current.click();
+                            }
+                        }}
                     />
                 </div>
                 {/* adds new brand when clicked on create button */}
                 <div className="w-1/5">
                     <button
+                        ref={createButtonRef}
                         className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm h-100"
                         onClick={handleSubmitBrand}
                     >
@@ -113,20 +126,28 @@ export default function Brand({ fetchProducts }) {
                                 </div>
 
                                 <div className="col-span-2 flex items-center">
+
+
+
                                     <button
                                         className="flex items-center"
-                                        onClick={(e) => {
-                                            // delete the brand when the admin clicks on the trash icon to delete
-                                            e.preventDefault();
-                                            const brandID = brand.brand_id;
-                                            // confirm the deletion of brand, to prevent accidental deletions
-                                            const confirmed = window.confirm('Are you sure you want to delete?');
-                                            // if confirmed, proceed to delete
-                                            if (confirmed) {
+                                        onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
+                                    >
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button>
+                                    {/* Render the delete modal */}
+                                    {showDeleteModal && (
+                                        <DeleteModal
+                                            // id={brand.brand_id}
+                                            onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
+                                            onDelete={() => {
+                                                console.log("delete button is clicked")
+                                                setShowDeleteModal(false); // Close the modal
+
                                                 axios
-                                                    .delete(`${baseUrl}/api/brands/${brandID}`)
+                                                    .delete(`${baseUrl}/api/brands/${brand.brand_id}`)
                                                     .then((res) => {
-                                                        const updatedBrands = brands.filter((b) => b.brand_id !== brandID);
+                                                        const updatedBrands = brands.filter((b) => b.brand_id !== brand.brand_id);
                                                         toast.success(`Brand deleted.`, {
                                                             autoClose: 3000,
                                                             pauseOnHover: true,
@@ -136,11 +157,10 @@ export default function Brand({ fetchProducts }) {
                                                         fetchBrands();
                                                         fetchProducts();
                                                     });
-                                            }
-                                        }}
-                                    >
-                                        <i className="bi bi-trash-fill"></i>
-                                    </button>
+
+                                            }}
+                                        />
+                                    )}
                                 </div>
 
                             </li>

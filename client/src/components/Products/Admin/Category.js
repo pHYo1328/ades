@@ -1,12 +1,18 @@
+import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
+import DeleteModal from '../../modal/DeleteModal';
+
 
 export default function Category({ fetchProducts }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+    const createButtonRef = useRef(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
     const [categories, setCategories] = useState(null);
     const [categoryName, setCategoryName] = useState('');
@@ -88,11 +94,19 @@ export default function Category({ fetchProducts }) {
                         placeholder="Category Name"
                         value={categoryName}
                         onChange={(e) => setCategoryName(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                createButtonRef.current.click();
+                            }
+                        }}
                     />
                 </div>
                 <div className="w-1/5">
                     {/* adds new category when clicked on create button */}
                     <button
+                        ref={createButtonRef}
                         className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm h-100"
                         onClick={handleSubmitCategory}
                     >
@@ -110,7 +124,7 @@ export default function Category({ fetchProducts }) {
                                     <p className="text-sm font-semibold text-gray-900">{category.category_name}</p>
                                 </div>
                                 <div className="col-span-2 flex items-center">
-                                    <button
+                                    {/* <button
                                         onClick={(e) => {
                                             // delete the category when clicked on trash icon to delete
                                             e.preventDefault();
@@ -140,7 +154,42 @@ export default function Category({ fetchProducts }) {
                                         }}
                                     >
                                         <i className="bi bi-trash-fill"></i>
+                                    </button> */}
+
+                                    <button
+                                        className="flex items-center"
+                                        onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
+                                    >
+                                        <i className="bi bi-trash-fill"></i>
                                     </button>
+                                    {/* Render the delete modal */}
+                                    {showDeleteModal && (
+                                        <DeleteModal
+                                            // id={brand.brand_id}
+                                            onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
+                                            onDelete={() => {
+                                                console.log("delete button is clicked")
+                                                setShowDeleteModal(false); // Close the modal
+
+                                                axios
+                                                    .delete(`${baseUrl}/api/categories/${category.category_id}`)
+                                                    .then((res) => {
+                                                        const updatedCategories = categories.filter(
+                                                            (c) => c.category_id !== category.category_id
+                                                        );
+                                                        toast.success(`Category deleted.`, {
+                                                            autoClose: 3000,
+                                                            pauseOnHover: true,
+                                                            style: { 'font-size': '16px' },
+                                                        });
+                                                        setCategories(updatedCategories);
+                                                        fetchCategories();
+                                                        fetchProducts();
+                                                    });
+
+                                            }}
+                                        />
+                                    )}
                                 </div>
                             </li>
                         ))

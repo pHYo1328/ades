@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useRef } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,6 +14,11 @@ import Statistics from '../../../components/Products/Admin/Statistics';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const searchOrderButtonRef = useRef(null);
+
+  const [open, setOpen] = useState(true);
+
+  const cancelButtonRef = useRef(null);
 
   const [products, setProducts] = useState(null);
   const [statistics, setStatistics] = useState(null);
@@ -154,11 +160,19 @@ export default function AdminDashboard() {
                 placeholder="Enter Order ID"
                 value={orderID}
                 onChange={(e) => setOrderID(e.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    searchOrderButtonRef.current.click();
+                  }
+                }}
               />
             </div>
 
             <div className="flex items-center w-full sm:w-full md:w-1/4 lg:w-1/4 px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
               <button
+                ref={searchOrderButtonRef}
                 className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
                 onClick={handleSearchOrder}
               >
