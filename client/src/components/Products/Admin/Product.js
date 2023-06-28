@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import { ToastContainer, toast } from 'react-toastify';
+import DeleteModal from '../../modal/DeleteModal';
 import 'react-toastify/dist/ReactToastify.css';
 
 const cld = new Cloudinary({
@@ -16,6 +18,9 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
     // const { product, products, refunds, setProducts, setRefunds } = props;
 
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
     return (
         <div className="d-flex flex-row py-3 justify-content-around h-30 w-30">
@@ -114,56 +119,62 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                     >
                         <i className="bi bi-pencil-square"></i>
                     </Link>
-                    <button
-                        onClick={() => {
-                            // deletes the product when the admin clicks on the trash icon to delete
-                            const productID = product.product_id;
-                            // confirm whether the admin wants to delete or not, to prevent accidental deletions
-                            const confirmed = window.confirm(
-                                'Are you sure you want to delete?'
-                            );
-                            // if deletion is confirmed by admin, delete the product by using productID
-                            if (confirmed) {
-                                axios
-                                    .delete(`${baseUrl}/api/products/${productID}`)
-                                    .then((res) => {
-                                        // const updatedProducts = products.filter(
-                                        //     (p) => p.product_id !== productID
-                                        // );
-                                        toast.success(`Product deleted.`, {
-                                            autoClose: 3000,
-                                            pauseOnHover: true,
-                                            style: { 'font-size': '16px' },
+
+                    <div>
+                        <button
+                            onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
+                        >
+                            <i className="bi bi-trash-fill"></i>
+                        </button>
+                        {/* Render the delete modal */}
+                        {showDeleteModal && (
+                            <DeleteModal
+                                // id={product.product_id}
+                                onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
+                                onDelete={() => {
+                                    console.log("delete button is clicked")
+                                    setShowDeleteModal(false); // Close the modal
+
+                                    axios
+                                        .delete(`${baseUrl}/api/products/${product.product_id}`)
+                                        .then((res) => {
+                                            // const updatedProducts = products.filter(
+                                            //     (p) => p.product_id !== productID
+                                            // );
+                                            toast.success(`Product deleted.`, {
+                                                autoClose: 3000,
+                                                pauseOnHover: true,
+                                                style: { 'font-size': '16px' },
+                                            });
+                                            // setProducts(updatedProducts);
+                                            fetchProducts();
+                                            fetchStatistics();
                                         });
-                                        // setProducts(updatedProducts);
-                                        fetchProducts();
-                                        fetchStatistics();
+
+                                    // give partial refund to customers who ordered the deleted products
+                                    axios
+                                        .post(
+                                            `${baseUrl}/processPartialRefund/${product.product_id}`
+                                        )
+                                        .then((response) => {
+                                            console.log(response);
+                                            setRefunds(response.data.data);
+                                            console.log(refunds);
+                                        })
+                                        .catch((error) => {
+                                            console.error(error);
+                                        });
+
+                                    toast.success(`Giving partial refund now.`, {
+                                        autoClose: 3000,
+                                        pauseOnHover: true,
+                                        style: { 'font-size': '16px' },
                                     });
 
-                                // give partial refund to customers who ordered the deleted products
-                                axios
-                                    .post(
-                                        `${baseUrl}/processPartialRefund/${productID}`
-                                    )
-                                    .then((response) => {
-                                        console.log(response);
-                                        setRefunds(response.data.data);
-                                        console.log(refunds);
-                                    })
-                                    .catch((error) => {
-                                        console.error(error);
-                                    });
-
-                                toast.success(`Giving partial refund now.`, {
-                                    autoClose: 3000,
-                                    pauseOnHover: true,
-                                    style: { 'font-size': '16px' },
-                                });
-                            }
-                        }}
-                    >
-                        <i className="bi bi-trash-fill"></i>
-                    </button>
+                                }}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -49,7 +49,7 @@ export default function ProductEditForm() {
     getProducts();
   }, []);
 
-  console.log("product data:", productData);
+  // console.log("product data:", productData);
 
   // changes the details of the product as the user clicks on submit button
   const handleSubmit = async (event) => {
