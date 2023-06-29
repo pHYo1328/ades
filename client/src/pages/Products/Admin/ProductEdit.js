@@ -8,19 +8,6 @@ export default function ProductEdit() {
   const [editImage, setEditImage] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const roles = JSON.parse(localStorage.getItem('roles'));
-  //   console.log(roles);
-  //   const isAdmin = roles.includes('admin');
-  //   console.log(isAdmin);
-  //   if (!isAdmin) {
-  //     // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     alert("you're not admin");
-  //     console.log('Redirecting to homepage-admin');
-  //     navigate('/homepage');
-  //   }
-  // }, []);
-
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
     console.log(roles);
@@ -45,6 +32,7 @@ export default function ProductEdit() {
       <h3 class="h3 text-center mt-5 mb-5">EDIT PRODUCT</h3>
 
       <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '400px' }}>
+        {/* toggle button to toggle between ProductEditForm and EditImage components */}
         <button
           className="btn btn-outline-success w-100"
           onClick={() => {

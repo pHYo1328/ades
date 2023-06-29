@@ -78,21 +78,31 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
     console.log(chalk.blue('Executing query >>>', selectCartDataQuery));
     console.log(chalk.blue('Cart data values:', cartDataValues));
 
+    // First insert all cart data values if duplicate update the quantity
     let rows;
     if (cartData.length > 0) {
       console.log(chalk.blue('Executing query >>>', addCartDataQuery));
       rows = await pool.query(addCartDataQuery, [cartDataValues]);
       console.log(chalk.green('Row inserted:' + rows.affectedRows));
     }
+    
+    // and fetch all cart data for that customer id
     const existingCartData = await pool.query(selectCartDataQuery, [userId]);
     console.log(chalk.green('Existing cart data:', existingCartData));
+
+    // check that data is longer then new cart data, Yes means there extra data user has deleted in frontend
     if (existingCartData[0].length > cartData.length) {
+      // find make all cart item id as array then 
       const existingProductIDs = cartData.map((item) => item.productId);
       if (existingProductIDs.length === 0) {
+
+        // cart is deleted ? remove all data
         console.log(chalk.blue('Executing query >>>', deleteAllCartDataQuery));
         const [deleteRows] = await pool.query(deleteAllCartDataQuery, [userId]);
         console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
       } else {
+
+        // partially deleted, delete all cart item without that ids in cart data
         console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
         const [deleteRows] = await pool.query(deleteCartDataQuery, [
           userId,
@@ -108,6 +118,7 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
   }
 };
 
+// fetch data from cart MYSQL
 module.exports.getCartDataFromMySqlDB = async (userId) => {
   console.log(chalk.blue('getCartDataFromMySqlDB is called'));
   const getCartDataQuery = `SELECT product_id,quantity FROM cart WHERE customer_id =?`;
@@ -128,6 +139,7 @@ module.exports.getCartDataFromMySqlDB = async (userId) => {
   }
 };
 
+// delete all cart items from mysql
 module.exports.deleteCartDataInMySqlDB = async (userId) => {
   console.log(chalk.blue('deleteCartDataInMySqlDB is called'));
   const deleteCartDataQuery = `DELETE FROM cart WHERE customer_id = ?`;
@@ -143,6 +155,7 @@ module.exports.deleteCartDataInMySqlDB = async (userId) => {
   }
 };
 
+// get all cart productDetails with array of productIDs
 module.exports.getCartProductDetails = async (productIDs) => {
   console.log(chalk.blue('getCartProductDetails is called'));
   const productDetailsFetchQuery = `SELECT product.product_id,

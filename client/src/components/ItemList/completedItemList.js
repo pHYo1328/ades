@@ -22,13 +22,17 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const handleRateItemClick = (index) => {
+    // make array to handle all items for the state with index
     const updatedShowRatingForm = [...showRatingForm];
+    // change opposite state of previous value to make sure to close or open
     updatedShowRatingForm[index] = !updatedShowRatingForm[index];
     setShowRatingForm(updatedShowRatingForm);
   };
 
   const handleRatingClick = (index, ratingValue) => {
+    // same concept with above function
     const updatedRating = [...rating];
+    // add the rating value
     updatedRating[index] = ratingValue;
     setRating(updatedRating);
   };

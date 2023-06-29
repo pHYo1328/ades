@@ -20,9 +20,13 @@ const cld = new Cloudinary({
 });
 
 const plusButtonHandler = (cartData, productId, updateCartData) => {
+  //create a new array with new data for the cart 
   const updatedCart = cartData.map((item) =>
+  // find the item with productId
     item.productId == productId
+    // if it exists, update the quantity plus one
       ? { ...item, quantity: item.quantity + 1 }
+      // else. return that item
       : item
   );
   console.log(updatedCart);
@@ -31,6 +35,7 @@ const plusButtonHandler = (cartData, productId, updateCartData) => {
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
   const updatedCart = cartData.map((item) =>
+  // same concept with plus button handler but here it cannot go under 1
     item.productId == productID && item.quantity > 1
       ? { ...item, quantity: item.quantity - 1 }
       : item
@@ -51,11 +56,14 @@ const deleteButtonHandler = (
       {
         label: 'Yes',
         onClick: () => {
+          // filter out the deleted item productID and create a new array without that 
           const filteredProducts = cartData.filter(
             (item) => item.productId != productID
           );
           console.log(filteredProducts);
           updateCartData(filteredProducts);
+          // recalulate the total amount after the deletion 
+          // with reduce, set the intial value as 0 sum all the data
           const overallTotalAmount = filteredProducts
             .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
             .toFixed(2);
@@ -116,12 +124,17 @@ const Cart = () => {
   }, []);
   const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
+    // cart data:{productId: , quantity: }
+    // productDetails:{ all data from database}
+    // create new array of cartData with details with map
     const itemsDetailsToShow = cartData
       .map((cartItem) => {
+        // find product which contains the same productId
         const cartInfo = productDetails.find(
           (item) => cartItem.productId == item.product_id
         );
 
+        // if found, calculate total amount for that cart item and combine two data from productDetails and cartData
         if (cartInfo) {
           const totalAmount = parseFloat(
             cartInfo.price * cartItem.quantity
@@ -135,8 +148,9 @@ const Cart = () => {
           return null;
         }
       })
-      .filter((item) => item !== null); // Filter out the null values
+      .filter((item) => item !== null); // Filter out the null values means inside database this cart item is not available anymore
     console.log(itemsDetailsToShow);
+    // same concept as above calculate total amount for all cart items
     const overallTotalAmount = itemsDetailsToShow
       .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
       .toFixed(2);
@@ -150,6 +164,7 @@ const Cart = () => {
     shippingMethod,
     cartProductData
   ) => {
+    // if user never choose shipping method prompt here to choose
     if (!shippingMethod) {
       toast.error('Please select shipping method', {
         autoClose: 3000,
@@ -160,6 +175,7 @@ const Cart = () => {
     }
     let isStockAvailable = true;
     let alertString = [];
+    // if user check out with empty cart, say error 
     if (!cartProductData) {
       toast.error('Please add items to cart to checkout', {
         autoClose: 3000,
@@ -168,19 +184,26 @@ const Cart = () => {
       });
       return;
     }
+    // make new array with map to fetch inventory quantity to check in Stock 
     const productIDs = cartProductData.map((item) => item.product_id);
+    // make new array with map to check inventory quantity with the data from database
     const cartData = cartProductData.map((item) => ({
       productId: item.product_id,
       quantity: item.quantity,
     }));
+    // fetch inventory quantity
     api
       .get(`/api/inventory/checkQuantity?productIDs=${productIDs.join(',')}`)
       .then((response) => {
         console.log(response.data.data);
+        // for all the data inside response from database
         response.data.data.forEach((inventory) => {
+          // find index of particular product id 
           const quantityIndex = cartData.findIndex(
             (item) => item.productId == inventory.product_id
           );
+          // and check that quantity index is -1 or less the cart quantity
+          // if less then cart quantity, change the state and make alert string to tell user which order is not avaliable
           if (
             quantityIndex !== -1 &&
             inventory.quantity < cartData[quantityIndex].quantity
@@ -196,6 +219,7 @@ const Cart = () => {
           }
         });
         if (!isStockAvailable) {
+          // to alert all strings value use forEach method
           alertString.forEach((string) => {
             toast.error(string, {
               autoClose: 3000,
@@ -205,7 +229,7 @@ const Cart = () => {
           });
           return;
         }
-
+        // if all instock send data to database and set CheokoutSuccessful status
         const requestBody = {
           shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
           totalPrice: totalPrice,
@@ -229,6 +253,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // fetch oncnce all data from database
         setIsLoading(true);
         const response = await api.get(`api/cart/${customerID}`);
         const cartData = response.data.data;
@@ -237,6 +262,7 @@ const Cart = () => {
         setShippingMethod(shippingData.data.data);
         if (cartData.length > 0) {
           var productIDs = [];
+          // fetch all products accroding cart data
           cartData.forEach((cartItem) => {
             productIDs.push(cartItem.productId);
           });
@@ -256,8 +282,12 @@ const Cart = () => {
   }, [customerID]);
   useEffect(() => {
     return () => {
+      // clear function after component dismounted
+      // need to update only when lastCartData is existed
       if (latestCartData.current.length >= 0) {
         if (!checkoutSuccessfulRef.current) {
+          // if checkoutSuccessful is still false mean never checkout so
+          // keep the data to redis and database
           api
             .post(`/api/cart/${customerID}`, {
               cartData: latestCartData.current,
@@ -266,6 +296,7 @@ const Cart = () => {
               console.log(response);
             });
         } else {
+          // checkout successful, delete all the cart data from both 
           api.delete(`/api/cart/${customerID}`).then((response) => {
             console.log(response);
           });
@@ -275,18 +306,21 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
+    // once checkout chnage make ref.current to checkoutsuccessful;
     checkoutSuccessfulRef.current = checkoutSuccessful;
     if (checkoutSuccessful) {
       navigate(`/payment/${orderId}`);
     }
   }, [checkoutSuccessful]);
   const handleChange = (event) => {
+    // handler for all changes for shipping address input
     setAddress({
       ...address,
       [event.target.name]: event.target.value,
     });
   };
   useEffect(() => {
+    // this useEffect is for everytime cartData or productdetails change remanipulate all data to show
     latestCartData.current = cartData;
     if (cartData.length > 0) {
       if (productDetails && productDetails.length > 0) {

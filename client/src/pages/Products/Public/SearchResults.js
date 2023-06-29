@@ -17,6 +17,7 @@ export default function SearchResults() {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const clientUrl = process.env.REACT_APP_DOMAIN_BASE_URL;
 
+  // gets the products based on the search results
   useEffect(() => {
     const query = window.location.href.split(`${clientUrl}/`)[1];
     axios
@@ -41,18 +42,14 @@ export default function SearchResults() {
         </h2>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+          {/* if the product has results, show the products */}
           {hasResults ? (
             products ? (
+              // shows all the product results
               products.map((product) => (
-                <div
-                  key={product.product_id}
-                  className="group relative"
-                  // onClick={() => {
-                  //   const productID = product.product_id;
-                  //   window.location.href = `/products/${productID}`;
-                  // }}
-                >
+                <div key={product.product_id} className="group relative">
                   <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
+                    {/* get the product image from Cloudinary */}
                     <AdvancedImage cldImg={cld.image(product.image_url)} />
                   </div>
                   <div className="mt-4 flex justify-between">
@@ -77,9 +74,9 @@ export default function SearchResults() {
                 </div>
               ))
             ) : (
+              // if not results match the search
               <div>
-                {' '}
-                <p>No results found</p>{' '}
+                <p>No results found</p>
               </div>
             )
           ) : (

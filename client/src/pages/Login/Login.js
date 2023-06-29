@@ -22,34 +22,30 @@ function Login() {
       password: password,
     };
 
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          localStorage.setItem('accessToken', data.accessToken);
-          localStorage.setItem('userid', data.userid);
-          localStorage.setItem('roles', JSON.stringify(data.roles));
-          document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
-          // setIsSignedIn(true); //add to logout
-          setErrorMessage('');
-          alert('successful login');
-          navigate('/verify-otp');
-        } else {
-          setErrorMessage('Incorrect username or password');
-          alert('Incorrect username or password');
-        }
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       })
-      .catch((error) => {
-        console.error(error);
-        setErrorMessage('An error occurred. Please try again.');
-      });
-  };
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+
+            setErrorMessage('');
+            alert("successful login");
+            navigate('/verify-otp', { state: data });
+          } else {
+            setErrorMessage('Incorrect username or password');
+            alert('Incorrect username or password');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setErrorMessage('An error occurred. Please try again.');
+        });
+    };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {

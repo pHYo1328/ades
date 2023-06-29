@@ -20,6 +20,7 @@ module.exports.addCustomerOrder = async (data) => {
                     VALUES ?
                     `;
   console.log(chalk.blue('Creating connection...'));
+  // manullyu creating connections to get all possible connections
   const connection = await pool.getConnection();
   console.log(
     chalk.blue(
@@ -28,19 +29,23 @@ module.exports.addCustomerOrder = async (data) => {
   );
   try {
     console.log(chalk.blue('Starting transaction'));
+    // open transation
     await connection.beginTransaction();
+    // create uuid for the order id
     const uuid = uuidv4();
     const orderData = [
       [uuid, customerID, shippingAddr, totalPrice, shippingMethod],
     ];
     console.log(chalk.blue('Executing query >>>>>>'), addOrderQuery);
     const [orderResult] = await connection.query(addOrderQuery, [orderData]);
+    // if order inserted successfully manipulate data to insert into order_item
     const orderItemsData = orderItems.map((item) => [
       uuid,
       item.productId,
       item.quantity,
     ]);
     console.log(orderItemsData);
+    //multiple insert with 2 dimensional array
     const result = await connection.query(addOrderItemsQuery, [orderItemsData]);
     await connection.commit();
     console.log(
@@ -48,16 +53,19 @@ module.exports.addCustomerOrder = async (data) => {
     );
     return uuid;
   } catch (error) {
+    // if error, rollback to initial state before insertion
     await connection.rollback();
     console.error(
       chalk.red('Error in inserting order and order items data:', error)
     );
     throw error;
   } finally {
+    // then release all  connections
     connection.release();
   }
 };
 
+// get order details before and after payment
 module.exports.getOrderDetailsByOrderStatus = async (data) => {
   console.log(chalk.blue('getOrderDetailsBeforePickUp is called'));
   const { customerID, orderStatus } = data;
@@ -110,6 +118,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
         'database is connected in order.services.js getOrderDetailsByOrderStatus function'
       )
     );
+    // if order status is order_received, payement date is not available
     if (orderStatus === OrderStatus.ORDER_RECEIVED) {
       console.log(chalk.blue('Executing query >>>>>>'), orderBeforePaidQuery);
       const dataRequired = [customerID, orderStatus.key];
@@ -118,6 +127,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
         chalk.green('Fetched Data according to order status >>>', result)
       );
       return result[0];
+      // or else take all date
     } else if (
       orderStatus === OrderStatus.ORDER_DELIVERED ||
       orderStatus === OrderStatus.ORDER_DELIVERING ||
@@ -137,6 +147,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
   }
 };
 
+// fetch all orders with paid and delivering status
 module.exports.getOrderDetailsForAdmin = async () => {
   console.log(chalk.blue('getOrderDetailsForAdmin is called'));
   const orderQuery = `SELECT orders.order_id,
@@ -166,6 +177,7 @@ module.exports.getOrderDetailsForAdmin = async () => {
   }
 };
 
+// update orders by Admin
 module.exports.updateOrderStatus = async (data) => {
   console.log(chalk.blue('updateOrderStatus is called'));
   const { orderIDs, orderStatus } = data;
@@ -181,6 +193,7 @@ module.exports.updateOrderStatus = async (data) => {
     );
     const dataRequired = [orderStatus.key, orderIDs];
     let result;
+    // if order_status is delivering update the status and shippig time 
     if (orderStatus === OrderStatus.ORDER_DELIVERING) {
       console.log(
         chalk.blue('Executing query >>>>>>'),
@@ -190,6 +203,7 @@ module.exports.updateOrderStatus = async (data) => {
       console.log(chalk.green(`updated order status`));
       return result[0].affectedRows;
     }
+    // or deliverd, update status and completed with UTC
     if (orderStatus === OrderStatus.ORDER_DELIVERED) {
       console.log(
         chalk.blue('Executing query >>>>>>'),
@@ -205,6 +219,7 @@ module.exports.updateOrderStatus = async (data) => {
   }
 };
 
+// Cancel the order
 module.exports.updateShippingDetails = async (data) => {
   console.log(chalk.blue('updateShippingDetails is called'));
   const { customerID, orderId, shippingAddr, shippingMethod } = data;

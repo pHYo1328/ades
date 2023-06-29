@@ -123,7 +123,7 @@ const UserInfo = () => {
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user) => (
+              {currentUsers.map((user) => ( //loop through all the users
                 <User
                   key={user.customer_id}
                   user={user}

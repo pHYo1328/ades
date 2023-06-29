@@ -6,7 +6,7 @@ import { AdvancedImage } from '@cloudinary/react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FadeLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
-
+import UserSignedInHeader from '../../components/header/userSignedInHeader';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -25,7 +25,6 @@ export default function LandingPage() {
   const [productBrand, setProductBrand] = useState();
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-  // get 5 latest arrivals
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/products/new`)
@@ -39,7 +38,6 @@ export default function LandingPage() {
       });
   }, []);
 
-  // gets all the brand names for drop down select
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -53,7 +51,6 @@ export default function LandingPage() {
       });
   }, []);
 
-  // gets all the category names for drop down select
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -68,6 +65,8 @@ export default function LandingPage() {
   }, []);
 
   return (
+    <div>
+        <UserSignedInHeader />
     <div
       className="bg-white w-full"
       style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -130,7 +129,6 @@ export default function LandingPage() {
                 <option disabled selected value>
                   -- CATEGORY --
                 </option>
-                {/* shows all the categories for drop down select */}
                 {categories ? (
                   categories.map((category) => (
                     <option value={category.category_id}>
@@ -164,7 +162,6 @@ export default function LandingPage() {
                 <option disabled selected value>
                   -- BRAND --
                 </option>
-                {/* shows all the brands for drop down select */}
                 {brands ? (
                   brands.map((brand) => (
                     <option value={brand.brand_id}>{brand.brand_name}</option>
@@ -190,12 +187,10 @@ export default function LandingPage() {
             <button
               type="button"
               class="btn btn-outline-primary w-100"
-              // calls the search endpoint
               onClick={() => {
                 let url = '/search';
                 const queryParams = [];
 
-                // adds to the query params based on user input
                 if (productName)
                   queryParams.push(`product_name=${productName}`);
                 if (productCategory)
@@ -245,12 +240,10 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-          {/* shows all the 5 latest arrivals */}
           {products ? (
             products.map((product) => (
               <div key={product.product_id} className="group relative">
                 <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                  {/* shows the image from Cloudinary */}
                   <AdvancedImage cldImg={cld.image(product.image_url)} />
                 </div>
                 <div className="mt-4 flex justify-between">
@@ -288,5 +281,6 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
+</div>
   );
 }

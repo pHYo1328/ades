@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 const cartServices = require('../services/cart.services');
 
+
+// controller for adding data to both redis and mysql databases
 exports.processAddCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));
   const { userID } = req.params;
@@ -16,6 +18,7 @@ exports.processAddCartData = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
+    // write concurrently to both databases
     const result = await Promise.all([
       cartServices.addCartDataToRedis(userID, cartData),
       cartServices.addCartDataToMySqlDB(userID, cartData),
@@ -35,6 +38,7 @@ exports.processAddCartData = async (req, res, next) => {
 };
 
 // for reading, decided to use cache aside
+// controller to get the cart data
 exports.processGetCartData = async (req, res, next) => {
   console.log(chalk.blue('processGetCartData is running'));
   const { userID } = req.params;
@@ -73,6 +77,7 @@ exports.processGetCartData = async (req, res, next) => {
   }
 };
 
+// controller to delete cart data from redis and mysql database
 exports.processDeleteCartData = async (req, res, next) => {
   console.log(chalk.blue('processDeleteCartData is running'));
   const { userID } = req.params;
@@ -84,6 +89,7 @@ exports.processDeleteCartData = async (req, res, next) => {
       throw error;
     }
     console.log(chalk.yellow('Inspect userID variable\n'), userID);
+    // delete concurrently
     const result = await Promise.all([
       cartServices.deleteCartDataInRedis(userID).catch((error) => {
         console.error('redis error', error);
@@ -106,6 +112,7 @@ exports.processDeleteCartData = async (req, res, next) => {
   }
 };
 
+//controllers to fetch all cart data details
 exports.processGetCartProductData = async (req, res, next) => {
   console.log(chalk.blue('processGetCartProductData is running'));
   const productIDs = req.query.productIDs.split(',');

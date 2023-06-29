@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import api from '../../index';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const VerifyOTP = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,8 +23,15 @@ const VerifyOTP = () => {
       console.log(response);
       if (response.ok) {
         console.log('Successful OTP verification');
-        alert('successful OTP');
-        navigate('/homepage');
+        alert("successful OTP");
+
+        const data = location.state; //pass data from Login.js
+        
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('userid', data.userid);
+        localStorage.setItem('roles', JSON.stringify(data.roles));
+        document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+        navigate('/userLanding');
       } else {
         alert('Invalid OTP');
         console.log('Invalid OTP');

@@ -27,6 +27,7 @@ export default function ProductCreate() {
 
   const navigate = useNavigate();
 
+  // get all categories for drop down select
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/category`)
@@ -40,6 +41,7 @@ export default function ProductCreate() {
       });
   }, []);
 
+  // get all brands for drop down select
   useEffect(() => {
     axios
       .get(`${baseUrl}/api/brands`)
@@ -52,18 +54,6 @@ export default function ProductCreate() {
         console.error(error);
       });
   }, []);
-  // useEffect(() => {
-  //   const roles = JSON.parse(localStorage.getItem('roles'));
-  //   console.log(roles);
-  //   const isAdmin = roles.includes('admin');
-  //   console.log(isAdmin);
-  //   if (!isAdmin) {
-  //     // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     alert("you're not admin");
-  //     console.log('Redirecting to homepage-admin');
-  //     navigate('/homepage');
-  //   }
-  // }, []);
 
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
@@ -84,10 +74,12 @@ export default function ProductCreate() {
     }
   }, []);
 
+  // creates a new product when the admin clicks on submit
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
 
+    // validate data
     if (
       !productName ||
       !productDescription ||
@@ -205,6 +197,7 @@ export default function ProductCreate() {
             <option disabled selected value>
               -- CATEGORY --
             </option>
+            {/* shows all categories */}
             {categories ? (
               categories.map((category) => (
                 <option value={category.category_id}>
@@ -238,6 +231,7 @@ export default function ProductCreate() {
             <option disabled selected value>
               -- BRAND --
             </option>
+            {/* shows all brands */}
             {brands ? (
               brands.map((brand) => (
                 <option value={brand.brand_id}>{brand.brand_name}</option>
@@ -263,6 +257,7 @@ export default function ProductCreate() {
         <UploadWidget onImageChange={handleImageChange} />
       </div>
       <div class="col-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+        {/* creates new product when the submit button is clicked */}
         <button
           type="submit"
           id="submit"
@@ -273,6 +268,5 @@ export default function ProductCreate() {
         </button>
       </div>
     </form>
-    // </>
   );
 }

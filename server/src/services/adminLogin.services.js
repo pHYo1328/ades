@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 module.exports.registerAdmin = async (username, email, password, roles) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-    // insert the new user
+    // insert the new admin
     const registerAdminQuery =
       'INSERT INTO admin (username, email, password, roles) VALUES (?, ?, ?, ?);';
     const results = await pool.query(registerAdminQuery, [
@@ -31,7 +31,7 @@ module.exports.loginAdmin = async (username) => {
     const loginAdminQuery =
       'SELECT admin_id,username,password,roles FROM admin WHERE username = ?';
     const results = await pool.query(loginAdminQuery, [username]);
-    console.log(chalk.red(JSON.stringify(results[0])));
+    console.log(chalk.red(JSON.stringify(results[0]))); // prints out the admin logged in
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in logging admin in: ', error));
@@ -117,11 +117,11 @@ module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM admin WHERE email = ?';
   const updatePasswordQuery = 'UPDATE admin SET password = ? WHERE email = ?';
   try {
-    // Get the previous hashed password
+    // Get the previous hashed password 
     const [rows] = await pool.query(getPasswordQuery, [email]);
 
     if (rows.length === 0) {
-      // User not found
+      // User is not found
       console.log('Admin not found');
       return false;
     }
@@ -131,20 +131,20 @@ module.exports.forgotPassword = async (email, newPassword) => {
     console.log(previousHashedPwd);
     console.log(newPassword);
 
-    // Compare the new hashed password with the previous hashed password
+    // Compare the new hashed password with the previous hashed password 
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
-      // password is the same as the previous password
+      // if password is the same as the previous password
       console.log(
         'New password is the same as the previous password for admin'
       );
       return false;
     }
 
-    // Encrypt the new password
+    // Encrypt the new password 
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
-    // Update the password
+    // Update the password into the database
     const updateResult = await pool.query(updatePasswordQuery, [
       hashedPwd,
       email,
@@ -152,11 +152,11 @@ module.exports.forgotPassword = async (email, newPassword) => {
 
     if (updateResult.affectedRows === 0) {
       console.log('Password update failed');
-      return false; // prob due to email
+      return false; // prob due to wrong email
     }
 
     console.log('Password updated successfully');
-    return true; // Password updated successfully
+    return true; // Password updated successfully 
   } catch (error) {
     console.error('Error in updating password: ', error);
     throw error;
@@ -173,15 +173,16 @@ module.exports.verifyOTP = async (otp) => {
 
     const rows = result[0];
     if (rows.length > 0) {
-      const savedOTP = rows[0].otp;
+      const savedOTP = rows[0].otp; //finds OTP from database
 
-      if (otp === savedOTP) {
+      if (otp === savedOTP) { // compares OTP with inputted OTP
         // OTP verification successful
         console.log('otp same as db otp for admin');
         return true;
       } else {
         // Invalid OTP
         console.log('ITS WRONG');
+
         return false;
       }
     } else {

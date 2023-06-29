@@ -15,6 +15,7 @@ const createHTMLContent = (customerProducts) => {
 };
 
 module.exports.sendEmail = (customer, customerProducts) => {
+  // copy and modify from sendinblue documentation
   return sendInBlue
     .sendTransacEmail({
       subject: 'Hello from Our TechZero',

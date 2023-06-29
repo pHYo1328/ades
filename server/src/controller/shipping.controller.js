@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const shippingService = require('../services/shipping.service');
 
+// controller for fetching shipping methods
 exports.processFetchShippingMethod = async (req, res, next) => {
   console.log(chalk.blue('processFetchShippingMethod is running'));
   try {

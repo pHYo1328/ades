@@ -33,13 +33,10 @@ function Login() {
         console.log('this is my' + data);
         if (data.success) {
           console.log('Admin login successful');
-          localStorage.setItem('accessToken', data.accessToken);
-          localStorage.setItem('admin_id', data.userid);
-          localStorage.setItem('roles', JSON.stringify(data.roles));
-          document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
+          
           setErrorMessage('');
           alert('successful admin login');
-          navigate('/verify-otp-admin');
+          navigate('/verify-otp-admin', { state: data });
         } else {
           console.log('Admin login failed');
           setErrorMessage('Incorrect username or password');
