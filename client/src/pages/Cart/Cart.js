@@ -309,10 +309,10 @@ const Cart = () => {
   return (
     <div className="flex flex-row">
       <div className={cartListDynamicClassName}>
-        <h2 className="font-roboto py-4 flex flex-row">
+        <h2 className="font-breezeBold py-4 flex flex-row">
           My Shopping Cart <FaShoppingCart />
         </h2>
-        <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black">
+        <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black font-breezeRegular">
           <thead className=" text-base border-b-2 md:text-xl">
             <tr>
               <th className="w-1/8">My Cart</th>
