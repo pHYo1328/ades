@@ -49,7 +49,7 @@ export default function ProductEditForm() {
     getProducts();
   }, []);
 
-  console.log("product data:", productData);
+  // console.log("product data:", productData);
 
   // changes the details of the product as the user clicks on submit button
   const handleSubmit = async (event) => {
@@ -108,132 +108,129 @@ export default function ProductEditForm() {
   };
 
   return (
-    <div>
-      <form
-        id="create-product-form"
-        class="w-50 mt-5"
-        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-        encType="multipart/form-data"
-      >
-        {/* shows the details of the product if the product exists */}
-        {productData ? (
-          <div>
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                Product Name
-              </label>
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                defaultValue={productData.product_name}
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                Description
-              </label>
-              <textarea
-                className="form-control form-control-sm"
-                placeholder="Description"
-                rows={3}
-                defaultValue={productData.description}
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
-              />
-            </div>
-            <div className="row">
-              <div className="mb-3 col-6">
-                <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                  Price
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  className="form-control form-control-sm"
-                  defaultValue={productData.price}
-                  value={productPrice}
-                  onChange={(e) => setProductPrice(e.target.value)}
-                  placeholder="Price"
-                />
-              </div>
-              <div className="mb-3 col-6">
-                <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                  Inventory (Quantity)
-                </label>
-                <input
-                  min="0"
-                  type="number"
-                  className="form-control form-control-sm"
-                  placeholder="Inventory (Quantity)"
-                  defaultValue={productData.quantity}
-                  value={productQuantity}
-                  onChange={(e) => setProductQuantity(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="mb-3 col-6">
-                <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                  Category
-                </label>
-                <Categories
-                  setCategoryID={setProductCategory}
-                  all={false}
-                  edit={true}
-                  productData={productData}
-                />
-              </div>
-              <div className="mb-3 col-6">
-                <label htmlFor="exampleFormControlInput1" className="form-label h6">
-                  Brand
-                </label>
-                <Brands
-                  setBrandID={setProductBrand}
-                  all={false}
-                  edit={true}
-                  productData={productData}
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          // Loading component (full screen)
-          <div className="flex items-center justify-center h-screen">
-            <Loading />
-          </div>
-        )}
-
-
-        <div class="d-flex justify-content-center gap-3">
-          <div class="col-5 text-dark">
-            <button
-              type="submit"
-              id="submit"
-              class="btn btn-outline-success mb-3 w-100"
-              onClick={handleSubmit}
-            >
-              Save
-            </button>
-            <ToastContainer
-              limit={2}
-              newestOnTop={true}
-              position="top-center"
+    <form
+      id="create-product-form"
+      style={{ marginLeft: 'auto', marginRight: 'auto' }}
+      encType="multipart/form-data"
+    >
+      {/* shows the details of the product if the product exists */}
+      {productData ? (
+        <div>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+              Product Name
+            </label>
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              defaultValue={productData.product_name}
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
             />
           </div>
-          <div class="col-5 text-dark">
-            <Link
-              to="/products/admin"
-              id="submit"
-              class="btn btn-outline-danger mb-3 w-100"
-            >
-              Discard Changes
-            </Link>
+
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+              Description
+            </label>
+            <textarea
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              placeholder="Description"
+              rows={3}
+              defaultValue={productData.description}
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Price
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                defaultValue={productData.price}
+                value={productPrice}
+                onChange={(e) => setProductPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Inventory
+              </label>
+              <input
+                min="0"
+                type="number"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                placeholder="Inventory (Quantity)"
+                defaultValue={productData.quantity}
+                value={productQuantity}
+                onChange={(e) => setProductQuantity(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Category
+              </label>
+              <Categories
+                setCategoryID={setProductCategory}
+                all={false}
+                edit={true}
+                productData={productData}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Brand
+              </label>
+              <Brands
+                setBrandID={setProductBrand}
+                all={false}
+                edit={true}
+                productData={productData}
+              />
+            </div>
           </div>
         </div>
-      </form>
-    </div>
+      ) : (
+        // Loading component (full screen)
+        <div className="flex items-center justify-center h-screen">
+          <Loading />
+        </div>
+      )}
+
+
+      <div className="flex justify-between mt-4 space-x-4">
+        <div className="mb-3 w-6/12">
+          <button
+            type="submit"
+            id="submit"
+            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100 flex items-center justify-center text-center"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+        <div className="mb-3 w-6/12">
+          <Link
+            to="/products/admin"
+            id="submit"
+            className="bg-light-blue  text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full flex items-center justify-center text-center hover:shadow-lg"  >
+            Discard Changes
+          </Link>
+        </div>
+      </div>
+
+      <ToastContainer
+        limit={2}
+        newestOnTop={true}
+        position="top-center"
+      />
+    </form>
   );
 }

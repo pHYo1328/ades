@@ -13,10 +13,11 @@ export default function Product(props) {
 
     return (
         <div key={product.product_id} className="group relative">
-            <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
+            <div className="h-70 w-100 aspect-square w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75">
                 {/* shows the image from Cloudinary */}
-                <AdvancedImage cldImg={cld.image(product.image_url)} />
+                <AdvancedImage cldImg={cld.image(product.image_url)} className="h-full w-full" />
             </div>
+
             <div className="mt-4 flex justify-between">
                 <div className="text-left">
                     <h3 className="text-sm text-gray-700">
@@ -30,7 +31,7 @@ export default function Product(props) {
                     </p>
                 </div>
                 <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
+                    ${product.price}
                 </p>
             </div>
         </div>

@@ -900,6 +900,7 @@ module.exports.createBrandOrCategory = async (name, type) => {
       error.sqlMessage.includes('Duplicate entry')
     ) {
       console.log(chalk.red('Duplicate entry error:', error.sqlMessage));
+      console.log("thinzar no rizz")
       return -1;
     }
     // throw error;

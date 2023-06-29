@@ -16,7 +16,8 @@ const handleNewUser = async (req, res) => {
       username,
       email,
       hashedPwd,
-      'customer'
+      'customer',
+      'ades/default_profile'
     );
 
     console.log(result);

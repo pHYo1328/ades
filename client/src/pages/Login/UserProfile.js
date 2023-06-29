@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import ProfileWidget from '../../components/cloudinary/ProfileWidget';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -17,8 +18,10 @@ const UserProfile = () => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
+  const [image, setImage] = useState(null);
   const url = `${baseUrl}/user-profile`;
   const url2 = `${baseUrl}/update-userProfile`;
+  const url3 = `${baseUrl}/update-userProfileImage`
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,9 +45,9 @@ const UserProfile = () => {
   }, []);
 
   const updateUserProfile = async () => {
-    
+
     try {
-      
+
       const response = await fetch(url2, {
         method: 'PUT',
         headers: {
@@ -73,6 +76,34 @@ const UserProfile = () => {
     setUser({ ...user, password: e.target.value });
   };
 
+  // sets the image path when the user uploads an image
+  const handleImageChange = (path) => {
+    console.log('Selected image path:', path);
+    setImage(path);
+  };
+
+  const updateProfileImage = async () => {
+    try {
+      const response = await fetch(url3, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image_url: image,
+          customer_id: user.customer_id,
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      console.log('User profile image updated successfully.');
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating user profile image:', error);
+    }
+  };
+
 
   return (
     <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
@@ -94,72 +125,83 @@ const UserProfile = () => {
             {user && (
               <div className="bg-white shadow-lg h-full p-8 rounded-tr-lg rounded-br-lg">
                 <h2 className="text-4xl text-center font-bold mb-4">User Information</h2>
-                  <div className="space-y-6">
+                <div className="space-y-6">
+                  <AdvancedImage key={image} cldImg={cld.image(user.image_url)} className="h-50 w-50" />
                   <div className="flex items-center">
-                        <span className="font-semibold w-28 text-lg">Username:</span>
-                        {editingUsername ? (
-                          <input
-                            type="text"
-                            className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingUsername ? 'opacity-100' : 'opacity-0 scale-95'}`}
-                            value={user.username}
-                            onChange={handleUsernameChange}
-                            onBlur={() => setEditingUsername(false)}
-                          />
-                        ) : (
-                          <span className="text-base">{user.username}</span>
-                        )}
-                        <BiEdit
-                          className={`ml-3 mt-1 text-base transition-all duration-300 ${editingUsername ? 'opacity-0' : 'opacity-100'}`}
-                          onClick={() => setEditingUsername(true)}
-                        />
+                    <span className="font-semibold w-28 text-lg">Username:</span>
+                    {editingUsername ? (
+                      <input
+                        type="text"
+                        className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingUsername ? 'opacity-100' : 'opacity-0 scale-95'}`}
+                        value={user.username}
+                        onChange={handleUsernameChange}
+                        onBlur={() => setEditingUsername(false)}
+                      />
+                    ) : (
+                      <span className="text-base">{user.username}</span>
+                    )}
+                    <BiEdit
+                      className={`ml-3 mt-1 text-base transition-all duration-300 ${editingUsername ? 'opacity-0' : 'opacity-100'}`}
+                      onClick={() => setEditingUsername(true)}
+                    />
                   </div>
-                    <div className="flex items-center">
-                      <span className="font-semibold w-28 text-lg">Email:</span>
-                      {editingEmail ? (
-                        <input
-                          type="email"
-                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingEmail ? 'opacity-100' : 'opacity-0 scale-95'}`}
-                          value={user.email}
-                          onChange={handleEmailChange}
-                          onBlur={() => setEditingEmail(false)}
-                        />
-                      ) : (
-                        <span className="text-base">{user.email}</span>
-                      )}
-                      <BiEdit 
+                  <div className="flex items-center">
+                    <span className="font-semibold w-28 text-lg">Email:</span>
+                    {editingEmail ? (
+                      <input
+                        type="email"
+                        className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingEmail ? 'opacity-100' : 'opacity-0 scale-95'}`}
+                        value={user.email}
+                        onChange={handleEmailChange}
+                        onBlur={() => setEditingEmail(false)}
+                      />
+                    ) : (
+                      <span className="text-base">{user.email}</span>
+                    )}
+                    <BiEdit
                       className={`ml-3 mt-1 text-base transition-all duration-300 ${editingEmail ? 'opacity-0' : 'opacity-100'}`}
                       onClick={() => setEditingEmail(true)} />
-                    </div>
-                    <div className="flex items-center">
-                      <span className="font-semibold w-28 text-lg">Password:</span>
-                      {editingPassword ? (
-                        <input
-                          type="password"
-                          className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingPassword ? 'opacity-100' : 'opacity-0 scale-95'}`}                         
-                          onChange={handlePasswordChange}
-                          onBlur={() => setEditingPassword(false)}
-                        />
-                      ) : (
-                        <button
-                            className="text-base text-blue-500 underline hover:text-blue-800"
-                            onClick={() => setEditingPassword(true)}
-                          >
-                            Change Password
-                          </button>
-                      )}
-                      
-                    </div>
-                    
                   </div>
-                  <button
-                    className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
-                    onClick={updateUserProfile}
-                  >
-                    Save
-                  </button>
+                  <div className="flex items-center">
+                    <span className="font-semibold w-28 text-lg">Password:</span>
+                    {editingPassword ? (
+                      <input
+                        type="password"
+                        className={`text-base border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-100 ${editingPassword ? 'opacity-100' : 'opacity-0 scale-95'}`}
+                        onChange={handlePasswordChange}
+                        onBlur={() => setEditingPassword(false)}
+                      />
+                    ) : (
+                      <button
+                        className="text-base text-blue-500 underline hover:text-blue-800"
+                        onClick={() => setEditingPassword(true)}
+                      >
+                        Change Password
+                      </button>
+                    )}
+
+                  </div>
+
                 </div>
-              )}
-            </div>
+                <button
+                  className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
+                  onClick={updateUserProfile}
+                >
+                  Save
+                </button>
+
+                <ProfileWidget onImageChange={handleImageChange} />
+
+                <button
+                  className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
+                  onClick={updateProfileImage}
+                >
+                  Save Profile Image
+                </button>
+
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

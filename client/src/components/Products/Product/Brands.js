@@ -11,9 +11,7 @@ export default function Brands({ setBrandID, all, edit = false, productData = nu
     axios
       .get(`${baseUrl}/api/brands`)
       .then((response) => {
-        console.log(response);
         setBrands(response.data.data);
-        console.log(brands);
       })
       .catch((error) => {
         console.error(error);
@@ -22,18 +20,22 @@ export default function Brands({ setBrandID, all, edit = false, productData = nu
 
   return (
     <select
-      class="form-select form-select-sm"
+      className="form-select form-select-md w-full"
       onChange={(e) => setBrandID(e.target.value)}
     >
-      <option disabled selected value>
+      <option disabled selected value="">
         -- BRAND --
       </option>
       {/* shows all the brands for drop down select */}
       {brands ? (
         brands.map((brand) => (
-          <option value={brand.brand_id} selected={
-            edit && brand.brand_name === productData?.brand_name
-          }>{brand.brand_name}</option>
+          <option
+            key={brand.brand_id}
+            value={brand.brand_id}
+            selected={edit && brand.brand_name === productData?.brand_name}
+          >
+            {brand.brand_name}
+          </option>
         ))
       ) : (
         // Loading component (full screen)
@@ -41,7 +43,7 @@ export default function Brands({ setBrandID, all, edit = false, productData = nu
           <Loading />
         </div>
       )}
-      {all && <option value={0}>All</option>}
+      {all && <option value="0">All</option>}
     </select>
-  )
+  );
 }

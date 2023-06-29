@@ -1,67 +1,46 @@
 import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
-
 import Product from './Product';
 import Loading from '../../Loading/Loading';
 
 
-export default function ProductList(props, { fetchProducts, fetchStatistics, setRefunds }) {
-    const { products, statistics, refunds } = props;
+export default function ProductList({ products, refunds, setProducts, setRefunds, fetchProducts, fetchStatistics }) {
 
     return (
-        <div
-            class="row my-2 mx-auto p-0"
-            style={{
-                height: '400px',
-                overflowY: 'scroll',
-                background: '#c2d9ff',
-                width: '90%',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            }}
-        >
-            <div
-                class="py-2"
-                style={{
-                    position: 'sticky',
-                    top: '0',
-                    background: '#dff7ec',
-                    width: '100%',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}
-            >
-                <div
-                    className="row align-items-center col-11"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                    <div className="col-9 h5 font-weight-bold">Products</div>
-                    {/* link to ProductCreate page when admin clicks on create button */}
-                    <div className="col-3">
-                        <Link
-                            to="/products/create"
-                            className="btn btn-info w-100 col-12 text-dark mr-2"
-                            id="createButton"
-                        >
-                            Create <i class="bi bi-plus-circle"></i>
-                        </Link>
-                    </div>
+        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
+
+            <div className="flex items-center justify-between mb-3 mt-3">
+                <div className="w-6/12 text-left ml-10 text-xl font-bold">Products</div>
+
+
+
+                <div className="w-3/12 mr-10">
+                    <Link
+                        to="/products/create"
+                        className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100 flex items-center justify-center text-center"
+
+                        id="createButton"
+                    >
+                        Create <i className="bi bi-plus-circle ml-1"></i>
+                    </Link>
                 </div>
             </div>
-            <ul role="list" class="divide-y divide-gray-100">
-                {/* shows all products */}
-                {products ? (
-                    products.map((product) => (
-                        <Product product={product} products={products} refunds={refunds} statistics={statistics} fetchProducts={fetchProducts} fetchStatistics={fetchStatistics} setRefunds={setRefunds} />
-                    ))
-                ) : (
-                    // Loading component (full screen)
-                    <div className="flex items-center justify-center h-screen">
-                        <Loading />
-                    </div>
-                )}
-            </ul>
+
+
+            <div className="overflow-y-scroll max-h-80">
+                <ul role="list" className="divide-y divide-gray-100 px-4 sm:px-4 md:px-3 lg:px-1">
+                    {/* shows all products */}
+                    {products ? (
+                        products.map((product) => (
+                            <Product product={product} products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={setRefunds} setProducts={setProducts} />
+                        ))
+                    ) : (
+                        // Loading component (full screen)
+                        <div className="flex items-center justify-center h-screen">
+                            <Loading />
+                        </div>
+                    )}
+                </ul>
+            </div >
         </div>
     )
 }

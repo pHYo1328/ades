@@ -1,12 +1,18 @@
+import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
+import DeleteModal from '../../modal/DeleteModal';
+
 
 export default function Category({ fetchProducts }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+    const createButtonRef = useRef(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
     const [categories, setCategories] = useState(null);
     const [categoryName, setCategoryName] = useState('');
@@ -50,138 +56,151 @@ export default function Category({ fetchProducts }) {
                 .then((response) => {
                     console.log("RESPONSE", response);
                     console.log("RESPONSE STATUS CODE: ", response.status);
-                    if (response.status == 409) {
+
+                    setCategory(response.data.data);
+                    toast.success(`Category created.`, {
+                        autoClose: 3000,
+                        pauseOnHover: true,
+                        style: { 'font-size': '16px' },
+                    });
+                    console.log(category);
+                    fetchCategories();
+                    setCategoryName('');
+                })
+                .catch((response) => {
+                    if (response.response.status == 409) {
                         console.log("duplicate");
                         toast.error(`Category or brand already exists.`, {
                             autoClose: 3000,
                             pauseOnHover: true,
                             style: { 'font-size': '16px' },
                         });
-                    } else {
-                        setCategory(response.data.data);
-                        toast.success(`Category created.`, {
-                            autoClose: 3000,
-                            pauseOnHover: true,
-                            style: { 'font-size': '16px' },
-                        });
-                        console.log(category);
-                        fetchCategories();
-                        setCategoryName('');
                     }
                 });
         }
     };
 
     return (
-        <div
-            class="col-5 p-0"
-            style={{
-                height: '300px',
-                overflowY: 'scroll',
-                background: '#c2d9ff',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            }}
-        >
-            <div
-                class="py-2"
-                style={{
-                    position: 'sticky',
-                    top: '0',
-                    background: '#dff7ec',
-                    width: '100%',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}
-            >
-                <div
-                    className="row align-items-center col-11"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                    <div className="col-10 h5 font-weight-bold">Categories</div>
-                </div>
+        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4">
+            <div className="flex justify-center">
+                <div className="text-center text-xl mt-3 mb-3 font-bold">Categories</div>
+            </div>
 
-                <div
-                    class="row col-12"
-                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                    <div class="col-8">
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Category Name"
-                            value={categoryName}
-                            onChange={(e) => setCategoryName(e.target.value)}
-                        />
-                    </div>
-                    <div class="col-4">
-                        {/* adds new category when clicked on create button */}
-                        <button
-                            class="btn btn-info w-100 col-6 text-dark mr-2"
-                            onClick={handleSubmitCategory}
-                        >
-                            Create <i class="bi bi-plus-circle"></i>
-                        </button>
-                    </div>
+            <div className="flex flex-row justify-center mt-2 mb-4 mx-auto space-x-4">
+                <div className="w-3/5">
+                    <input
+                        type="text"
+                        className="border border-gray-300 rounded-md py-2 px-3 w-full"
+                        placeholder="Category Name"
+                        value={categoryName}
+                        onChange={(e) => setCategoryName(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                createButtonRef.current.click();
+                            }
+                        }}
+                    />
+                </div>
+                <div className="w-1/5">
+                    {/* adds new category when clicked on create button */}
+                    <button
+                        ref={createButtonRef}
+                        className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm h-100"
+                        onClick={handleSubmitCategory}
+                    >
+                        <i className="bi bi-plus-circle"></i>
+                    </button>
                 </div>
             </div>
-            <ul
-                role="list"
-                class="divide-y divide-gray-100"
-                style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto' }}
-            >
-                {/* shows all categories */}
-                {categories ? (
-                    categories.map((category) => (
-                        <div class="d-flex flex-row row py-3 justify-content-around">
-                            <div class="col-6">
-                                <p class="text-sm font-semibold leading-6 text-gray-900">
-                                    {category.category_name}
-                                </p>
-                            </div>
-                            <div class="col-4 d-flex justify-content-end">
-                                <button
-                                    onClick={(e) => {
-                                        // delete the category when clicked on trash icon to delete
-                                        e.preventDefault();
-                                        const categoryID = category.category_id;
-                                        // confirm deletion to prevent accidental deletions
-                                        const confirmed = window.confirm(
-                                            'Are you sure you want to delete?'
-                                        );
-                                        // if confirmed, proceed to delete
-                                        if (confirmed) {
-                                            axios
-                                                .delete(`${baseUrl}/api/categories/${categoryID}`)
-                                                .then((res) => {
-                                                    const updatedCategories = categories.filter(
-                                                        (c) => c.category_id !== categoryID
-                                                    );
-                                                    toast.success(`Category deleted.`, {
-                                                        autoClose: 3000,
-                                                        pauseOnHover: true,
-                                                        style: { 'font-size': '16px' },
+            <div className="overflow-y-scroll max-h-80">
+                <ul role="list" className="divide-y divide-gray-100 px-4 sm:px-4 md:px-3 lg:px-1">
+                    {/* shows all categories */}
+                    {categories ? (
+                        categories.map((category) => (
+                            <li className="flex flex-row py-3 justify-between px-3">
+                                <div className="col-span-10 flex items-center">
+                                    <p className="text-sm font-semibold text-gray-900">{category.category_name}</p>
+                                </div>
+                                <div className="col-span-2 flex items-center">
+                                    {/* <button
+                                        onClick={(e) => {
+                                            // delete the category when clicked on trash icon to delete
+                                            e.preventDefault();
+                                            const categoryID = category.category_id;
+                                            // confirm deletion to prevent accidental deletions
+                                            const confirmed = window.confirm(
+                                                'Are you sure you want to delete?'
+                                            );
+                                            // if confirmed, proceed to delete
+                                            if (confirmed) {
+                                                axios
+                                                    .delete(`${baseUrl}/api/categories/${categoryID}`)
+                                                    .then((res) => {
+                                                        const updatedCategories = categories.filter(
+                                                            (c) => c.category_id !== categoryID
+                                                        );
+                                                        toast.success(`Category deleted.`, {
+                                                            autoClose: 3000,
+                                                            pauseOnHover: true,
+                                                            style: { 'font-size': '16px' },
+                                                        });
+                                                        setCategories(updatedCategories);
+                                                        fetchCategories();
+                                                        fetchProducts();
                                                     });
-                                                    setCategories(updatedCategories);
-                                                    fetchCategories();
-                                                    fetchProducts();
-                                                });
-                                        }
-                                    }}
-                                >
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
+                                            }
+                                        }}
+                                    >
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button> */}
+
+                                    <button
+                                        className="flex items-center"
+                                        onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
+                                    >
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button>
+                                    {/* Render the delete modal */}
+                                    {showDeleteModal && (
+                                        <DeleteModal
+                                            // id={brand.brand_id}
+                                            onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
+                                            onDelete={() => {
+                                                console.log("delete button is clicked")
+                                                setShowDeleteModal(false); // Close the modal
+
+                                                axios
+                                                    .delete(`${baseUrl}/api/categories/${category.category_id}`)
+                                                    .then((res) => {
+                                                        const updatedCategories = categories.filter(
+                                                            (c) => c.category_id !== category.category_id
+                                                        );
+                                                        toast.success(`Category deleted.`, {
+                                                            autoClose: 3000,
+                                                            pauseOnHover: true,
+                                                            style: { 'font-size': '16px' },
+                                                        });
+                                                        setCategories(updatedCategories);
+                                                        fetchCategories();
+                                                        fetchProducts();
+                                                    });
+
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                            </li>
+                        ))
+                    ) : (
+                        // Loading component (full screen)
+                        <div className="flex items-center justify-center h-screen">
+                            <Loading />
                         </div>
-                    ))
-                ) : (
-                    // Loading component (full screen)
-                    <div className="flex items-center justify-center h-screen">
-                        <Loading />
-                    </div>
-                )}
-            </ul>
+                    )}
+                </ul>
+            </div>
         </div>
     );
 }

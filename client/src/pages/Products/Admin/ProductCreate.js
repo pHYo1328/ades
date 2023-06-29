@@ -120,100 +120,108 @@ export default function ProductCreate() {
   };
 
   return (
-    <form
-      id="create-product-form"
-      class="w-50 mt-5"
-      style={{ marginLeft: 'auto', marginRight: 'auto' }}
-      enctype="multipart/form-data"
-    >
-      <h3 class="h3 text-center">CREATE PRODUCT</h3>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label h6">
-          Product Name
-        </label>
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          placeholder="Product Name"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label h6">
-          Description
-        </label>
-
-        <textarea
-          class="form-control form-control-sm"
-          placeholder="Description"
-          rows={3}
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
-        />
-      </div>
-      <div class="row">
-        <div class="mb-3 col-6">
-          <label for="exampleFormControlInput1" class="form-label h6">
-            Price
-          </label>
-          <input
-            type="number"
-            min="0"
-            class="form-control form-control-sm"
-            value={productPrice}
-            onChange={(e) => setProductPrice(e.target.value)}
-            placeholder="Price"
-          />
-        </div>
-        <div class="mb-3 col-6">
-          <label for="exampleFormControlInput1" class="form-label h6">
-            Inventory (Quantity)
-          </label>
-          <input
-            min="0"
-            type="number"
-            class="form-control form-control-sm"
-            value={productQuantity}
-            onChange={(e) => setProductQuantity(e.target.value)}
-            placeholder="Inventory (Quantity)"
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="mb-3 col-6">
-          <label for="exampleFormControlInput1" class="form-label h6">
-            Category
-          </label>
-          <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
-        </div>
-        <div class="mb-3 col-6">
-          <label for="exampleFormControlInput1" class="form-label h6">
-            Brand
-          </label>
-          <Brands setBrandID={setProductBrand} all={false} key={brandKey} />
-        </div>
-      </div>
-      <div class="mb-3">
-        <UploadWidget onImageChange={handleImageChange} />
-      </div>
-      <div class="col-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-        {/* creates new product when the submit button is clicked */}
-        <button
-          type="submit"
-          id="submit"
-          class="btn btn-outline-primary mb-3 w-100"
-          onClick={handleSubmit}
+    <div className="bg-white w-full">
+      <div className="bg-white w-11/12 mx-auto">
+        <form
+          id="create-product-form"
+          className="sm:w-11/12 md:w-10/12 lg:w-8/12 mt-5 mx-auto bg-peach p-5 rounded-md mb-5"
+          encType="multipart/form-data"
         >
-          Submit
-        </button>
-        <ToastContainer
-          limit={2}
-          newestOnTop={true}
-          position="top-center"
-        />
+          <h3 className="text-center text-2xl font-bold mb-6">CREATE PRODUCT</h3>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+              Product Name
+            </label>
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              placeholder="Product Name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+              Description
+            </label>
+            <textarea
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              placeholder="Description"
+              rows={3}
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1 text-sm">
+                Price
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                value={productPrice}
+                onChange={(e) => setProductPrice(e.target.value)}
+                placeholder="Price"
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1 ">
+                Inventory
+              </label>
+              <input
+                min="0"
+                type="number"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                value={productQuantity}
+                onChange={(e) => setProductQuantity(e.target.value)}
+                placeholder="Inventory (Quantity)"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Category
+              </label>
+              <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
+                Brand
+              </label>
+              <Brands setBrandID={setProductBrand} all={false} key={brandKey} />
+            </div>
+          </div>
+
+          <div className="flex justify-between mt-4 space-x-4">
+            <div className="mb-3 w-6/12">
+              <UploadWidget onImageChange={handleImageChange} />
+            </div>
+            <div className="mb-3 w-6/12">
+              <button
+                type="submit"
+                id="submit"
+                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+
+          <ToastContainer
+            limit={2}
+            newestOnTop={true}
+            position="top-center"
+          />
+        </form>
       </div>
-    </form>
+    </div>
+
   );
 }
