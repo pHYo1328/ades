@@ -170,7 +170,7 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
-  router.post('/api/bookmark', bookmarkController.processAddBookMark);
+  router.post('/api/bookmark/add', bookmarkController.processAddBookMark);
 
   // PUT
   router.put('/api/admin/order', orderController.processUpdateOrderStatus);
@@ -191,6 +191,7 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
   );
+  router.delete('/api/bookmark/remove/:customerId/:brandId', bookmarkController.processRemoveBookMark);
 
   //Carolyn
 

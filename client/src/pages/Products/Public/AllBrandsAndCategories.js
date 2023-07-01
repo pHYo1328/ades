@@ -65,37 +65,36 @@ export default function AllBrandsAndCategories() {
       // Toggle bookmark status
       const newStatus = { ...prevStatus, [brandId]: !prevStatus[brandId] };
       if (newStatus[brandId]) {
-        // If brand is bookmarked, add to bookmarkedBrands
-        bookmarkedBrandsRef.current = [...bookmarkedBrandsRef.current, brandId];
+        // If brand is bookmarked, send a POST request to add the brand to the bookmarks
+        api
+          .post('/api/bookmark/add', {
+            customerId,
+            brandId,
+          })
+          .then((response) => {
+            console.log('Brand bookmarked successfully');
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error('Error bookmarking brand:', error);
+          });
       } else {
-        // If brand is un-bookmarked, remove from bookmarkedBrands
-        bookmarkedBrandsRef.current = bookmarkedBrandsRef.current.filter(
-          (id) => id !== brandId
-        );
-      }
-
-      return newStatus;
-    });
-  };
-
-  useEffect(() => {
-    return () => {
-      console.log(bookmarkedBrandsRef.current);
-      api
-        .post('/api/bookmark', {
-          customerId,
-          brandIds: bookmarkedBrandsRef.current.sort(),
-        })
+        // If brand is un-bookmarked, send a POST request to remove the brand from the bookmarks
+        api
+        .delete(`/api/bookmark/remove/${customerId}/${brandId}`)
         .then((response) => {
-          console.log('Bookmark data sent successfully');
+          console.log('Brand un-bookmarked successfully');
           console.log(response);
         })
         .catch((error) => {
-          console.error('Error sending bookmark data:', error);
+          console.error('Error un-bookmarking brand:', error);
         });
-    };
-  }, [customerId]);
 
+      }
+      return newStatus;
+    });
+  };
+  
   return (
     <div className="bg-white w-full text-dark text-left container-fluid align-items-center">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
