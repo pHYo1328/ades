@@ -228,8 +228,19 @@ module.exports = (app, router) => {
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
-    checkoutController.handleWebhooks
-  ),
+    async (req, res) => {
+      const createWebhookEndpoint = async () => {
+        const endpoint = await stripe.webhookEndpoints.create({
+          url: 'https://techzero-v3-1.onrender.com/webhook',
+          enabled_events: ['charge.refunded', 'charge.succeeded'],
+        });
+        console.log('Webhook endpoint created:', endpoint);
+      };
+  
+      await createWebhookEndpoint();
+      await exports.handleWebhooks(req, res);
+    }
+  );
 
     router.get(
       '/api/paymentByStatus/:orderID',

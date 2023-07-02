@@ -235,22 +235,22 @@ exports.processPartialRefund = async (req, res) => {
 
 let endpointSecret;
 
-const createWebhookEndpoint = async () => {
-  const endpoint = await stripe.webhookEndpoints.create({
-    url: 'https://techzero-v3-1.onrender.com/webhook',
-    enabled_events: ['charge.refunded', 'charge.succeeded'],
-  });
-  console.log('Webhook endpoint created:', endpoint);
-};
+// const createWebhookEndpoint = async () => {
+//   const endpoint = await stripe.webhookEndpoints.create({
+//     url: 'https://techzero-v3-1.onrender.com/webhook',
+//     enabled_events: ['charge.refunded', 'charge.succeeded'],
+//   });
+//   console.log('Webhook endpoint created:', endpoint);
+// };
 
 // Call the function to create the webhook endpoint
-createWebhookEndpoint()
-  .then(() => {
-    console.log('Webhook endpoint created successfully');
-  })
-  .catch((error) => {
-    console.error('Error creating webhook endpoint:', error);
-  });
+// createWebhookEndpoint()
+//   .then(() => {
+//     console.log('Webhook endpoint created successfully');
+//   })
+//   .catch((error) => {
+//     console.error('Error creating webhook endpoint:', error);
+//   });
 
 //creating webhook for getting data inside inside database
 exports.handleWebhooks = async (req, res) => {
