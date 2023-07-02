@@ -34,6 +34,9 @@ function Payment() {
         setStripePromise(loadStripe(stripe_publishable_key));
         setPayments(paymentData);
         setClientSecret(clientSecret);
+
+         // Call the webhook endpoint
+         await axios.post(`${baseUrl}/webhook`, {});
       } catch (error) {
         console.error(error);
       }

@@ -25,6 +25,8 @@ const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
+const stripe = require('../config/stripe');
+const { handleWebhooks }  = require('../controller/checkout.controller');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -227,7 +229,7 @@ module.exports = (app, router) => {
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
-    bodyParser.raw({ type: 'application/json' }),
+    bodyParser.json({ type: 'application/json' }),
     async (req, res) => {
       const createWebhookEndpoint = async () => {
         const endpoint = await stripe.webhookEndpoints.create({
@@ -238,7 +240,7 @@ module.exports = (app, router) => {
       };
   
       await createWebhookEndpoint();
-      await exports.handleWebhooks(req, res);
+      await handleWebhooks(req, res);
     }
   );
 
