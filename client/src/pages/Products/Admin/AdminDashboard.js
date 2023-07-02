@@ -6,198 +6,273 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Brand from '../../../components/Products/Admin/Brand';
+import Button from '../../../components/Button';
+import Toggle from '../../../components/Products/Admin/Toggle'
+import TextInput from '../../../components/TextInput';
+import SideBar from '../../../components/Products/Admin/SideBar';
+
+import LinkButton from '../../../components/LinkButton';
 import Category from '../../../components/Products/Admin/Category';
 
 import ProductList from '../../../components/Products/Admin/ProductList';
 import Statistics from '../../../components/Products/Admin/Statistics';
 
+import OrderAdmin from '../../Order/Admin/OrderAdmin';
+import UserInfo from '../../Login/UserInfo';
+
+import Brand from '../../../components/Products/Admin/Brand';
+
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const searchOrderButtonRef = useRef(null);
+    const navigate = useNavigate();
+    const brandCreateButtonRef = useRef(null);
+    const categoryCreateButtonRef = useRef(null);
+    const searchOrderButtonRef = useRef(null);
 
-  const [open, setOpen] = useState(true);
+    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-  const cancelButtonRef = useRef(null);
+    const [products, setProducts] = useState(null);
+    const [statistics, setStatistics] = useState(null);
 
-  const [products, setProducts] = useState(null);
-  const [statistics, setStatistics] = useState(null);
-  const [statisticsKey, setStatisticsKey] = useState(0);
-  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+    const [orderID, setOrderID] = useState(null);
+    const [refunds, setRefunds] = useState(null);
 
-  const [orderID, setOrderID] = useState(null);
-  const [refunds, setRefunds] = useState(null);
+    const [brands, setBrands] = useState(null);
+    const [brandName, setBrandName] = useState('');
+    const [brand, setBrand] = useState(null);
 
-  useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
-    if (!roles) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      console.log('Redirecting to login');
-      navigate('/login');
-    } else {
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        // alert("you're not admin");
-        console.log('Redirecting to homepage');
-        navigate('/homepage');
-      }
-    }
-  });
+    const [categories, setCategories] = useState(null);
+    const [categoryName, setCategoryName] = useState('');
+    const [category, setCategory] = useState(null);
 
-  // get all products
-  const fetchProducts = () => {
-    axios
-      .get(`${baseUrl}/api/allProducts`)
-      .then((response) => {
-        console.log(response);
-        setProducts(response.data.data);
-        console.log(products);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+    const [activeTab, setActiveTab] = useState('home');
 
-  useEffect(() => { fetchProducts() }, [])
-
-  // get the statistics
-  const fetchStatistics = () => {
-    axios
-      .get(`${baseUrl}/api/admin/statistics`)
-      .then((response) => {
-        setStatistics(response.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // refresh the statistics every 1 minute
-  useEffect(() => {
-    fetchStatistics();
-    setStatisticsKey((prevKey) => prevKey + 1);
-    const intervalId = setInterval(fetchStatistics, 60 * 1000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [products]);
-
-  // search the order by id
-  const handleSearchOrder = async (event) => {
-    console.log(chalk.yellow('Search button is clicked!'));
-    event.preventDefault();
-
-    if (!orderID) {
-      toast.error(`Please fill in the order_id to process refund.`, {
-        autoClose: 3000,
-        pauseOnHover: true,
-        style: { 'font-size': '16px' },
-      });
-    } else {
-      try {
-        const response = await axios.get(
-          `${baseUrl}/api/paymentByStatus/${orderID}`
-        );
-        console.log(response);
-
-        // Check if order exists
-        if (response.data && response.data.data.length > 0) {
-          window.location.href = `/payment-refund/${orderID}`;
+    useEffect(() => {
+        const roles = JSON.parse(localStorage.getItem('roles'));
+        console.log(roles);
+        if (!roles) {
+            // User does not have the required role(s), redirect them to the homepage or show an error message
+            console.log('Redirecting to login');
+            navigate('/login');
+        } else {
+            const isAdmin = roles.includes('admin');
+            console.log(isAdmin);
+            if (!isAdmin) {
+                // User does not have the required role(s), redirect them to the homepage or show an error message
+                // alert("you're not admin");
+                console.log('Redirecting to homepage');
+                navigate('/homepage');
+            }
         }
-      } catch (error) {
-        console.error(error);
-        toast.error(`Order does not exist for fully refunding.`, {
-          autoClose: 3000,
-          pauseOnHover: true,
-          style: { 'font-size': '16px' },
-        });
-      }
-    }
-  };
+    });
 
-  return (
-    <div className="bg-white w-full">
-      <div className="bg-white w-11/12 mx-auto">
+    const fetchData = (endpoint, setData) => {
+        axios
+            .get(endpoint)
+            .then((response) => {
+                setData(response.data.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
-        <ToastContainer
-          limit={2}
-          newestOnTop={true}
-          position="top-center"
-        />
+    const fetchProducts = () => fetchData(`${baseUrl}/api/allProducts`, setProducts);
+    useEffect(() => { fetchProducts() }, [])
 
-        <div className="flex justify-center mx-auto">
-          <h3 className="text-center text-black font-bold mb-4 mt-3 text-xxl">Admin Dashboard</h3>
-        </div>
+    const fetchCategories = () => fetchData(`${baseUrl}/api/category`, setCategories);
+    useEffect(() => { fetchCategories() }, [])
 
-        <Statistics statistics={statistics} key={statisticsKey} />
+    const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands);
+    useEffect(() => { fetchBrands() }, [])
 
-        <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+    const fetchStatistics = () => fetchData(`${baseUrl}/api/admin/statistics`, setStatistics);
 
-        <div className="col-span-12 mx-auto flex flex-wrap justify-center text-center mb-4">
-          <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 px-2">
-            <Brand fetchProducts={() => fetchProducts()} />
-          </div>
-          <div className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2 px-2">
-            <Category fetchProducts={() => fetchProducts()} />
-          </div>
-        </div>
+    // refresh the statistics every 1 minute
+    useEffect(() => {
+        fetchStatistics();
+        const intervalId = setInterval(fetchStatistics, 60 * 1000);
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [products]);
 
+    const handleSubmit = async (event, name, type, setData, fetchData, setDataName) => {
+        event.preventDefault();
 
-        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
+        if (!name) {
+            toast.error(`Please enter the name of the ${type}.`, {
+                autoClose: 3000,
+                pauseOnHover: true,
+                style: { fontSize: '16px' },
+            });
+        } else {
+            const requestBody = {
+                name: name,
+                type: type,
+            };
 
-          <div className="flex items-center justify-between mb-3 mt-3 ">
-            <div className="w-9/12 text-left ml-10 text-xl font-bold">Fully Refund</div>
-          </div>
+            axios
+                .post(`${baseUrl}/api/products/admin/type`, requestBody)
+                .then((response) => {
+                    setData(response.data.data);
+                    toast.success(`${type} created.`, {
+                        autoClose: 3000,
+                        pauseOnHover: true,
+                        style: { fontSize: '16px' },
+                    });
+                    fetchData();
+                    setDataName('');
+                })
+                .catch((error) => {
+                    if (error.response.status === 409) {
+                        console.log("duplicate");
+                        toast.error(`Category or brand already exists.`, {
+                            autoClose: 3000,
+                            pauseOnHover: true,
+                            style: { fontSize: '16px' },
+                        });
+                    }
+                });
+        }
+    };
 
-          <div className="flex flex-col sm:flex-row items-center justify-between mt-3 py-2">
-            <div className="flex items-center w-full sm:w-full md:w-3/4 lg:w-3/4 text-left text-xl px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
-              <input
-                type="text"
-                className="border border-gray-300 rounded-md w-full"
-                placeholder="Enter Order ID"
-                value={orderID}
-                onChange={(e) => setOrderID(e.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    searchOrderButtonRef.current.click();
-                  }
-                }}
-              />
+    // add new brand
+    const handleSubmitBrand = (event) => {
+        console.log(chalk.yellow('submit button is clicked!'));
+        handleSubmit(event, brandName, 'brand', setBrand, fetchBrands, setBrandName);
+    };
+
+    // add new category
+    const handleSubmitCategory = (event) => {
+        console.log(chalk.yellow('submit button is clicked!'));
+        handleSubmit(event, categoryName, 'category', setCategory, fetchCategories, setCategoryName);
+    };
+
+    // search the order by id
+    const handleSearchOrder = async (event) => {
+        console.log(chalk.yellow('Search button is clicked!'));
+        event.preventDefault();
+
+        if (!orderID) {
+            toast.error(`Please fill in the order_id to process refund.`, {
+                autoClose: 3000,
+                pauseOnHover: true,
+                style: { 'font-size': '16px' },
+            });
+        } else {
+            try {
+                const response = await axios.get(
+                    `${baseUrl}/api/paymentByStatus/${orderID}`
+                );
+                console.log(response);
+
+                // Check if order exists
+                if (response.data && response.data.data.length > 0) {
+                    window.location.href = `/payment-refund/${orderID}`;
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error(`Order does not exist for fully refunding.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { 'font-size': '16px' },
+                });
+            }
+        }
+    };
+
+    return (
+        <div className="bg-white z-1 top-25">
+            <div className="bg-white w-full mx-auto">
+                <ToastContainer
+                    limit={2}
+                    newestOnTop={true}
+                    position="top-center"
+                />
+
+                <Toggle />
+
+                <aside id="default-sidebar" class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0" aria-label="Sidebar">
+                    <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
+                </aside>
+
+                <div className="p-4 sm:ml-64 top-25 overflow-hidden">
+                    <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
+                        {activeTab === 'home' && (
+                            <Statistics statistics={statistics} />
+                        )}
+                        {activeTab === 'products' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Enter search..."} />
+                                    </div>
+
+                                    <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
+                                        <LinkButton linkTo={"/products/create"} content={<>
+                                            Create <i className="bi bi-plus-circle ml-1"></i>
+                                        </>} />
+                                    </div>
+                                </div>
+
+                                <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+                            </div>
+                        )}
+                        {activeTab === 'brands' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Brand Name"} value={brandName} func={(e) => setBrandName(e.target.value)} buttonRef={brandCreateButtonRef} />
+                                    </div>
+
+                                    <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
+                                        <Button buttonRef={brandCreateButtonRef} onClick={handleSubmitBrand} content={<i className="bi bi-plus-circle"></i>} />
+                                    </div>
+                                </div>
+                                <Brand brands={brands} fetchProducts={() => fetchProducts()} fetchBrands={() => fetchBrands()} setBrands={setBrands} />
+                            </div>
+                        )}
+                        {activeTab === 'categories' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Category Name"} value={categoryName} func={(e) => setCategoryName(e.target.value)} buttonRef={categoryCreateButtonRef} />
+                                    </div>
+
+                                    <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
+                                        <Button buttonRef={categoryCreateButtonRef} onClick={handleSubmitCategory} content={<i className="bi bi-plus-circle"></i>} />
+                                    </div>
+                                </div>
+                                <Category categories={categories} fetchProducts={() => fetchProducts()} fetchCategories={() => fetchCategories()} />
+                            </div>
+                        )}
+                        {activeTab === 'users' && (
+                            <UserInfo />
+                        )}
+                        {activeTab === 'orders' && (
+                            <OrderAdmin />
+                        )}
+                        {activeTab === 'refunds' && (
+                            <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
+
+                                <div className="flex items-center justify-between mb-3 mt-3 ">
+                                    <div className="w-9/12 text-left ml-10 text-xl font-bold">Fully Refund</div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row items-center justify-between mt-3 py-2">
+                                    <div className="flex items-center w-full sm:w-full md:w-3/4 lg:w-3/4 text-left text-xl px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
+                                        <TextInput placeholder={"Enter Order ID"} value={orderID} func={(e) => setOrderID(e.target.value)} buttonRef={searchOrderButtonRef} />
+                                    </div>
+
+                                    <div className="flex items-center w-full sm:w-full md:w-1/4 lg:w-1/4 px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
+                                        <Button buttonRef={searchOrderButtonRef} onClick={handleSearchOrder} content={<i className="bi bi-search"></i>} />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div >
             </div>
-
-            <div className="flex items-center w-full sm:w-full md:w-1/4 lg:w-1/4 px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
-              <button
-                ref={searchOrderButtonRef}
-                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
-                onClick={handleSearchOrder}
-              >
-                Search <i className="bi bi-search"></i>
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-
-        <div className="col-span-12">
-
-          <div className="flex justify-center mb-12">
-            {/* link to go to orderStatus to manage the status of orders */}
-            <Link to={'/admin/orderStatus'}>
-              <button className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-md">
-                Go to Order Status Management
-              </button>
-            </Link>
-          </div>
-        </div>
-
-
-      </div>
-    </div >
-  );
+        </div >
+    )
 }

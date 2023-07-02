@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import Product from './Product';
 import Loading from '../../Loading/Loading';
 
@@ -6,41 +5,56 @@ import Loading from '../../Loading/Loading';
 export default function ProductList({ products, refunds, setProducts, setRefunds, fetchProducts, fetchStatistics }) {
 
     return (
-        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
+        <div className="relative  overflow-x-auto overflow-y-auto max-h-[60vh] sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[70vh] shadow-md sm:rounded-lg">
 
-            <div className="flex items-center justify-between mb-3 mt-3">
-                <div className="w-6/12 text-left ml-10 text-xl font-bold">Products</div>
-
-
-
-                <div className="w-3/12 mr-10">
-                    <Link
-                        to="/products/create"
-                        className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100 flex items-center justify-center text-center"
-
-                        id="createButton"
-                    >
-                        Create <i className="bi bi-plus-circle ml-1"></i>
-                    </Link>
+            {products ? (
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead className="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
+                        <tr>
+                            <th scope="col" className="px-6 py-3">
+                                <span className="sr-only">Image</span>
+                                {/* Image */}
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Category
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Brand
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Inventory
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-700 dark:text-gray-400 h-98 overflow-y-auto">
+                        {products.map((product) => (
+                            <Product
+                                product={product}
+                                products={products}
+                                refunds={refunds}
+                                fetchProducts={() => fetchProducts()}
+                                fetchStatistics={() => fetchStatistics()}
+                                setRefunds={setRefunds}
+                                setProducts={setProducts}
+                            />
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                // Loading component (full screen)
+                <div className="flex items-center justify-center h-screen">
+                    <Loading />
                 </div>
-            </div>
-
-
-            <div className="overflow-y-scroll max-h-80">
-                <ul role="list" className="divide-y divide-gray-100 px-4 sm:px-4 md:px-3 lg:px-1">
-                    {/* shows all products */}
-                    {products ? (
-                        products.map((product) => (
-                            <Product product={product} products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={setRefunds} setProducts={setProducts} />
-                        ))
-                    ) : (
-                        // Loading component (full screen)
-                        <div className="flex items-center justify-center h-screen">
-                            <Loading />
-                        </div>
-                    )}
-                </ul>
-            </div >
+            )}
         </div>
     )
 }
