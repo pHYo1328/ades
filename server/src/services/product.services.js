@@ -380,9 +380,8 @@ module.exports.getSearchResults = async (
     if (product_name) {
       searchResultsDataQuery += `
         AND (p.product_name RLIKE ? 
-          OR c.category_name RLIKE ? 
-          OR b.brand_name RLIKE ? 
-          OR p.description RLIKE ?)`;
+          OR c.category_name = ? 
+          OR b.brand_name = ?)`;
       queryInput.push(product_name, product_name, product_name, product_name);
     }
     if (category_id && category_id != 0) {

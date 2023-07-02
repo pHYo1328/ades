@@ -46,7 +46,6 @@ export default function ProductsPage() {
       )
       .then((response) => {
         console.log(response);
-        console.log('short');
         console.log(response.data.data);
         setProducts(response.data.data);
         console.log(products);
