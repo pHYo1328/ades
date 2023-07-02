@@ -1,5 +1,5 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import {  useNavigate } from 'react-router-dom';
 

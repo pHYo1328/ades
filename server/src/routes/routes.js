@@ -218,12 +218,17 @@ module.exports = (app, router) => {
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
+  
+  // router.post(
+  //   '/handleChargeSucceeded',
+  //   checkoutController.handleChargeSucceeded
+  // );  
 
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
     bodyParser.raw({ type: 'application/json' }),
-    checkoutController.createWebhooks
+    checkoutController.handleWebhooks
   ),
 
     router.get(
