@@ -23,6 +23,7 @@ const cld = new Cloudinary({
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState(null);
+  const [hasRelatedProducts, setHasRelatedProducts] = useState(false);
   const [categoryID, setCategoryID] = useState(null);
   const [brandID, setBrandID] = useState(null);
   let [cartQuantity, setCartQuantity] = useState(0);
@@ -95,6 +96,7 @@ export default function ProductDetails() {
         .get(`${baseUrl}/api/products/related/${categoryID}/${brandID}`)
         .then((response) => {
           console.log(response);
+          setHasRelatedProducts(true);
           console.log("categoryID: ", categoryID);
           console.log("brandID: ", brandID);
           setRelatedProducts(response.data.data);
@@ -231,12 +233,17 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          {relatedProducts ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {relatedProducts.map((product) => (
-                <Product key={product.id} product={product} />
-              ))}
-            </div>
+          {hasRelatedProducts ? (
+            relatedProducts ? (
+              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+                {relatedProducts.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              // If no results match the search
+              <p className="mt-40 text-center text-gray-500">No results found</p>
+            )
           ) : (
             <div className="flex items-center justify-center h-screen">
               <Loading />
@@ -244,6 +251,6 @@ export default function ProductDetails() {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
