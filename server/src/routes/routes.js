@@ -83,7 +83,7 @@ module.exports = (app, router) => {
     productController.processGetAllRatingsByProductID
   );
   router.get(
-    '/api/products/related/:categoryID/:brandID',
+    '/api/products/related/:productID',
     productController.processGetRelatedProducts
   );
 
