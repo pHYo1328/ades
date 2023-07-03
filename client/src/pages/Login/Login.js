@@ -22,30 +22,29 @@ function Login() {
       password: password,
     };
 
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setErrorMessage('');
+          alert('successful login');
+          navigate('/verify-otp', { state: data });
+        } else {
+          setErrorMessage('Incorrect username or password');
+          alert('Incorrect username or password');
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-
-            setErrorMessage('');
-            alert("successful login");
-            navigate('/verify-otp', { state: data });
-          } else {
-            setErrorMessage('Incorrect username or password');
-            alert('Incorrect username or password');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setErrorMessage('An error occurred. Please try again.');
-        });
-    };
+      .catch((error) => {
+        console.error(error);
+        setErrorMessage('An error occurred. Please try again.');
+      });
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {

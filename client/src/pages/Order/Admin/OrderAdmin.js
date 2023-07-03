@@ -22,13 +22,19 @@ const OrderAdmin = () => {
   };
 
   const updateOrderStatusHandler = async (orderIDs, orderStatus) => {
-    const selectedOrders = orders.filter((order) => orderIDs.includes(order.order_id));
-    const hasNullShippingStartAt = selectedOrders.some((order) => !order.shipping_start_at);
+    const selectedOrders = orders.filter((order) =>
+      orderIDs.includes(order.order_id)
+    );
+    const hasPaidOrder = selectedOrders.some(
+      (order) => order.order_status === 'paid'
+    );
 
-  if (orderStatus === 'delivered' && hasNullShippingStartAt) {
-    window.alert("Cannot update to 'Delivered'. Selected orders haven't started shipping yet.");
-    return;
-  }
+    if (orderStatus === 'delivered' && hasPaidOrder) {
+      window.alert(
+        "Cannot update to 'Delivered'. Selected orders are currently in 'Paid' status and need to be 'Delivering' before they can be 'Delivered'."
+      );
+      return;
+    }
     const result = await api.put(`api/admin/order`, {
       orderIDs: orderIDs,
       orderStatus: orderStatus,
@@ -70,59 +76,68 @@ const OrderAdmin = () => {
         </thead>
         <tbody>
           {orders.map((order) => (
-            <tr key={order.order_id} className='border-b-2 border-t-2 border-blue-950'>
-            <td className="py-3 ">
-              <input
-                type="checkbox"
-                value={order.order_id}
-                checked={selectedOptions.includes(order.order_id)}
-                onChange={handleOptionChange}
-              />
-            </td>
-            <td>
-              <p>{order.order_id}</p>
-            </td>
-            <td>
-              <p
-                className={`px-12 py-2 text-center ${
-                  order.order_status === 'paid'
-                    ? 'bg-amber-500'
-                    : 'bg-green-500'
-                }`}
-              >
-                {order.order_status}
-              </p>
-            </td>
-            <td>
-              <p className="px-10">{format(
+            <tr
+              key={order.order_id}
+              className="border-b-2 border-t-2 border-blue-950"
+            >
+              <td className="py-3 ">
+                <input
+                  type="checkbox"
+                  value={order.order_id}
+                  checked={selectedOptions.includes(order.order_id)}
+                  onChange={handleOptionChange}
+                />
+              </td>
+              <td>
+                <p>{order.order_id}</p>
+              </td>
+              <td>
+                <p
+                  className={`px-12 py-2 text-center ${
+                    order.order_status === 'paid'
+                      ? 'bg-amber-500'
+                      : 'bg-green-500'
+                  }`}
+                >
+                  {order.order_status}
+                </p>
+              </td>
+              <td>
+                <p className="px-10">
+                  {format(
                     utcToZonedTime(order.payment_date, userTimeZone),
                     'yyyy-MM-dd EEE HH:mm:ss'
-                  )}</p>
-            </td>
-            <td>
-              <p className='bg-gray-500 text-white px-3 py-2'>{order.shipping_address}</p>
-            </td>
-          </tr>
+                  )}
+                </p>
+              </td>
+              <td>
+                <p className="bg-gray-500 text-white px-3 py-2">
+                  {order.shipping_address}
+                </p>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
 
-      <div className='fixed bottom-0 w-full h-1/5 z-10 bg-white py-3 flex items-center justify-center'><button
-        onClick={() => {
-          updateOrderStatusHandler(selectedOptions, 'delivering');
-        }}
-        className="px-3 mx-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
-      >
-        Update To delivering
-      </button>
-      <button
-        onClick={() => {
-          updateOrderStatusHandler(selectedOptions, 'delivered');
-        }}
-        className="px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
-      >
-        Update To delivered
-      </button></div>
+      <div className="fixed bottom-0 w-full h-1/5 z-10 bg-white py-3 flex items-center justify-center">
+        <button
+          onClick={() => {
+            updateOrderStatusHandler(selectedOptions, 'delivering');
+          }}
+          className="px-3 mx-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
+        >
+          Update To delivering
+        </button>
+        <button
+          onClick={() => {
+            updateOrderStatusHandler(selectedOptions, 'delivered');
+          }}
+          className="px-3 py-2 bg-blue-600 text-white rounded-md text-base font-roboto"
+        >
+          Update To delivered
+        </button>
+      </div>
     </div>
   );
 };

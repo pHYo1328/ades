@@ -41,7 +41,6 @@ function Payment() {
     };
 
     fetchData();
-
   }, [orderID]);
 
   return (

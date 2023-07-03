@@ -123,14 +123,18 @@ const UserInfo = () => {
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user) => ( //loop through all the users
-                <User
-                  key={user.customer_id}
-                  user={user}
-                  handleUpdateClick={handleUpdateClick}
-                  handleDeleteClick={handleDeleteClick}
-                />
-              ))}
+              {currentUsers.map(
+                (
+                  user //loop through all the users
+                ) => (
+                  <User
+                    key={user.customer_id}
+                    user={user}
+                    handleUpdateClick={handleUpdateClick}
+                    handleDeleteClick={handleDeleteClick}
+                  />
+                )
+              )}
             </tbody>
           </table>
         </div>

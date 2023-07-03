@@ -6,6 +6,7 @@ import { FaClipboard, FaWallet } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { format, utcToZonedTime } from 'date-fns-tz';
 import { RiTruckLine } from 'react-icons/ri';
+import UserTimezoneDate from '../UserTimeZoneDate';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -81,20 +82,12 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
         });
     }
   };
-  const getUserTimeZone = () => {
-    if (typeof Intl === 'object' && typeof Intl.DateTimeFormat === 'function') {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone;
-    } else {
-      // Fallback to a default time zone if Intl API is not supported
-      console.log('Intl API is not supported');
-      return 'UTC';
-    }
-  };
-  const userTimeZone = getUserTimeZone();
   if (items.length === 0) {
     return (
-      <div className='flex items-center justify-center align-middle py-5'>
-        <h2>No Items {renderRating ? (`delivered to you`):(`is delivering to you`)}</h2>
+      <div className="flex items-center justify-center align-middle py-5">
+        <h2>
+          No Items {renderRating ? `delivered to you` : `is delivering to you`}
+        </h2>
       </div>
     );
   }
@@ -123,31 +116,21 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
               <div className="block md:flex flex-col">
                 <p className="flex flex-row items-center text-sm sm:text-lg space-x- pb-2">
                   <FaWallet className="text-green-700 text-xl" />
-                  payment at :{' '}
-                  {format(
-                    utcToZonedTime(item.payment_date, userTimeZone),
-                    'yyyy-MM-dd HH:mm:ss'
-                  )}
+                  payment at : <UserTimezoneDate date={item.payment_date} />
                 </p>
                 <p className="flex flex-row items-center text-sm sm:text-lg space-x-1 pb-2">
                   <RiTruckLine className="text-green-700 text-xl" />
 
                   <p>
                     shipping started at :{' '}
-                    {format(
-                      utcToZonedTime(item.shipping_start_at, userTimeZone),
-                      'yyyy-MM-dd HH:mm:ss'
-                    )}
+                    <UserTimezoneDate date={item.shipping_start_at} />
                   </p>
                 </p>
                 {item.completed_at ? (
                   <p className="flex flex-row items-center text-sm sm:text-lg space-x-1 pb-2">
                     <RiTruckLine className="text-green-700 text-xl" />
                     shipping arrived at:{' '}
-                    {format(
-                      utcToZonedTime(item.completed_at, userTimeZone),
-                      'yyyy-MM-dd HH:mm:ss'
-                    )}
+                    <UserTimezoneDate date={item.completed_at} />
                   </p>
                 ) : (
                   <span></span>

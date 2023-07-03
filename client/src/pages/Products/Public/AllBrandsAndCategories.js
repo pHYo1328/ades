@@ -81,20 +81,19 @@ export default function AllBrandsAndCategories() {
       } else {
         // If brand is un-bookmarked, send a POST request to remove the brand from the bookmarks
         api
-        .delete(`/api/bookmark/remove/${customerId}/${brandId}`)
-        .then((response) => {
-          console.log('Brand un-bookmarked successfully');
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error('Error un-bookmarking brand:', error);
-        });
-
+          .delete(`/api/bookmark/remove/${customerId}/${brandId}`)
+          .then((response) => {
+            console.log('Brand un-bookmarked successfully');
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error('Error un-bookmarking brand:', error);
+          });
       }
       return newStatus;
     });
   };
-  
+
   return (
     <div className="bg-white w-full text-dark text-left container-fluid align-items-center">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">

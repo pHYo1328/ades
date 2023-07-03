@@ -15,7 +15,7 @@ async function queryWithRetry(query, params, retries) {
   }
 }
 
-// fetch the latest date of data insertion 
+// fetch the latest date of data insertion
 module.exports.getLatestUpdate = async () => {
   const updateCheckingQuery =
     'SELECT MAX(created_at) AS latest_update FROM product';

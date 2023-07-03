@@ -25,7 +25,7 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        alert("email sent");
+        alert('email sent');
       })
       .catch((error) => {
         console.error(error);

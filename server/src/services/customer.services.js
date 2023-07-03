@@ -10,4 +10,3 @@ module.exports.retrieveUserInfo = async (customer_id) => {
   console.log(chalk.blue('User info retrieved by customer_id!'));
   return users;
 };
-

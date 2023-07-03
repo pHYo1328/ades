@@ -3,7 +3,13 @@ import api from '../../index';
 import { useNavigate } from 'react-router-dom';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
-import { FaEdit,FaClipboard,FaWalking, FaWallet,FaMapMarkedAlt } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaClipboard,
+  FaWalking,
+  FaWallet,
+  FaMapMarkedAlt,
+} from 'react-icons/fa';
 import { RiTruckLine } from 'react-icons/ri';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -55,7 +61,7 @@ const OrderList = ({
 
   const combineOrders = (orders) => {
     // to organize the data from database, use reduce and find to bulid 2 dimensional array
-    // first accumulator with [] and find the order id 
+    // first accumulator with [] and find the order id
     // if order id found make it push to existing order array or make a new array
     const combinedOrders = orders.reduce((acc, order) => {
       const existingOrder = acc.find((o) => o.order_id === order.order_id);
@@ -92,7 +98,7 @@ const OrderList = ({
     return combinedOrders;
   };
   const clearedItems = combineOrders(items);
-  
+
   const handleDeleteItem = async (orderId, productId, quantity) => {
     confirmAlert({
       title: 'Confirm to cancel the order',
@@ -100,7 +106,7 @@ const OrderList = ({
       buttons: [
         {
           label: 'Yes',
-          onClick: async() => {
+          onClick: async () => {
             try {
               const result = await api.delete(
                 `/api/order?orderId=${orderId}&productID=${productId}&quantity=${quantity}&orderStatus=${orderStatus}`
@@ -110,7 +116,8 @@ const OrderList = ({
               // Remove the deleted item from state
               // re render the UI
               const updatedItemList = items.filter(
-                (item) => item.order_id !== orderId || item.product_id !== productId
+                (item) =>
+                  item.order_id !== orderId || item.product_id !== productId
               );
               setItems(updatedItemList);
             } catch (error) {
@@ -131,10 +138,9 @@ const OrderList = ({
   // if one item cannot make it, must cancel that order item
   const payButtonHandler = async (orderId) => {
     console.log(orderId);
-    let isStockAvailable =true;
-    const products= items
-    .filter((item) => item.order_id === orderId)
-    const productIds= products.map((item) => item.product_id);
+    let isStockAvailable = true;
+    const products = items.filter((item) => item.order_id === orderId);
+    const productIds = products.map((item) => item.product_id);
     console.log(productIds);
     const productIdsWithQuantity = products.map((item) => ({
       product_id: item.product_id,
@@ -148,31 +154,37 @@ const OrderList = ({
         response.data.data.forEach((inventory) => {
           const quantityIndex = productIdsWithQuantity.findIndex(
             (item) => item.productId == inventory.product_id
-          ); if (
+          );
+          if (
             quantityIndex !== -1 &&
             inventory.quantity < productIdsWithQuantity[quantityIndex].quantity
           ) {
             isStockAvailable = false;
           }
 
-          if(!isStockAvailable){
-            toast.warn("Sorry,items in your orders are no more stock. Please cancel", {
-              autoClose: 3000,
-              pauseOnHover: true,
-              style: { 'font-size': '16px' },
-            });
+          if (!isStockAvailable) {
+            toast.warn(
+              'Sorry,items in your orders are no more stock. Please cancel',
+              {
+                autoClose: 3000,
+                pauseOnHover: true,
+                style: { 'font-size': '16px' },
+              }
+            );
+          } else {
+            navigate(`/payment/${orderId}`);
           }
-          else{
-            navigate(`/payment/${orderId}`)
-          }
-
-        })})
-  }
+        });
+      });
+  };
 
   if (items.length === 0) {
     return (
-      <div className='flex items-center justify-center align-middle py-5'>
-        <h2>No Items to {orderStatus == "paid" ? (`deliver to you`):(`pay for order`)}</h2>
+      <div className="flex items-center justify-center align-middle py-5">
+        <h2>
+          No Items to{' '}
+          {orderStatus == 'paid' ? `deliver to you` : `pay for order`}
+        </h2>
       </div>
     );
   }
@@ -183,7 +195,10 @@ const OrderList = ({
         <li key={index}>
           <div className="mx-4 my-3 shadow-md shadow-gray-900  p-6 rounded-lg">
             <div className="block sm:flex flex-row justify-around text-base">
-              <p className='flex flex-row items-center'><FaClipboard className='text-green-700'/>order ID : {item.order_id}</p>
+              <p className="flex flex-row items-center">
+                <FaClipboard className="text-green-700" />
+                order ID : {item.order_id}
+              </p>
               {editingIndex === index ? (
                 <div className="block w-full sm:flex flex-row sm:space-x-12 py-2 sm:w-1/2">
                   <input
@@ -204,28 +219,34 @@ const OrderList = ({
                 </div>
               ) : (
                 <div className="block sm:flex flex-row space-x-12 items-center">
-                  <div className='block sm:flex flex-row space-x-6'>
-                    <p className='flex flex-row items-center space-x-1'><FaMapMarkedAlt className='text-green-700'/>Address : {item.shipping_address}</p>
-                    <p className='flex flex-row items-center space-x-2'><RiTruckLine className='text-green-700'/>Shipping Method : {item.shipping_method}</p>
+                  <div className="block sm:flex flex-row space-x-6">
+                    <p className="flex flex-row items-center space-x-1">
+                      <FaMapMarkedAlt className="text-green-700" />
+                      Address : {item.shipping_address}
+                    </p>
+                    <p className="flex flex-row items-center space-x-2">
+                      <RiTruckLine className="text-green-700" />
+                      Shipping Method : {item.shipping_method}
+                    </p>
                   </div>
-                  <div className='flex flex-row space-x-5 py-2'>
-                  <button
-                    onClick={() => handleEditClick(index)}
-                    className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center"
-                  >
-                    <FaEdit className="mr-3"></FaEdit>Edit
-                  </button>
-                  {renderButton && (
+                  <div className="flex flex-row space-x-5 py-2">
                     <button
-                      onClick={() => {
-                        payButtonHandler(item.order_id);
-                      }}
-                      className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center"
+                      onClick={() => handleEditClick(index)}
+                      className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center"
                     >
-                      <FaWallet/>
-                      Pay
+                      <FaEdit className="mr-3"></FaEdit>Edit
                     </button>
-                  )}
+                    {renderButton && (
+                      <button
+                        onClick={() => {
+                          payButtonHandler(item.order_id);
+                        }}
+                        className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center"
+                      >
+                        <FaWallet />
+                        Pay
+                      </button>
+                    )}
                   </div>
                 </div>
               )}

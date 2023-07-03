@@ -1,8 +1,7 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
 import { useState, useEffect } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
-import {  useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function CheckoutForm({ clientSecret }) {
   const stripe = useStripe();
@@ -12,7 +11,6 @@ export default function CheckoutForm({ clientSecret }) {
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,11 +38,9 @@ export default function CheckoutForm({ clientSecret }) {
     } else {
       // Payment succeeded, navigate to the homepage
       navigate('/');
-    }  
+    }
 
-   
     setIsProcessing(false);
-    
   };
 
   return (

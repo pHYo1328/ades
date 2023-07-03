@@ -191,7 +191,10 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
   );
-  router.delete('/api/bookmark/remove/:customerId/:brandId', bookmarkController.processRemoveBookMark);
+  router.delete(
+    '/api/bookmark/remove/:customerId/:brandId',
+    bookmarkController.processRemoveBookMark
+  );
 
   //Carolyn
 
@@ -226,14 +229,13 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.createWebhooks
   ),
+    router.get(
+      '/api/paymentByStatus/:orderID',
+      // verifyAccessToken.verifyToken,
+      paymentController.processGetPaymentByStatus
+    );
 
-  router.get(
-    '/api/paymentByStatus/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByStatus
-  );
-
-    router.post('/processRefund/:orderID', checkoutController.processRefund);
+  router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
@@ -276,5 +278,8 @@ module.exports = (app, router) => {
     forgotPasswordAdminController.handleForgotPassword
   );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
-  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
+  router.post(
+    '/verify-email-admin',
+    verificationEmailAdmin.sendForgotPasswordEmail
+  );
 };

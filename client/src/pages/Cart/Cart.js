@@ -1,82 +1,13 @@
-import axios from 'axios';
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import LoadingIndicator from 'react-loading-indicator';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
-import { AiFillDelete } from 'react-icons/ai';
-import { FiPlus, FiMinus } from 'react-icons/fi';
 import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaShoppingCart } from 'react-icons/fa';
 import api from '../../index';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
+import { CartTable } from '../../components/CartTable';
 
-const plusButtonHandler = (cartData, productId, updateCartData) => {
-  //create a new array with new data for the cart 
-  const updatedCart = cartData.map((item) =>
-  // find the item with productId
-    item.productId == productId
-    // if it exists, update the quantity plus one
-      ? { ...item, quantity: item.quantity + 1 }
-      // else. return that item
-      : item
-  );
-  console.log(updatedCart);
-  updateCartData([...updatedCart]);
-};
-
-const minusButtonHandler = (cartData, productID, updateCartData) => {
-  const updatedCart = cartData.map((item) =>
-  // same concept with plus button handler but here it cannot go under 1
-    item.productId == productID && item.quantity > 1
-      ? { ...item, quantity: item.quantity - 1 }
-      : item
-  );
-  updateCartData([...updatedCart]);
-};
-
-const deleteButtonHandler = (
-  cartData,
-  productID,
-  updateCartData,
-  setTotalAmount
-) => {
-  confirmAlert({
-    title: 'Confirm to delete',
-    message: 'Are you sure you want to delete this item?',
-    buttons: [
-      {
-        label: 'Yes',
-        onClick: () => {
-          // filter out the deleted item productID and create a new array without that 
-          const filteredProducts = cartData.filter(
-            (item) => item.productId != productID
-          );
-          console.log(filteredProducts);
-          updateCartData(filteredProducts);
-          // recalulate the total amount after the deletion 
-          // with reduce, set the intial value as 0 sum all the data
-          const overallTotalAmount = filteredProducts
-            .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
-            .toFixed(2);
-          setTotalAmount(overallTotalAmount);
-        },
-      },
-      {
-        label: 'No',
-        onClick: () => {},
-      },
-    ],
-  });
-};
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [cartProductData, setCartProductData] = useState(null);
@@ -149,7 +80,6 @@ const Cart = () => {
         }
       })
       .filter((item) => item !== null); // Filter out the null values means inside database this cart item is not available anymore
-    console.log(itemsDetailsToShow);
     // same concept as above calculate total amount for all cart items
     const overallTotalAmount = itemsDetailsToShow
       .reduce((total, item) => total + parseFloat(item.totalAmount), 0)
@@ -175,7 +105,7 @@ const Cart = () => {
     }
     let isStockAvailable = true;
     let alertString = [];
-    // if user check out with empty cart, say error 
+    // if user check out with empty cart, say error
     if (!cartProductData) {
       toast.error('Please add items to cart to checkout', {
         autoClose: 3000,
@@ -184,7 +114,7 @@ const Cart = () => {
       });
       return;
     }
-    // make new array with map to fetch inventory quantity to check in Stock 
+    // make new array with map to fetch inventory quantity to check in Stock
     const productIDs = cartProductData.map((item) => item.product_id);
     // make new array with map to check inventory quantity with the data from database
     const cartData = cartProductData.map((item) => ({
@@ -198,7 +128,7 @@ const Cart = () => {
         console.log(response.data.data);
         // for all the data inside response from database
         response.data.data.forEach((inventory) => {
-          // find index of particular product id 
+          // find index of particular product id
           const quantityIndex = cartData.findIndex(
             (item) => item.productId == inventory.product_id
           );
@@ -271,7 +201,6 @@ const Cart = () => {
               ','
             )}`
           );
-          console.log(productResponse.data.data);
           setProductsDetails(productResponse.data.data);
         }
       } catch (error) {
@@ -296,7 +225,7 @@ const Cart = () => {
               console.log(response);
             });
         } else {
-          // checkout successful, delete all the cart data from both 
+          // checkout successful, delete all the cart data from both
           api.delete(`/api/cart/${customerID}`).then((response) => {
             console.log(response);
           });
@@ -324,7 +253,6 @@ const Cart = () => {
     latestCartData.current = cartData;
     if (cartData.length > 0) {
       if (productDetails && productDetails.length > 0) {
-        console.log(cartData);
         combineCartDataAndProductDetails();
         setIsLoading(false);
       } else {
@@ -341,159 +269,19 @@ const Cart = () => {
     showCheckout ? 'hidden' : 'block'
   }`;
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row font-breezeRegular">
       <div className={cartListDynamicClassName}>
         <h2 className="font-breezeBold py-4 flex flex-row">
           My Shopping Cart <FaShoppingCart />
         </h2>
-        <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black font-breezeRegular">
-          <thead className=" text-base border-b-2 md:text-xl">
-            <tr>
-              <th className="w-1/8">My Cart</th>
-              <th className="w-1/4">Product</th>
-              <th className="hidden lg:table-cell w-1/6">Price</th>
-              <th className="lg:w-1/12 text-center hidden sm:table-cell">
-                Quantity
-              </th>
-              <th className="lg:w-1/5 text-center hidden sm:table-cell">
-                Total
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr className="flex justify-center items-center">
-                <LoadingIndicator />
-              </tr>
-            ) : cartProductData &&
-              cartData.length > 0 &&
-              productDetails.length > 0 ? (
-              cartProductData.map((cartItem, index) => (
-                <tr
-                  key={`${cartItem.product_ID}-${index}`}
-                  className=" border-b-2 border-grey"
-                >
-                  <td className="flex flew-row py-6 w-48 h-56 md:w-64 md:h-64 ">
-                    <AdvancedImage
-                      cldImg={cld.image(cartItem.image_url)}
-                      className="rounded"
-                    />
-                  </td>
-                  <td>
-                    <b className="hidden md:block">{cartItem.product_name}</b>
-                    <p className="block md:hidden">{cartItem.product_name}</p>
-                    <p className="hidden md:flex flex-row">
-                      <b className="hidden lg:block">category:</b>{' '}
-                      {cartItem.category}
-                    </p>
-                    <p className="hidden md:flex flex-row">
-                      <b className="hidden lg:block">brand :</b>
-                      {cartItem.brand}
-                    </p>
-                    <div className="block lg:hidden">{cartItem.price}</div>
-                    <div className=" justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2">
-                      <button
-                        className="flex items-center justify-center "
-                        onClick={() =>
-                          minusButtonHandler(
-                            cartData,
-                            cartItem.product_id,
-                            setCartData
-                          )
-                        }
-                      >
-                        <FiMinus size={16} />
-                      </button>
-                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
-                        {cartItem.quantity}
-                      </p>
-                      <button
-                        className="flex items-center justify-center"
-                        onClick={() =>
-                          plusButtonHandler(
-                            cartData,
-                            cartItem.product_id,
-                            setCartData
-                          )
-                        }
-                      >
-                        <FiPlus size={16} />
-                      </button>
-                    </div>
-                    <div className="w-20 text-center block md:hidden">
-                      <b>${cartItem.totalAmount}</b>
-                    </div>
-                  </td>
-                  <td className="hidden lg:table-cell">${cartItem.price}</td>
-                  <td>
-                    <div className=" justify-evenly border-2 border-gray-400 rounded hidden md:flex flex-row">
-                      <button
-                        className="flex items-center justify-center "
-                        onClick={() =>
-                          minusButtonHandler(
-                            cartData,
-                            cartItem.product_id,
-                            setCartData
-                          )
-                        }
-                      >
-                        <FiMinus size={16} />
-                      </button>
-                      <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
-                        {cartItem.quantity}
-                      </p>
-                      <button
-                        className="flex items-center justify-center"
-                        onClick={() =>
-                          plusButtonHandler(
-                            cartData,
-                            cartItem.product_id,
-                            setCartData
-                          )
-                        }
-                      >
-                        <FiPlus size={16} />
-                      </button>
-                    </div>
-                  </td>
-                  <td className="w-40 text-center hidden md:table-cell">
-                    <b>${cartItem.totalAmount}</b>
-                  </td>
-                  <td className="pl-4">
-                    <button
-                      className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full"
-                      onClick={() =>
-                        deleteButtonHandler(
-                          cartData,
-                          cartItem.product_id,
-                          setCartData,
-                          setTotalAmount
-                        )
-                      }
-                    >
-                      <AiFillDelete
-                        size={20}
-                        color="white"
-                        className="hidden md:block"
-                      />
-                      <AiFillDelete
-                        size={16}
-                        color="white"
-                        className="block md:hidden"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="flex justify-center item-center">
-                  There is nothing in your cart.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <CartTable
+          isLoading={isLoading}
+          cartProductData={cartProductData}
+          cartData={cartData}
+          setCartData={setCartData}
+          setTotalAmount={setTotalAmount}
+          productDetails={productDetails}
+        />
       </div>
       <div className={checkoutDynamicClassName}>
         <div className="w-full bg-stone-700 p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">

@@ -5,8 +5,8 @@ module.exports = {
     extend: {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
-        breezeRegular: ['Breeze-Regular','sans-serif'],
-        breezeBold: ['Breeze-Bold','sans-serif'],
+        breezeRegular: ['Breeze-Regular', 'sans-serif'],
+        breezeBold: ['Breeze-Bold', 'sans-serif'],
       },
     },
   },
