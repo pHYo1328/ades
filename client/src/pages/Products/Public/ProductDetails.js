@@ -6,6 +6,7 @@ import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Carousel from 'react-bootstrap/Carousel';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../../components/Loading/Loading';
 import Rating from '../../../components/Products/Product/Rating';
@@ -23,12 +24,23 @@ const cld = new Cloudinary({
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState(null);
+  const [hasRelatedProducts, setHasRelatedProducts] = useState(false);
   const [categoryID, setCategoryID] = useState(null);
   const [brandID, setBrandID] = useState(null);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const navigate = useNavigate();
   const customerId = localStorage.getItem('userid');
+
+  const [index, setIndex] = useState(0);
+  const [images, setImages] = useState();
+  const [image, setImage] = useState('');
+
+  // changes the index of carousel
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
 
   const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
@@ -76,10 +88,6 @@ export default function ProductDetails() {
       .then((response) => {
         console.log(response);
         setProduct(response.data.data);
-        console.log("response.data.data");
-        console.log(response.data.data);
-        console.log("response.data.data.brand_id");
-        console.log(response.data.data.brand_id);
         setBrandID(response.data.data.brand_id);
         setCategoryID(response.data.data.category_id);
       })
@@ -95,10 +103,8 @@ export default function ProductDetails() {
         .get(`${baseUrl}/api/products/related/${categoryID}/${brandID}`)
         .then((response) => {
           console.log(response);
-          console.log("categoryID: ", categoryID);
-          console.log("brandID: ", brandID);
+          setHasRelatedProducts(true);
           setRelatedProducts(response.data.data);
-          console.log(setRelatedProducts);
         })
         .catch((error) => {
           console.error(error);
@@ -113,17 +119,33 @@ export default function ProductDetails() {
           {/* shows the details of the product, if the product exists */}
           {product ? (
             <div>
-              <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 md:grid md:grid-cols-2 md:grid-rows-[auto,auto,1fr] md:gap-x-8 md:px-8 md:pb-24 md:pt-16 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-                {/* shows all the images of the product */}
-                {product.image_url.map((url, index) => (
-                  // shows the image from Cloudinary
-                  <div
-                    key={index}
-                    className="max-w-xs h-auto mx-2 my-2 overflow-hidden rounded shadow-lg flex justify-center items-center"
+              <div className="mx-auto px-4 pb-16 pt-10 sm:px-6 md:px-8 md:pb-24 md:pt-16 lg:px-8 lg:pb-24 lg:pt-16">
+
+                <div className="w-full flex justify-center items-center">
+                  <Carousel
+                    activeIndex={index}
+                    onSelect={handleSelect}
+                    className="max-w-full max-h-96"
                   >
-                    <AdvancedImage cldImg={cld.image(url)} />
-                  </div>
-                ))}
+                    {/* shows all the images if exists */}
+                    {product.image_url ? (
+                      product.image_url.map((url) => (
+                        <Carousel.Item>
+                          {/* shows the image from Cloudinary */}
+                          <AdvancedImage
+                            cldImg={cld.image(url)}
+                            className="w-96 h-96 mx-auto"
+                          />
+                        </Carousel.Item>
+                      ))
+                    ) : (
+                      // Loading component (full screen)
+                      <div className="flex items-center justify-center h-screen">
+                        <Loading />
+                      </div>
+                    )}
+                  </Carousel>
+                </div>
               </div>
 
               <div className="mx-auto text-center w-full">
@@ -231,12 +253,17 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          {relatedProducts ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {relatedProducts.map((product) => (
-                <Product key={product.id} product={product} />
-              ))}
-            </div>
+          {hasRelatedProducts ? (
+            relatedProducts ? (
+              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+                {relatedProducts.map((product) => (
+                  <Product key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              // If no results match the search
+              <p className="mt-40 text-center text-gray-500">No results found</p>
+            )
           ) : (
             <div className="flex items-center justify-center h-screen">
               <Loading />
@@ -244,6 +271,6 @@ export default function ProductDetails() {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 }
