@@ -16,6 +16,8 @@ module.exports.getProductByID = async (productID) => {
           p.price,
           c.category_name,
           b.brand_name,
+          c.category_id, 
+          b.brand_id, 
           COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
           COUNT(r.rating_score) AS rating_count
       FROM
@@ -483,6 +485,43 @@ module.exports.getImagesByProductID = async (productID) => {
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getImagesByProductID: ', error));
+    throw error;
+  }
+};
+
+// get related products
+module.exports.getRelatedProducts = async (categoryID, brandID) => {
+  console.log(chalk.blue('getRelatedProducts is called'));
+  // console.log(chalk.blue(categoryID));
+  try {
+    const productsDataQuery = `
+      SELECT 
+        p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+        c.category_id,
+        b.brand_id,
+        MAX(p_i.image_url) as image_url
+      FROM 
+        category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+      WHERE
+        c.category_id = ? OR b.brand_id = ?
+      GROUP BY
+	      p.product_id
+      LIMIT 5
+
+      `;
+    const results = await pool.query(productsDataQuery, [categoryID, brandID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getRelatedProducts: ', error));
     throw error;
   }
 };

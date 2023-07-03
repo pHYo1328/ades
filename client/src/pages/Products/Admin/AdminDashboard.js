@@ -30,6 +30,8 @@ export default function AdminDashboard() {
 
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
+    const [search, setSearch] = useState(null);
+
     const [products, setProducts] = useState(null);
     const [statistics, setStatistics] = useState(null);
 
@@ -45,6 +47,8 @@ export default function AdminDashboard() {
     const [category, setCategory] = useState(null);
 
     const [activeTab, setActiveTab] = useState('home');
+
+    const [showMenu, setShowMenu] = useState(false)
 
     useEffect(() => {
         const roles = JSON.parse(localStorage.getItem('roles'));
@@ -190,11 +194,15 @@ export default function AdminDashboard() {
                     position="top-center"
                 />
 
-                <Toggle />
+                <Toggle showMenu={showMenu} setShowMenu={() => setShowMenu()} />
 
                 <aside id="default-sidebar" class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0" aria-label="Sidebar">
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
                 </aside>
+
+                {showMenu && (
+                    <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
+                )}
 
                 <div className="p-4 sm:ml-64 top-25 overflow-hidden">
                     <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">

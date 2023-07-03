@@ -43,7 +43,9 @@ exports.processGetProductByID = async (req, res, next) => {
       average_rating: productData.average_rating,
       rating_count: productData.rating_count,
       quantity: productData.quantity,
-      image_url: imageData.map((u) => u.image_url),
+      category_id: productData.category_id,
+      brand_id: productData.brand_id,
+      image_url: imageData.map((u) => u.image_url)
     };
 
     return res.status(200).json({
@@ -626,6 +628,47 @@ exports.processGetImagesByProductID = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in getImagesByProductID: ', error));
+    return next(error);
+  }
+};
+
+// get related products
+exports.processGetRelatedProducts = async (req, res, next) => {
+  console.log(chalk.blue('processGetRelatedProducts running'));
+  // const { productID } = req.params;
+  const { categoryID, brandID } = req.params;
+  try {
+    const productData = await productServices.getRelatedProducts(
+      categoryID, brandID
+    );
+    if (productData) {
+      console.log(chalk.yellow('Product data: ', productData));
+      const products = productData.map((product) => ({
+        product_id: product.product_id,
+        product_name: product.product_name,
+        price: product.price,
+        description: product.description,
+        category_name: product.category_name,
+        brand_name: product.brand_name,
+        image_url: product.image_url,
+        category_id: product.category_id,
+        brand_id: product.brand_id
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'Read product details successful',
+        data: products,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No related products exists',
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red('Error in getRelatedProducts: ', error));
     return next(error);
   }
 };
