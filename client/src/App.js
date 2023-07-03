@@ -28,7 +28,6 @@ import OrderToDeliver from './pages/Order/OrderToDeliver/OrderToDeliver';
 import OrderToPay from './pages/Order/OrderToPay/OrderToPay';
 import OrderAdmin from './pages/Order/Admin/OrderAdmin';
 import LandingPage from './pages/Home/LandingPage';
-import UserLandingPage from './pages/Home/LandingPageLoggedIn';
 import ProductCreate from './pages/Products/Admin/ProductCreate';
 import ProductEdit from './pages/Products/Admin/ProductEdit';
 import Payment from './pages/Stripe/Payment';
@@ -44,15 +43,23 @@ import './input.css';
 
 function App() {
   const location = useLocation();
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  // const [isSignedIn, setIsSignedIn] = useState(false);
   const adminHeaderRoutes = [
     '/admin',
     '/products/edit/:productID:productID',
     '/products/create',
     '/homepage-admin',
+    '/users',
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/homepage']; // Specify the routes where the header should be signed in headers
-  const hiddenHeaderRoutes = ['/userLanding']; //Specify the routes where the headers should be hidden
+  const SignedInHeaderRoutes = [
+    '/',
+    '/homepage',
+    '/products',
+    '/user-profile',
+    '/cart',
+    '/orderDelivered',
+  ]; // Specify the routes where the header should be signed in headers
+  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
   //   const userIsSignedIn = checkUserIsSignedIn();
@@ -65,21 +72,23 @@ function App() {
   //   return userId !== null;
   // };
 
+  const isSignedIn = localStorage.getItem('isSignedIn') === 'true'; // Get the isSignedIn status from localStorage
+  const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
+
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
   const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
   let headerComponent = null;
 
   if (hideHeader) {
-    headerComponent = null; // Hide the header
+    headerComponent = null;
   } else if (adminHeader) {
-    headerComponent = <AdminHeader />;
+    headerComponent = isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
   } else if (signedInHeader) {
-    headerComponent = <SignedInHeader />;
+    headerComponent = isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
   } else {
     headerComponent = <Header />;
   }
-
   // if (hideHeader) {
   //   headerComponent = null; // Hide the header
   // } else if (adminHeader) {
@@ -99,7 +108,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/userLanding" element={<UserLandingPage />} />
+            {/* <Route path="/userLanding" element={<UserLandingPage />} /> */}
 
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />

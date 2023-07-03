@@ -5,9 +5,11 @@ import axios from 'axios';
 import chalk from 'chalk';
 
 import Carousel from 'react-bootstrap/Carousel';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import Loading from '../../Loading/Loading';
 
 import { FadeLoader } from 'react-spinners';
 
@@ -38,12 +40,34 @@ export default function EditImage() {
     setImagePath(path);
   };
 
+  // gets all the images of the product
+  const getImages = () => {
+    axios
+      .get(`${baseUrl}/api/products/${productID}/images`)
+      .then((response) => {
+        console.log(response);
+        setImages(response.data.data);
+        console.log(images);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getImages();
+  }, []);
+
   // updates the images when the user clicks on submit
   const handleSubmit = async (event) => {
     console.log(chalk.yellow('submit button is clicked!'));
     event.preventDefault();
     if (!imagePath || !productID) {
-      window.alert('Please fill in all fields.');
+      toast.error(`Please fill in all the fields.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
     } else {
       const requestBody = {
         product_id: productID,
@@ -62,99 +86,79 @@ export default function EditImage() {
         })
         .then((response) => {
           console.log(response);
+          toast.success(`Image updated.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
           setImage(response.data.data);
           console.log(image);
-          window.location.reload();
+          getImages();
+          // window.location.reload();
         });
     }
   };
 
-  // gets all the images of the product
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/products/${productID}/images`)
-      .then((response) => {
-        console.log(response);
-        setImages(response.data.data);
-        console.log(images);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
   return (
     <div>
-      <div
-        class="row"
-        style={{ width: '400px', margin: 'auto', marginTop: '50px' }}
-      >
-        <div class="col-6">
-          <div style={{ width: '200px', margin: 'auto' }}>
-            <UploadWidget onImageChange={handleImageChange} />
-          </div>
+      <div className="flex justify-between mt-4 space-x-4">
+        <div className="mb-3 w-6/12">
+          <UploadWidget onImageChange={handleImageChange} />
         </div>
-        <div class="col-6 d-flex align-items-center">
-          <div style={{ margin: 'auto', width: '200px' }}>
-            <button
-              type="submit"
-              id="submit"
-              class="btn btn-outline-primary ml-4 h-100 w-100"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
+        <div className="mb-3 w-6/12">
+          <button
+            type="submit"
+            id="submit"
+            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       </div>
 
-      <div
-        style={{ marginLeft: 'auto', marginRight: 'auto', width: '500px' }}
-        className="text-center"
-      >
-        <button
-          class="btn btn-outline-primary mb-3 mt-4 w-50"
-          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-          onClick={() => {
-            // delete all images of the product
-            console.log('delete all images for the product');
-            console.log(productID);
-            axios
-              .delete(`${baseUrl}/api/products/${productID}/images`)
-              .then((res) => {
-                console.log('deleted');
-                setImages();
-              });
-          }}
-        >
-          Delete All Images
-        </button>
-      </div>
+      <div className="mt-3 w-200 h-300 mx-auto">
+        <div className="mx-auto lg:w-6/12 md:w-9/12 sm:w-11/12 mb-4">
+          <button
+            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm mt-4"
+            onClick={() => {
+              // delete all images of the product
+              console.log('delete all images for the product');
+              console.log(productID);
+              axios
+                .delete(`${baseUrl}/api/products/${productID}/images`)
+                .then((res) => {
+                  console.log('deleted');
+                  toast.success(`Images deleted.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { fontSize: '16px' },
+                  });
+                  getImages();
+                  setIndex(0);
+                });
+            }}
+          >
+            Delete All Images
+          </button>
+        </div>
 
-      <div
-        style={{
-          width: '400px',
-          height: '400px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}
-        class="mt-3"
-      >
         <Carousel
           activeIndex={index}
           onSelect={handleSelect}
-          style={{ maxWidth: '100%', maxHeight: '200px', margin: '0 auto' }}
+          className="max-w-full max-h-64 mx-auto"
         >
           {/* shows all the images if exists */}
           {images ? (
             images.map((image) => (
               <Carousel.Item>
-                <div style={{ position: 'relative' }}>
-                  <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <button
-                        onClick={() => {
-                          // delete the image at the index by using imageID
+                <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
+                  <div className="flex justify-center">
+                    <button
+                      // disabled={images.length <= 1}
+                      onClick={() => {
+                        if (images.length > 1) {
+                          // Delete the image at the index by using imageID
                           const imageID = image.image_id;
                           axios
                             .delete(`${baseUrl}/api/products/images/${imageID}`)
@@ -162,47 +166,49 @@ export default function EditImage() {
                               const updatedImages = images.filter(
                                 (i) => i.image_id !== imageID
                               );
+                              toast.success(`Image deleted.`, {
+                                autoClose: 3000,
+                                pauseOnHover: true,
+                                style: { fontSize: '16px' },
+                              });
                               setImages(updatedImages);
+                              setIndex(0);
                             });
-                        }}
-                        style={{
-                          borderRadius: '50%',
-                          backgroundColor: 'black',
-                          width: '30px',
-                          height: '30px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          border: 'none',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <i
-                          class="bi bi-trash-fill"
-                          style={{ color: 'white' }}
-                        ></i>
-                      </button>
-                    </div>
-                  </Carousel.Caption>
-                  {/* shows the image from Cloudinary */}
-                  <AdvancedImage cldImg={cld.image(image.image_url)} />
-                </div>
+                        } else {
+                          // Show an alert when trying to delete the only image
+                          toast.error(
+                            `Each product should have at least one image.`,
+                            {
+                              autoClose: 3000,
+                              pauseOnHover: true,
+                              style: { fontSize: '16px' },
+                            }
+                          );
+                        }
+                      }}
+                      className="rounded-full bg-black w-8 h-8 flex items-center justify-center border-none cursor-pointer"
+                    >
+                      <i className="bi bi-trash-fill text-white"></i>
+                    </button>
+                  </div>
+                </Carousel.Caption>
+                {/* shows the image from Cloudinary */}
+                <AdvancedImage
+                  cldImg={cld.image(image.image_url)}
+                  className="w-64 h-64 mx-auto"
+                />
               </Carousel.Item>
             ))
           ) : (
-            <div className="mx-auto flex flex-col items-center">
-              <FadeLoader
-                color={'navy'}
-                loading={true}
-                size={100}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p>Loading...</p>
+            // Loading component (full screen)
+            <div className="flex items-center justify-center h-screen">
+              <Loading />
             </div>
           )}
         </Carousel>
       </div>
+
+      <ToastContainer limit={2} newestOnTop={true} position="top-center" />
     </div>
   );
 }

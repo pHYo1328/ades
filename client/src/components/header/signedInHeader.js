@@ -36,6 +36,7 @@ const SignedInHeader = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userid');
     localStorage.removeItem('roles');
+    localStorage.removeItem('isSignedIn');
     navigate('/');
   };
 
@@ -48,25 +49,25 @@ const SignedInHeader = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-tertiary shadow">
       <div className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="text-lg font-bold text-gray-800">
+            <Link to="/" className="text-lg font-bold text-white">
               TECHZERO
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            <Link to="/products" className="text-gray-800 hover:text-gray-600">
+            <Link to="/products" className="text-white hover:text-gray-600">
               Products
             </Link>
-            <Link to="/cart" className="text-gray-800 hover:text-gray-600">
+            <Link to="/cart" className="text-white hover:text-gray-600">
               Cart
             </Link>
             <div className="relative" ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}
-                className="text-gray-800 hover:text-gray-600"
+                className="text-white hover:text-gray-600"
               >
                 User
               </button>
@@ -111,9 +112,15 @@ const SignedInHeader = () => {
               Log out
             </button>
 
-            <Link to="/login-admin">
+            {/* <Link to="/login-admin">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Admin
+              </button>
+            </Link> */}
+
+            <Link to="/user-profile">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
+                User Profile
               </button>
             </Link>
           </div>

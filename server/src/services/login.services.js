@@ -4,7 +4,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // creates new user
-module.exports.registerUser = async (username, email, password, roles) => {
+module.exports.registerUser = async (
+  username,
+  email,
+  password,
+  roles,
+  image_url
+) => {
   console.log(chalk.blue('User registered successfully'));
   try {
     //  // Check if the username already exists in the database
@@ -18,14 +24,17 @@ module.exports.registerUser = async (username, email, password, roles) => {
     //   error.status = 500;
     //   throw error;
     // }
+
     // insert the new user
+
     const registerUserQuery =
-      'INSERT INTO users (username, email, password, roles) VALUES (?, ?, ?, ?);';
+      'INSERT INTO users (username, email, password, roles, image_url) VALUES (?, ?, ?, ?, ?);';
     const results = await pool.query(registerUserQuery, [
       username,
       email,
       password,
       roles,
+      image_url,
     ]);
     console.log(chalk.green(results));
     return results;

@@ -25,6 +25,8 @@ const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
+const stripe = require('../config/stripe');
+const { handleWebhooks } = require('../controller/checkout.controller');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -79,6 +81,10 @@ module.exports = (app, router) => {
   router.get(
     '/api/products/rating/:productID',
     productController.processGetAllRatingsByProductID
+  );
+  router.get(
+    '/api/products/related/:categoryID/:brandID',
+    productController.processGetRelatedProducts
   );
 
   // DELETE
@@ -223,17 +229,34 @@ module.exports = (app, router) => {
     checkoutController.createPaymentIntent
   );
 
+  // router.post(
+  //   '/handleChargeSucceeded',
+  //   checkoutController.handleChargeSucceeded
+  // );
+
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
-    bodyParser.raw({ type: 'application/json' }),
-    checkoutController.createWebhooks
-  ),
-    router.get(
-      '/api/paymentByStatus/:orderID',
-      // verifyAccessToken.verifyToken,
-      paymentController.processGetPaymentByStatus
-    );
+    bodyParser.json({ type: 'application/json' }),
+    async (req, res) => {
+      const createWebhookEndpoint = async () => {
+        const endpoint = await stripe.webhookEndpoints.create({
+          url: 'https://techzero-v3-1.onrender.com/webhook',
+          enabled_events: ['charge.refunded', 'charge.succeeded'],
+        });
+        console.log('Webhook endpoint created:', endpoint);
+      };
+
+      await createWebhookEndpoint();
+      await handleWebhooks(req, res);
+    }
+  );
+
+  router.get(
+    '/api/paymentByStatus/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByStatus
+  );
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 
@@ -267,6 +290,10 @@ module.exports = (app, router) => {
   router.post('/verify-email', verificationEmail.sendForgotPasswordEmail);
 
   router.get('/user-profile', customerProfile.userProfileInformation);
+
+  router.put('/update-userProfile', customerProfile.updateUserProfile);
+
+  router.put('/update-userProfileImage', customerProfile.updateProfileImage);
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import api from '../../../index';
-import { FadeLoader } from 'react-spinners';
+import Loading from '../../../components/Loading/Loading';
 export default function AllBrandsAndCategories() {
   const [brands, setBrands] = useState(null);
   const [categories, setCategories] = useState(null);
@@ -95,100 +95,81 @@ export default function AllBrandsAndCategories() {
   };
 
   return (
-    <div className="bg-white w-full text-dark text-left container-fluid align-items-center">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div class="col-10" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-          <div class="row">
-            <div class="col-10 h5 font-weight-bold">Brands</div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-            {/* shows all brands */}
+    <div className="bg-white w-full">
+      <div className="bg-white w-11/12 mx-auto text-dark text-left">
+        <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          {/* Brands */}
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold mb-6">Brands</h2>
             {brands ? (
-              brands.map((brand) => (
-                <div
-                  className="group relative border border-gray-300 rounded p-4"
-                  key={brand.brand_id}
-                >
-                  <div className="flex justify-between">
-                    <div className="text-left d-flex align-items-center">
-                      <h3 className="text-sm text-gray-700">
-                        {/* link to ProductsByBrand to show all the products related to the brand */}
-                        <Link to={`/brands/${brand.brand_id}`}>
-                          {brand.brand_name}
-                        </Link>
-                      </h3>
-                    </div>
-
-                    <div>
-                      {/* bookmark button */}
-                      <button
-                        onClick={() => bookmarkClickHandler(brand.brand_id)}
-                      >
-                        <i
-                          className={`bi bi-bookmark${
-                            bookmarkStatus[brand.brand_id] ? '-fill' : ''
-                          }`}
-                        ></i>
-                      </button>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                {brands.map((brand) => (
+                  <div
+                    className="group relative border border-gray-300 rounded p-4"
+                    key={brand.brand_id}
+                  >
+                    <div className="flex justify-between">
+                      <div className="text-left">
+                        <h3 className="text-sm text-gray-700">
+                          {/* link to ProductsByBrand to show all the products related to the brand */}
+                          <Link to={`/brands/${brand.brand_id}`}>
+                            {brand.brand_name}
+                          </Link>
+                        </h3>
+                      </div>
+                      <div>
+                        {/* bookmark button */}
+                        <button
+                          onClick={() => bookmarkClickHandler(brand.brand_id)}
+                        >
+                          <i
+                            className={`bi bi-bookmark${
+                              bookmarkStatus[brand.brand_id] ? '-fill' : ''
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
+              // Loading component (full screen)
+              <div className="flex items-center justify-center">
+                <Loading />
               </div>
             )}
           </div>
 
-          <hr class="mt-5"></hr>
+          <hr className="my-10" />
 
-          <div class="row mt-5">
-            <div class="col-10 h5 font-weight-bold">Categories</div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-            {/* shows all categories */}
+          {/* Categories */}
+          <div>
+            <h2 className="text-2xl font-bold mb-6">Categories</h2>
             {categories ? (
-              categories.map((category) => (
-                <div
-                  className="group relative border border-gray-300 rounded p-4"
-                  key={category.category_id}
-                >
-                  <div className="flex justify-between">
-                    <div className="text-left flex items-center">
-                      <h3 className="text-sm text-gray-700">
-                        {/* goes to ProductsByCategory to show all the products related to the category */}
-                        <Link to={`/categories/${category.category_id}`}>
-                          {category.category_name}
-                        </Link>
-                      </h3>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                {categories.map((category) => (
+                  <div
+                    className="group relative border border-gray-300 rounded p-4"
+                    key={category.category_id}
+                  >
+                    <div className="flex justify-between">
+                      <div className="text-left">
+                        <h3 className="text-sm text-gray-700">
+                          {/* goes to ProductsByCategory to show all the products related to the category */}
+                          <Link to={`/categories/${category.category_id}`}>
+                            {category.category_name}
+                          </Link>
+                        </h3>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <div className="flex items-center justify-center h-screen">
-                <div className="mx-auto flex flex-col items-center">
-                  <FadeLoader
-                    color={'navy'}
-                    loading={true}
-                    size={100}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                  <p>Loading...</p>
-                </div>
+              // Loading component (full screen)
+              <div className="flex items-center justify-center">
+                <Loading />
               </div>
             )}
           </div>

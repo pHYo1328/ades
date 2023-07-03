@@ -62,3 +62,25 @@ const OrderDelivered = () => {
 };
 
 export default OrderDelivered;
+
+{
+  /* <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
+      <div className="flex h-screen w-screen m-3">
+        <div className="bg-gray-800 text-white ml-10 w-64 flex-none rounded-tl-lg rounded-bl-lg">
+          <nav className="p-4">
+            <ul className="space-y-2">
+              <li className="py-2">
+                <a href="/user-profile" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Profile Page</a>
+              </li>
+              <li className="py-2">
+                <a href="#" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Order History</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        
+
+      </div>
+</div> */
+}

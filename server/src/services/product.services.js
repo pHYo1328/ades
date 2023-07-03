@@ -16,6 +16,8 @@ module.exports.getProductByID = async (productID) => {
           p.price,
           c.category_name,
           b.brand_name,
+          c.category_id, 
+          b.brand_id, 
           COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
           COUNT(r.rating_score) AS rating_count
       FROM
@@ -358,6 +360,7 @@ module.exports.getSearchResults = async (
   min_price
 ) => {
   console.log(chalk.blue('getSearchResults is called'));
+
   try {
     let searchResultsDataQuery = `
       SELECT
@@ -379,16 +382,15 @@ module.exports.getSearchResults = async (
     if (product_name) {
       searchResultsDataQuery += `
         AND (p.product_name RLIKE ? 
-          OR c.category_name RLIKE ? 
-          OR b.brand_name RLIKE ? 
-          OR p.description RLIKE ?)`;
+          OR c.category_name = ? 
+          OR b.brand_name = ?)`;
       queryInput.push(product_name, product_name, product_name, product_name);
     }
-    if (category_id) {
+    if (category_id && category_id != 0) {
       searchResultsDataQuery += ` AND p.category_id = ?`;
       queryInput.push(category_id);
     }
-    if (brand_id) {
+    if (brand_id && brand_id != 0) {
       searchResultsDataQuery += ` AND p.brand_id = ?`;
       queryInput.push(brand_id);
     }
@@ -483,6 +485,43 @@ module.exports.getImagesByProductID = async (productID) => {
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getImagesByProductID: ', error));
+    throw error;
+  }
+};
+
+// get related products
+module.exports.getRelatedProducts = async (categoryID, brandID) => {
+  console.log(chalk.blue('getRelatedProducts is called'));
+  // console.log(chalk.blue(categoryID));
+  try {
+    const productsDataQuery = `
+      SELECT 
+        p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+        c.category_id,
+        b.brand_id,
+        MAX(p_i.image_url) as image_url
+      FROM 
+        category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+      WHERE
+        c.category_id = ? OR b.brand_id = ?
+      GROUP BY
+	      p.product_id
+      LIMIT 5
+
+      `;
+    const results = await pool.query(productsDataQuery, [categoryID, brandID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getRelatedProducts: ', error));
     throw error;
   }
 };
@@ -651,14 +690,33 @@ module.exports.deleteImageByID = async (imageID) => {
 // delete all images by product id
 module.exports.deleteImagesByProductID = async (productID) => {
   console.log(chalk.blue('deleteImagesByProductID is called'));
+  const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
+  const addDefaultImageQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to product.services.js deleteImagesByProductID function'
+    )
+  );
   try {
-    const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
-    const results = await pool.query(deleteImageQuery, [productID]);
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+    let imageValues = [[[productID, 'ades/product_default_image_gr1qpm']]];
+    await pool.query(deleteImageQuery, [productID]);
+
+    const results = await connection.query(addDefaultImageQuery, imageValues);
+
+    await connection.commit();
+
     console.log(chalk.green(results[0].affectedRows));
     return results[0].affectedRows > 0;
   } catch (error) {
+    await connection.rollback();
     console.error(chalk.red('Error in deleteImageByID: ', error));
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -802,8 +860,17 @@ module.exports.createProduct = async (
     );
     const productID = productResult[0].insertId;
 
-    let imageValues = [image.map((i) => [productID, i])];
-    console.log(chalk.blue(imageValues));
+    let imageValues;
+
+    if (image.length > 0) {
+      imageValues = [image.map((i) => [productID, i])];
+    } else {
+      imageValues = [[[productID, 'ades/product_default_image_gr1qpm']]];
+    }
+
+    console.log('image length: ', imageValues.length);
+
+    console.log(chalk.blue('images', imageValues));
     await connection.query(imageCreateQuery, imageValues);
 
     const inventoryData = [productID, quantity];
@@ -866,8 +933,19 @@ module.exports.createBrandOrCategory = async (name, type) => {
     console.log(chalk.green(results[0]));
     return results[0].affectedRows > 0;
   } catch (error) {
-    console.error(chalk.red('Error in createBrandOrCategory: ', error));
-    throw error;
+    if (
+      error.sqlState === '23000' &&
+      error.sqlMessage.includes('Duplicate entry')
+    ) {
+      console.log(chalk.red('Duplicate entry error:', error.sqlMessage));
+      console.log('thinzar no rizz');
+      return -1;
+    }
+    // throw error;
+    else {
+      console.error(chalk.red('Error in createBrandOrCategory: ', error));
+      throw error;
+    }
   }
 };
 

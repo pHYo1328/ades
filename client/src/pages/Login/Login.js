@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -7,7 +7,13 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
+    if (isUserSignedIn) {
+      navigate('/');
+    }
+  }, []);
 
   const onHandleSubmit = () => {
     if (!username || !password) {
@@ -34,6 +40,7 @@ function Login() {
         if (data.success) {
           setErrorMessage('');
           alert('successful login');
+
           navigate('/verify-otp', { state: data });
         } else {
           setErrorMessage('Incorrect username or password');

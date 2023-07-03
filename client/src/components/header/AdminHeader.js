@@ -36,6 +36,7 @@ const Header = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
+    localStorage.removeItem('isAdminSignedIn');
     navigate('/');
   };
 
@@ -48,7 +49,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow top-0 left-0 sticky z-2">
       <div className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center">

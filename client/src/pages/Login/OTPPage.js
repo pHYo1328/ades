@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../index';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,13 @@ const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
+
+  useEffect(() => {
+    const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
+    if (isUserSignedIn) {
+      navigate('/');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,8 +37,9 @@ const VerifyOTP = () => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('userid', data.userid);
         localStorage.setItem('roles', JSON.stringify(data.roles));
+        localStorage.setItem('isSignedIn', 'true');
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
-        navigate('/userLanding');
+        navigate('/');
       } else {
         alert('Invalid OTP');
         console.log('Invalid OTP');
@@ -40,6 +48,7 @@ const VerifyOTP = () => {
       console.error(error);
     }
   };
+
   return (
     <div className="max-w-md mx-auto mt-8">
       <form onSubmit={handleSubmit}>

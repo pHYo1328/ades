@@ -1,22 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-// import Pagination from '@mui/material/Pagination';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
 import Pagination from '../../../components/Products/Pagination';
-import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
+import Loading from '../../../components/Loading/Loading';
+import Product from '../../../components/Products/Product/Product';
+import Brands from '../../../components/Products/Product/Brands';
+import Categories from '../../../components/Products/Product/Categories';
 
 export default function ProductsPage() {
   const [resetPage, setResetPage] = useState(true);
   const [products, setProducts] = useState(null);
-  const [brands, setBrands] = useState(null);
-  const [categories, setCategories] = useState(null);
   const [categoryID, setCategoryID] = useState(0);
   const [brandID, setBrandID] = useState(0);
   const [sort, setSort] = useState(0);
@@ -26,34 +18,6 @@ export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [offset, setOffset] = useState(0);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-
-  // get all category for drop down selection
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/category`)
-      .then((response) => {
-        console.log(response);
-        setCategories(response.data.data);
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // get all brands for drop down selection
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/brands`)
-      .then((response) => {
-        console.log(response);
-        setBrands(response.data.data);
-        console.log(brands);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   // changes the offset and current page as the user changes the page using pagination
   const handlePageChange = (page) => {
@@ -82,7 +46,6 @@ export default function ProductsPage() {
       )
       .then((response) => {
         console.log(response);
-        console.log('short');
         console.log(response.data.data);
         setProducts(response.data.data);
         console.log(products);
@@ -130,171 +93,86 @@ export default function ProductsPage() {
 
   return (
     <div className="bg-white w-full">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div class="row">
-          <div class="col-4">
-            <h2
-              className="text-2xl font-bold tracking-tight text-gray-900 text-center"
-              class="h2"
-            >
-              Products
-            </h2>
-          </div>
-          <div class="col-2">
-            <div class="input-group mb-3">
-              <input
-                min="1"
-                type="number"
-                class="form-control form-control-sm"
-                value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
-                placeholder="Limit"
-                aria-describedby="basic-addon2"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">
+      <div className="bg-white w-11/12 mx-auto">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="flex flex-wrap items-center mb-10">
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 text-left">
+                Products
+              </h2>
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <div className="flex items-center">
+                <input
+                  min="1"
+                  type="number"
+                  className="border border-gray-300 rounded-md py-2 px-3 w-full"
+                  value={limit}
+                  onChange={(e) => setLimit(parseInt(e.target.value))}
+                  placeholder="Limit"
+                  aria-describedby="basic-addon2"
+                />
+                <span className="ml-2 text-sm text-gray-600">
                   Products/Page
                 </span>
               </div>
             </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <select
+                className="form-select form-select-md w-full"
+                aria-label=".form-select-sm example"
+                onChange={(e) => setSort(e.target.value)}
+              >
+                <option disabled selected value={0}>
+                  Sort
+                </option>
+                <option value={1}>Price (Ascending)</option>
+                <option value={2}>Price (Descending)</option>
+                <option value={3}>Name (A-Z)</option>
+                <option value={4}>Name (Z-A)</option>
+              </select>
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <Categories setCategoryID={setCategoryID} all={true} />
+            </div>
+            <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
+              <Brands setBrandID={setBrandID} all={true} />
+            </div>
           </div>
-          <div class="col-2">
-            <select
-              class="form-select form-select-sm"
-              aria-label=".form-select-sm example"
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option disabled selected value={0}>
-                Sort
-              </option>
-              <option value={1}>Price (Ascending)</option>
-              <option value={2}>Price (Descending)</option>
-              <option value={3}>Name (A-Z)</option>
-              <option value={4}>Name (Z-A)</option>
-            </select>
-          </div>
-          <div class="col-2">
-            <select
-              class="form-select form-select-sm"
-              onChange={(e) => setCategoryID(e.target.value)}
-            >
-              <option disabled selected value="0">
-                -- CATEGORY --
-              </option>
-              {/* shows all the categories for drop down select */}
-              {categories ? (
-                categories.map((category) => (
-                  <option value={category.category_id}>
-                    {category.category_name}
-                  </option>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-screen">
-                  <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
-                </div>
-              )}
-              <option value={0}>All</option>
-            </select>
-          </div>
-          <div class="col-2">
-            <select
-              class="form-select form-select-sm"
-              onChange={(e) => setBrandID(e.target.value)}
-            >
-              <option disabled selected value>
-                -- BRAND --
-              </option>
-              {/* shows all the brands for drop down select */}
-              {brands ? (
-                brands.map((brand) => (
-                  <option value={brand.brand_id}>{brand.brand_name}</option>
-                ))
-              ) : (
-                <div className="flex items-center justify-center h-screen">
-                  <div className="mx-auto flex flex-col items-center">
-                    <FadeLoader
-                      color={'navy'}
-                      loading={true}
-                      size={100}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
-                    <p>Loading...</p>
-                  </div>
-                </div>
-              )}
-              <option value={0}>All</option>
-            </select>
-          </div>
-        </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
           {/* shows all the products, based on the filter input */}
           {products ? (
-            products.map((product) => (
-              <div key={product.product_id} className="group relative">
-                <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-50">
-                  <AdvancedImage cldImg={cld.image(product.image_url)} />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div className="text-left">
-                    <h3 className="text-sm text-gray-700">
-                      <Link to={`/product/${product.product_id}`}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.product_name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.brand_name}
-                    </p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900 justify-start">
-                    {product.price}
-                  </p>
-                </div>
+            products.length > 0 ? (
+              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+                {products.map((product) => (
+                  <Product product={product} />
+                ))}
               </div>
-            ))
+            ) : (
+              <p className="mt-40 text-center text-gray-500">
+                No results found
+              </p>
+            )
           ) : (
+            // Loading component (full screen)
             <div className="flex items-center justify-center h-screen">
-              <div className="mx-auto flex flex-col items-center">
-                <FadeLoader
-                  color={'navy'}
-                  loading={true}
-                  size={100}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p>Loading...</p>
-              </div>
+              <Loading />
             </div>
           )}
         </div>
-      </div>
 
-      <div
-        class="pb-5 mb-5"
-        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-      >
-        {/* handles pagination */}
-        <Pagination
-          style={{ marginLeft: 'auto', marginRight: 'auto' }}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-        {/* shows the current page that the user is at */}
-        <p class="text-center h6 mt-4">
-          {currentPage} / {totalPages}
-        </p>
+        <div className="pb-5 mb-5 mx-auto">
+          {/* handles pagination */}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+          {/* shows the current page that the user is at */}
+          <p className="text-center text-sm mt-4">
+            {currentPage} / {totalPages}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -2,18 +2,20 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import React from 'react';
-import { FadeLoader } from 'react-spinners';
 import axios from 'axios';
 import chalk from 'chalk';
 import { Link } from 'react-router-dom';
+import Categories from '../Product/Categories';
+import Brands from '../Product/Brands';
+import Loading from '../../Loading/Loading';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ProductEditForm() {
   const { productID } = useParams();
   const [productData, setProductData] = useState();
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-  const [brands, setBrands] = useState(null);
-  const [categories, setCategories] = useState(null);
   const [product, setProduct] = useState(null);
 
   const [productName, setProductName] = useState();
@@ -31,35 +33,12 @@ export default function ProductEditForm() {
       .then((response) => {
         console.log(response);
         setProductData(response.data.data);
-        console.log(productData);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // gets all the category names to show in drop down select
-  const getCategories = () => {
-    axios
-      .get(`${baseUrl}/api/category`)
-      .then((response) => {
-        console.log(response);
-        setCategories(response.data.data);
-        console.log(categories);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // gets all the brand names to show in drop down select
-  const getBrands = () => {
-    axios
-      .get(`${baseUrl}/api/brands`)
-      .then((response) => {
-        console.log(response);
-        setBrands(response.data.data);
-        console.log(brands);
+        setProductName(response.data.data.product_name);
+        setProductDescription(response.data.data.description);
+        setProductBrand(response.data.data.category_id);
+        setProductCategory(response.data.data.brand_id);
+        setProductPrice(response.data.data.price);
+        setProductQuantity(response.data.data.quantity);
       })
       .catch((error) => {
         console.error(error);
@@ -68,11 +47,9 @@ export default function ProductEditForm() {
 
   useEffect(() => {
     getProducts();
-    getCategories();
-    getBrands();
   }, []);
 
-  console.log(productData);
+  // console.log("product data:", productData);
 
   // changes the details of the product as the user clicks on submit button
   const handleSubmit = async (event) => {
@@ -90,183 +67,182 @@ export default function ProductEditForm() {
     };
 
     console.log(requestBody);
-
-    axios
-      .put(`${baseUrl}/api/products/${productID}`, requestBody, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setProduct(response.data.data);
-        console.log(product);
+    if (productName == '' || productDescription == '') {
+      toast.error(`Please fill in all the fields.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
       });
-
-    // alter the user about the changes saved
-    window.alert('Changes saved!');
+    } else if (isNaN(productQuantity) || productQuantity < 0) {
+      toast.error(`Inventory must be a value not less than 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
+    } else if (isNaN(productPrice) || productPrice <= 0) {
+      toast.error(`Price must be a value not less than or equal to 0.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
+    } else {
+      axios
+        .put(`${baseUrl}/api/products/${productID}`, requestBody, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          toast.success(`Changes saved.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
+          console.log(response);
+          setProduct(response.data.data);
+          console.log(product);
+        });
+    }
   };
 
   return (
-    <div>
-      <form
-        id="create-product-form"
-        class="w-50 mt-5"
-        style={{ marginLeft: 'auto', marginRight: 'auto' }}
-        encType="multipart/form-data"
-      >
-        {/* shows the details of the product if the product exists */}
-        {productData && (
-          <div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label h6">
-                Product Name
+    <form
+      id="create-product-form"
+      style={{ marginLeft: 'auto', marginRight: 'auto' }}
+      encType="multipart/form-data"
+    >
+      {/* shows the details of the product if the product exists */}
+      {productData ? (
+        <div>
+          <div className="mb-3">
+            <label
+              htmlFor="exampleFormControlInput1"
+              className="block text-base font-semibold mb-1"
+            >
+              Product Name
+            </label>
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              defaultValue={productData.product_name}
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label
+              htmlFor="exampleFormControlInput1"
+              className="block text-base font-semibold mb-1"
+            >
+              Description
+            </label>
+            <textarea
+              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+              placeholder="Description"
+              rows={3}
+              defaultValue={productData.description}
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label
+                htmlFor="exampleFormControlInput1"
+                className="block text-base font-semibold mb-1"
+              >
+                Price
               </label>
               <input
-                type="text"
-                class="form-control form-control-sm"
-                defaultValue={productData.product_name}
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                type="number"
+                min="0"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                defaultValue={productData.price}
+                value={productPrice}
+                onChange={(e) => setProductPrice(e.target.value)}
+                placeholder="Price"
               />
             </div>
-
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label h6">
-                Description
+            <div className="mb-3">
+              <label
+                htmlFor="exampleFormControlInput1"
+                className="block text-base font-semibold mb-1"
+              >
+                Inventory
               </label>
-              <textarea
-                class="form-control form-control-sm"
-                placeholder="Description"
-                rows={3}
-                defaultValue={productData.description}
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
+              <input
+                min="0"
+                type="number"
+                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
+                placeholder="Inventory (Quantity)"
+                defaultValue={productData.quantity}
+                value={productQuantity}
+                onChange={(e) => setProductQuantity(e.target.value)}
               />
             </div>
-            <div class="row">
-              <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label  h6">
-                  Price
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  class="form-control form-control-sm"
-                  defaultValue={productData.price}
-                  value={productPrice}
-                  onChange={(e) => setProductPrice(e.target.value)}
-                  placeholder="Price"
-                />
-              </div>
-              <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label h6">
-                  Inventory (Quantity)
-                </label>
-                <input
-                  min="0"
-                  type="number"
-                  class="form-control form-control-sm"
-                  placeholder="Inventory (Quantity)"
-                  defaultValue={productData.quantity}
-                  value={productQuantity}
-                  onChange={(e) => setProductQuantity(e.target.value)}
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label h6">
-                  Category
-                </label>
-                <select
-                  class="form-select form-select-sm"
-                  onChange={(e) => setProductCategory(e.target.value)}
-                >
-                  {/* shows all the categories for the drop down */}
-                  {categories ? (
-                    categories.map((category) => (
-                      <option
-                        value={category.category_id}
-                        selected={
-                          category.category_name === productData.category_name
-                        }
-                      >
-                        {category.category_name}
-                      </option>
-                    ))
-                  ) : (
-                    <div className="mx-auto flex flex-col items-center">
-                      <FadeLoader
-                        color={'navy'}
-                        loading={true}
-                        size={100}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                      />
-                      <p>Loading...</p>
-                    </div>
-                  )}
-                </select>
-              </div>
-              <div class="mb-3 col-6">
-                <label for="exampleFormControlInput1" class="form-label h6">
-                  Brand
-                </label>
-                <select
-                  class="form-select form-select-sm"
-                  onChange={(e) => setProductBrand(e.target.value)}
-                >
-                  {/* shows all the brands for the drop down */}
-                  {brands ? (
-                    brands.map((brand) => (
-                      <option
-                        value={brand.brand_id}
-                        selected={brand.brand_name === productData.brand_name}
-                      >
-                        {brand.brand_name}
-                      </option>
-                    ))
-                  ) : (
-                    <div className="mx-auto flex flex-col items-center">
-                      <FadeLoader
-                        color={'navy'}
-                        loading={true}
-                        size={100}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                      />
-                      <p>Loading...</p>
-                    </div>
-                  )}
-                </select>
-              </div>
-            </div>
           </div>
-        )}
-
-        <div class="d-flex justify-content-center gap-3">
-          <div class="col-5 text-dark">
-            <button
-              type="submit"
-              id="submit"
-              class="btn btn-outline-success mb-3 w-100"
-              onClick={handleSubmit}
-            >
-              Save
-            </button>
-          </div>
-          <div class="col-5 text-dark">
-            <Link
-              to="/products/admin"
-              id="submit"
-              class="btn btn-outline-danger mb-3 w-100"
-            >
-              Discard Changes
-            </Link>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="mb-3">
+              <label
+                htmlFor="exampleFormControlInput1"
+                className="block text-base font-semibold mb-1"
+              >
+                Category
+              </label>
+              <Categories
+                setCategoryID={setProductCategory}
+                all={false}
+                edit={true}
+                productData={productData}
+              />
+            </div>
+            <div className="mb-3">
+              <label
+                htmlFor="exampleFormControlInput1"
+                className="block text-base font-semibold mb-1"
+              >
+                Brand
+              </label>
+              <Brands
+                setBrandID={setProductBrand}
+                all={false}
+                edit={true}
+                productData={productData}
+              />
+            </div>
           </div>
         </div>
-      </form>
-    </div>
+      ) : (
+        // Loading component (full screen)
+        <div className="flex items-center justify-center h-screen">
+          <Loading />
+        </div>
+      )}
+
+      <div className="flex justify-between mt-4 space-x-4">
+        <div className="mb-3 w-6/12">
+          <button
+            type="submit"
+            id="submit"
+            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100 flex items-center justify-center text-center"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+        <div className="mb-3 w-6/12">
+          <Link
+            to="/products/admin"
+            id="submit"
+            className="bg-light-blue  text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full flex items-center justify-center text-center hover:shadow-lg"
+          >
+            Discard Changes
+          </Link>
+        </div>
+      </div>
+
+      <ToastContainer limit={2} newestOnTop={true} position="top-center" />
+    </form>
   );
 }

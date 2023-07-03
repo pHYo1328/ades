@@ -48,25 +48,25 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-tertiary shadow">
       <div className="container mx-auto px-4 py-6">
         <nav className="hidden md:flex items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="text-lg font-bold text-gray-800">
+            <Link to="/" className="text-lg font-bold text-white">
               TECHZERO
             </Link>
           </div>
           <div className="flex items-center space-x-8">
             <Link
               to="/products"
-              className="text-gray-800 hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+              className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
             >
               <MdComputer />
               <p className="text-2xl">Products</p>
             </Link>
             <Link
               to="/cart"
-              className="text-gray-800 hover:text-gray-600 py-2 border-b-2 border-transparent hover:border-fuchsia-600 flex flex-row space-x-1"
+              className="text-white hover:text-gray-600 py-2 border-b-2 border-transparent hover:border-fuchsia-600 flex flex-row space-x-1"
             >
               <FaShoppingCart />
               <p className="text-2xl">Cart</p>
@@ -74,7 +74,7 @@ const Header = () => {
             <div className="relative" ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}
-                className="text-gray-800 hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+                className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
               >
                 <FaUser />
                 <p className="text-2xl">User</p>
