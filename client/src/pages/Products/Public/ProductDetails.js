@@ -11,6 +11,7 @@ import Loading from '../../../components/Loading/Loading';
 import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
+import Product from '../../../components/Products/Product/Product';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
@@ -21,10 +22,14 @@ const cld = new Cloudinary({
 
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState(null);
+  const [categoryID, setCategoryID] = useState(null);
+  const [brandID, setBrandID] = useState(null);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const navigate = useNavigate();
   const customerId = localStorage.getItem('userid');
+
   const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
     if (!customerId) {
@@ -71,12 +76,35 @@ export default function ProductDetails() {
       .then((response) => {
         console.log(response);
         setProduct(response.data.data);
-        console.log(product);
+        console.log("response.data.data");
+        console.log(response.data.data);
+        console.log("response.data.data.brand_id");
+        console.log(response.data.data.brand_id);
+        setBrandID(response.data.data.brand_id);
+        setCategoryID(response.data.data.category_id);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
+
+  // get related products
+  useEffect(() => {
+    if (categoryID && brandID) {
+      axios
+        .get(`${baseUrl}/api/products/related/${categoryID}/${brandID}`)
+        .then((response) => {
+          console.log(response);
+          console.log("categoryID: ", categoryID);
+          console.log("brandID: ", brandID);
+          setRelatedProducts(response.data.data);
+          console.log(setRelatedProducts);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [categoryID, brandID]);
 
   return (
     <div className="bg-white w-full">
@@ -189,6 +217,27 @@ export default function ProductDetails() {
             </div>
           ) : (
             // Loading component (full screen)
+            <div className="flex items-center justify-center h-screen">
+              <Loading />
+            </div>
+          )}
+        </div>
+        <div className="mx-auto px-4 pb-16 sm:px-6 sm:py-16 lg:px-8">
+          <div className="flex flex-row items-center justify-between">
+            <div className="w-10/12">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                Related Products
+              </h2>
+            </div>
+          </div>
+
+          {relatedProducts ? (
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
+              {relatedProducts.map((product) => (
+                <Product key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
             <div className="flex items-center justify-center h-screen">
               <Loading />
             </div>

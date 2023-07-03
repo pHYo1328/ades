@@ -26,7 +26,7 @@ const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 const stripe = require('../config/stripe');
-const { handleWebhooks }  = require('../controller/checkout.controller');
+const { handleWebhooks } = require('../controller/checkout.controller');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -81,6 +81,10 @@ module.exports = (app, router) => {
   router.get(
     '/api/products/rating/:productID',
     productController.processGetAllRatingsByProductID
+  );
+  router.get(
+    '/api/products/related/:categoryID/:brandID',
+    productController.processGetRelatedProducts
   );
 
   // DELETE
@@ -220,7 +224,7 @@ module.exports = (app, router) => {
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-  
+
   // router.post(
   //   '/handleChargeSucceeded',
   //   checkoutController.handleChargeSucceeded
@@ -238,17 +242,17 @@ module.exports = (app, router) => {
         });
         console.log('Webhook endpoint created:', endpoint);
       };
-  
+
       await createWebhookEndpoint();
       await handleWebhooks(req, res);
     }
   );
 
-    router.get(
-      '/api/paymentByStatus/:orderID',
-      // verifyAccessToken.verifyToken,
-      paymentController.processGetPaymentByStatus
-    );
+  router.get(
+    '/api/paymentByStatus/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByStatus
+  );
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 
