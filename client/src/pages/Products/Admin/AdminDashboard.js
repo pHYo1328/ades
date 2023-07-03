@@ -27,12 +27,15 @@ export default function AdminDashboard() {
     const brandCreateButtonRef = useRef(null);
     const categoryCreateButtonRef = useRef(null);
     const searchOrderButtonRef = useRef(null);
+    const searchProductButtonRef = useRef(null);
 
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
     const [search, setSearch] = useState(null);
+    // const [searchKey, setSearchKey] = useState(0);
 
     const [products, setProducts] = useState(null);
+    const [hasProducts, setHasProducts] = useState(false);
     const [statistics, setStatistics] = useState(null);
 
     const [orderID, setOrderID] = useState(null);
@@ -69,25 +72,43 @@ export default function AdminDashboard() {
         }
     });
 
-    const fetchData = (endpoint, setData) => {
+    const fetchData = (endpoint, setData, setHasData) => {
         axios
             .get(endpoint)
             .then((response) => {
                 setData(response.data.data);
+                setHasData(true);
             })
             .catch((error) => {
                 console.error(error);
             });
     };
 
-    const fetchProducts = () => fetchData(`${baseUrl}/api/allProducts`, setProducts);
-    useEffect(() => { fetchProducts() }, [])
 
     const fetchCategories = () => fetchData(`${baseUrl}/api/category`, setCategories);
     useEffect(() => { fetchCategories() }, [])
 
     const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands);
     useEffect(() => { fetchBrands() }, [])
+
+    const fetchProducts = () => {
+        setHasProducts(true);
+        fetchData(`${baseUrl}/api/allProducts`, setProducts, setHasProducts);
+    }
+
+    const fetchSearchResults = () => {
+        setHasProducts(true);
+        fetchData(`${baseUrl}/api/search?product_name=${search}`, setProducts, setHasProducts);
+
+    }
+
+    useEffect(() => {
+        if (search && search.trim() !== "") {
+            fetchSearchResults();
+        } else {
+            fetchProducts();
+        }
+    }, [search]);
 
     const fetchStatistics = () => fetchData(`${baseUrl}/api/admin/statistics`, setStatistics);
 
@@ -213,8 +234,17 @@ export default function AdminDashboard() {
                             <div className="w-full">
                                 <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
                                     <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                                        <TextInput placeholder={"Enter search..."} />
+                                        {/* <TextInput placeholder={"Enter search..."} value={search}
+                                            onChange={(e) => setSearch(e.target.value)} buttonRef={searchProductButtonRef} /> */}
+
+                                        <TextInput placeholder={"Enter search..."} value={search}
+                                            func={(e) => setSearch(e.target.value)} />
                                     </div>
+
+                                    {/* <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12 pr-4">
+                                        <Button buttonRef={searchProductButtonRef} onClick={fetchSearchResults} content={<>Search <i className="bi bi-search ml-1"></i></>} />
+
+                                    </div> */}
 
                                     <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                                         <LinkButton linkTo={"/products/create"} content={<>
@@ -223,7 +253,7 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
 
-                                <ProductList products={products} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+                                <ProductList products={products} hasProducts={hasProducts} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
                             </div>
                         )}
                         {activeTab === 'brands' && (

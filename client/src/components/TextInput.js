@@ -6,13 +6,13 @@ export default function TextInput({ placeholder, value, func, buttonRef }) {
             placeholder={placeholder}
             value={value}
             onChange={func}
-            onKeyDown={(event) => {
+            onKeyDown={buttonRef && ((event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
                     event.stopPropagation();
                     buttonRef.current.click();
                 }
-            }}
+            })}
         />
     )
 }
