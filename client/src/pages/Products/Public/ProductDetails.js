@@ -25,8 +25,6 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [hasRelatedProducts, setHasRelatedProducts] = useState(false);
-  const [categoryID, setCategoryID] = useState(null);
-  const [brandID, setBrandID] = useState(null);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const navigate = useNavigate();
@@ -88,29 +86,25 @@ export default function ProductDetails() {
       .then((response) => {
         console.log(response);
         setProduct(response.data.data);
-        setBrandID(response.data.data.brand_id);
-        setCategoryID(response.data.data.category_id);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [productID]);
 
   // get related products
   useEffect(() => {
-    if (categoryID && brandID) {
-      axios
-        .get(`${baseUrl}/api/products/related/${categoryID}/${brandID}`)
-        .then((response) => {
-          console.log(response);
-          setHasRelatedProducts(true);
-          setRelatedProducts(response.data.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [categoryID, brandID]);
+    axios
+      .get(`${baseUrl}/api/products/related/${productID}`)
+      .then((response) => {
+        console.log(response);
+        setHasRelatedProducts(true);
+        setRelatedProducts(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [productID]);
 
   return (
     <div className="bg-white w-full">
@@ -257,7 +251,7 @@ export default function ProductDetails() {
             relatedProducts ? (
               <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
                 {relatedProducts.map((product) => (
-                  <Product key={product.id} product={product} />
+                  <Product key={product.product_id} product={product} />
                 ))}
               </div>
             ) : (

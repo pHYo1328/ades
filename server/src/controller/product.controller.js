@@ -636,10 +636,10 @@ exports.processGetImagesByProductID = async (req, res, next) => {
 exports.processGetRelatedProducts = async (req, res, next) => {
   console.log(chalk.blue('processGetRelatedProducts running'));
   // const { productID } = req.params;
-  const { categoryID, brandID } = req.params;
+  const { productID } = req.params;
   try {
     const productData = await productServices.getRelatedProducts(
-      categoryID, brandID
+      productID
     );
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));

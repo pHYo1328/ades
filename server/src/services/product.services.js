@@ -490,7 +490,7 @@ module.exports.getImagesByProductID = async (productID) => {
 };
 
 // get related products
-module.exports.getRelatedProducts = async (categoryID, brandID) => {
+module.exports.getRelatedProducts = async (productID) => {
   console.log(chalk.blue('getRelatedProducts is called'));
   // console.log(chalk.blue(categoryID));
   try {
@@ -511,13 +511,13 @@ module.exports.getRelatedProducts = async (categoryID, brandID) => {
         INNER JOIN brand b ON b.brand_id = p.brand_id
         LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
       WHERE
-        c.category_id = ? OR b.brand_id = ?
+        (c.category_id = p.category_id OR b.brand_id = p.brand_id) AND p.product_id != ?
       GROUP BY
 	      p.product_id
       LIMIT 5
 
       `;
-    const results = await pool.query(productsDataQuery, [categoryID, brandID]);
+    const results = await pool.query(productsDataQuery, [productID]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
