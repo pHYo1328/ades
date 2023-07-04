@@ -14,7 +14,6 @@ export default function ProductListModal({ products, hasProducts, refunds, setPr
         setOpen(false)
     }
 
-
     return (
         <Transition.Root show={open} as={Fragment} className="h-75 w-full">
             <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
@@ -41,7 +40,7 @@ export default function ProductListModal({ products, hasProducts, refunds, setPr
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="w-full relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+                            <Dialog.Panel className="p-2 w-full relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
                                 <div className="w-full bg-white px-4 pb-4 sm:p-6 sm:pb-4">
                                     <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
                                         Products

@@ -54,7 +54,11 @@ export default function Brand({ brands, fetchProducts, fetchBrands, refunds, set
         <div className="relative  overflow-x-auto overflow-y-auto max-h-[60vh] sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[70vh] shadow-md sm:rounded-lg">
 
             {brands ? (
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" style={{ tableLayout: 'fixed' }}>
+                    <colgroup>
+                        <col style={{ width: '50%' }} /> {/* Set the desired width for the Name column */}
+                        <col style={{ width: '50%' }} /> {/* Set the desired width for the Action column */}
+                    </colgroup>
                     <thead className="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
                         <tr>
 
@@ -79,7 +83,6 @@ export default function Brand({ brands, fetchProducts, fetchBrands, refunds, set
                                 </td>
                                 {showProducts && (
                                     <ProductListModal
-                                        // key={products}
                                         onCancel={() => { setShowProducts(false); console.log("cancel button is clicked") }}
                                         products={products} hasProducts={hasProducts} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()}
                                     />
