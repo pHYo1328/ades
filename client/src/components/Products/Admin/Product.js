@@ -145,7 +145,8 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                 </div>
             </td>
             <td className="px-6 py-4 items-center justify-center">
-                <Link to={`/products/edit/${product.product_id}`}>
+                <Link
+                    to={`/products/edit/${product.product_id}`}>
                     <i className="text-lg bi bi-pencil-square"></i>
                 </Link>
 
@@ -168,6 +169,6 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                 </div>
             </td>
 
-        </tr>
+        </tr >
     )
 }

@@ -113,14 +113,15 @@ export default function AdminDashboard() {
         setHasProducts(true);
         fetchData(`${baseUrl}/api/allProducts`, setProducts, setHasProducts);
     }
+    // useEffect(() => { fetchProducts() }, [])
 
     const fetchSearchResults = () => {
         setHasProducts(true);
         fetchData(`${baseUrl}/api/search?product_name=${search}`, setProducts, setHasProducts);
-
     }
 
     useEffect(() => {
+        // fetchProducts();
         if (search && search.trim() !== "") {
             fetchSearchResults();
         } else {
@@ -138,8 +139,6 @@ export default function AdminDashboard() {
             clearInterval(intervalId);
         };
     }, [products]);
-
-
 
     const handleSubmit = async (event, name, type, setData, fetchData, setDataName) => {
         event.preventDefault();
@@ -255,10 +254,6 @@ export default function AdminDashboard() {
                 <aside id="default-sidebar" class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0" aria-label="Sidebar">
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
                 </aside>
-
-                {/* {showSmallMenu && (
-                    <SideBar className="md:hidden lg:hidden" activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
-                )} */}
 
                 {window.innerWidth < 768 && showMenu && (
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />

@@ -12,7 +12,7 @@ import Loading from '../../../components/Loading/Loading';
 import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
-import Product from '../../../components/Products/Product/Product';
+import ProductList from '../../../components/Products/Product/ProductList';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
@@ -31,8 +31,6 @@ export default function ProductDetails() {
   const customerId = localStorage.getItem('userid');
 
   const [index, setIndex] = useState(0);
-  const [images, setImages] = useState();
-  const [image, setImage] = useState('');
 
   // changes the index of carousel
   const handleSelect = (selectedIndex, e) => {
@@ -79,27 +77,19 @@ export default function ProductDetails() {
     }
   };
 
-  // get the details + images of the product by product ID
+  // Fetch product details and related products
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/product/${productID}`)
-      .then((response) => {
-        console.log(response);
-        setProduct(response.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [productID]);
+    Promise.all([
+      axios.get(`${baseUrl}/api/product/${productID}`),
+      axios.get(`${baseUrl}/api/products/related/${productID}`)
+    ])
+      .then(([productResponse, relatedProductsResponse]) => {
+        console.log(productResponse);
+        console.log(relatedProductsResponse);
 
-  // get related products
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/products/related/${productID}`)
-      .then((response) => {
-        console.log(response);
+        setProduct(productResponse.data.data);
         setHasRelatedProducts(true);
-        setRelatedProducts(response.data.data);
+        setRelatedProducts(relatedProductsResponse.data.data);
       })
       .catch((error) => {
         console.error(error);
@@ -247,22 +237,7 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          {hasRelatedProducts ? (
-            relatedProducts ? (
-              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-                {relatedProducts.map((product) => (
-                  <Product key={product.product_id} product={product} />
-                ))}
-              </div>
-            ) : (
-              // If no results match the search
-              <p className="mt-40 text-center text-gray-500">No results found</p>
-            )
-          ) : (
-            <div className="flex items-center justify-center h-screen">
-              <Loading />
-            </div>
-          )}
+          <ProductList hasResults={hasRelatedProducts} products={relatedProducts} />
         </div>
       </div>
     </div >

@@ -123,6 +123,14 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       parseInt(sort)
     );
     console.log(chalk.yellow('Product data: ', productData));
+    if (!productData || productData.length === 0) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'No products exist',
+      });
+    }
+    console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({
       product_id: product.product_id,
       product_name: product.product_name,
@@ -132,22 +140,12 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       brand_name: product.brand_name,
       image_url: product.image_url,
     }));
-
-    const response = {
+    return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Read product details successful',
       data: products,
-    };
-
-    console.log(chalk.yellow(productData.length));
-
-    if (productData.length === 0) {
-      response.statusCode = 200;
-      response.message = 'No categories or brands exist';
-    }
-
-    return res.status(response.statusCode).json(response);
+    });
   } catch (error) {
     console.error(chalk.red('Error in getProductsByCategoryOrBrand: ', error));
     return next(error);

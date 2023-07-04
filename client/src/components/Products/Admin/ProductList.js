@@ -4,6 +4,15 @@ import Loading from '../../Loading/Loading';
 
 export default function ProductList({ products, hasProducts, refunds, setProducts, setRefunds, fetchProducts, fetchStatistics }) {
 
+    const headers = [
+        { key: 'name', label: 'Name' },
+        { key: 'category', label: 'Category' },
+        { key: 'brand', label: 'Brand' },
+        { key: 'price', label: 'Price' },
+        { key: 'inventory', label: 'Inventory' },
+        { key: 'action', label: 'Action' },
+    ];
+
     return (
         <div className="relative  overflow-x-auto overflow-y-auto max-h-[60vh] sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[70vh] shadow-md sm:rounded-lg">
             {hasProducts ? (
@@ -16,24 +25,11 @@ export default function ProductList({ products, hasProducts, refunds, setProduct
                                     <span className="sr-only">Image</span>
                                     {/* Image */}
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Category
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Brand
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Price
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Inventory
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Action
-                                </th>
+                                {headers.map((header) => (
+                                    <th scope="col" className="px-6 py-3" key={header.key}>
+                                        {header.label}
+                                    </th>
+                                ))}
                             </tr>
                         </thead>
                         <tbody className="text-gray-700 dark:text-gray-400 h-98 overflow-y-auto">
@@ -52,7 +48,7 @@ export default function ProductList({ products, hasProducts, refunds, setProduct
                     </table>
                 ) : (
                     // If no results match the search
-                    <p className="mt-40 text-center text-gray-500">No results found</p>
+                    <p className="my-40 text-center text-gray-500">No results found</p>
                 )
             ) : (
                 // Loading component (full screen)
