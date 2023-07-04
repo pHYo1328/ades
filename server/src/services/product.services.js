@@ -178,23 +178,32 @@ module.exports.getProductsByCategoryID = async (categoryID) => {
   console.log(chalk.blue(categoryID));
   try {
     const productsDataQuery = `
-      SELECT 
-        p.product_id, 
-        p.product_name, 
-        p.description, 
-        p.price, 
-        c.category_name, 
-        b.brand_name, 
-        MAX(p_i.image_url) as image_url
-      FROM 
-        category c 
-        INNER JOIN product p ON p.category_id = c.category_id 
-        INNER JOIN brand b ON b.brand_id = p.brand_id
-        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-      WHERE
-        c.category_id = ?
-      GROUP BY
-	      p.product_id
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+    WHERE c.category_id=?
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name;
 
       `;
     const results = await pool.query(productsDataQuery, [categoryID]);
@@ -211,23 +220,32 @@ module.exports.getProductsByBrandID = async (brandID) => {
   console.log(chalk.blue('getProductsByBrandID is called'));
   try {
     const productsDataQuery = `
-      SELECT
-	p.product_id, 
-    p.product_name, 
-    p.description, 
-    p.price, 
-    c.category_name, 
-    b.brand_name, 
-	MAX(p_i.image_url) as image_url
-FROM 
-	category c 
-    INNER JOIN product p ON p.category_id = c.category_id 
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
     INNER JOIN brand b ON b.brand_id = p.brand_id
-    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-WHERE
-	b.brand_id = ?
-GROUP BY
-	p.product_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+    WHERE b.brand_id=?
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name;
       `;
     const results = await pool.query(productsDataQuery, [brandID]);
     console.log(chalk.green(results[0]));
