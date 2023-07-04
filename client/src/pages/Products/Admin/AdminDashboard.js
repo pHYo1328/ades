@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Button from '../../../components/Button';
-import Toggle from '../../../components/Products/Admin/Toggle'
 import TextInput from '../../../components/TextInput';
 import SideBar from '../../../components/Products/Admin/SideBar';
 
