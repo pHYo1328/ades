@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Button from '../../../components/Button';
-import Toggle from '../../../components/Products/Admin/Toggle';
 import TextInput from '../../../components/TextInput';
 import SideBar from '../../../components/Products/Admin/SideBar';
 
@@ -23,32 +22,36 @@ import UserInfo from '../../Login/UserInfo';
 import Brand from '../../../components/Products/Admin/Brand';
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const brandCreateButtonRef = useRef(null);
-  const categoryCreateButtonRef = useRef(null);
-  const searchOrderButtonRef = useRef(null);
+    const navigate = useNavigate();
+    const brandCreateButtonRef = useRef(null);
+    const categoryCreateButtonRef = useRef(null);
+    const searchOrderButtonRef = useRef(null);
+    const searchProductButtonRef = useRef(null);
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-  const [search, setSearch] = useState(null);
+    const [search, setSearch] = useState(null);
+    // const [searchKey, setSearchKey] = useState(0);
 
-  const [products, setProducts] = useState(null);
-  const [statistics, setStatistics] = useState(null);
+    const [products, setProducts] = useState(null);
+    const [statistics, setStatistics] = useState(null);
 
   const [orderID, setOrderID] = useState(null);
   const [refunds, setRefunds] = useState(null);
 
-  const [brands, setBrands] = useState(null);
-  const [brandName, setBrandName] = useState('');
-  const [brand, setBrand] = useState(null);
+    const [brands, setBrands] = useState(null);
+    const [brandName, setBrandName] = useState('');
+    const [brand, setBrand] = useState(null);
+    const [hasBrand, setHasBrand] = useState(false)
 
-  const [categories, setCategories] = useState(null);
-  const [categoryName, setCategoryName] = useState('');
-  const [category, setCategory] = useState(null);
+    const [categories, setCategories] = useState(null);
+    const [categoryName, setCategoryName] = useState('');
+    const [category, setCategory] = useState(null);
+    const [hasCategory, setHasCategory] = useState(false)
 
   const [activeTab, setActiveTab] = useState('home');
 
-  const [showMenu, setShowMenu] = useState(false);
+    const [showMenu, setShowMenu] = useState(false)
 
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
@@ -69,36 +72,26 @@ export default function AdminDashboard() {
     }
   });
 
-  const fetchData = (endpoint, setData) => {
-    axios
-      .get(endpoint)
-      .then((response) => {
-        setData(response.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+    const fetchData = (endpoint, setData, setHasData) => {
+        axios
+            .get(endpoint)
+            .then((response) => {
+                setData(response.data.data);
+                setHasData(true);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
-  const fetchProducts = () =>
-    fetchData(`${baseUrl}/api/allProducts`, setProducts);
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
-  const fetchCategories = () =>
-    fetchData(`${baseUrl}/api/category`, setCategories);
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+    const fetchCategories = () => fetchData(`${baseUrl}/api/category`, setCategories, setHasCategory);
+    useEffect(() => { fetchCategories() }, [])
 
-  const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands);
-  useEffect(() => {
-    fetchBrands();
-  }, []);
+    const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands, setHasBrand);
+    useEffect(() => { fetchBrands() }, [])
 
-  const fetchStatistics = () =>
-    fetchData(`${baseUrl}/api/admin/statistics`, setStatistics);
+    const fetchStatistics = () => fetchData(`${baseUrl}/api/admin/statistics`, setStatistics);
 
   // refresh the statistics every 1 minute
   useEffect(() => {
@@ -220,7 +213,7 @@ export default function AdminDashboard() {
       <div className="bg-white w-full mx-auto">
         <ToastContainer limit={2} newestOnTop={true} position="top-center" />
 
-        <Toggle showMenu={showMenu} setShowMenu={() => setShowMenu()} />
+                <Toggle showMenu={showMenu} setShowMenu={() => setShowMenu()} />
 
         <aside
           id="default-sidebar"
@@ -233,22 +226,22 @@ export default function AdminDashboard() {
           />
         </aside>
 
-        {showMenu && (
-          <SideBar
-            activeTab={activeTab}
-            setActiveTab={(value) => setActiveTab(value)}
-          />
-        )}
+                {window.innerWidth < 768 && showMenu && (
+                    <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
+                )}
 
-        <div className="p-4 sm:ml-64 top-25 overflow-hidden">
-          <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
-            {activeTab === 'home' && <Statistics statistics={statistics} />}
-            {activeTab === 'products' && (
-              <div className="w-full">
-                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
-                  <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                    <TextInput placeholder={'Enter search...'} />
-                  </div>
+                <div className="p-4 sm:ml-64 top-25 overflow-hidden">
+                    <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
+                        {activeTab === 'home' && (
+                            <Statistics statistics={statistics} />
+                        )}
+                        {activeTab === 'products' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Enter search..."} value={search}
+                                            func={(e) => setSearch(e.target.value)} />
+                                    </div>
 
                   <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                     <LinkButton
@@ -262,55 +255,29 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <ProductList
-                  products={products}
-                  refunds={refunds}
-                  fetchProducts={() => fetchProducts()}
-                  fetchStatistics={() => fetchStatistics()}
-                  setRefunds={() => setRefunds()}
-                  setProducts={() => setProducts()}
-                />
-              </div>
-            )}
-            {activeTab === 'brands' && (
-              <div className="w-full">
-                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
-                  <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                    <TextInput
-                      placeholder={'Brand Name'}
-                      value={brandName}
-                      func={(e) => setBrandName(e.target.value)}
-                      buttonRef={brandCreateButtonRef}
-                    />
-                  </div>
+                                <ProductList products={products} hasProducts={hasProducts} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+                            </div>
+                        )}
+                        {activeTab === 'brands' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Brand Name"} value={brandName} func={(e) => setBrandName(e.target.value)} buttonRef={brandCreateButtonRef} />
+                                    </div>
 
-                  <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
-                    <Button
-                      buttonRef={brandCreateButtonRef}
-                      onClick={handleSubmitBrand}
-                      content={<i className="bi bi-plus-circle"></i>}
-                    />
-                  </div>
-                </div>
-                <Brand
-                  brands={brands}
-                  fetchProducts={() => fetchProducts()}
-                  fetchBrands={() => fetchBrands()}
-                  setBrands={setBrands}
-                />
-              </div>
-            )}
-            {activeTab === 'categories' && (
-              <div className="w-full">
-                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
-                  <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                    <TextInput
-                      placeholder={'Category Name'}
-                      value={categoryName}
-                      func={(e) => setCategoryName(e.target.value)}
-                      buttonRef={categoryCreateButtonRef}
-                    />
-                  </div>
+                                    <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
+                                        <Button buttonRef={brandCreateButtonRef} onClick={handleSubmitBrand} content={<i className="bi bi-plus-circle"></i>} />
+                                    </div>
+                                </div>
+                                <Brand brands={brands} fetchProducts={() => fetchProducts()} fetchBrands={() => fetchBrands()} setBrands={setBrands} products={products} hasProducts={hasProducts} refunds={refunds} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
+                            </div>
+                        )}
+                        {activeTab === 'categories' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Category Name"} value={categoryName} func={(e) => setCategoryName(e.target.value)} buttonRef={categoryCreateButtonRef} />
+                                    </div>
 
                   <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                     <Button

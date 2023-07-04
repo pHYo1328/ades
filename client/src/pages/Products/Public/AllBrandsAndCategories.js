@@ -11,28 +11,18 @@ export default function AllBrandsAndCategories() {
   const bookmarkedBrandsRef = useRef([]);
   const customerId = localStorage.getItem('userid');
 
-  // get all brands
+  // Fetch all brands and categories
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/brands`)
-      .then((response) => {
-        console.log(response);
-        setBrands(response.data.data);
-        console.log(brands);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+    Promise.all([
+      axios.get(`${baseUrl}/api/brands`),
+      axios.get(`${baseUrl}/api/category`)
+    ])
+      .then(([brandsResponse, categoriesResponse]) => {
+        console.log(brandsResponse);
+        console.log(categoriesResponse);
 
-  // get all categories
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/category`)
-      .then((response) => {
-        console.log(response);
-        setCategories(response.data.data);
-        console.log(categories);
+        setBrands(brandsResponse.data.data);
+        setCategories(categoriesResponse.data.data);
       })
       .catch((error) => {
         console.error(error);

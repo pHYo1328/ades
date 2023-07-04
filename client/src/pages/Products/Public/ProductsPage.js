@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from '../../../components/Products/Pagination';
-import Loading from '../../../components/Loading/Loading';
-import Product from '../../../components/Products/Product/Product';
 import Brands from '../../../components/Products/Product/Brands';
 import Categories from '../../../components/Products/Product/Categories';
+import ProductList from '../../../components/Products/Product/ProductList';
+import NumberInput from '../../../components/NumberInput';
 
 export default function ProductsPage() {
   const [resetPage, setResetPage] = useState(true);
@@ -17,7 +17,15 @@ export default function ProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [offset, setOffset] = useState(0);
+  const [hasResults, setHasResults] = useState(false)
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+
+  const sortOptions = [
+    { value: 1, label: "Price (Ascending)" },
+    { value: 2, label: "Price (Descending)" },
+    { value: 3, label: "Name (A-Z)" },
+    { value: 4, label: "Name (Z-A)" }
+  ];
 
   // changes the offset and current page as the user changes the page using pagination
   const handlePageChange = (page) => {
@@ -35,11 +43,6 @@ export default function ProductsPage() {
       setCurrentPage(1);
     }
     setOffset(limit * (currentPage - 1));
-    console.log(offset);
-    console.log(limit);
-    console.log(
-      `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
-    );
     axios
       .get(
         `${baseUrl}/api/products/${categoryID}/${brandID}/${limit}/${offset}/${sort}`
@@ -48,6 +51,7 @@ export default function ProductsPage() {
         console.log(response);
         console.log(response.data.data);
         setProducts(response.data.data);
+        setHasResults(true);
         console.log(products);
       })
       .catch((error) => {
@@ -103,18 +107,8 @@ export default function ProductsPage() {
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
               <div className="flex items-center">
-                <input
-                  min="1"
-                  type="number"
-                  className="border border-gray-300 rounded-md py-2 px-3 w-full"
-                  value={limit}
-                  onChange={(e) => setLimit(parseInt(e.target.value))}
-                  placeholder="Limit"
-                  aria-describedby="basic-addon2"
-                />
-                <span className="ml-2 text-sm text-gray-600">
-                  Products/Page
-                </span>
+                <NumberInput min={1} value={limit} func={(e) => setLimit(parseInt(e.target.value))} placeholder={"Limit"} />
+                <span className="ml-2 text-sm text-gray-600">Products/Page</span>
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
@@ -126,11 +120,13 @@ export default function ProductsPage() {
                 <option disabled selected value={0}>
                   Sort
                 </option>
-                <option value={1}>Price (Ascending)</option>
-                <option value={2}>Price (Descending)</option>
-                <option value={3}>Name (A-Z)</option>
-                <option value={4}>Name (Z-A)</option>
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
+
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
               <Categories setCategoryID={setCategoryID} all={true} />
@@ -140,25 +136,8 @@ export default function ProductsPage() {
             </div>
           </div>
 
-          {/* shows all the products, based on the filter input */}
-          {products ? (
-            products.length > 0 ? (
-              <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-                {products.map((product) => (
-                  <Product product={product} />
-                ))}
-              </div>
-            ) : (
-              <p className="mt-40 text-center text-gray-500">
-                No results found
-              </p>
-            )
-          ) : (
-            // Loading component (full screen)
-            <div className="flex items-center justify-center h-screen">
-              <Loading />
-            </div>
-          )}
+          <ProductList hasResults={hasResults} products={products} />
+
         </div>
 
         <div className="pb-5 mb-5 mx-auto">

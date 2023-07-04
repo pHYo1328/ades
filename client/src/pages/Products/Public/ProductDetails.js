@@ -6,12 +6,13 @@ import { AdvancedImage } from '@cloudinary/react';
 import api from '../../../index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Carousel from 'react-bootstrap/Carousel';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../../components/Loading/Loading';
 import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
-import Product from '../../../components/Products/Product/Product';
+import ProductList from '../../../components/Products/Product/ProductList';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
@@ -23,12 +24,19 @@ const cld = new Cloudinary({
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState(null);
-  const [categoryID, setCategoryID] = useState(null);
-  const [brandID, setBrandID] = useState(null);
+  const [hasRelatedProducts, setHasRelatedProducts] = useState(false);
   let [cartQuantity, setCartQuantity] = useState(0);
   const { productID } = useParams();
   const navigate = useNavigate();
   const customerId = localStorage.getItem('userid');
+
+  const [index, setIndex] = useState(0);
+
+  // changes the index of carousel
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
 
   const addToCartHandler = async (userid, productId, productName, quantity) => {
     // first i want to use useContext hook but i dont know why everytime context got re rendered. If i can find the problem i will change it back
@@ -69,42 +77,24 @@ export default function ProductDetails() {
     }
   };
 
-  // get the details + images of the product by product ID
+  // Fetch product details and related products
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/product/${productID}`)
-      .then((response) => {
-        console.log(response);
-        setProduct(response.data.data);
-        console.log('response.data.data');
-        console.log(response.data.data);
-        console.log('response.data.data.brand_id');
-        console.log(response.data.data.brand_id);
-        setBrandID(response.data.data.brand_id);
-        setCategoryID(response.data.data.category_id);
+    Promise.all([
+      axios.get(`${baseUrl}/api/product/${productID}`),
+      axios.get(`${baseUrl}/api/products/related/${productID}`)
+    ])
+      .then(([productResponse, relatedProductsResponse]) => {
+        console.log(productResponse);
+        console.log(relatedProductsResponse);
+
+        setProduct(productResponse.data.data);
+        setHasRelatedProducts(true);
+        setRelatedProducts(relatedProductsResponse.data.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
-
-  // get related products
-  useEffect(() => {
-    if (categoryID && brandID) {
-      axios
-        .get(`${baseUrl}/api/products/related/${categoryID}/${brandID}`)
-        .then((response) => {
-          console.log(response);
-          console.log('categoryID: ', categoryID);
-          console.log('brandID: ', brandID);
-          setRelatedProducts(response.data.data);
-          console.log(setRelatedProducts);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [categoryID, brandID]);
+  }, [productID]);
 
   return (
     <div className="bg-white w-full">
@@ -113,17 +103,33 @@ export default function ProductDetails() {
           {/* shows the details of the product, if the product exists */}
           {product ? (
             <div>
-              <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 md:grid md:grid-cols-2 md:grid-rows-[auto,auto,1fr] md:gap-x-8 md:px-8 md:pb-24 md:pt-16 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-                {/* shows all the images of the product */}
-                {product.image_url.map((url, index) => (
-                  // shows the image from Cloudinary
-                  <div
-                    key={index}
-                    className="max-w-xs h-auto mx-2 my-2 overflow-hidden rounded shadow-lg flex justify-center items-center"
+              <div className="mx-auto px-4 pb-16 pt-10 sm:px-6 md:px-8 md:pb-24 md:pt-16 lg:px-8 lg:pb-24 lg:pt-16">
+
+                <div className="w-full flex justify-center items-center">
+                  <Carousel
+                    activeIndex={index}
+                    onSelect={handleSelect}
+                    className="max-w-full max-h-96"
                   >
-                    <AdvancedImage cldImg={cld.image(url)} />
-                  </div>
-                ))}
+                    {/* shows all the images if exists */}
+                    {product.image_url ? (
+                      product.image_url.map((url) => (
+                        <Carousel.Item>
+                          {/* shows the image from Cloudinary */}
+                          <AdvancedImage
+                            cldImg={cld.image(url)}
+                            className="w-96 h-96 mx-auto"
+                          />
+                        </Carousel.Item>
+                      ))
+                    ) : (
+                      // Loading component (full screen)
+                      <div className="flex items-center justify-center h-screen">
+                        <Loading />
+                      </div>
+                    )}
+                  </Carousel>
+                </div>
               </div>
 
               <div className="mx-auto text-center w-full">
@@ -242,19 +248,9 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          {relatedProducts ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {relatedProducts.map((product) => (
-                <Product key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-screen">
-              <Loading />
-            </div>
-          )}
+          <ProductList hasResults={hasRelatedProducts} products={relatedProducts} />
         </div>
       </div>
-    </div>
+    </div >
   );
 }

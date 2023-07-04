@@ -21,20 +21,22 @@ export default function Product(props) {
         />
       </div>
 
-      <div className="mt-4 flex justify-between">
-        <div className="text-left">
-          <h3 className="text-sm text-gray-700">
-            <Link to={`/product/${product.product_id}`}>
-              <span aria-hidden="true" className="absolute inset-0" />
-              {product.product_name}
-            </Link>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">{product.brand_name}</p>
+            <div className="mt-4 flex justify-between">
+                <div className="text-left">
+                    <h3 className="text-sm text-gray-700">
+                        <Link to={`/product/${product.product_id}`} onClick={() => window.scrollTo(0, 0)}>
+                            <span aria-hidden="true" className="absolute inset-0" />
+                            {product.product_name}
+                        </Link>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                        {product.brand_name}
+                    </p>
+                </div>
+                <p className="text-sm font-medium text-gray-900 justify-start">
+                    ${product.price}
+                </p>
+            </div>
         </div>
-        <p className="text-sm font-medium text-gray-900 justify-start">
-          ${product.price}
-        </p>
-      </div>
-    </div>
-  );
+    )
 }

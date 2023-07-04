@@ -10,9 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import Loading from '../../Loading/Loading';
-
-import { FadeLoader } from 'react-spinners';
-
+import Button from '../../Button';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
 
 const cld = new Cloudinary({
@@ -99,6 +97,23 @@ export default function EditImage() {
     }
   };
 
+  const deleteAllImages = () => {
+    console.log('delete all images for the product');
+    console.log(productID);
+    axios
+      .delete(`${baseUrl}/api/products/${productID}/images`)
+      .then((res) => {
+        console.log('deleted');
+        toast.success(`Images deleted.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { fontSize: '16px' },
+        });
+        getImages();
+        setIndex(0);
+      });
+  }
+
   return (
     <div>
       <div className="flex justify-between mt-4 space-x-4">
@@ -106,41 +121,13 @@ export default function EditImage() {
           <UploadWidget onImageChange={handleImageChange} />
         </div>
         <div className="mb-3 w-6/12">
-          <button
-            type="submit"
-            id="submit"
-            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <Button onClick={handleSubmit} content={"Submit"} />
         </div>
       </div>
 
       <div className="mt-3 w-200 h-300 mx-auto">
         <div className="mx-auto lg:w-6/12 md:w-9/12 sm:w-11/12 mb-4">
-          <button
-            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm mt-4"
-            onClick={() => {
-              // delete all images of the product
-              console.log('delete all images for the product');
-              console.log(productID);
-              axios
-                .delete(`${baseUrl}/api/products/${productID}/images`)
-                .then((res) => {
-                  console.log('deleted');
-                  toast.success(`Images deleted.`, {
-                    autoClose: 3000,
-                    pauseOnHover: true,
-                    style: { fontSize: '16px' },
-                  });
-                  getImages();
-                  setIndex(0);
-                });
-            }}
-          >
-            Delete All Images
-          </button>
+          <Button onClick={deleteAllImages} content={"Delete All Images"} />
         </div>
 
         <Carousel

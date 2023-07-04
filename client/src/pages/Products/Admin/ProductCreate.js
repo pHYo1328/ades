@@ -7,6 +7,12 @@ import Categories from '../../../components/Products/Product/Categories';
 import Brands from '../../../components/Products/Product/Brands';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Button from '../../../components/Button';
+import TextInput from '../../../components/TextInput';
+import NumberInput from '../../../components/NumberInput';
+import InputLabel from '../../../components/InputLabel';
+import TextArea from '../../../components/TextArea';
+
 export default function ProductCreate() {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
@@ -130,93 +136,33 @@ export default function ProductCreate() {
             CREATE PRODUCT
           </h3>
           <div className="mb-3">
-            <label
-              htmlFor="exampleFormControlInput1"
-              className="block text-base font-semibold mb-1"
-            >
-              Product Name
-            </label>
-            <input
-              type="text"
-              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-              placeholder="Product Name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-            />
+            <InputLabel content="Product Name" />
+            <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} />
           </div>
 
           <div className="mb-3">
-            <label
-              htmlFor="exampleFormControlInput1"
-              className="block text-base font-semibold mb-1"
-            >
-              Description
-            </label>
-            <textarea
-              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-              placeholder="Description"
-              rows={3}
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-            />
+            <InputLabel content="Description" />
+            <TextArea rows={3} placeholder={"Description"} value={productDescription} func={(e) => setProductDescription(e.target.value)} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlInput1"
-                className="block text-base font-semibold mb-1 text-sm"
-              >
-                Price
-              </label>
-              <input
-                type="number"
-                min="0"
-                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
-                placeholder="Price"
-              />
+              <InputLabel content="Price" />
+              <NumberInput min={0} placeholder={"Price"} value={productPrice} func={(e) => setProductPrice(e.target.value)} />
             </div>
             <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlInput1"
-                className="block text-base font-semibold mb-1 "
-              >
-                Inventory
-              </label>
-              <input
-                min="0"
-                type="number"
-                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-                value={productQuantity}
-                onChange={(e) => setProductQuantity(e.target.value)}
-                placeholder="Inventory (Quantity)"
-              />
+              <InputLabel content="Inventory" />
+              <NumberInput min={0} placeholder={"Inventory (Quantity)"} value={productQuantity} func={(e) => setProductQuantity(e.target.value)} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlInput1"
-                className="block text-base font-semibold mb-1"
-              >
-                Category
-              </label>
-              <Categories
-                setCategoryID={setProductCategory}
-                all={false}
-                key={categoryKey}
-              />
+              <InputLabel content="Category" />
+              <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
             </div>
             <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlInput1"
-                className="block text-base font-semibold mb-1"
-              >
-                Brand
-              </label>
+              <InputLabel content="Brand" />
               <Brands setBrandID={setProductBrand} all={false} key={brandKey} />
             </div>
           </div>
@@ -226,14 +172,7 @@ export default function ProductCreate() {
               <UploadWidget onImageChange={handleImageChange} />
             </div>
             <div className="mb-3 w-6/12">
-              <button
-                type="submit"
-                id="submit"
-                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
+              <Button onClick={handleSubmit} content={"Submit"} />
             </div>
           </div>
 

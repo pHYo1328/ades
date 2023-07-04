@@ -8,6 +8,9 @@ import Loading from '../../components/Loading/Loading';
 import Product from '../../components/Products/Product/Product';
 import Brands from '../../components/Products/Product/Brands';
 import Categories from '../../components/Products/Product/Categories';
+import TextInput from '../../components/TextInput';
+import NumberInput from '../../components/NumberInput';
+import Button from '../../components/Button';
 
 export default function LandingPage() {
   const [products, setProducts] = useState(null);
@@ -42,6 +45,24 @@ export default function LandingPage() {
       });
   }, []);
 
+  const search = (productName, productCategory, productBrand, productMaxPrice, productMinPrice) => {
+    {
+      let url = '/search';
+      const queryParams = [];
+
+      if (productName) queryParams.push(`product_name=${productName}`);
+      if (productCategory) queryParams.push(`category_id=${productCategory}`);
+      if (productBrand) queryParams.push(`brand_id=${productBrand}`);
+      if (productMaxPrice) queryParams.push(`max_price=${productMaxPrice}`);
+      if (productMinPrice) queryParams.push(`min_price=${productMinPrice}`);
+
+      if (queryParams.length > 0) {
+        url += `?${queryParams.join('&')}`;
+        window.location.href = url;
+      }
+    }
+  }
+
   return (
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto">
@@ -53,43 +74,18 @@ export default function LandingPage() {
           <div className="flex justify-center">
             <div className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12">
               <div className="mb-4 text-dark">
-                <input
-                  type="text"
-                  className="border border-gray-300 rounded-md py-2 px-3 w-full"
-                  placeholder="Enter search..."
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      searchButtonRef.current.click();
-                    }
-                  }}
-                />
+                <TextInput placeholder={"Enter search..."} value={productName} func={(e) => setProductName(e.target.value)} buttonRef={searchButtonRef} />
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-3">
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <input
-                type="number"
-                className="border border-gray-500 border-opacity-75 rounded-md py-2 px-3 w-full"
-                placeholder="Min price"
-                value={productMinPrice}
-                onChange={(e) => setProductMinPrice(e.target.value)}
-              />
+              <NumberInput placeholder={"Min price"} value={productMinPrice} func={(e) => setProductMinPrice(e.target.value)} />
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <input
-                type="number"
-                className="border border-gray-500 border-opacity-75 rounded-md py-2 px-3 w-full"
-                placeholder="Max price"
-                value={productMaxPrice}
-                onChange={(e) => setProductMaxPrice(e.target.value)}
-              />
+              <NumberInput placeholder={"Max price"} value={productMaxPrice} func={(e) => setProductMaxPrice(e.target.value)} />
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
@@ -105,33 +101,10 @@ export default function LandingPage() {
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <button
-                type="button"
-                className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm"
-                ref={searchButtonRef}
-                onClick={() => {
-                  let url = '/search';
-                  const queryParams = [];
+              <Button buttonRef={searchButtonRef} onClick={() => {
+                search(productName, productCategory, productBrand, productMaxPrice, productMinPrice)
+              }} content={"Search"} />
 
-                  if (productName)
-                    queryParams.push(`product_name=${productName}`);
-                  if (productCategory)
-                    queryParams.push(`category_id=${productCategory}`);
-                  if (productBrand)
-                    queryParams.push(`brand_id=${productBrand}`);
-                  if (productMaxPrice)
-                    queryParams.push(`max_price=${productMaxPrice}`);
-                  if (productMinPrice)
-                    queryParams.push(`min_price=${productMinPrice}`);
-
-                  if (queryParams.length > 0) {
-                    url += `?${queryParams.join('&')}`;
-                    window.location.href = url;
-                  }
-                }}
-              >
-                Search
-              </button>
             </div>
           </div>
 
