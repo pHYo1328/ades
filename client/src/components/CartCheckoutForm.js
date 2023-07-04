@@ -150,9 +150,9 @@ const CartCheckoutForm = ({
   };
   return (
     <div
-      className={`lg:mr-36 ${
-        showCheckout ? 'block' : 'hidden lg:block'
-      } mb-48 w-9/10 `}
+      className={` ${
+        showCheckout ? 'block flex-grow' : 'hidden lg:block flex-grow'
+      }`}
     >
       <div className="w-full bg-light-blue p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
         <div className="space-y-4 ">
@@ -230,8 +230,8 @@ const CartCheckoutForm = ({
           </p>
         </div>
         <div>
-
-          <Button onClick={() =>
+          <Button
+            onClick={() =>
               checkOutHandler(
                 customerID,
                 address,
@@ -240,7 +240,8 @@ const CartCheckoutForm = ({
                 cartProductData
               )
             }
-            content={"Check Out"}/>
+            content={'Check Out'}
+          />
           <ToastContainer
             limit={2}
             newestOnTop={true}

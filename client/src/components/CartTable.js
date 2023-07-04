@@ -8,6 +8,7 @@ export const CartTable = ({
   setCartData,
   setTotalAmount,
   productDetails,
+  customerID,
 }) => {
   const hasCartData =
     cartProductData && cartData.length > 0 && productDetails.length > 0;
@@ -27,6 +28,7 @@ export const CartTable = ({
           cartData={cartData}
           setCartData={setCartData}
           setTotalAmount={setTotalAmount}
+          customerID={customerID}
         />
       ));
     } else {

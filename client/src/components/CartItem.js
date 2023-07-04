@@ -3,6 +3,8 @@ import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
+import { debounce } from 'lodash';
+import api from '../index'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 const cld = new Cloudinary({
@@ -17,7 +19,21 @@ const CartItem = ({
   cartData,
   setCartData,
   setTotalAmount,
+  customerID
 }) => {
+  const debouncedApiCall = useCallback(debounce((updatedCart) => {
+    const postCartData = () => {
+      api
+      .post(`/api/cart/${customerID}`, {
+        cartData: updatedCart,
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  }
+  postCartData();
+  }, 1000), [customerID]);
+  
   const plusButtonHandler = useCallback(
     (productId) => {
       console.log(productId);
@@ -27,9 +43,12 @@ const CartItem = ({
           : item
       );
       console.log(updatedCart);
+  
       setCartData([...updatedCart]);
+      
+      debouncedApiCall([...updatedCart]);
     },
-    [cartData, setCartData]
+    [cartData, setCartData, customerID]
   );
 
   const minusButtonHandler = useCallback(
@@ -41,8 +60,9 @@ const CartItem = ({
       );
       console.log(updatedCart);
       setCartData([...updatedCart]);
+      debouncedApiCall([...updatedCart]);
     },
-    [cartData, setCartData]
+    [cartData, setCartData,customerID]
   );
 
   const deleteButtonHandler = useCallback(
@@ -86,6 +106,7 @@ const CartItem = ({
         <AdvancedImage
           cldImg={cld.image(cartItem.image_url)}
           className="rounded"
+          width="100%" height="100%"
         />
       </td>
       <td>

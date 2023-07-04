@@ -154,13 +154,13 @@ const Cart = () => {
       setIsLoading(false);
     }
   }, [cartData, productDetails]);
-
-  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-24 ${
-    showCheckout ? 'hidden' : 'block'
-  }`;
   return (
-    <div className="flex flex-row font-breezeRegular">
-      <div className={cartListDynamicClassName}>
+    <div className="flex flex-row ml-4 mr-4 lg:mr-24 lg:ml-24 2xl:ml-72 2xl:mr-72 mt-4 mb-24 sm:mb-18 font-breezeRegular sm:px-3">
+      <div
+        className={`flex-grow ${
+          showCheckout ? 'hidden' : 'block'
+        }`}
+      >
         <h2 className="font-breezeBold py-4 flex flex-row">
           My Shopping Cart <FaShoppingCart />
         </h2>
@@ -171,18 +171,19 @@ const Cart = () => {
           setCartData={setCartData}
           setTotalAmount={setTotalAmount}
           productDetails={productDetails}
+          customerID={customerID}
         />
       </div>
       <CartCheckoutForm
-        shippingMethod={shippingMethod}
-        setOrderId={setOrderId}
-        totalAmount={totalAmount}
-        setCheckoutSuccessful={setCheckoutSuccessful}
-        showCheckout={showCheckout}
-        customerID={customerID}
-        cartProductData={cartProductData}
-      />
-      <div className="fixed bottom-0 w-full h-1/5 z-10 bg-white py-3">
+          shippingMethod={shippingMethod}
+          setOrderId={setOrderId}
+          totalAmount={totalAmount}
+          setCheckoutSuccessful={setCheckoutSuccessful}
+          showCheckout={showCheckout}
+          customerID={customerID}
+          cartProductData={cartProductData}
+        />
+      <div className="fixed bottom-0 w-full h-[80px] z-10  bg-white">
         {!showCheckout ? (
           <div className="py-6 flex flex-row justify-around lg:justify-normal">
             <Link to="/products">
