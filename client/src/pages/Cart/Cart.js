@@ -22,9 +22,9 @@ const cld = new Cloudinary({
 const plusButtonHandler = (cartData, productId, updateCartData) => {
   //create a new array with new data for the cart 
   const updatedCart = cartData.map((item) =>
-  // find the item with productId
+    // find the item with productId
     item.productId == productId
-    // if it exists, update the quantity plus one
+      // if it exists, update the quantity plus one
       ? { ...item, quantity: item.quantity + 1 }
       // else. return that item
       : item
@@ -35,7 +35,7 @@ const plusButtonHandler = (cartData, productId, updateCartData) => {
 
 const minusButtonHandler = (cartData, productID, updateCartData) => {
   const updatedCart = cartData.map((item) =>
-  // same concept with plus button handler but here it cannot go under 1
+    // same concept with plus button handler but here it cannot go under 1
     item.productId == productID && item.quantity > 1
       ? { ...item, quantity: item.quantity - 1 }
       : item
@@ -72,7 +72,7 @@ const deleteButtonHandler = (
       },
       {
         label: 'No',
-        onClick: () => {},
+        onClick: () => { },
       },
     ],
   });
@@ -210,10 +210,8 @@ const Cart = () => {
           ) {
             isStockAvailable = false;
             alertString.push(
-              `Sorry, ${
-                inventory.product_name
-              } cannot provide the quantity you are asking for. Please reduce your quantity by ${
-                cartData[quantityIndex].quantity - inventory.quantity
+              `Sorry, ${inventory.product_name
+              } cannot provide the quantity you are asking for. Please reduce your quantity by ${cartData[quantityIndex].quantity - inventory.quantity
               }.`
             );
           }
@@ -334,12 +332,10 @@ const Cart = () => {
       setIsLoading(false);
     }
   }, [cartData, productDetails]);
-  const checkoutDynamicClassName = `lg:mr-36 ${
-    showCheckout ? 'block' : 'hidden lg:block'
-  } mb-48 w-9/10 `;
-  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-24 ${
-    showCheckout ? 'hidden' : 'block'
-  }`;
+  const checkoutDynamicClassName = `lg:mr-36 ${showCheckout ? 'block' : 'hidden lg:block'
+    } mb-48 w-9/10 `;
+  const cartListDynamicClassName = `mt-4 mb-48 sm:mb-64 mr-4 w-full ml-4 lg:w-3/5 lg:ml-24 ${showCheckout ? 'hidden' : 'block'
+    }`;
   return (
     <div className="flex flex-row">
       <div className={cartListDynamicClassName}>
@@ -381,7 +377,10 @@ const Cart = () => {
                   </td>
                   <td>
                     <b className="hidden md:block">{cartItem.product_name}</b>
-                    <p className="block md:hidden">{cartItem.product_name}</p>
+                    <Link to={`/product/${cartItem.product_id}`} onClick={() => window.scrollTo(0, 0)}>
+                      <span aria-hidden="true" className="absolute inset-0" />
+                      {cartItem.product_name}
+                    </Link>
                     <p className="hidden md:flex flex-row">
                       <b className="hidden lg:block">category:</b>{' '}
                       {cartItem.category}
