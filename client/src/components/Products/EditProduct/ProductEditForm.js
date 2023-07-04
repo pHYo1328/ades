@@ -218,7 +218,7 @@ export default function ProductEditForm() {
         </div>
         <div className="mb-3 w-6/12">
           <Link
-            to="/products/admin"
+            to="/admin"
             id="submit"
             className="bg-light-blue  text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full flex items-center justify-center text-center hover:shadow-lg"  >
             Discard Changes

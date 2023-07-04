@@ -37,6 +37,7 @@ export default function AdminDashboard() {
     const [products, setProducts] = useState(null);
     const [hasProducts, setHasProducts] = useState(false);
     const [statistics, setStatistics] = useState(null);
+    const [hasStatistics, setHasStatistics] = useState(false)
 
     const [orderID, setOrderID] = useState(null);
     const [refunds, setRefunds] = useState(null);
@@ -44,10 +45,12 @@ export default function AdminDashboard() {
     const [brands, setBrands] = useState(null);
     const [brandName, setBrandName] = useState('');
     const [brand, setBrand] = useState(null);
+    const [hasBrand, setHasBrand] = useState(false)
 
     const [categories, setCategories] = useState(null);
     const [categoryName, setCategoryName] = useState('');
     const [category, setCategory] = useState(null);
+    const [hasCategory, setHasCategory] = useState(false)
 
     const [activeTab, setActiveTab] = useState('home');
 
@@ -85,10 +88,10 @@ export default function AdminDashboard() {
     };
 
 
-    const fetchCategories = () => fetchData(`${baseUrl}/api/category`, setCategories);
+    const fetchCategories = () => fetchData(`${baseUrl}/api/category`, setCategories, setHasCategory);
     useEffect(() => { fetchCategories() }, [])
 
-    const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands);
+    const fetchBrands = () => fetchData(`${baseUrl}/api/brands`, setBrands, setHasBrand);
     useEffect(() => { fetchBrands() }, [])
 
     const fetchProducts = () => {
@@ -110,7 +113,7 @@ export default function AdminDashboard() {
         }
     }, [search]);
 
-    const fetchStatistics = () => fetchData(`${baseUrl}/api/admin/statistics`, setStatistics);
+    const fetchStatistics = () => fetchData(`${baseUrl}/api/admin/statistics`, setStatistics, setHasStatistics);
 
     // refresh the statistics every 1 minute
     useEffect(() => {
@@ -215,7 +218,22 @@ export default function AdminDashboard() {
                     position="top-center"
                 />
 
-                <Toggle showMenu={showMenu} setShowMenu={() => setShowMenu()} />
+                {/* <Toggle showMenu={showMenu} setShowMenu={() => setShowMenu()} /> */}
+
+                <button
+                    data-drawer-target="sidebar-multi-level-sidebar"
+                    data-drawer-toggle="sidebar-multi-level-sidebar"
+                    aria-controls="sidebar-multi-level-sidebar"
+                    type="button"
+                    className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    onClick={() => {
+                        setShowMenu(!showMenu);
+                        console.log("showMenu", showMenu)
+                    }}
+                >
+                    <span className="sr-only">Open sidebar</span>
+                    <i class="bi bi-list"></i>
+                </button>
 
                 <aside id="default-sidebar" class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0" aria-label="Sidebar">
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
@@ -234,17 +252,9 @@ export default function AdminDashboard() {
                             <div className="w-full">
                                 <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
                                     <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                                        {/* <TextInput placeholder={"Enter search..."} value={search}
-                                            onChange={(e) => setSearch(e.target.value)} buttonRef={searchProductButtonRef} /> */}
-
                                         <TextInput placeholder={"Enter search..."} value={search}
                                             func={(e) => setSearch(e.target.value)} />
                                     </div>
-
-                                    {/* <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12 pr-4">
-                                        <Button buttonRef={searchProductButtonRef} onClick={fetchSearchResults} content={<>Search <i className="bi bi-search ml-1"></i></>} />
-
-                                    </div> */}
 
                                     <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                                         <LinkButton linkTo={"/products/create"} content={<>
@@ -267,7 +277,7 @@ export default function AdminDashboard() {
                                         <Button buttonRef={brandCreateButtonRef} onClick={handleSubmitBrand} content={<i className="bi bi-plus-circle"></i>} />
                                     </div>
                                 </div>
-                                <Brand brands={brands} fetchProducts={() => fetchProducts()} fetchBrands={() => fetchBrands()} setBrands={setBrands} />
+                                <Brand brands={brands} fetchProducts={() => fetchProducts()} fetchBrands={() => fetchBrands()} setBrands={setBrands} products={products} hasProducts={hasProducts} refunds={refunds} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()} />
                             </div>
                         )}
                         {activeTab === 'categories' && (

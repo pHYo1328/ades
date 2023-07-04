@@ -5,12 +5,29 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
 import DeleteModal from '../../modal/DeleteModal';
+import ProductListModal from '../../modal/ProductListModal';
 
 
-export default function Category({ categories, fetchProducts, fetchCategories }) {
+export default function Category({ categories, fetchProducts, fetchCategories, refunds, setRefunds, fetchStatistics }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [categoryID, setCategoryID] = useState(null)
+    const [categoryID, setCategoryID] = useState(null);
+    const [showProducts, setShowProducts] = useState(false);
+    const [products, setProducts] = useState(null)
+    const [hasProducts, setHasProducts] = useState(false)
+
+    const getProductsByCategory = (categoryID) => {
+        axios
+            .get(`${baseUrl}/api/products/category/${categoryID}`)
+            .then((response) => {
+                console.log(response);
+                setProducts(response.data.data);
+                setHasProducts(true)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
 
     const deleteCategory = (categoryID) => {
         axios
@@ -48,8 +65,20 @@ export default function Category({ categories, fetchProducts, fetchCategories })
                         {categories.map((category) => (
                             <tr className="bg-white border-b hover:bg-gray-50 text-dark text-center">
                                 <td className="px-6 py-4 font-semibold text-gray-900">
-                                    {category.category_name}
+                                    <button onClick={() => {
+                                        console.log(category.category_id);
+                                        console.log('category is clicked')
+                                        setShowProducts(true);
+                                        getProductsByCategory(category.category_id);
+                                    }}>{category.category_name}</button>
                                 </td>
+                                {showProducts && (
+                                    <ProductListModal
+                                        // key={products}
+                                        onCancel={() => { setShowProducts(false); console.log("cancel button is clicked") }}
+                                        products={products} hasProducts={hasProducts} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()}
+                                    />
+                                )}
                                 <td className="px-6 py-4 font-semibold text-gray-900">
                                     <button
                                         className=" text-center"
