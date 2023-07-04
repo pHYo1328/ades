@@ -176,7 +176,7 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
-  router.post('/api/bookmark', bookmarkController.processAddBookMark);
+  router.post('/api/bookmark/add', bookmarkController.processAddBookMark);
 
   // PUT
   router.put('/api/admin/order', orderController.processUpdateOrderStatus);
@@ -196,6 +196,10 @@ module.exports = (app, router) => {
     '/api/order',
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
+  );
+  router.delete(
+    '/api/bookmark/remove/:customerId/:brandId',
+    bookmarkController.processRemoveBookMark
   );
 
   //Carolyn
@@ -228,7 +232,7 @@ module.exports = (app, router) => {
   // router.post(
   //   '/handleChargeSucceeded',
   //   checkoutController.handleChargeSucceeded
-  // );  
+  // );
 
   //inserting data from stripe to back_end
   router.post(
@@ -296,7 +300,13 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
-  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
+  router.post(
+    '/verify-email-admin',
+    verificationEmailAdmin.sendForgotPasswordEmail
+  );
 };

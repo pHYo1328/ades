@@ -14,7 +14,6 @@ import InputLabel from '../../../components/InputLabel';
 import TextArea from '../../../components/TextArea';
 
 export default function ProductCreate() {
-
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
@@ -133,7 +132,9 @@ export default function ProductCreate() {
           className="sm:w-11/12 md:w-10/12 lg:w-8/12 mt-5 mx-auto bg-peach p-5 rounded-md mb-5"
           encType="multipart/form-data"
         >
-          <h3 className="text-center text-2xl font-bold mb-6">CREATE PRODUCT</h3>
+          <h3 className="text-center text-2xl font-bold mb-6">
+            CREATE PRODUCT
+          </h3>
           <div className="mb-3">
             <InputLabel content="Product Name" />
             <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} />
@@ -175,14 +176,9 @@ export default function ProductCreate() {
             </div>
           </div>
 
-          <ToastContainer
-            limit={2}
-            newestOnTop={true}
-            position="top-center"
-          />
+          <ToastContainer limit={2} newestOnTop={true} position="top-center" />
         </form>
       </div>
     </div>
-
   );
 }

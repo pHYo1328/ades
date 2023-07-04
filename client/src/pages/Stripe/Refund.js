@@ -20,7 +20,6 @@ function RefundPayment() {
       })
       .catch((error) => {
         console.error(error);
-        
       });
   }, []);
 
@@ -33,10 +32,12 @@ function RefundPayment() {
   const handleRefund = async (event) => {
     console.log(chalk.yellow('Refund button is clicked!'));
     event.preventDefault();
-  
+
     // Display a confirmation dialog
-    const confirmed = window.confirm('Are you sure you want to process the refund?');
-  
+    const confirmed = window.confirm(
+      'Are you sure you want to process the refund?'
+    );
+
     if (confirmed) {
       axios
         .post(`${baseUrl}/processRefund/${orderID}`)
@@ -52,7 +53,7 @@ function RefundPayment() {
         });
     }
   };
-  
+
   return (
     <>
       <h1>The details of order</h1>

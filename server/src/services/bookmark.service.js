@@ -1,42 +1,44 @@
 const chalk = require('chalk');
 const pool = require('../config/database');
 
-// overwriting bookmark data in database
+// Add a single brand to the bookmarks
 module.exports.addBookMark = async (data) => {
   console.log(chalk.blue('addBookMark is called'));
-  const { customerId, brandIds } = data;
-  console.log(chalk.yellow('Inspecting data variables'), customerId, brandIds);
-  const brandIdsData = brandIds.map((brand) => [customerId, brand]);
-  const addBookmarkQuery = `INSERT IGNORE INTO bookmark(customer_id, brand_id) VALUES ?`;
-  const deleteBookmarkQuery = `DELETE FROM bookmark WHERE customer_id = ? AND brand_id NOT IN (?)`;
-  const deleteAllBookmarkQuery = `DELETE FROM bookmark WHERE customer_id = ?`;
+  const { customerId, brandId } = data; // Take single brandId instead of an array of brandIds
+  console.log(chalk.yellow('Inspecting data variables'), customerId, brandId);
+  const addBookmarkQuery = `INSERT IGNORE INTO bookmark(customer_id, brand_id) VALUES (?, ?)`;
+
   try {
     console.log(chalk.blue('Creating connection...'));
-    let result = null;
-
-    //if brand id data is bigger than , means user never unbookmarked anything
-    if (brandIds.length > 0) {
-
-      // first insert all data ignore duplicate
-      console.log(chalk.blue('Executing query', addBookmarkQuery));
-      result = await pool.query(addBookmarkQuery, [brandIdsData]);
-      console.log(chalk.green('Result:', result));
-
-      // then clear everything that is not inside new bookmark brand id data
-      console.log(chalk.blue('Executing query', deleteBookmarkQuery));
-      await pool.query(deleteBookmarkQuery, [customerId, brandIds]);
-    } else {
-      // else delete all data from database
-      console.log(chalk.blue('Executing query', deleteAllBookmarkQuery));
-      await pool.query(deleteAllBookmarkQuery, [customerId]);
-    }
+    console.log(chalk.blue('Executing query', addBookmarkQuery));
+    const result = await pool.query(addBookmarkQuery, [customerId, brandId]); // Pass single brandId to query
+    console.log(chalk.green('Result:', result));
     return result ? result.affectedRows : 0;
   } catch (error) {
-    console.log(chalk.red('Error in addBookmarkQuery:', error));
+    console.log(chalk.red('Error in addBookMark:', error));
     throw error;
   }
 };
 
+// Remove a single brand from the bookmarks
+module.exports.removeBookMark = async (data) => {
+  // New function for removing bookmarks
+  console.log(chalk.blue('removeBookMark is called'));
+  const { customerId, brandId } = data; // Take single brandId
+  console.log(chalk.yellow('Inspecting data variables'), customerId, brandId);
+  const removeBookmarkQuery = `DELETE FROM bookmark WHERE customer_id = ? AND brand_id = ?`;
+
+  try {
+    console.log(chalk.blue('Creating connection...'));
+    console.log(chalk.blue('Executing query', removeBookmarkQuery));
+    const result = await pool.query(removeBookmarkQuery, [customerId, brandId]); // Pass single brandId to query
+    console.log(chalk.green('Result:', result));
+    return result ? result.affectedRows : 0;
+  } catch (error) {
+    console.log(chalk.red('Error in removeBookMark:', error));
+    throw error;
+  }
+};
 
 // fetch all bookmark data from database for a particular customer
 module.exports.fetchBookmarkByCustomerID = async (data) => {

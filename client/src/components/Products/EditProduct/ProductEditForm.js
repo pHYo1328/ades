@@ -73,9 +73,7 @@ export default function ProductEditForm() {
     };
 
     console.log(requestBody);
-    if (
-      productName == "" || productDescription == ""
-    ) {
+    if (productName == '' || productDescription == '') {
       toast.error(`Please fill in all the fields.`, {
         autoClose: 3000,
         pauseOnHover: true,
@@ -170,7 +168,6 @@ export default function ProductEditForm() {
         </div>
       )}
 
-
       <div className="flex justify-between mt-4 space-x-4">
         <div className="mb-3 w-6/12">
           <Button onClick={handleSubmit} content={"Submit"} />
@@ -180,11 +177,7 @@ export default function ProductEditForm() {
         </div>
       </div>
 
-      <ToastContainer
-        limit={2}
-        newestOnTop={true}
-        position="top-center"
-      />
+      <ToastContainer limit={2} newestOnTop={true} position="top-center" />
     </form>
   );
 }

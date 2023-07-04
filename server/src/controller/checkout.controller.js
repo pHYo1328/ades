@@ -84,9 +84,6 @@ exports.getConfig = (req, res) => {
 //   }
 // };
 
-
-
-
 //creating the payment intent with stripe
 exports.createPaymentIntent = async (req, res) => {
   console.log(chalk.blue('create payment intent'));
@@ -273,7 +270,6 @@ exports.handleWebhooks = async (req, res) => {
     data = event.data.object;
     eventType = event.type;
   } else {
-    
     console.log('req.body:', req.body);
 
     if (req.body && req.body.data) {
@@ -287,7 +283,7 @@ exports.handleWebhooks = async (req, res) => {
     console.log(chalk.yellow('Data: ', data));
     console.log(chalk.yellow('Event Type: ', eventType));
   }
-  
+
   //handle the event
   if (eventType === 'charge.succeeded') {
     const {
@@ -365,7 +361,6 @@ exports.handleWebhooks = async (req, res) => {
       }
     }
   }
- 
+
   res.send().end();
 };
-

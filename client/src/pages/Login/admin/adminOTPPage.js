@@ -28,7 +28,7 @@ const VerifyOTP = () => {
       if (response.ok) {
         // OTP verification successful
         console.log('Successful OTP verification for admin');
-        alert("successful OTP");
+        alert('successful OTP');
         const data = location.state; //pass data from AdminLogin.js
 
         localStorage.setItem('accessToken', data.accessToken);

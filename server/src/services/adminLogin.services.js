@@ -117,7 +117,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM admin WHERE email = ?';
   const updatePasswordQuery = 'UPDATE admin SET password = ? WHERE email = ?';
   try {
-    // Get the previous hashed password 
+    // Get the previous hashed password
     const [rows] = await pool.query(getPasswordQuery, [email]);
 
     if (rows.length === 0) {
@@ -131,7 +131,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
     console.log(previousHashedPwd);
     console.log(newPassword);
 
-    // Compare the new hashed password with the previous hashed password 
+    // Compare the new hashed password with the previous hashed password
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
       // if password is the same as the previous password
@@ -141,7 +141,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
       return false;
     }
 
-    // Encrypt the new password 
+    // Encrypt the new password
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
     // Update the password into the database
@@ -156,7 +156,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
     }
 
     console.log('Password updated successfully');
-    return true; // Password updated successfully 
+    return true; // Password updated successfully
   } catch (error) {
     console.error('Error in updating password: ', error);
     throw error;
@@ -175,7 +175,8 @@ module.exports.verifyOTP = async (otp) => {
     if (rows.length > 0) {
       const savedOTP = rows[0].otp; //finds OTP from database
 
-      if (otp === savedOTP) { // compares OTP with inputted OTP
+      if (otp === savedOTP) {
+        // compares OTP with inputted OTP
         // OTP verification successful
         console.log('otp same as db otp for admin');
         return true;

@@ -4,14 +4,19 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // creates new user
-module.exports.registerUser = async (username, email, password, roles, image_url) => {
+module.exports.registerUser = async (
+  username,
+  email,
+  password,
+  roles,
+  image_url
+) => {
   console.log(chalk.blue('User registered successfully'));
   try {
-
     //  // Check if the username already exists in the database
     // const checkUsernameQuery = 'SELECT COUNT(*) as count FROM users WHERE username = ?';
     // const usernameExists = await pool.query(checkUsernameQuery, [username]);
-    // const count = usernameExists[0].count; 
+    // const count = usernameExists[0].count;
 
     // if (count > 0) {
     //   // Throw an error with status code 500
@@ -29,11 +34,10 @@ module.exports.registerUser = async (username, email, password, roles, image_url
       email,
       password,
       roles,
-      image_url
+      image_url,
     ]);
     console.log(chalk.green(results));
     return results;
-
   } catch (error) {
     console.error(chalk.red('Error in registering new user: ', error)); //username prob already exists in database
     throw error;
@@ -47,7 +51,7 @@ module.exports.loginUser = async (username) => {
     const loginUserQuery =
       'SELECT customer_id,username,password,roles FROM users WHERE username = ?';
     const results = await pool.query(loginUserQuery, [username]);
-    console.log(chalk.red(JSON.stringify(results[0])));  // prints out the user logged in
+    console.log(chalk.red(JSON.stringify(results[0]))); // prints out the user logged in
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in logging user in: ', error));
@@ -112,7 +116,7 @@ module.exports.updateRefreshToken = async (
 
 // Logout user
 module.exports.logoutUser = async (refreshToken) => {
-  // query to remove refreshToken by making it NULL 
+  // query to remove refreshToken by making it NULL
   const logoutQuery =
     'UPDATE users SET refreshToken = NULL WHERE refreshToken = ? AND refreshToken IS NOT NULL';
   try {
@@ -134,7 +138,7 @@ module.exports.forgotPassword = async (email, newPassword) => {
   const getPasswordQuery = 'SELECT password FROM users WHERE email = ?';
   const updatePasswordQuery = 'UPDATE users SET password = ? WHERE email = ?';
   try {
-    // Get the previous hashed password 
+    // Get the previous hashed password
     const [rows] = await pool.query(getPasswordQuery, [email]);
 
     if (rows.length === 0) {
@@ -148,15 +152,15 @@ module.exports.forgotPassword = async (email, newPassword) => {
     console.log(previousHashedPwd);
     console.log(newPassword);
 
-    // Compare the new hashed password with the previous hashed password 
+    // Compare the new hashed password with the previous hashed password
     const isSamePassword = await bcrypt.compare(newPassword, previousHashedPwd);
     if (isSamePassword) {
-      // password is the same as the previous password 
+      // password is the same as the previous password
       console.log('New password is the same as the previous password');
       return false;
     }
 
-    // Encrypt the new password 
+    // Encrypt the new password
     const hashedPwd = await bcrypt.hash(newPassword, 10);
 
     // Update the password in admin database
@@ -190,7 +194,8 @@ module.exports.verifyOTP = async (otp) => {
     if (rows.length > 0) {
       const savedOTP = rows[0].otp; // finds otp from database
 
-      if (otp === savedOTP) { // compares OTP with inputted OTP
+      if (otp === savedOTP) {
+        // compares OTP with inputted OTP
         // OTP verification successful
         console.log('otp same as db otp');
         return true;

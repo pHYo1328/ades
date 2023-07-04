@@ -3,20 +3,23 @@ import { AdvancedImage } from '@cloudinary/react';
 import { Link } from 'react-router-dom';
 
 const cld = new Cloudinary({
-    cloud: {
-        cloudName: 'ddoajstil',
-    },
+  cloud: {
+    cloudName: 'ddoajstil',
+  },
 });
 
 export default function Product(props) {
-    const { product } = props;
+  const { product } = props;
 
-    return (
-        <div key={product.product_id} className="group relative">
-            <div className="h-70 w-100 aspect-square w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75">
-                {/* shows the image from Cloudinary */}
-                <AdvancedImage cldImg={cld.image(product.image_url)} className="h-full w-full" />
-            </div>
+  return (
+    <div key={product.product_id} className="group relative">
+      <div className="h-70 w-100 aspect-square w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75">
+        {/* shows the image from Cloudinary */}
+        <AdvancedImage
+          cldImg={cld.image(product.image_url)}
+          className="h-full w-full"
+        />
+      </div>
 
             <div className="mt-4 flex justify-between">
                 <div className="text-left">
