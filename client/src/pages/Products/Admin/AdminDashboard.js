@@ -54,7 +54,23 @@ export default function AdminDashboard() {
 
     const [activeTab, setActiveTab] = useState('home');
 
-    const [showMenu, setShowMenu] = useState(false)
+    const [showMenu, setShowMenu] = useState(false);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            console.log(window.innerWidth);
+            if (window.innerWidth > 768) {
+                setShowMenu(false);
+            }
+        };
+
+        window.addEventListener("resize", handleWindowResize);
+
+        return () => {
+            window.removeEventListener("resize", handleWindowResize);
+        };
+    }, []);
+
 
     useEffect(() => {
         const roles = JSON.parse(localStorage.getItem('roles'));
@@ -123,6 +139,8 @@ export default function AdminDashboard() {
             clearInterval(intervalId);
         };
     }, [products]);
+
+
 
     const handleSubmit = async (event, name, type, setData, fetchData, setDataName) => {
         event.preventDefault();
@@ -239,7 +257,11 @@ export default function AdminDashboard() {
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
                 </aside>
 
-                {showMenu && (
+                {/* {showSmallMenu && (
+                    <SideBar className="md:hidden lg:hidden" activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
+                )} */}
+
+                {window.innerWidth < 768 && showMenu && (
                     <SideBar activeTab={activeTab} setActiveTab={(value) => setActiveTab(value)} />
                 )}
 
