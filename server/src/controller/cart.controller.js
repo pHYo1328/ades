@@ -1,7 +1,6 @@
 const chalk = require('chalk');
 const cartServices = require('../services/cart.services');
 
-
 // controller for adding data to both redis and mysql databases
 exports.processAddCartData = async (req, res, next) => {
   console.log(chalk.blue('processAddCartData is running'));

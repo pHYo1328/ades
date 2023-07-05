@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loading from '../../Loading/Loading';
 
-export default function Brands({ setBrandID, all, edit = false, productData = null }) {
+export default function Brands({
+  setBrandID,
+  all,
+  edit = false,
+  productData = null,
+}) {
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [brands, setBrands] = useState(null);
 

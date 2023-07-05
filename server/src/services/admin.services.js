@@ -59,7 +59,7 @@ module.exports.deleteUser = async (userid) => {
   try {
     console.log(chalk.blue('Running SQL >>>>>>'));
     await connection.beginTransaction();
-    // Run the delete queries concurrently 
+    // Run the delete queries concurrently
     await Promise.all([
       pool.query(orderDeleteQuery, [userid]),
       pool.query(productOrderDeleteQuery),

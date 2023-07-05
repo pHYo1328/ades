@@ -5,7 +5,7 @@ const pool = require('../config/database');
 
 // Update user information
 const updateUser = async (req, res) => {
-  const { userid, username, email, password } = req.body
+  const { userid, username, email, password } = req.body;
   try {
     console.log('updateController userid', userid);
     // Fetch the previous hashed password from the database

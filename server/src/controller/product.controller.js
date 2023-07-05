@@ -45,7 +45,7 @@ exports.processGetProductByID = async (req, res, next) => {
       quantity: productData.quantity,
       category_id: productData.category_id,
       brand_id: productData.brand_id,
-      image_url: imageData.map((u) => u.image_url)
+      image_url: imageData.map((u) => u.image_url),
     };
 
     return res.status(200).json({
@@ -649,7 +649,7 @@ exports.processGetRelatedProducts = async (req, res, next) => {
         brand_name: product.brand_name,
         image_url: product.image_url,
         category_id: product.category_id,
-        brand_id: product.brand_id
+        brand_id: product.brand_id,
       }));
       res.status(200).json({
         statusCode: 200,

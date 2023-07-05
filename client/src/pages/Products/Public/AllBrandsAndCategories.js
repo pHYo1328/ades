@@ -55,42 +55,39 @@ export default function AllBrandsAndCategories() {
       // Toggle bookmark status
       const newStatus = { ...prevStatus, [brandId]: !prevStatus[brandId] };
       if (newStatus[brandId]) {
-        // If brand is bookmarked, add to bookmarkedBrands
-        bookmarkedBrandsRef.current = [...bookmarkedBrandsRef.current, brandId];
+        // If brand is bookmarked, send a POST request to add the brand to the bookmarks
+        api
+          .post('/api/bookmark/add', {
+            customerId,
+            brandId,
+          })
+          .then((response) => {
+            console.log('Brand bookmarked successfully');
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error('Error bookmarking brand:', error);
+          });
       } else {
-        // If brand is un-bookmarked, remove from bookmarkedBrands
-        bookmarkedBrandsRef.current = bookmarkedBrandsRef.current.filter(
-          (id) => id !== brandId
-        );
+        // If brand is un-bookmarked, send a POST request to remove the brand from the bookmarks
+        api
+          .delete(`/api/bookmark/remove/${customerId}/${brandId}`)
+          .then((response) => {
+            console.log('Brand un-bookmarked successfully');
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error('Error un-bookmarking brand:', error);
+          });
       }
-
       return newStatus;
     });
   };
-
-  useEffect(() => {
-    return () => {
-      console.log(bookmarkedBrandsRef.current);
-      api
-        .post('/api/bookmark', {
-          customerId,
-          brandIds: bookmarkedBrandsRef.current.sort(),
-        })
-        .then((response) => {
-          console.log('Bookmark data sent successfully');
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error('Error sending bookmark data:', error);
-        });
-    };
-  }, [customerId]);
 
   return (
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto text-dark text-left">
         <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-
           {/* Brands */}
           <div className="mb-10">
             <h2 className="text-2xl font-bold mb-6">Brands</h2>
@@ -116,7 +113,9 @@ export default function AllBrandsAndCategories() {
                           onClick={() => bookmarkClickHandler(brand.brand_id)}
                         >
                           <i
-                            className={`bi bi-bookmark${bookmarkStatus[brand.brand_id] ? '-fill' : ''}`}
+                            className={`bi bi-bookmark${
+                              bookmarkStatus[brand.brand_id] ? '-fill' : ''
+                            }`}
                           ></i>
                         </button>
                       </div>
@@ -164,10 +163,8 @@ export default function AllBrandsAndCategories() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
-
   );
 }

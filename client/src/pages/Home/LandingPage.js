@@ -28,7 +28,7 @@ export default function LandingPage() {
   useEffect(() => {
     setCategoryKey((prevKey) => prevKey + 1);
     setBrandKey((prevKey) => prevKey + 1);
-  }, [])
+  }, []);
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   // get 5 latest arrivals
@@ -65,9 +65,11 @@ export default function LandingPage() {
 
   return (
     <div className="bg-white w-full">
-      <div className="bg-white w-11/12 mx-auto" >
+      <div className="bg-white w-11/12 mx-auto">
         <div className="mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <h3 className="text-center text-black font-bold mb-5 text-xxl">WELCOME TO TECHZERO</h3>
+          <h3 className="text-center text-black font-bold mb-5 text-xxl">
+            WELCOME TO TECHZERO
+          </h3>
 
           <div className="flex justify-center">
             <div className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12">
@@ -87,7 +89,11 @@ export default function LandingPage() {
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <Categories setCategoryID={setProductCategory} all={true} key={categoryKey} />
+              <Categories
+                setCategoryID={setProductCategory}
+                all={true}
+                key={categoryKey}
+              />
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">

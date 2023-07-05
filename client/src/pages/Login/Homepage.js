@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-//NOT USED 
+//NOT USED
 function Home() {
   const navigate = useNavigate();
 

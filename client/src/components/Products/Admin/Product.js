@@ -8,89 +8,92 @@ import DeleteModal from '../../modal/DeleteModal';
 import 'react-toastify/dist/ReactToastify.css';
 
 const cld = new Cloudinary({
-    cloud: {
-        cloudName: 'ddoajstil',
-    },
+  cloud: {
+    cloudName: 'ddoajstil',
+  },
 });
 
-export default function Product({ product, refunds, setRefunds, fetchProducts, fetchStatistics }) {
+export default function Product({
+  product,
+  refunds,
+  setRefunds,
+  fetchProducts,
+  fetchStatistics,
+}) {
+  // const { product, products, refunds, setProducts, setRefunds } = props;
 
-    // const { product, products, refunds, setProducts, setRefunds } = props;
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    const increaseInventory = (productID) => {
-        axios
-            .put(`${baseUrl}/api/products/inventory/plus/${productID}`)
-            .then((response) => {
-                console.log('Increase button is clicked');
-                toast.success(`Inventory level updated.`, {
-                    autoClose: 3000,
-                    pauseOnHover: true,
-                    style: { fontSize: '16px' },
-                });
-                fetchProducts();
-                fetchStatistics();
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    const decreaseInventory = (productID) => {
-        axios
-            .put(`${baseUrl}/api/products/inventory/minus/${productID}`)
-            .then((response) => {
-                console.log('Decrease button is clicked');
-                toast.success(`Inventory level updated.`, {
-                    autoClose: 3000,
-                    pauseOnHover: true,
-                    style: { fontSize: '16px' },
-                });
-                fetchProducts();
-                fetchStatistics();
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
-    const deleteProduct = (productID) => {
-        axios
-            .delete(`${baseUrl}/api/products/${product.product_id}`)
-            .then((res) => {
-                console.log('productID: ', product.product_id);
-                toast.success(`Product deleted.`, {
-                    autoClose: 3000,
-                    pauseOnHover: true,
-                    style: { 'font-size': '16px' },
-                });
-                fetchProducts();
-                fetchStatistics();
-            });
-
-        // give partial refund to customers who ordered the deleted products
-        axios
-            .post(
-                `${baseUrl}/processPartialRefund/${product.product_id}`
-            )
-            .then((response) => {
-                console.log(response);
-                setRefunds(response.data.data);
-                console.log(refunds);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        toast.success(`Giving partial refund now.`, {
-            autoClose: 3000,
-            pauseOnHover: true,
-            style: { 'font-size': '16px' },
+  const increaseInventory = (productID) => {
+    axios
+      .put(`${baseUrl}/api/products/inventory/plus/${productID}`)
+      .then((response) => {
+        console.log('Increase button is clicked');
+        toast.success(`Inventory level updated.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { fontSize: '16px' },
         });
-    }
+        fetchProducts();
+        fetchStatistics();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const decreaseInventory = (productID) => {
+    axios
+      .put(`${baseUrl}/api/products/inventory/minus/${productID}`)
+      .then((response) => {
+        console.log('Decrease button is clicked');
+        toast.success(`Inventory level updated.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { fontSize: '16px' },
+        });
+        fetchProducts();
+        fetchStatistics();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const deleteProduct = (productID) => {
+    axios
+      .delete(`${baseUrl}/api/products/${product.product_id}`)
+      .then((res) => {
+        console.log('productID: ', product.product_id);
+        toast.success(`Product deleted.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { 'font-size': '16px' },
+        });
+        fetchProducts();
+        fetchStatistics();
+      });
+
+    // give partial refund to customers who ordered the deleted products
+    axios
+      .post(`${baseUrl}/processPartialRefund/${product.product_id}`)
+      .then((response) => {
+        console.log(response);
+        setRefunds(response.data.data);
+        console.log(refunds);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    toast.success(`Giving partial refund now.`, {
+      autoClose: 3000,
+      pauseOnHover: true,
+      style: { 'font-size': '16px' },
+    });
+  };
 
     return (
         <tr className="bg-white border-b hover:bg-gray-50 text-dark text-center">
@@ -128,7 +131,7 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                         <input
                             type="number"
                             id="first_product"
-                            className="text-center items-center justify-center bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="text-center bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder={product.quantity}
                             disabled
                         />
@@ -145,8 +148,7 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                 </div>
             </td>
             <td className="px-6 py-4 items-center justify-center">
-                <Link
-                    to={`/products/edit/${product.product_id}`}>
+                <Link to={`/products/edit/${product.product_id}`}>
                     <i className="text-lg bi bi-pencil-square"></i>
                 </Link>
 
@@ -169,6 +171,6 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
                 </div>
             </td>
 
-        </tr >
+        </tr>
     )
 }

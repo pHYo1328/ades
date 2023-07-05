@@ -54,6 +54,5 @@ export default function ProductEdit() {
         </div>
       </div>
     </div>
-
   );
 }

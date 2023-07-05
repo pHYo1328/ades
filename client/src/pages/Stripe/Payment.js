@@ -35,15 +35,14 @@ function Payment() {
         setPayments(paymentData);
         setClientSecret(clientSecret);
 
-         // Call the webhook endpoint
-         await axios.post(`${baseUrl}/webhook`, {});
+        // Call the webhook endpoint
+        await axios.post(`${baseUrl}/webhook`, {});
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchData();
-
   }, [orderID]);
 
   return (

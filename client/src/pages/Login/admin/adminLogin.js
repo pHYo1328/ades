@@ -12,7 +12,7 @@ function Login() {
     const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true';
     if (isAdminSignedIn) {
       navigate('/homepage-admin');
-    } 
+    }
   }, []);
 
   const onHandleSubmit = (e) => {
@@ -40,7 +40,7 @@ function Login() {
         console.log('this is my' + data);
         if (data.success) {
           console.log('Admin login successful');
-          
+
           setErrorMessage('');
           alert('successful admin login');
           navigate('/verify-otp-admin', { state: data });

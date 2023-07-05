@@ -142,7 +142,7 @@ export default function EditImage() {
                 <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
                   <div className="flex justify-center">
                     <button
-                      // disabled={images.length <= 1} 
+                      // disabled={images.length <= 1}
                       onClick={() => {
                         if (images.length > 1) {
                           // Delete the image at the index by using imageID
@@ -163,11 +163,14 @@ export default function EditImage() {
                             });
                         } else {
                           // Show an alert when trying to delete the only image
-                          toast.error(`Each product should have at least one image.`, {
-                            autoClose: 3000,
-                            pauseOnHover: true,
-                            style: { fontSize: '16px' },
-                          });
+                          toast.error(
+                            `Each product should have at least one image.`,
+                            {
+                              autoClose: 3000,
+                              pauseOnHover: true,
+                              style: { fontSize: '16px' },
+                            }
+                          );
                         }
                       }}
                       className="rounded-full bg-black w-8 h-8 flex items-center justify-center border-none cursor-pointer"
@@ -194,6 +197,5 @@ export default function EditImage() {
 
       <ToastContainer limit={2} newestOnTop={true} position="top-center" />
     </div>
-
   );
 }
