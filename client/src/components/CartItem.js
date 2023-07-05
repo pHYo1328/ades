@@ -21,19 +21,6 @@ const CartItem = ({
   setTotalAmount,
   customerID
 }) => {
-  const debouncedApiCall = useCallback(debounce((updatedCart) => {
-    const postCartData = () => {
-      api
-      .post(`/api/cart/${customerID}`, {
-        cartData: updatedCart,
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  }
-  postCartData();
-  }, 1000), [customerID]);
-  
   const plusButtonHandler = useCallback(
     (productId) => {
       console.log(productId);
@@ -46,7 +33,6 @@ const CartItem = ({
   
       setCartData([...updatedCart]);
       
-      debouncedApiCall([...updatedCart]);
     },
     [cartData, setCartData, customerID]
   );
@@ -60,7 +46,6 @@ const CartItem = ({
       );
       console.log(updatedCart);
       setCartData([...updatedCart]);
-      debouncedApiCall([...updatedCart]);
     },
     [cartData, setCartData,customerID]
   );
@@ -102,7 +87,7 @@ const CartItem = ({
       key={`${cartItem.product_ID}-${index}`}
       className=" border-b-2 border-grey"
     >
-      <td className="flex flew-row py-6 w-48 h-56 md:w-64 md:h-64 ">
+      <td className="flex flew-row py-6 px-2 w-48 h-56 md:w-64 md:h-64 ">
         <AdvancedImage
           cldImg={cld.image(cartItem.image_url)}
           className="rounded"
