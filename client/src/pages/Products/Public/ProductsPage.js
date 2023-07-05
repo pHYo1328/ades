@@ -17,14 +17,14 @@ export default function ProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [offset, setOffset] = useState(0);
-  const [hasResults, setHasResults] = useState(false)
+  const [hasResults, setHasResults] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const sortOptions = [
-    { value: 1, label: "Price (Ascending)" },
-    { value: 2, label: "Price (Descending)" },
-    { value: 3, label: "Name (A-Z)" },
-    { value: 4, label: "Name (Z-A)" }
+    { value: 1, label: 'Price (Ascending)' },
+    { value: 2, label: 'Price (Descending)' },
+    { value: 3, label: 'Name (A-Z)' },
+    { value: 4, label: 'Name (Z-A)' },
   ];
 
   // changes the offset and current page as the user changes the page using pagination
@@ -107,8 +107,15 @@ export default function ProductsPage() {
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
               <div className="flex items-center">
-                <NumberInput min={1} value={limit} func={(e) => setLimit(parseInt(e.target.value))} placeholder={"Limit"} />
-                <span className="ml-2 text-sm text-gray-600">Products/Page</span>
+                <NumberInput
+                  min={1}
+                  value={limit}
+                  func={(e) => setLimit(parseInt(e.target.value))}
+                  placeholder={'Limit'}
+                />
+                <span className="ml-2 text-sm text-gray-600">
+                  Products/Page
+                </span>
               </div>
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
@@ -126,7 +133,6 @@ export default function ProductsPage() {
                   </option>
                 ))}
               </select>
-
             </div>
             <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/5 p-2">
               <Categories setCategoryID={setCategoryID} all={true} />
@@ -137,7 +143,6 @@ export default function ProductsPage() {
           </div>
 
           <ProductList hasResults={hasResults} products={products} />
-
         </div>
 
         <div className="pb-5 mb-5 mx-auto">
@@ -154,6 +159,5 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
-
   );
 }

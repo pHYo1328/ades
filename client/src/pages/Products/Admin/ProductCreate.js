@@ -14,7 +14,6 @@ import InputLabel from '../../../components/InputLabel';
 import TextArea from '../../../components/TextArea';
 
 export default function ProductCreate() {
-
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
@@ -133,32 +132,57 @@ export default function ProductCreate() {
           className="sm:w-11/12 md:w-10/12 lg:w-8/12 mt-5 mx-auto bg-peach p-5 rounded-md mb-5"
           encType="multipart/form-data"
         >
-          <h3 className="text-center text-2xl font-bold mb-6">CREATE PRODUCT</h3>
+          <h3 className="text-center text-2xl font-bold mb-6">
+            CREATE PRODUCT
+          </h3>
           <div className="mb-3">
             <InputLabel content="Product Name" />
-            <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} />
+            <TextInput
+              placeholder={'Product Name'}
+              value={productName}
+              func={(e) => setProductName(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
             <InputLabel content="Description" />
-            <TextArea rows={3} placeholder={"Description"} value={productDescription} func={(e) => setProductDescription(e.target.value)} />
+            <TextArea
+              rows={3}
+              placeholder={'Description'}
+              value={productDescription}
+              func={(e) => setProductDescription(e.target.value)}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
               <InputLabel content="Price" />
-              <NumberInput min={0} placeholder={"Price"} value={productPrice} func={(e) => setProductPrice(e.target.value)} />
+              <NumberInput
+                min={0}
+                placeholder={'Price'}
+                value={productPrice}
+                func={(e) => setProductPrice(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <InputLabel content="Inventory" />
-              <NumberInput min={0} placeholder={"Inventory (Quantity)"} value={productQuantity} func={(e) => setProductQuantity(e.target.value)} />
+              <NumberInput
+                min={0}
+                placeholder={'Inventory (Quantity)'}
+                value={productQuantity}
+                func={(e) => setProductQuantity(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
               <InputLabel content="Category" />
-              <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
+              <Categories
+                setCategoryID={setProductCategory}
+                all={false}
+                key={categoryKey}
+              />
             </div>
             <div className="mb-3">
               <InputLabel content="Brand" />
@@ -171,18 +195,13 @@ export default function ProductCreate() {
               <UploadWidget onImageChange={handleImageChange} />
             </div>
             <div className="mb-3 w-6/12">
-              <Button onClick={handleSubmit} content={"Submit"} />
+              <Button onClick={handleSubmit} content={'Submit'} />
             </div>
           </div>
 
-          <ToastContainer
-            limit={2}
-            newestOnTop={true}
-            position="top-center"
-          />
+          <ToastContainer limit={2} newestOnTop={true} position="top-center" />
         </form>
       </div>
     </div>
-
   );
 }

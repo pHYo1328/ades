@@ -635,9 +635,7 @@ exports.processGetRelatedProducts = async (req, res, next) => {
   // const { productID } = req.params;
   const { productID } = req.params;
   try {
-    const productData = await productServices.getRelatedProducts(
-      productID
-    );
+    const productData = await productServices.getRelatedProducts(productID);
     if (productData) {
       console.log(chalk.yellow('Product data: ', productData));
       const products = productData.map((product) => ({

@@ -1,10 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
-import { debounce } from 'lodash';
-import api from '../index'
+import { AdvancedImage, preload } from '@cloudinary/react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Link } from 'react-router-dom';
@@ -20,7 +18,7 @@ const CartItem = ({
   cartData,
   setCartData,
   setTotalAmount,
-  customerID
+  customerID,
 }) => {
   const plusButtonHandler = useCallback(
     (productId) => {
@@ -33,7 +31,6 @@ const CartItem = ({
       console.log(updatedCart);
 
       setCartData([...updatedCart]);
-      
     },
     [cartData, setCartData, customerID]
   );
@@ -75,13 +72,19 @@ const CartItem = ({
           },
           {
             label: 'No',
-            onClick: () => { },
+            onClick: () => {},
           },
         ],
       });
     },
     [cartData, setCartData, setTotalAmount]
   );
+
+  useEffect(() => {
+    // Preload the image
+    const image = new Image();
+    image.src = cartItem.image_url;
+  }, [cartItem.image_url]);
 
   return (
     <tr
@@ -92,11 +95,15 @@ const CartItem = ({
         <AdvancedImage
           cldImg={cld.image(cartItem.image_url)}
           className="rounded"
-          width="100%" height="100%"
+          width="100%"
+          height="100%"
         />
       </td>
       <td>
-        <Link to={`/product/${cartItem.product_id}`} onClick={() => window.scrollTo(0, 0)}>
+        <Link
+          to={`/product/${cartItem.product_id}`}
+          onClick={() => window.scrollTo(0, 0)}
+        >
           <b>{cartItem.product_name}</b>
         </Link>
         <p className="block md:hidden">{cartItem.product_name}</p>
@@ -121,7 +128,9 @@ const CartItem = ({
           <button
             className="flex items-center justify-center"
             onClick={() => plusButtonHandler(cartItem.product_id)}
+            aria-label="Increase quantity"
           >
+            <span className="sr-only">Increase quantity</span>
             <FiPlus size={16} />
           </button>
         </div>
@@ -130,26 +139,26 @@ const CartItem = ({
         </div>
       </td>
       <td className="hidden lg:table-cell">${cartItem.price}</td>
-      <td>
-        <div className=" justify-evenly border-2 border-gray-400 rounded hidden md:flex flex-row">
+      <td >
+        <div className=" justify-evenly hidden md:flex flex-row">
           <button
-            className="flex items-center justify-center "
+            className="flex items-center justify-center w-8 border-2 rounded-tl-md rounded-bl-md border-gray-500"
             onClick={() => minusButtonHandler(cartItem.product_id)}
           >
             <FiMinus size={16} />
           </button>
-          <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+          <p className="text-center px-1 w-10 border-t-2 border-b-2 border-gray-500">
             {cartItem.quantity}
           </p>
           <button
-            className="flex items-center justify-center"
+            className="flex items-center justify-center w-8 border-2 border-gray-500 rounded-tr-md rounded-br-md"
             onClick={() => plusButtonHandler(cartItem.product_id)}
           >
             <FiPlus size={16} />
           </button>
         </div>
       </td>
-      <td className="w-40 text-center hidden md:table-cell">
+      <td className="text-center hidden md:table-cell ">
         <b>${cartItem.totalAmount}</b>
       </td>
       <td className="pl-4">

@@ -13,15 +13,16 @@ export default function SideBar({ activeTab, setActiveTab }) {
             { label: 'Refunds', value: 'refunds' },
           ].map(({ label, value }) => (
             <button
-              className={`w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${activeTab === value ? 'bg-gray-700' : ''}`}
+              className={`w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                activeTab === value ? 'bg-gray-700' : ''
+              }`}
               onClick={() => setActiveTab(value)}
             >
               {label}
             </button>
-
           ))}
         </li>
       </ul>
     </nav>
-  )
+  );
 }

@@ -39,21 +39,26 @@ export default function ProductEdit() {
 
           <div className="mx-auto lg:w-6/12 md:w-9/12 sm:w-11/12 mb-10">
             {/* toggle button to toggle between ProductEditForm and EditImage components */}
-            <Button onClick={() => {
-              setEditImage(!editImage);
-            }}
-              content={<>
-                <div className="flex items-center justify-center">
-                  <div>Update&nbsp;</div>
-                  <div>{!editImage ? <p>Images</p> : <p>Product Details</p>}</div>
-                </div>
-              </>} />
+            <Button
+              onClick={() => {
+                setEditImage(!editImage);
+              }}
+              content={
+                <>
+                  <div className="flex items-center justify-center">
+                    <div>Update&nbsp;</div>
+                    <div>
+                      {!editImage ? <p>Images</p> : <p>Product Details</p>}
+                    </div>
+                  </div>
+                </>
+              }
+            />
           </div>
 
           {!editImage ? <ProductEditForm /> : <EditImage />}
         </div>
       </div>
     </div>
-
   );
 }

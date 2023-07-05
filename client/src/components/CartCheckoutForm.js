@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TextInput from './TextInput';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../index';
 import LoadingIndicator from 'react-loading-indicator';
 import Button from './Button';
+import Select from 'react-select';
+import { getNames,getCode,getName } from 'country-list';
+import loadScript from '../utils/loadScript';
+import CheckoutInput from './CheckoutInput';
 const InputField = ({
   label,
   placeholder,
@@ -12,6 +16,8 @@ const InputField = ({
   value,
   handleChange,
   type = 'text',
+  id,
+  ref
 }) => (
   <div className="flex flex-row items-center">
     <label
@@ -26,7 +32,9 @@ const InputField = ({
       name={name}
       value={value}
       func={handleChange}
-      className="px-3 py-2 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none flex-grow"
+      className="placeholder-gray-500 text-gray-900 rounded-sm focus:outline-none flex-grow"
+      id={id}
+      ref = {ref}
     />
   </div>
 );
@@ -44,17 +52,31 @@ const CartCheckoutForm = ({
   const [address, setAddress] = useState({
     addressLine1: '',
     addressLine2: '',
-    state: '',
+    country: '',
     postalCode: '',
   });
+  const autoCompleteRef = useRef();
+  const inputRef = useRef();
+  const countryOptions = getNames().map((name) => ({
+    label: name,
+    value: name,
+  }));
+ 
 
-  const handleChange = (event) => {
-    // handler for all changes for shipping address input
+  const handleSelectChange = (selectedOption) => {
     setAddress({
       ...address,
-      [event.target.name]: event.target.value,
+      state: selectedOption.value,
     });
   };
+  
+  const handleAddressLine2Change = (value) => {
+    setAddress({
+      ...address,
+      addressLine2: value,
+    });
+  }
+
   const checkOutHandler = (
     customerId,
     address,
@@ -148,43 +170,72 @@ const CartCheckoutForm = ({
         console.log(error);
       });
   };
+  
   return (
     <div
-      className={` ${
+      className={`col-span-full lg:col-span-4 sm:ml-24 sm:mr-24 lg:ml-0 lg:mr-0 ${
         showCheckout ? 'block flex-grow' : 'hidden lg:block flex-grow'
       }`}
     >
       <div className="w-full bg-light-blue p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
         <div className="space-y-4 ">
-          {/* ... (UI Code) */}
-          <InputField
-            label="Address line 1"
-            placeholder="Enter Your Address"
-            name="addressLine1"
-            value={address.addressLine1}
-            handleChange={handleChange}
-          />
+          
+        <div className="flex flex-row items-center">
+            <label
+              htmlFor="countrySelect"
+              className="block text-base font-medium text-white w-28"
+            >
+              Country :
+            </label>
+            <Select
+              id="countrySelect"
+              aria-labelledby="countrySelect"
+              options={countryOptions}
+              onChange={handleSelectChange}
+              name="country"
+              className='w-full'
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  fontSize: '18px', // Set your desired font size here
+                }),option: (provided) => ({
+                  ...provided,
+                  fontSize: '18px', // Set your desired font size for the options
+                }),
+                placeholder: (provided) => ({
+                  ...provided,
+                  color: "#9CA3AF", // Set your desired color for the placeholder
+                }),
+              }}
+            />
+          </div>
+          <div className="flex flex-row items-center">
+            <label
+              htmlFor="addressLine1"
+              className="block text-base font-medium text-white w-28"
+            >
+              Address Line 1 :
+            </label>
+            <CheckoutInput countryCode={address.country.length>0 ? getCode(address.country) : "sg"} address={address} setAddress={setAddress} id={"addressLine1"}/>
+          </div>
+          
+          
           <InputField
             label="Address line 2"
             placeholder="Apartment, suite, unit, building, floor, etc."
             name="addressLine2"
             value={address.addressLine2}
-            handleChange={handleChange}
-          />
-          <InputField
-            label="State"
-            placeholder="State"
-            name="state"
-            value={address.state}
-            handleChange={handleChange}
+            handleChange={handleAddressLine2Change}
+            id="addressLine2"
           />
           <InputField
             label="Postal Code"
             placeholder="Postal Code"
             name="postalCode"
             value={address.postalCode}
-            handleChange={handleChange}
+            handleChange={handleAddressLine2Change}
             type="number"
+            id="postalCode"
           />
           {/* ... (Remaining UI Code) */}
         </div>
@@ -194,11 +245,12 @@ const CartCheckoutForm = ({
         <select
           required
           name="shippingMethods"
-          className="form-select form-select-sm"
+          className="form-select form-select-sm mb-3"
           onChange={(event) => {
             setShippingFee(event.target.value);
             setShippingId(event.target.selectedIndex);
           }}
+          id="shippingMethods"
         >
           <option disabled selected value="0">
             -- Shipping Method --
@@ -223,7 +275,7 @@ const CartCheckoutForm = ({
             <p> ${shippingFee}</p>
           </div>
         </div>
-        <div className=" text-white border-b-2 border-white flex flex-row justify-between pb-3">
+        <div className=" text-white border-b-2 border-white flex flex-row justify-between py-2 mb-3">
           <p className="uppercase text-xl">Estimated total :</p>
           <p className="text-base">
             ${(parseFloat(totalAmount) + parseFloat(shippingFee)).toFixed(2)}

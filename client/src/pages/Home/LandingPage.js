@@ -45,7 +45,13 @@ export default function LandingPage() {
       });
   }, []);
 
-  const search = (productName, productCategory, productBrand, productMaxPrice, productMinPrice) => {
+  const search = (
+    productName,
+    productCategory,
+    productBrand,
+    productMaxPrice,
+    productMinPrice
+  ) => {
     {
       let url = '/search';
       const queryParams = [];
@@ -61,7 +67,7 @@ export default function LandingPage() {
         window.location.href = url;
       }
     }
-  }
+  };
 
   return (
     <div className="bg-white w-full">
@@ -74,18 +80,31 @@ export default function LandingPage() {
           <div className="flex justify-center">
             <div className="w-full sm:w-11/12 md:w-10/12 lg:w-9/12">
               <div className="mb-4 text-dark">
-                <TextInput placeholder={"Enter search..."} value={productName} func={(e) => setProductName(e.target.value)} buttonRef={searchButtonRef} />
+                <TextInput
+                  placeholder={'Enter search...'}
+                  value={productName}
+                  func={(e) => setProductName(e.target.value)}
+                  buttonRef={searchButtonRef}
+                />
               </div>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-3 sm:space-y-0 sm:space-x-3">
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <NumberInput placeholder={"Min price"} value={productMinPrice} func={(e) => setProductMinPrice(e.target.value)} />
+              <NumberInput
+                placeholder={'Min price'}
+                value={productMinPrice}
+                func={(e) => setProductMinPrice(e.target.value)}
+              />
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <NumberInput placeholder={"Max price"} value={productMaxPrice} func={(e) => setProductMaxPrice(e.target.value)} />
+              <NumberInput
+                placeholder={'Max price'}
+                value={productMaxPrice}
+                func={(e) => setProductMaxPrice(e.target.value)}
+              />
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
@@ -101,10 +120,19 @@ export default function LandingPage() {
             </div>
 
             <div className="mb-3 w-full sm:w-11/12 md:w-10/12 lg:w-1/4">
-              <Button buttonRef={searchButtonRef} onClick={() => {
-                search(productName, productCategory, productBrand, productMaxPrice, productMinPrice)
-              }} content={"Search"} />
-
+              <Button
+                buttonRef={searchButtonRef}
+                onClick={() => {
+                  search(
+                    productName,
+                    productCategory,
+                    productBrand,
+                    productMaxPrice,
+                    productMinPrice
+                  );
+                }}
+                content={'Search'}
+              />
             </div>
           </div>
 
