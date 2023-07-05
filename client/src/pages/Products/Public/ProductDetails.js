@@ -142,13 +142,11 @@ export default function ProductDetails() {
                   </p>
                 </div>
 
-                <AverageRating
-                  averageRating={product.average_rating}
-                  ratingCount={product.rating_count}
-                />
+                <AverageRating averageRating={product.average_rating} ratingCount={product.rating_count} />
               </div>
 
               <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 md:grid md:grid-cols-2 md:grid-rows-[auto,auto,1fr] md:gap-x-8 md:px-8 md:pb-24 md:pt-16 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
+
                 <ProductDescription description={product.description} />
 
                 <div className="mt-2 lg:row-span-3 lg:mt-0">
@@ -188,11 +186,7 @@ export default function ProductDetails() {
                       >
                         <i className="bi bi-plus-circle"></i>
                       </button>
-                      <ToastContainer
-                        limit={2}
-                        newestOnTop={true}
-                        position="top-center"
-                      />
+                      <ToastContainer limit={2} newestOnTop={true} position="top-center" />
                     </div>
                   </div>
 
@@ -201,9 +195,7 @@ export default function ProductDetails() {
                       No stock available
                     </p>
                   ) : (
-                    <p className="text-emerald-800 text-base text-center">
-                      Stock in
-                    </p>
+                    <p className="text-emerald-800 text-base text-center">Stock in</p>
                   )}
 
                   <div className="mx-auto">
@@ -221,15 +213,12 @@ export default function ProductDetails() {
                     >
                       Add to cart
                     </button>
-                    <ToastContainer
-                      limit={2}
-                      newestOnTop={true}
-                      position="top-center"
-                    />
+                    <ToastContainer limit={2} newestOnTop={true} position="top-center" />
                   </div>
 
                   <Rating productID={productID} />
                 </div>
+
               </div>
             </div>
           ) : (

@@ -157,9 +157,8 @@ const Cart = () => {
   return (
     <div className="flex flex-row ml-4 mr-4 lg:mr-24 lg:ml-24 2xl:ml-72 2xl:mr-72 mt-4 mb-24 sm:mb-18 font-breezeRegular sm:px-3">
       <div
-        className={`flex-grow ${
-          showCheckout ? 'hidden' : 'block'
-        }`}
+        className={`flex-grow ${showCheckout ? 'hidden' : 'block'
+          }`}
       >
         <h2 className="font-breezeBold py-4 flex flex-row">
           My Shopping Cart <FaShoppingCart />
@@ -175,14 +174,14 @@ const Cart = () => {
         />
       </div>
       <CartCheckoutForm
-          shippingMethod={shippingMethod}
-          setOrderId={setOrderId}
-          totalAmount={totalAmount}
-          setCheckoutSuccessful={setCheckoutSuccessful}
-          showCheckout={showCheckout}
-          customerID={customerID}
-          cartProductData={cartProductData}
-        />
+        shippingMethod={shippingMethod}
+        setOrderId={setOrderId}
+        totalAmount={totalAmount}
+        setCheckoutSuccessful={setCheckoutSuccessful}
+        showCheckout={showCheckout}
+        customerID={customerID}
+        cartProductData={cartProductData}
+      />
       <div className="fixed bottom-0 w-full h-[80px] z-10  bg-white">
         {!showCheckout ? (
           <div className="py-6 flex flex-row justify-around lg:justify-normal">

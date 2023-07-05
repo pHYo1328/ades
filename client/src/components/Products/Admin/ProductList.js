@@ -26,7 +26,7 @@ export default function ProductList({ products, hasProducts, refunds, setProduct
                                     {/* Image */}
                                 </th>
                                 {headers.map((header) => (
-                                    <th scope="col" className="px-6 py-3" key={header.key}>
+                                    <th scope="col" className="px-6 py-3 text-center" key={header.key}>
                                         {header.label}
                                     </th>
                                 ))}
