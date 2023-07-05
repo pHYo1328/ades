@@ -26,7 +26,7 @@ export default function AdminDashboard() {
     const brandCreateButtonRef = useRef(null);
     const categoryCreateButtonRef = useRef(null);
     const searchOrderButtonRef = useRef(null);
-    const searchProductButtonRef = useRef(null);
+    // const searchProductButtonRef = useRef(null);
 
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     const [categories, setCategories] = useState(null);
     const [categoryName, setCategoryName] = useState('');
     const [category, setCategory] = useState(null);
-    const [hasCategory, setHasCategory] = useState(false)
+    const [hasCategory, setHasCategory] = useState(false);
 
     const [activeTab, setActiveTab] = useState('home');
 
