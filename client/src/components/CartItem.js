@@ -7,6 +7,7 @@ import { debounce } from 'lodash';
 import api from '../index'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { Link } from 'react-router-dom';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -24,16 +25,16 @@ const CartItem = ({
   const debouncedApiCall = useCallback(debounce((updatedCart) => {
     const postCartData = () => {
       api
-      .post(`/api/cart/${customerID}`, {
-        cartData: updatedCart,
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  }
-  postCartData();
+        .post(`/api/cart/${customerID}`, {
+          cartData: updatedCart,
+        })
+        .then((response) => {
+          console.log(response);
+        });
+    }
+    postCartData();
   }, 1000), [customerID]);
-  
+
   const plusButtonHandler = useCallback(
     (productId) => {
       console.log(productId);
@@ -43,9 +44,9 @@ const CartItem = ({
           : item
       );
       console.log(updatedCart);
-  
+
       setCartData([...updatedCart]);
-      
+
       debouncedApiCall([...updatedCart]);
     },
     [cartData, setCartData, customerID]
@@ -62,7 +63,7 @@ const CartItem = ({
       setCartData([...updatedCart]);
       debouncedApiCall([...updatedCart]);
     },
-    [cartData, setCartData,customerID]
+    [cartData, setCartData, customerID]
   );
 
   const deleteButtonHandler = useCallback(
@@ -89,7 +90,7 @@ const CartItem = ({
           },
           {
             label: 'No',
-            onClick: () => {},
+            onClick: () => { },
           },
         ],
       });
@@ -110,7 +111,9 @@ const CartItem = ({
         />
       </td>
       <td>
-        <b className="hidden md:block">{cartItem.product_name}</b>
+        <Link to={`/product/${cartItem.product_id}`} onClick={() => window.scrollTo(0, 0)}>
+          <b>{cartItem.product_name}</b>
+        </Link>
         <p className="block md:hidden">{cartItem.product_name}</p>
         <p className="hidden md:flex flex-row">
           <b className="hidden lg:block">category:</b> {cartItem.category}
