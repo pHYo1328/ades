@@ -457,6 +457,28 @@ module.exports.getStatistics = async () => {
   }
 };
 
+// get total revenue by year and month
+module.exports.getTotalRevenue = async () => {
+  console.log(chalk.blue('getTotalRevenue is called'))
+  try {
+    const totalQuery = `
+    SELECT 
+	    YEAR(payment_date) AS year,
+      MONTH(payment_date) AS month, 
+      SUM(payment_total) AS total
+    FROM payment 
+    GROUP BY YEAR(payment_date), MONTH(payment_date) 
+    ORDER BY MONTH(payment_date);`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenue: ', error));
+    throw error;
+  }
+
+}
+
 // get total number of products by brand or category
 module.exports.getTotalNumberOfProducts = async (categoryID, brandID) => {
   console.log(chalk.blue('getTotalNumberOfProducts is called'));

@@ -1,7 +1,18 @@
 // THINZAR HNIN YU (P2201014)
+const cloudinary = require('cloudinary').v2;
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   secure: true,
+//   // upload_preset: CLOUDINARY_UPLOAD_PRESET,
+//   api_key: CLOUDINARY_API_KEY,
+//   api_secret: CLOUDINARY_API_SECRET
+
+// })
 
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
+const cloudinary_url = process.env.CLOUDINARY_URL;
 
 // GET
 
@@ -542,6 +553,40 @@ exports.processGetStatistics = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in getProductByID: ', error));
+    return next(error);
+  }
+};
+
+// get total revenue by year and month
+exports.processGetTotalRevenue = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalRevenue running'));
+  try {
+    const revenueData = await productServices.getTotalRevenue();
+    console.log(chalk.yellow(revenueData));
+    if (!revenueData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No payments exist',
+      });
+    }
+    console.log(chalk.yellow('revenueData data: ', revenueData));
+    const revenues = revenueData.map((revenue) => ({
+      year: revenue.year,
+      month: revenue.month,
+      total: revenue.total
+    }))
+
+    console.log(chalk.green(revenues));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read revenue details successful',
+      revenues,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenue: ', error));
     return next(error);
   }
 };

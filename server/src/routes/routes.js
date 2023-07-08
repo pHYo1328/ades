@@ -86,6 +86,10 @@ module.exports = (app, router) => {
     '/api/products/related/:productID',
     productController.processGetRelatedProducts
   );
+  router.get(
+    '/api/admin/revenue',
+    productController.processGetTotalRevenue
+  )
 
   // DELETE
   router.delete(

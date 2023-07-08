@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import Category from '../../../components/Products/Admin/Category';
 
 import ProductList from '../../../components/Products/Admin/ProductList';
 import Statistics from '../../../components/Products/Admin/Statistics';
+import RevenueChart from '../../../components/Products/Admin/RevenueChart';
 
 import OrderAdmin from '../../Order/Admin/OrderAdmin';
 import UserInfo from '../../Login/UserInfo';
@@ -262,7 +263,12 @@ export default function AdminDashboard() {
                 <div className="p-4 sm:ml-64 top-25 overflow-hidden">
                     <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
                         {activeTab === 'home' && (
-                            <Statistics statistics={statistics} />
+                            <div className="w-full">
+                                <Statistics statistics={statistics} />
+                                <div >
+                                    <RevenueChart className="" />
+                                </div>
+                            </div>
                         )}
                         {activeTab === 'products' && (
                             <div className="w-full">
