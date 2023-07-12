@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import chalk from 'chalk';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
+import RevenueChart from './RevenueChart';
 
 export default function Statistics(props) {
   const { statistics } = props;
@@ -47,6 +44,7 @@ export default function Statistics(props) {
           <Loading />
         </div>
       )}
+            {/* <RevenueChart /> */}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import Category from '../../../components/Products/Admin/Category';
 
 import ProductList from '../../../components/Products/Admin/ProductList';
 import Statistics from '../../../components/Products/Admin/Statistics';
+import RevenueChart from '../../../components/Products/Admin/RevenueChart';
 
 import OrderAdmin from '../../Order/Admin/OrderAdmin';
 import UserInfo from '../../Login/UserInfo';
@@ -26,7 +27,7 @@ export default function AdminDashboard() {
   const brandCreateButtonRef = useRef(null);
   const categoryCreateButtonRef = useRef(null);
   const searchOrderButtonRef = useRef(null);
-  const searchProductButtonRef = useRef(null);
+  // const searchProductButtonRef = useRef(null);
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -49,7 +50,7 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState(null);
   const [categoryName, setCategoryName] = useState('');
   const [category, setCategory] = useState(null);
-  const [hasCategory, setHasCategory] = useState(false);
+  const [hasCategory, setHasCategory] = useState(false);;
 
   const [activeTab, setActiveTab] = useState('home');
 
@@ -299,19 +300,23 @@ export default function AdminDashboard() {
           />
         )}
 
-        <div className="p-4 sm:ml-64 top-25 overflow-hidden">
-          <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
-            {activeTab === 'home' && <Statistics statistics={statistics} />}
-            {activeTab === 'products' && (
-              <div className="w-full">
-                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
-                  <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                    <TextInput
-                      placeholder={'Enter search...'}
-                      value={search}
-                      func={(e) => setSearch(e.target.value)}
-                    />
-                  </div>
+                <div className="p-4 sm:ml-64 top-25 overflow-hidden">
+                    <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
+                        {activeTab === 'home' && (
+                            <div className="w-full">
+                            <Statistics statistics={statistics} />
+                            <div >
+                                <RevenueChart className="" />
+                            </div>
+                        </div>
+                        )}
+                        {activeTab === 'products' && (
+                            <div className="w-full">
+                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                                        <TextInput placeholder={"Enter search..."} value={search}
+                                            func={(e) => setSearch(e.target.value)} />
+                                    </div>
 
                   <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                     <LinkButton
