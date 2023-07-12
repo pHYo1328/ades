@@ -168,7 +168,7 @@ const OrderList = ({
               {
                 autoClose: 3000,
                 pauseOnHover: true,
-                style: { 'font-size': '16px' },
+                style: { 'fontSize': '16px' },
               }
             );
           } else {

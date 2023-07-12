@@ -66,7 +66,7 @@ const CartCheckoutForm = ({
       toast.error('Please select shipping method', {
         autoClose: 3000,
         pauseOnHover: true,
-        style: { 'font-size': '16px' },
+        style: { 'fontSize': '16px' },
       });
       return;
     }
@@ -77,7 +77,7 @@ const CartCheckoutForm = ({
       toast.error('Please add items to cart to checkout', {
         autoClose: 3000,
         pauseOnHover: true,
-        style: { 'font-size': '16px' },
+        style: { 'fontSize': '16px' },
       });
       return;
     }
@@ -121,29 +121,29 @@ const CartCheckoutForm = ({
             toast.error(string, {
               autoClose: 3000,
               pauseOnHover: true,
-              style: { 'font-size': '16px' },
+              style: { 'fontSize': '16px' },
             });
           });
           return;
         }
         handleValidation().then(result => {
-          if (result){
-            const requestBody = {
-            shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
-            totalPrice: totalPrice,
-            shippingMethod: shippingMethod,
-            orderItems: cartData,
-          };
-          api
-            .post(`/api/order/${customerId}`, requestBody)
-            .then((response) => {
-              setCheckoutSuccessful(true);
-              setOrderId(response.data.data);
-            })
-            .catch((error) => {
-              alert(error.response.data.message);
-            });
-          }
+          // if (result){
+          //   const requestBody = {
+          //   shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
+          //   totalPrice: totalPrice,
+          //   shippingMethod: shippingMethod,
+          //   orderItems: cartData,
+          // };
+          // api
+          //   .post(`/api/order/${customerId}`, requestBody)
+          //   .then((response) => {
+          //     setCheckoutSuccessful(true);
+          //     setOrderId(response.data.data);
+          //   })
+          //   .catch((error) => {
+          //     alert(error.response.data.message);
+          //   });
+          // }
       });
         //if all instock send data to database and set CheokoutSuccessful status
         
@@ -216,7 +216,7 @@ const CartCheckoutForm = ({
              {isInvalidAddress && (
               <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
                 {"Invalid Address"}
-                <div class="tooltip-arrow" data-popper-arrow></div>
+                <div className="tooltip-arrow" data-popper-arrow></div>
               </div>
             )}
           </div>
