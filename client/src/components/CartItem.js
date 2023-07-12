@@ -139,7 +139,7 @@ const CartItem = ({
         </div>
       </td>
       <td className="hidden lg:table-cell">${cartItem.price}</td>
-      <td >
+      <td>
         <div className=" justify-evenly hidden md:flex flex-row">
           <button
             className="flex items-center justify-center w-8 border-2 rounded-tl-md rounded-bl-md border-gray-500"

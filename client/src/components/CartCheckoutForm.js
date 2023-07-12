@@ -1,43 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import TextInput from './TextInput';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../index';
 import LoadingIndicator from 'react-loading-indicator';
 import Button from './Button';
 import Select from 'react-select';
-import { getNames,getCode,getName } from 'country-list';
-import loadScript from '../utils/loadScript';
+import { getNames, getCode, getName } from 'country-list';
 import CheckoutInput from './CheckoutInput';
-const InputField = ({
-  label,
-  placeholder,
-  name,
-  value,
-  handleChange,
-  type = 'text',
-  id,
-  ref
-}) => (
-  <div className="flex flex-row items-center">
-    <label
-      htmlFor={name}
-      className="block text-base font-medium text-white w-28"
-    >
-      {label} :
-    </label>
-    <TextInput
-      type={type}
-      placeholder={placeholder}
-      name={name}
-      value={value}
-      func={handleChange}
-      className="placeholder-gray-500 text-gray-900 rounded-sm focus:outline-none flex-grow"
-      id={id}
-      ref = {ref}
-    />
-  </div>
-);
+import { validateAddress, validatePostalCode } from '../utils/addressUtils';
+
+
 const CartCheckoutForm = ({
   shippingMethod,
   setOrderId,
@@ -55,27 +27,29 @@ const CartCheckoutForm = ({
     country: '',
     postalCode: '',
   });
-  const autoCompleteRef = useRef();
-  const inputRef = useRef();
+  const [isInvalidAddress, setIsInvalidAddress] = useState(false);
+  const [isInvalidPostalCode, setIsInvalidPostalCode] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('Singapore');
   const countryOptions = getNames().map((name) => ({
     label: name,
     value: name,
   }));
- 
+  const handleValidation = async () => {
+    const addressValidity = await validateAddress(`${address.addressLine1}`, getCode(selectedCountry));
+    const postalCodeValidity = await validatePostalCode(`${address.postalCode}`, getCode(selectedCountry));
 
-  const handleSelectChange = (selectedOption) => {
-    setAddress({
-      ...address,
-      state: selectedOption.value,
-    });
-  };
-  
-  const handleAddressLine2Change = (value) => {
-    setAddress({
-      ...address,
-      addressLine2: value,
-    });
-  }
+    if (addressValidity) {
+        document.getElementById("addressLine1").setCustomValidity("Invalid Address");
+        document.getElementById("addressLine1").reportValidity();
+        setIsInvalidAddress(true);
+    }
+
+    if (postalCodeValidity) {
+        document.getElementById("postalCode").setCustomValidity("Invalid Postal Code");
+        document.getElementById("postalCode").reportValidity();
+        setIsInvalidPostalCode(true);
+    }
+};
 
   const checkOutHandler = (
     customerId,
@@ -149,28 +123,29 @@ const CartCheckoutForm = ({
           });
           return;
         }
+        handleValidation();
         // if all instock send data to database and set CheokoutSuccessful status
-        const requestBody = {
-          shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.state} ${address.postalCode}`,
-          totalPrice: totalPrice,
-          shippingMethod: shippingMethod,
-          orderItems: cartData,
-        };
-        api
-          .post(`/api/order/${customerId}`, requestBody)
-          .then((response) => {
-            setCheckoutSuccessful(true);
-            setOrderId(response.data.data);
-          })
-          .catch((error) => {
-            alert(error.response.data.message);
-          });
+        // const requestBody = {
+        //   shippingAddr: `${address.addressLine1},${address.addressLine2},${address.postalCode},${address.state} `,
+        //   totalPrice: totalPrice,
+        //   shippingMethod: shippingMethod,
+        //   orderItems: cartData,
+        // };
+        // api
+        //   .post(`/api/order/${customerId}`, requestBody)
+        //   .then((response) => {
+        //     setCheckoutSuccessful(true);
+        //     setOrderId(response.data.data);
+        //   })
+        //   .catch((error) => {
+        //     alert(error.response.data.message);
+        //   });
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  
+
   return (
     <div
       className={`col-span-full lg:col-span-4 sm:ml-24 sm:mr-24 lg:ml-0 lg:mr-0 ${
@@ -179,8 +154,7 @@ const CartCheckoutForm = ({
     >
       <div className="w-full bg-light-blue p-4 lg:ml-12  mt-5 rounded-lg shadow-lg">
         <div className="space-y-4 ">
-          
-        <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center">
             <label
               htmlFor="countrySelect"
               className="block text-base font-medium text-white w-28"
@@ -191,20 +165,29 @@ const CartCheckoutForm = ({
               id="countrySelect"
               aria-labelledby="countrySelect"
               options={countryOptions}
-              onChange={handleSelectChange}
+              onChange={(selectedOption) => {
+                const selectedCountry = selectedOption.value;
+                setSelectedCountry(selectedCountry);
+                setAddress({
+                  ...address,
+                  country: selectedCountry,
+                });
+              }}
+              value={{ label: selectedCountry, value: selectedCountry }}
               name="country"
-              className='w-full'
+              className="w-full"
               styles={{
                 control: (provided) => ({
                   ...provided,
                   fontSize: '18px', // Set your desired font size here
-                }),option: (provided) => ({
+                }),
+                option: (provided) => ({
                   ...provided,
                   fontSize: '18px', // Set your desired font size for the options
                 }),
                 placeholder: (provided) => ({
                   ...provided,
-                  color: "#9CA3AF", // Set your desired color for the placeholder
+                  color: '#9CA3AF', // Set your desired color for the placeholder
                 }),
               }}
             />
@@ -216,28 +199,55 @@ const CartCheckoutForm = ({
             >
               Address Line 1 :
             </label>
-            <CheckoutInput countryCode={address.country.length>0 ? getCode(address.country) : "sg"} address={address} setAddress={setAddress} id={"addressLine1"}/>
+            <CheckoutInput
+              countryCode={getCode(selectedCountry).toLowerCase()}
+              address={address}
+              setAddress={setAddress}
+              id="addressLine1"
+              isInvalid={isInvalidAddress}
+            />
           </div>
-          
-          
-          <InputField
-            label="Address line 2"
-            placeholder="Apartment, suite, unit, building, floor, etc."
-            name="addressLine2"
-            value={address.addressLine2}
-            handleChange={handleAddressLine2Change}
-            id="addressLine2"
-          />
-          <InputField
-            label="Postal Code"
-            placeholder="Postal Code"
-            name="postalCode"
-            value={address.postalCode}
-            handleChange={handleAddressLine2Change}
-            type="number"
-            id="postalCode"
-          />
-          {/* ... (Remaining UI Code) */}
+          <div className="flex flex-row items-center">
+            <label
+              htmlFor="addressLine2"
+              className="block text-base font-medium text-white w-28"
+            >
+              Address line 2 :
+            </label>
+            <input
+              type="text"
+              placeholder="Apartment, suite, unit, building, floor, etc."
+              name="addressLine2"
+              value={address.addressLine2}
+              onChange={(event) => {
+                setAddress({ ...address, addressLine2: event.target.value });
+              }}
+              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full
+        }`}
+              id="addressLine2"
+            />
+          </div>
+          <div className="flex flex-row items-center">
+            <label
+              htmlFor="postalCode"
+              className="block text-base font-medium text-white w-28"
+            >
+              Postal Code :
+            </label>
+            <input
+              type="number"
+              placeholder="Enter postal code"
+              name="postalCode"
+              value={address.postalCode}
+              onChange={(event) => {
+                setAddress({ ...address, postalCode: event.target.value });
+              }}
+              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full ${
+                isInvalidPostalCode ? 'border-red-500' : ''
+              }`}
+              id="postalCode"
+            />
+          </div>
         </div>
         <label htmlFor="shippingMethods" className="text-white text-base">
           Choose shipping methods:

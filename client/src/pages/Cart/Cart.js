@@ -156,7 +156,11 @@ const Cart = () => {
   }, [cartData, productDetails]);
   return (
     <div className=" ml-4 mr-4 lg:mr-24 lg:ml-24 2xl:ml-72 2xl:mr-72 mt-4 mb-24 sm:mb-18 font-breezeRegular sm:px-3 grid grid-cols-12 gap-4">
-      <div className={`flex-grow ${showCheckout ? 'hidden' : 'block'} col-span-full lg:col-span-8`}>
+      <div
+        className={`flex-grow ${
+          showCheckout ? 'hidden' : 'block'
+        } col-span-full lg:col-span-8`}
+      >
         <h2 className="font-breezeBold py-4 flex flex-row">
           My Shopping Cart <FaShoppingCart />
         </h2>
