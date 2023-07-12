@@ -47,7 +47,6 @@ const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
       autocompleteRef.current.addListener('place_changed', () => {
         const place = autocompleteRef.current.getPlace();
         if (!place || !place.address_components) {
-          console.log('place is not chosen from the list');
           return;
         }
 
@@ -123,6 +122,7 @@ const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
   console.log(isInvalid);
   return (
     <input
+      type='text'
       ref={inputRef}
       onChange={handleInputChange}
       value={address.addressLine1}

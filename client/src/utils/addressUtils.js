@@ -8,11 +8,9 @@ export const validateAddress = async (address, countryCode) => {
     const response = await fetch(url);
     const data = await response.json();
     if (data.status === 'OK' && data.results.length > 0) {
-      data.results.forEach((result) => {
-        if (result.address_components.length > 1) {
-          return false;
-        } else return true;
-      });
+      return data.results.some(
+        (result) => result.address_components.length <= 1
+      );
     } else {
       // Address is invalid or not found
       return true;
@@ -23,10 +21,7 @@ export const validateAddress = async (address, countryCode) => {
   }
 };
 
-export const validatePostalCode = async (
-  postalCode,
-  countryCode,
-) => {
+export const validatePostalCode = async (postalCode, countryCode) => {
   const apiKey = process.env.REACT_APP_GOOGLE_MAP_API;
   const encodedPostalCode = encodeURIComponent(postalCode);
   const encodedCountryCode = encodeURIComponent(countryCode);
@@ -36,8 +31,11 @@ export const validatePostalCode = async (
     console.log('validatePostalCode is called');
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
-    if (data.status === 'OK' && data.results.length > 0 && data.results[0].address_components.length > 1) {
+    if (
+      data.status === 'OK' &&
+      data.results.length > 0 &&
+      data.results[0].address_components.length > 1
+    ) {
       return false;
     } else {
       return true;

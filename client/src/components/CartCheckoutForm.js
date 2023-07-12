@@ -9,7 +9,6 @@ import { getNames, getCode, getName } from 'country-list';
 import CheckoutInput from './CheckoutInput';
 import { validateAddress, validatePostalCode } from '../utils/addressUtils';
 
-
 const CartCheckoutForm = ({
   shippingMethod,
   setOrderId,
@@ -35,21 +34,25 @@ const CartCheckoutForm = ({
     value: name,
   }));
   const handleValidation = async () => {
-    const addressValidity = await validateAddress(`${address.addressLine1}`, getCode(selectedCountry));
-    const postalCodeValidity = await validatePostalCode(`${address.postalCode}`, getCode(selectedCountry));
-
-    if (addressValidity) {
-        document.getElementById("addressLine1").setCustomValidity("Invalid Address");
-        document.getElementById("addressLine1").reportValidity();
-        setIsInvalidAddress(true);
+    const addressValidity = await validateAddress(
+      `${address.addressLine1}`,
+      getCode(selectedCountry)
+    );
+  
+    setIsInvalidAddress(addressValidity);
+  
+    let postalCodeValidity = false; // define with default value
+  
+    if (address.postalCode.length > 0) {
+      postalCodeValidity = await validatePostalCode(
+        `${address.postalCode}`,
+        getCode(selectedCountry)
+      );
+      setIsInvalidPostalCode(postalCodeValidity);
     }
-
-    if (postalCodeValidity) {
-        document.getElementById("postalCode").setCustomValidity("Invalid Postal Code");
-        document.getElementById("postalCode").reportValidity();
-        setIsInvalidPostalCode(true);
-    }
-};
+    return !(addressValidity || postalCodeValidity);
+  };
+  
 
   const checkOutHandler = (
     customerId,
@@ -123,23 +126,27 @@ const CartCheckoutForm = ({
           });
           return;
         }
-        handleValidation();
-        // if all instock send data to database and set CheokoutSuccessful status
-        // const requestBody = {
-        //   shippingAddr: `${address.addressLine1},${address.addressLine2},${address.postalCode},${address.state} `,
-        //   totalPrice: totalPrice,
-        //   shippingMethod: shippingMethod,
-        //   orderItems: cartData,
-        // };
-        // api
-        //   .post(`/api/order/${customerId}`, requestBody)
-        //   .then((response) => {
-        //     setCheckoutSuccessful(true);
-        //     setOrderId(response.data.data);
-        //   })
-        //   .catch((error) => {
-        //     alert(error.response.data.message);
-        //   });
+        handleValidation().then(result => {
+          if (result){
+            const requestBody = {
+            shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
+            totalPrice: totalPrice,
+            shippingMethod: shippingMethod,
+            orderItems: cartData,
+          };
+          api
+            .post(`/api/order/${customerId}`, requestBody)
+            .then((response) => {
+              setCheckoutSuccessful(true);
+              setOrderId(response.data.data);
+            })
+            .catch((error) => {
+              alert(error.response.data.message);
+            });
+          }
+      });
+        //if all instock send data to database and set CheokoutSuccessful status
+        
       })
       .catch((error) => {
         console.log(error);
@@ -192,7 +199,7 @@ const CartCheckoutForm = ({
               }}
             />
           </div>
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center relative">
             <label
               htmlFor="addressLine1"
               className="block text-base font-medium text-white w-28"
@@ -206,6 +213,12 @@ const CartCheckoutForm = ({
               id="addressLine1"
               isInvalid={isInvalidAddress}
             />
+             {isInvalidAddress && (
+              <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
+                {"Invalid Address"}
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            )}
           </div>
           <div className="flex flex-row items-center">
             <label
@@ -222,12 +235,12 @@ const CartCheckoutForm = ({
               onChange={(event) => {
                 setAddress({ ...address, addressLine2: event.target.value });
               }}
-              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full
+              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full border-2
         }`}
               id="addressLine2"
             />
           </div>
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center relative">
             <label
               htmlFor="postalCode"
               className="block text-base font-medium text-white w-28"
@@ -235,18 +248,24 @@ const CartCheckoutForm = ({
               Postal Code :
             </label>
             <input
-              type="number"
+              type="text"
               placeholder="Enter postal code"
               name="postalCode"
               value={address.postalCode}
               onChange={(event) => {
                 setAddress({ ...address, postalCode: event.target.value });
               }}
-              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full ${
+              className={`placeholder-gray-400 text-gray-900 rounded focus:outline-none w-full border-2 ${
                 isInvalidPostalCode ? 'border-red-500' : ''
               }`}
               id="postalCode"
             />
+            {isInvalidPostalCode && (
+              <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
+                {"Invalid Postal Code"}
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            )}
           </div>
         </div>
         <label htmlFor="shippingMethods" className="text-white text-base">
