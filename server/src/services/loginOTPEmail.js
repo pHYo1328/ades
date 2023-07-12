@@ -17,24 +17,24 @@ module.exports.OTPEmailSender = async (username) => {
     console.log('im inside try this is my unsername', username);
     const result = await pool.query(userQuery, [username]);
     console.log('Result:', result[0]);
-    const rows = result[0]; // Access the rows returned from the query 
+    const rows = result[0]; // Access the rows returned from the query
     console.log('Rows:', rows);
     if (rows.length > 0) {
-      // Process each row 
+      // Process each row
       const response = await Promise.all(
         rows.map(async (row) => {
           const users = row;
           const username = users.username;
           const email = users.email;
-          const otp = generateOTP(); // Generate random OTP 
+          const otp = generateOTP(); // Generate random OTP
 
-          // Save the OTP in the database for the user 
+          // Save the OTP in the database for the user
           await pool.query('UPDATE users SET otp = ? WHERE username = ?', [
             otp,
             username,
           ]);
 
-          // Send the OTP email using Sendinblue 
+          // Send the OTP email using Sendinblue
           const data = await sendInBlue.sendTransacEmail({
             subject: 'Hello from Our TechZero',
             sender: { email: 'techZero@gmail.com', name: 'techZero' },

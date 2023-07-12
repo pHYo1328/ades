@@ -8,14 +8,14 @@ const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
-  
+
   useEffect(() => {
     const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
     if (isUserSignedIn) {
       navigate('/');
     }
   }, []);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,10 +30,10 @@ const VerifyOTP = () => {
       console.log(response);
       if (response.ok) {
         console.log('Successful OTP verification');
-        alert("successful OTP");
+        alert('successful OTP');
 
         const data = location.state; //pass data from Login.js
-        
+
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('userid', data.userid);
         localStorage.setItem('roles', JSON.stringify(data.roles));

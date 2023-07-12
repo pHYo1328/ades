@@ -63,7 +63,8 @@ const OrderDelivered = () => {
 
 export default OrderDelivered;
 
-{/* <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
+{
+  /* <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
       <div className="flex h-screen w-screen m-3">
         <div className="bg-gray-800 text-white ml-10 w-64 flex-none rounded-tl-lg rounded-bl-lg">
           <nav className="p-4">
@@ -81,4 +82,5 @@ export default OrderDelivered;
         
 
       </div>
-</div> */}
+</div> */
+}

@@ -2,7 +2,6 @@ const chalk = require('chalk');
 const bcrypt = require('bcrypt');
 const customerService = require('../services/customer.services');
 
-
 exports.userProfileInformation = async (req, res) => {
   console.log('inside user profile controller');
   try {
@@ -19,15 +18,19 @@ exports.userProfileInformation = async (req, res) => {
 };
 
 exports.updateUserProfile = async (req, res) => {
-  console.log("In updateUserProfile controller");
+  console.log('In updateUserProfile controller');
 
   const { customer_id, username, email, password } = req.body;
 
   try {
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await customerService.updateUserInfo(customer_id, username, email, hashedPassword);
+    await customerService.updateUserInfo(
+      customer_id,
+      username,
+      email,
+      hashedPassword
+    );
     console.log('User information updated successfully.');
     res.status(200).json({ message: 'User information updated successfully.' });
   } catch (error) {
@@ -37,7 +40,7 @@ exports.updateUserProfile = async (req, res) => {
 };
 
 exports.updateProfileImage = async (req, res) => {
-  console.log("in updateProfileImage");
+  console.log('in updateProfileImage');
 
   const { image_url, customer_id } = req.body;
 
@@ -49,4 +52,4 @@ exports.updateProfileImage = async (req, res) => {
     console.error('Error in updating user profile image: ', error);
     res.status(500).json({ message: 'Error updating user image information' });
   }
-}
+};

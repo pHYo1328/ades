@@ -4,12 +4,18 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
-import { Link } from 'react-router-dom';
 import Categories from '../Product/Categories';
 import Brands from '../Product/Brands';
 import Loading from '../../Loading/Loading';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import Button from '../../../components/Button';
+import TextInput from '../../../components/TextInput';
+import NumberInput from '../../../components/NumberInput';
+import InputLabel from '../../../components/InputLabel';
+import TextArea from '../../../components/TextArea';
+import LinkButton from '../../../components/LinkButton'
 
 export default function ProductEditForm() {
   const { productID } = useParams();
@@ -35,8 +41,8 @@ export default function ProductEditForm() {
         setProductData(response.data.data);
         setProductName(response.data.data.product_name);
         setProductDescription(response.data.data.description);
-        setProductBrand(response.data.data.category_id);
-        setProductCategory(response.data.data.brand_id);
+        setProductBrand(response.data.data.brand_id);
+        setProductCategory(response.data.data.category_id);
         setProductPrice(response.data.data.price);
         setProductQuantity(response.data.data.quantity);
       })
@@ -103,6 +109,7 @@ export default function ProductEditForm() {
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
+          // fetchProducts();
         });
     }
   };
@@ -117,66 +124,27 @@ export default function ProductEditForm() {
       {productData ? (
         <div>
           <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-              Product Name
-            </label>
-            <input
-              type="text"
-              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-              defaultValue={productData.product_name}
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-            />
+            <InputLabel content="Product Name" />
+            <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} defaultValue={productData.product_name} />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-              Description
-            </label>
-            <textarea
-              className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-              placeholder="Description"
-              rows={3}
-              defaultValue={productData.description}
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-            />
+            <InputLabel content="Description" />
+            <TextArea rows={3} placeholder={"Description"} value={productDescription} func={(e) => setProductDescription(e.target.value)} defaultValue={productData.description} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-                Price
-              </label>
-              <input
-                type="number"
-                min="0"
-                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-                defaultValue={productData.price}
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
-                placeholder="Price"
-              />
+              <InputLabel content="Price" />
+              <NumberInput min={0} placeholder={"Price"} value={productPrice} func={(e) => setProductPrice(e.target.value)} defaultValue={productData.price} />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-                Inventory
-              </label>
-              <input
-                min="0"
-                type="number"
-                className="border border-gray-300 rounded-md py-2 px-3 w-full text-sm"
-                placeholder="Inventory (Quantity)"
-                defaultValue={productData.quantity}
-                value={productQuantity}
-                onChange={(e) => setProductQuantity(e.target.value)}
-              />
+              <InputLabel content="Inventory" />
+              <NumberInput min={0} placeholder={"Inventory (Quantity)"} value={productQuantity} func={(e) => setProductQuantity(e.target.value)} defaultValue={productData.quantity} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-                Category
-              </label>
+              <InputLabel content="Category" />
               <Categories
                 setCategoryID={setProductCategory}
                 all={false}
@@ -185,9 +153,7 @@ export default function ProductEditForm() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="block text-base font-semibold mb-1">
-                Brand
-              </label>
+              <InputLabel content="Brand" />
               <Brands
                 setBrandID={setProductBrand}
                 all={false}
@@ -207,22 +173,10 @@ export default function ProductEditForm() {
 
       <div className="flex justify-between mt-4 space-x-4">
         <div className="mb-3 w-6/12">
-          <button
-            type="submit"
-            id="submit"
-            className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-md w-full text-sm h-100 flex items-center justify-center text-center"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <Button onClick={handleSubmit} content={"Submit"} />
         </div>
         <div className="mb-3 w-6/12">
-          <Link
-            to="/products/admin"
-            id="submit"
-            className="bg-light-blue  text-white font-bold py-2 px-4 rounded-md w-full text-sm h-full flex items-center justify-center text-center hover:shadow-lg"  >
-            Discard Changes
-          </Link>
+          <LinkButton content={"Discard Changes"} linkTo={`/admin`} />
         </div>
       </div>
 

@@ -37,8 +37,9 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
         </li>
         {renderPaginationItems()}
         <li
-          className={`page-item ${currentPage === totalPages ? 'disabled' : ''
-            }`}
+          className={`page-item ${
+            currentPage === totalPages ? 'disabled' : ''
+          }`}
         >
           {/* changes to next page as the user clicks on the icon */}
           <a

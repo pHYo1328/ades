@@ -237,7 +237,6 @@ exports.processUpdateShippingDetails = async (req, res, next) => {
   }
 };
 
-
 // controller for cancel the particular order items
 exports.processCancelOrder = async (req, res, next) => {
   console.log(chalk.blue('processCancelOrder is running'));

@@ -9,6 +9,81 @@ exports.getConfig = (req, res) => {
   });
 };
 
+// exports.createPaymentIntent = async (req, res) => {
+//   console.log(chalk.blue('create payment intent'));
+//   try {
+//     const orderID = req.params.orderID; // Get the orderID from the request parameters
+
+//     // Call the getPaymentTotal function from payment.services to fetch the payment_total
+//     const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
+//     console.log(chalk.yellow('createdPaymentTotal:', createdPaymentTotal));
+//     const paymentTotal = parseInt(createdPaymentTotal[0].payment_total * 100);
+//     console.log(chalk.yellow('paymentTotal:', paymentTotal));
+//     if (isNaN(paymentTotal)) {
+//       throw new Error('Invalid payment total');
+//     }
+
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: paymentTotal,
+//       currency: 'sgd',
+//       automatic_payment_methods: { enabled: true },
+//       metadata: {
+//         order_id: orderID,
+//       },
+//     });
+
+//     // Send clientSecret and PaymentIntent details to client
+//     res.json({
+//       clientSecret: paymentIntent.client_secret,
+//       id: paymentIntent.id,
+//     });
+//   } catch (err) {
+//     console.log(chalk.red('Error in createPaymentIntent', err));
+//     res.status(400).json({
+//       error: {
+//         message: err.message,
+//       },
+//     });
+//   }
+// };
+
+// exports.handleChargeSucceeded = async (event) => {
+//   const {
+//     id: paymentIntentId,
+//     status,
+//     amount,
+//     payment_method_details,
+//     billing_details,
+//     metadata,
+//   } = event.data.object;
+//   const { line1, line2, state, postal_code } = billing_details.address;
+//   const shippingAddr = `${line1} ${line2 ? line2 + ' ' : ''}${state} ${postal_code}`;
+
+//   console.log('Charge succeeded. Event data:');
+//   console.log('ID:', paymentIntentId);
+//   console.log('Status:', status);
+//   const total = (amount / 100).toFixed(2);
+//   console.log('Amount:', total);
+//   console.log('Payment method:', payment_method_details.type);
+//   console.log('Order ID:', metadata.order_id);
+//   console.log('Shipping address:', shippingAddr);
+
+//   try {
+//     await paymentServices.addPayment(
+//       paymentIntentId,
+//       status,
+//       total,
+//       payment_method_details.type,
+//       shippingAddr,
+//       metadata.order_id
+//     );
+
+//     console.log('Payment details stored in the database successfully');
+//   } catch (error) {
+//     console.error('Error storing payment details in the database:', error);
+//   }
+// };
+
 //creating the payment intent with stripe
 exports.createPaymentIntent = async (req, res) => {
   console.log(chalk.blue('create payment intent'));
@@ -157,8 +232,25 @@ exports.processPartialRefund = async (req, res) => {
 
 let endpointSecret;
 
+// const createWebhookEndpoint = async () => {
+//   const endpoint = await stripe.webhookEndpoints.create({
+//     url: 'https://techzero-v3-1.onrender.com/webhook',
+//     enabled_events: ['charge.refunded', 'charge.succeeded'],
+//   });
+//   console.log('Webhook endpoint created:', endpoint);
+// };
+
+// Call the function to create the webhook endpoint
+// createWebhookEndpoint()
+//   .then(() => {
+//     console.log('Webhook endpoint created successfully');
+//   })
+//   .catch((error) => {
+//     console.error('Error creating webhook endpoint:', error);
+//   });
+
 //creating webhook for getting data inside inside database
-exports.createWebhooks = async (req, res) => {
+exports.handleWebhooks = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let data;
   let eventType;
@@ -178,11 +270,20 @@ exports.createWebhooks = async (req, res) => {
     data = event.data.object;
     eventType = event.type;
   } else {
-    data = req.body.data.object;
+    console.log('req.body:', req.body);
+
+    if (req.body && req.body.data) {
+      data = req.body.data.object;
+    } else {
+      console.log('Invalid request body');
+      res.status(400).send('Invalid request body');
+      return;
+    }
     eventType = req.body.type;
     console.log(chalk.yellow('Data: ', data));
     console.log(chalk.yellow('Event Type: ', eventType));
   }
+
   //handle the event
   if (eventType === 'charge.succeeded') {
     const {

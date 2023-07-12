@@ -6,175 +6,118 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
 import DeleteModal from '../../modal/DeleteModal';
+import ProductListModal from '../../modal/ProductListModal';
 
-export default function Brand({ fetchProducts }) {
+export default function Brand({ brands, fetchProducts, fetchBrands, refunds, setRefunds, fetchStatistics }) {
     const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-    const createButtonRef = useRef(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [brandID, setBrandID] = useState(null);
+    const [showProducts, setShowProducts] = useState(false);
+    const [products, setProducts] = useState(null)
+    const [hasProducts, setHasProducts] = useState(false)
 
-
-    const [brands, setBrands] = useState(null);
-    const [brandName, setBrandName] = useState('');
-    const [brand, setBrand] = useState(null);
-
-    // get all brands
-    const fetchBrands = () => {
+    const getProductsByBrand = (brandID) => {
         axios
-            .get(`${baseUrl}/api/brands`)
+            .get(`${baseUrl}/api/products/brand/${brandID}`)
             .then((response) => {
                 console.log(response);
-                setBrands(response.data.data);
-                console.log(brands);
+                setProducts(response.data.data);
+                setHasProducts(true)
             })
             .catch((error) => {
                 console.error(error);
             });
-    };
+    }
 
-    useEffect(() => { fetchBrands() }, [])
+    useEffect(() => { console.log("products", products) }, [products])
 
-    // add new brand
-    const handleSubmitBrand = async (event) => {
-        console.log(chalk.yellow('submit button is clicked!'));
-        event.preventDefault();
+    const deleteBrand = (brandID) => {
 
-        if (!brandName) {
-            toast.error(`Please enter the name of the brand.`, {
-                autoClose: 3000,
-                pauseOnHover: true,
-                style: { 'font-size': '16px' },
+        axios
+            .delete(`${baseUrl}/api/brands/${brandID}`)
+            .then((res) => {
+                console.log("brandid ", brandID)
+                // const updatedBrands = brands.filter((b) => b.brand_id !== brand.brand_id);
+                toast.success(`Brand deleted.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { 'font-size': '16px' },
+                });
+                // setBrands(updatedBrands);
+                fetchBrands();
+                fetchProducts();
             });
-        } else {
-            const requestBody = {
-                name: brandName,
-                type: 'brand',
-            };
-            console.log(requestBody);
-            axios
-                .post(`${baseUrl}/api/products/admin/type`, requestBody)
-                .then((response) => {
-                    console.log(response);
 
-                    setBrand(response.data.data);
-                    toast.success(`Brand created.`, {
-                        autoClose: 3000,
-                        pauseOnHover: true,
-                        style: { 'font-size': '16px' },
-                    });
-                    console.log(brand);
-                    fetchBrands();
-                    setBrandName('');
-
-                })
-                .catch((response) => {
-                    if (response.response.status == 409) {
-                        console.log("duplicate");
-                        toast.error(`Category or brand already exists.`, {
-                            autoClose: 3000,
-                            pauseOnHover: true,
-                            style: { 'font-size': '16px' },
-                        });
-                    }
-                });;
-        }
-    };
+    }
 
     return (
-        <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4">
-            <div className="flex justify-center">
-                <div className="text-center text-xl mt-3 mb-3 font-bold">Brands</div>
-            </div>
+        <div className="relative  overflow-x-auto overflow-y-auto max-h-[60vh] sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[70vh] shadow-md sm:rounded-lg">
 
-            <div className="flex flex-row justify-center mt-2 mb-4 mx-auto space-x-4">
-                <div className="w-3/5">
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded-md py-2 px-3 w-full"
-                        placeholder="Brand Name"
-                        value={brandName}
-                        onChange={(e) => setBrandName(e.target.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                createButtonRef.current.click();
-                            }
-                        }}
-                    />
-                </div>
-                {/* adds new brand when clicked on create button */}
-                <div className="w-1/5">
-                    <button
-                        ref={createButtonRef}
-                        className="bg-dark-blue hover:bg-light-blue text-white font-bold py-2 px-4 rounded-sm w-full text-sm h-100"
-                        onClick={handleSubmitBrand}
-                    >
-                        <i className="bi bi-plus-circle"></i>
-                    </button>
-                </div>
-            </div>
+            {brands ? (
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" style={{ tableLayout: 'fixed' }}>
+                    <colgroup>
+                        <col style={{ width: '50%' }} /> {/* Set the desired width for the Name column */}
+                        <col style={{ width: '50%' }} /> {/* Set the desired width for the Action column */}
+                    </colgroup>
+                    <thead className="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
+                        <tr>
 
-            <div className="overflow-y-scroll max-h-80">
-                <ul role="list" className="divide-y divide-gray-100 px-4 sm:px-4 md:px-3 lg:px-1">
-                    {/* shows all brands */}
-                    {brands ? (
-                        brands.map((brand) => (
-                            <li className="flex flex-row py-3 justify-between px-3">
-
-                                <div className="col-span-10 flex items-center">
-                                    <p className="text-sm font-semibold text-gray-900">{brand.brand_name}</p>
-                                </div>
-
-                                <div className="col-span-2 flex items-center">
-
-
-
+                            <th scope="col" className="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-700 dark:text-gray-400 h-98 overflow-y-auto">
+                        {brands.map((brand) => (
+                            <tr className="bg-white border-b hover:bg-gray-50 text-dark text-center">
+                                <td className="px-6 py-4 font-semibold text-gray-900">
+                                    <button onClick={() => {
+                                        console.log(brand.brand_id);
+                                        console.log('brand is clicked')
+                                        setShowProducts(true);
+                                        getProductsByBrand(brand.brand_id);
+                                    }}>{brand.brand_name}</button>
+                                </td>
+                                {showProducts && (
+                                    <ProductListModal
+                                        onCancel={() => { setShowProducts(false); console.log("cancel button is clicked") }}
+                                        products={products} hasProducts={hasProducts} refunds={refunds} fetchProducts={() => fetchProducts()} fetchStatistics={() => fetchStatistics()} setRefunds={() => setRefunds()} setProducts={() => setProducts()}
+                                    />
+                                )}
+                                <td className="px-6 py-4 font-semibold text-gray-900">
                                     <button
-                                        className="flex items-center"
-                                        onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
+                                        className=" text-center"
+                                        onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); setBrandID(brand.brand_id) }}
                                     >
                                         <i className="bi bi-trash-fill"></i>
                                     </button>
                                     {/* Render the delete modal */}
                                     {showDeleteModal && (
                                         <DeleteModal
-                                            // id={brand.brand_id}
                                             onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
                                             onDelete={() => {
                                                 console.log("delete button is clicked")
                                                 setShowDeleteModal(false); // Close the modal
-
-                                                axios
-                                                    .delete(`${baseUrl}/api/brands/${brand.brand_id}`)
-                                                    .then((res) => {
-                                                        const updatedBrands = brands.filter((b) => b.brand_id !== brand.brand_id);
-                                                        toast.success(`Brand deleted.`, {
-                                                            autoClose: 3000,
-                                                            pauseOnHover: true,
-                                                            style: { 'font-size': '16px' },
-                                                        });
-                                                        setBrands(updatedBrands);
-                                                        fetchBrands();
-                                                        fetchProducts();
-                                                    });
-
+                                                console.log("brandid ", brandID)
+                                                deleteBrand(brandID)
                                             }}
                                         />
                                     )}
-                                </div>
+                                </td>
+                            </tr>
 
-                            </li>
-
-
-                        ))
-                    ) : (
-                        // Loading component (full screen)
-                        <div className="flex items-center justify-center h-screen">
-                            <Loading />
-                        </div>
-                    )}
-                </ul>
-            </div>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                // Loading component (full screen)
+                <div className="flex items-center justify-center h-screen">
+                    <Loading />
+                </div>
+            )}
         </div>
     );
 }

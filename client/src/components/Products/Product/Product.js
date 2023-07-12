@@ -21,7 +21,7 @@ export default function Product(props) {
             <div className="mt-4 flex justify-between">
                 <div className="text-left">
                     <h3 className="text-sm text-gray-700">
-                        <Link to={`/product/${product.product_id}`}>
+                        <Link to={`/product/${product.product_id}`} onClick={() => window.scrollTo(0, 0)}>
                             <span aria-hidden="true" className="absolute inset-0" />
                             {product.product_name}
                         </Link>

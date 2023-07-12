@@ -21,162 +21,154 @@ export default function Product({ product, refunds, setRefunds, fetchProducts, f
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const increaseInventory = (productID) => {
+        axios
+            .put(`${baseUrl}/api/products/inventory/plus/${productID}`)
+            .then((response) => {
+                console.log('Increase button is clicked');
+                toast.success(`Inventory level updated.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { fontSize: '16px' },
+                });
+                fetchProducts();
+                fetchStatistics();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    const decreaseInventory = (productID) => {
+        axios
+            .put(`${baseUrl}/api/products/inventory/minus/${productID}`)
+            .then((response) => {
+                console.log('Decrease button is clicked');
+                toast.success(`Inventory level updated.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { fontSize: '16px' },
+                });
+                fetchProducts();
+                fetchStatistics();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    const deleteProduct = (productID) => {
+        axios
+            .delete(`${baseUrl}/api/products/${product.product_id}`)
+            .then((res) => {
+                console.log('productID: ', product.product_id);
+                toast.success(`Product deleted.`, {
+                    autoClose: 3000,
+                    pauseOnHover: true,
+                    style: { 'font-size': '16px' },
+                });
+                fetchProducts();
+                fetchStatistics();
+            });
+
+        // give partial refund to customers who ordered the deleted products
+        axios
+            .post(
+                `${baseUrl}/processPartialRefund/${product.product_id}`
+            )
+            .then((response) => {
+                console.log(response);
+                setRefunds(response.data.data);
+                console.log(refunds);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        toast.success(`Giving partial refund now.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+        });
+    }
 
     return (
-        <div className="d-flex flex-row py-3 justify-content-around h-30 w-30">
-            <div className="w-2/6 sm:w-2/6 md:w-2/6 lg:w-1/6 aspect-square border-r-2 border-white pl-2 pr-3 mr-3 h-30 ">
+        <tr className="bg-white border-b hover:bg-gray-50 text-dark text-center">
+            <td className="aspect-square" style={{ width: "250px" }}>
                 <AdvancedImage
                     className="h-full w-full bg-gray-50 rounded-lg object-cover"
                     cldImg={cld.image(product.image_url)}
                 />
-            </div>
-            <div className="w-3/6 flex flex-col justify-center">
-                <p className="text-sm font-semibold leading-6 text-gray-900">
-                    {product.product_name}
-                </p>
-                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    {product.category_name} - {product.brand_name}
-                </p>
-                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    <i className="bi bi-tags-fill"></i> ${product.price}
-                </p>
-            </div>
-
-
-            {/* <div className="col-4 d-flex justify-between justify-content-end align-items-center"> */}
-            <div className="w-3/6 flex flex-wrap justify-center items-center text-center space-x-3">
-
-                <div className="mx-auto w-full sm:w-full md:w-1/2 lg:w-1/2 mb-4 lg:px-3 md:px-3 items-center lg:mt-5 md:mt-5">
-                    <div className="flex flex-row justify-between items-center">
-                        <div className="w-2/5">
-                            <button
-                                className="w-full"
-                                id="minusButton"
-                                onClick={() => {
-                                    if (product.quantity >= 1) {
-                                        // minus the inventory by 1 when the admin clicks on the minus icon
-                                        const productID = product.product_id;
-                                        axios
-                                            .put(`${baseUrl}/api/products/inventory/minus/${productID}`)
-                                            .then((response) => {
-                                                console.log('Decrease button is clicked');
-                                                toast.success(`Inventory level updated.`, {
-                                                    autoClose: 3000,
-                                                    pauseOnHover: true,
-                                                    style: { fontSize: '16px' },
-                                                });
-                                                fetchProducts();
-                                                fetchStatistics();
-                                            })
-                                            .catch((error) => {
-                                                console.error(error);
-                                            });
-                                    }
-                                }}
-                            >
-                                <i className="bi bi-dash-circle"></i>
-                            </button>
-                        </div>
-                        {/* the quantity will change as the admin makes changes to the inventory */}
-                        <p className="w-1/5 mx-3 text-center">{product.quantity}</p>
-                        <div className="w-2/5">
-                            <button
-                                className="w-full"
-                                id="plusButton"
-                                onClick={() => {
-                                    // plus the inventory by 1 when the admin clicks on the plus button
-                                    const productID = product.product_id;
-                                    axios
-                                        .put(`${baseUrl}/api/products/inventory/plus/${productID}`)
-                                        .then((response) => {
-                                            console.log('Increase button is clicked');
-                                            toast.success(`Inventory level updated.`, {
-                                                autoClose: 3000,
-                                                pauseOnHover: true,
-                                                style: { fontSize: '16px' },
-                                            });
-                                            fetchProducts();
-                                            fetchStatistics();
-                                        })
-                                        .catch((error) => {
-                                            console.error(error);
-                                        });
-                                }}
-                            >
-                                <i className="bi bi-plus-circle"></i>
-                            </button>
-                        </div>
+            </td>
+            <td className="px-6 py-4 font-semibold text-gray-900">
+                {product.product_name}
+            </td>
+            <td className="px-6 py-4 font-semibold text-gray-900">
+                {product.category_name}
+            </td>
+            <td className="px-6 py-4 font-semibold text-gray-900">
+                {product.brand_name}
+            </td>
+            <td className="px-6 py-4 font-semibold text-gray-900">
+                ${product.price}
+            </td>
+            <td className="px-6 py-4">
+                <div className="flex items-center space-x-3">
+                    <button className="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button" onClick={() => {
+                        if (product.quantity >= 1) {
+                            // minus the inventory by 1 when the admin clicks on the minus icon
+                            const productID = product.product_id;
+                            decreaseInventory(productID);
+                        }
+                    }}>
+                        <span className="sr-only">Quantity button</span>
+                        <svg className="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <div className="flex justify-center items-center">
+                        <input
+                            type="number"
+                            id="first_product"
+                            className="text-center items-center justify-center bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder={product.quantity}
+                            disabled
+                        />
                     </div>
+
+                    <button className="inline-flex items-center p-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button" onClick={() => {
+                        // plus the inventory by 1 when the admin clicks on the plus button
+                        const productID = product.product_id;
+                        increaseInventory(productID);
+                    }}>
+                        <span className="sr-only">Quantity button</span>
+                        <svg className="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    </button>
                 </div>
+            </td>
+            <td className="px-6 py-4 items-center justify-center">
+                <Link
+                    to={`/products/edit/${product.product_id}`}>
+                    <i className="text-lg bi bi-pencil-square"></i>
+                </Link>
 
-
-
-                <div className="mx-auto w-full sm:w-full md:w-1/2 lg:w-1/2 lg:px-3 md:px-3  items-center ">
-                    {/* link to ProductEdit page as the admin clicks on the pencil icon to edit */}
-                    <Link
-                        to={`/products/edit/${product.product_id}`}
-                        className="mr-2"
-                    >
-                        <i className="bi bi-pencil-square"></i>
-                    </Link>
-
-                    <div>
-                        <button
-                            onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}
-                        >
-                            <i className="bi bi-trash-fill"></i>
-                        </button>
-                        {/* Render the delete modal */}
-                        {showDeleteModal && (
-                            <DeleteModal
-                                // id={product.product_id}
-                                onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
-                                onDelete={() => {
-                                    console.log("delete button is clicked")
-                                    setShowDeleteModal(false); // Close the modal
-
-                                    axios
-                                        .delete(`${baseUrl}/api/products/${product.product_id}`)
-                                        .then((res) => {
-                                            // const updatedProducts = products.filter(
-                                            //     (p) => p.product_id !== productID
-                                            // );
-                                            toast.success(`Product deleted.`, {
-                                                autoClose: 3000,
-                                                pauseOnHover: true,
-                                                style: { 'font-size': '16px' },
-                                            });
-                                            // setProducts(updatedProducts);
-                                            fetchProducts();
-                                            fetchStatistics();
-                                        });
-
-                                    // give partial refund to customers who ordered the deleted products
-                                    axios
-                                        .post(
-                                            `${baseUrl}/processPartialRefund/${product.product_id}`
-                                        )
-                                        .then((response) => {
-                                            console.log(response);
-                                            setRefunds(response.data.data);
-                                            console.log(refunds);
-                                        })
-                                        .catch((error) => {
-                                            console.error(error);
-                                        });
-
-                                    toast.success(`Giving partial refund now.`, {
-                                        autoClose: 3000,
-                                        pauseOnHover: true,
-                                        style: { 'font-size': '16px' },
-                                    });
-
-                                }}
-                            />
-                        )}
-                    </div>
+                <div className='h-100'>
+                    <button onClick={() => { setShowDeleteModal(true); console.log(showDeleteModal); }}>
+                        <i className="text-lg bi bi-trash-fill"></i>
+                    </button>
+                    {/* Render the delete modal */}
+                    {showDeleteModal && (
+                        <DeleteModal
+                            onCancel={() => { setShowDeleteModal(false); console.log("cancel button is clicked") }}
+                            onDelete={() => {
+                                console.log("delete button is clicked")
+                                setShowDeleteModal(false); // Close the modal
+                                const productID = product.product_id;
+                                deleteProduct(productID);
+                            }}
+                        />
+                    )}
                 </div>
-            </div>
-        </div>
+            </td>
+
+        </tr >
     )
 }

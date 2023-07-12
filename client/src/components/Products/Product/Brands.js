@@ -21,7 +21,7 @@ export default function Brands({ setBrandID, all, edit = false, productData = nu
   return (
     <select
       className="form-select form-select-md w-full"
-      onChange={(e) => setBrandID(e.target.value)}
+      onChange={(e) => { setBrandID(e.target.value) }}
     >
       <option disabled selected value="">
         -- BRAND --

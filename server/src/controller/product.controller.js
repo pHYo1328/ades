@@ -1,7 +1,18 @@
 // THINZAR HNIN YU (P2201014)
+const cloudinary = require('cloudinary').v2;
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+//   secure: true,
+//   // upload_preset: CLOUDINARY_UPLOAD_PRESET,
+//   api_key: CLOUDINARY_API_KEY,
+//   api_secret: CLOUDINARY_API_SECRET
+
+// })
 
 const chalk = require('chalk');
 const productServices = require('../services/product.services');
+const cloudinary_url = process.env.CLOUDINARY_URL;
 
 // GET
 
@@ -43,6 +54,8 @@ exports.processGetProductByID = async (req, res, next) => {
       average_rating: productData.average_rating,
       rating_count: productData.rating_count,
       quantity: productData.quantity,
+      category_id: productData.category_id,
+      brand_id: productData.brand_id,
       image_url: imageData.map((u) => u.image_url),
     };
 
@@ -121,6 +134,14 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       parseInt(sort)
     );
     console.log(chalk.yellow('Product data: ', productData));
+    if (!productData || productData.length === 0) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'No products exist',
+      });
+    }
+    console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({
       product_id: product.product_id,
       product_name: product.product_name,
@@ -130,22 +151,12 @@ exports.processGetProductsByCategoryOrBrand = async (req, res, next) => {
       brand_name: product.brand_name,
       image_url: product.image_url,
     }));
-
-    const response = {
+    return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Read product details successful',
       data: products,
-    };
-
-    console.log(chalk.yellow(productData.length));
-
-    if (productData.length === 0) {
-      response.statusCode = 200;
-      response.message = 'No categories or brands exist';
-    }
-
-    return res.status(response.statusCode).json(response);
+    });
   } catch (error) {
     console.error(chalk.red('Error in getProductsByCategoryOrBrand: ', error));
     return next(error);
@@ -175,6 +186,14 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
       categoryID
     );
     console.log(chalk.yellow('Product data: ', productData));
+    if (!productData || productData.length === 0) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'No products exist',
+      });
+    }
+    console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({
       product_id: product.product_id,
       product_name: product.product_name,
@@ -183,23 +202,14 @@ exports.processGetProductsByCategoryID = async (req, res, next) => {
       category_name: product.category_name,
       brand_name: product.brand_name,
       image_url: product.image_url,
+      quantity: product.quantity,
     }));
-
-    const response = {
+    return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Read product details successful',
       data: products,
-    };
-
-    console.log(chalk.yellow(productData.length));
-
-    if (productData.length === 0) {
-      response.statusCode = 404;
-      response.message = 'No categories exist';
-    }
-
-    return res.status(response.statusCode).json(response);
+    });
   } catch (error) {
     console.error(chalk.red('Error in getProductsByCategoryID: ', error));
     return next(error);
@@ -229,6 +239,15 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
   try {
     const productData = await productServices.getProductsByBrandID(brandID);
     console.log(chalk.yellow('Product data: ', productData));
+
+    if (!productData || productData.length === 0) {
+      return res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'No products exist',
+      });
+    }
+    console.log(chalk.yellow('Product data: ', productData));
     const products = productData.map((product) => ({
       product_id: product.product_id,
       product_name: product.product_name,
@@ -237,23 +256,14 @@ exports.processGetProductsByBrandID = async (req, res, next) => {
       category_name: product.category_name,
       brand_name: product.brand_name,
       image_url: product.image_url,
+      quantity: product.quantity,
     }));
-
-    const response = {
+    return res.status(200).json({
       statusCode: 200,
       ok: true,
       message: 'Read product details successful',
       data: products,
-    };
-
-    console.log(chalk.yellow(productData.length));
-
-    if (productData.length === 0) {
-      response.statusCode = 404;
-      response.message = 'No brands exist';
-    }
-
-    return res.status(response.statusCode).json(response);
+    });
   } catch (error) {
     console.error(chalk.red('Error in getProductsByBrandID: ', error));
     return next(error);
@@ -547,6 +557,40 @@ exports.processGetStatistics = async (req, res, next) => {
   }
 };
 
+// get total revenue by year and month
+exports.processGetTotalRevenue = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalRevenue running'));
+  try {
+    const revenueData = await productServices.getTotalRevenue();
+    console.log(chalk.yellow(revenueData));
+    if (!revenueData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No payments exist',
+      });
+    }
+    console.log(chalk.yellow('revenueData data: ', revenueData));
+    const revenues = revenueData.map((revenue) => ({
+      year: revenue.year,
+      month: revenue.month,
+      total: revenue.total
+    }))
+
+    console.log(chalk.green(revenues));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read revenue details successful',
+      revenues,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenue: ', error));
+    return next(error);
+  }
+};
+
 // get total number of products by brand or category
 exports.processGetTotalNumberOfProducts = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfProducts running'));
@@ -626,6 +670,47 @@ exports.processGetImagesByProductID = async (req, res, next) => {
     });
   } catch (error) {
     console.error(chalk.red('Error in getImagesByProductID: ', error));
+    return next(error);
+  }
+};
+
+// get related products
+exports.processGetRelatedProducts = async (req, res, next) => {
+  console.log(chalk.blue('processGetRelatedProducts running'));
+  // const { productID } = req.params;
+  const { productID } = req.params;
+  try {
+    const productData = await productServices.getRelatedProducts(
+      productID
+    );
+    if (productData) {
+      console.log(chalk.yellow('Product data: ', productData));
+      const products = productData.map((product) => ({
+        product_id: product.product_id,
+        product_name: product.product_name,
+        price: product.price,
+        description: product.description,
+        category_name: product.category_name,
+        brand_name: product.brand_name,
+        image_url: product.image_url,
+        category_id: product.category_id,
+        brand_id: product.brand_id,
+      }));
+      res.status(200).json({
+        statusCode: 200,
+        ok: true,
+        message: 'Read product details successful',
+        data: products,
+      });
+    } else {
+      res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No related products exists',
+      });
+    }
+  } catch (error) {
+    console.error(chalk.red('Error in getRelatedProducts: ', error));
     return next(error);
   }
 };

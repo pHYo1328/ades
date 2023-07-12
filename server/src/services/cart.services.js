@@ -85,23 +85,21 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
       rows = await pool.query(addCartDataQuery, [cartDataValues]);
       console.log(chalk.green('Row inserted:' + rows.affectedRows));
     }
-    
+
     // and fetch all cart data for that customer id
     const existingCartData = await pool.query(selectCartDataQuery, [userId]);
     console.log(chalk.green('Existing cart data:', existingCartData));
 
     // check that data is longer then new cart data, Yes means there extra data user has deleted in frontend
     if (existingCartData[0].length > cartData.length) {
-      // find make all cart item id as array then 
+      // find make all cart item id as array then
       const existingProductIDs = cartData.map((item) => item.productId);
       if (existingProductIDs.length === 0) {
-
         // cart is deleted ? remove all data
         console.log(chalk.blue('Executing query >>>', deleteAllCartDataQuery));
         const [deleteRows] = await pool.query(deleteAllCartDataQuery, [userId]);
         console.log(chalk.green('Deleted rows:', JSON.stringify(deleteRows)));
       } else {
-
         // partially deleted, delete all cart item without that ids in cart data
         console.log(chalk.blue('Executing query >>>', deleteCartDataQuery));
         const [deleteRows] = await pool.query(deleteCartDataQuery, [

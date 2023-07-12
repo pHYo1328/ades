@@ -50,9 +50,15 @@ function App() {
     '/products/create',
     '/homepage-admin',
     '/users',
-    
   ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = ['/', '/homepage', '/products', '/user-profile', '/cart', '/orderDelivered']; // Specify the routes where the header should be signed in headers
+  const SignedInHeaderRoutes = [
+    '/',
+    '/homepage',
+    '/products',
+    '/user-profile',
+    '/cart',
+    '/orderDelivered',
+  ]; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
@@ -67,8 +73,8 @@ function App() {
   // };
 
   const isSignedIn = localStorage.getItem('isSignedIn') === 'true'; // Get the isSignedIn status from localStorage
-  const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true' //Get the isAdminSignedIn status from localstorage
-  
+  const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
+
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
   const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
   const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
