@@ -100,19 +100,17 @@ export default function EditImage() {
   const deleteAllImages = () => {
     console.log('delete all images for the product');
     console.log(productID);
-    axios
-      .delete(`${baseUrl}/api/products/${productID}/images`)
-      .then((res) => {
-        console.log('deleted');
-        toast.success(`Images deleted.`, {
-          autoClose: 3000,
-          pauseOnHover: true,
-          style: { fontSize: '16px' },
-        });
-        getImages();
-        setIndex(0);
+    axios.delete(`${baseUrl}/api/products/${productID}/images`).then((res) => {
+      console.log('deleted');
+      toast.success(`Images deleted.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { fontSize: '16px' },
       });
-  }
+      getImages();
+      setIndex(0);
+    });
+  };
 
   return (
     <div>
@@ -121,13 +119,13 @@ export default function EditImage() {
           <UploadWidget onImageChange={handleImageChange} />
         </div>
         <div className="mb-3 w-6/12">
-          <Button onClick={handleSubmit} content={"Submit"} />
+          <Button onClick={handleSubmit} content={'Submit'} />
         </div>
       </div>
 
       <div className="mt-3 w-200 h-300 mx-auto">
         <div className="mx-auto lg:w-6/12 md:w-9/12 sm:w-11/12 mb-4">
-          <Button onClick={deleteAllImages} content={"Delete All Images"} />
+          <Button onClick={deleteAllImages} content={'Delete All Images'} />
         </div>
 
         <Carousel
@@ -142,7 +140,7 @@ export default function EditImage() {
                 <Carousel.Caption style={{ top: 0, marginBottom: 0 }}>
                   <div className="flex justify-center">
                     <button
-                      // disabled={images.length <= 1} 
+                      // disabled={images.length <= 1}
                       onClick={() => {
                         if (images.length > 1) {
                           // Delete the image at the index by using imageID
@@ -163,11 +161,14 @@ export default function EditImage() {
                             });
                         } else {
                           // Show an alert when trying to delete the only image
-                          toast.error(`Each product should have at least one image.`, {
-                            autoClose: 3000,
-                            pauseOnHover: true,
-                            style: { fontSize: '16px' },
-                          });
+                          toast.error(
+                            `Each product should have at least one image.`,
+                            {
+                              autoClose: 3000,
+                              pauseOnHover: true,
+                              style: { fontSize: '16px' },
+                            }
+                          );
                         }
                       }}
                       className="rounded-full bg-black w-8 h-8 flex items-center justify-center border-none cursor-pointer"
@@ -194,6 +195,5 @@ export default function EditImage() {
 
       <ToastContainer limit={2} newestOnTop={true} position="top-center" />
     </div>
-
   );
 }
