@@ -127,23 +127,23 @@ const CartCheckoutForm = ({
           return;
         }
         handleValidation().then(result => {
-          // if (result){
-          //   const requestBody = {
-          //   shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
-          //   totalPrice: totalPrice,
-          //   shippingMethod: shippingMethod,
-          //   orderItems: cartData,
-          // };
-          // api
-          //   .post(`/api/order/${customerId}`, requestBody)
-          //   .then((response) => {
-          //     setCheckoutSuccessful(true);
-          //     setOrderId(response.data.data);
-          //   })
-          //   .catch((error) => {
-          //     alert(error.response.data.message);
-          //   });
-          // }
+          if (result){
+            const requestBody = {
+            shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
+            totalPrice: totalPrice,
+            shippingMethod: shippingMethod,
+            orderItems: cartData,
+          };
+          api
+            .post(`/api/order/${customerId}`, requestBody)
+            .then((response) => {
+              setCheckoutSuccessful(true);
+              setOrderId(response.data.data);
+            })
+            .catch((error) => {
+              alert(error.response.data.message);
+            });
+          }
       });
         //if all instock send data to database and set CheokoutSuccessful status
         
