@@ -38,11 +38,11 @@ const CartCheckoutForm = ({
       `${address.addressLine1}`,
       getCode(selectedCountry)
     );
-  
+
     setIsInvalidAddress(addressValidity);
-  
+
     let postalCodeValidity = false; // define with default value
-  
+
     if (address.postalCode.length > 0) {
       postalCodeValidity = await validatePostalCode(
         `${address.postalCode}`,
@@ -52,7 +52,6 @@ const CartCheckoutForm = ({
     }
     return !(addressValidity || postalCodeValidity);
   };
-  
 
   const checkOutHandler = (
     customerId,
@@ -66,7 +65,7 @@ const CartCheckoutForm = ({
       toast.error('Please select shipping method', {
         autoClose: 3000,
         pauseOnHover: true,
-        style: { 'fontSize': '16px' },
+        style: { fontSize: '16px' },
       });
       return;
     }
@@ -77,7 +76,7 @@ const CartCheckoutForm = ({
       toast.error('Please add items to cart to checkout', {
         autoClose: 3000,
         pauseOnHover: true,
-        style: { 'fontSize': '16px' },
+        style: { fontSize: '16px' },
       });
       return;
     }
@@ -121,32 +120,31 @@ const CartCheckoutForm = ({
             toast.error(string, {
               autoClose: 3000,
               pauseOnHover: true,
-              style: { 'fontSize': '16px' },
+              style: { fontSize: '16px' },
             });
           });
           return;
         }
-        handleValidation().then(result => {
-          if (result){
+        handleValidation().then((result) => {
+          if (result) {
             const requestBody = {
-            shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
-            totalPrice: totalPrice,
-            shippingMethod: shippingMethod,
-            orderItems: cartData,
-          };
-          api
-            .post(`/api/order/${customerId}`, requestBody)
-            .then((response) => {
-              setCheckoutSuccessful(true);
-              setOrderId(response.data.data);
-            })
-            .catch((error) => {
-              alert(error.response.data.message);
-            });
+              shippingAddr: `${address.addressLine1} ${address.addressLine2} ${address.postalCode} ${address.country} `,
+              totalPrice: totalPrice,
+              shippingMethod: shippingMethod,
+              orderItems: cartData,
+            };
+            api
+              .post(`/api/order/${customerId}`, requestBody)
+              .then((response) => {
+                setCheckoutSuccessful(true);
+                setOrderId(response.data.data);
+              })
+              .catch((error) => {
+                alert(error.response.data.message);
+              });
           }
-      });
+        });
         //if all instock send data to database and set CheokoutSuccessful status
-        
       })
       .catch((error) => {
         console.log(error);
@@ -181,7 +179,7 @@ const CartCheckoutForm = ({
                 });
               }}
               value={{ label: selectedCountry, value: selectedCountry }}
-              name="country"
+              name="countrySelect"
               className="w-full"
               styles={{
                 control: (provided) => ({
@@ -213,9 +211,9 @@ const CartCheckoutForm = ({
               id="addressLine1"
               isInvalid={isInvalidAddress}
             />
-             {isInvalidAddress && (
+            {isInvalidAddress && (
               <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
-                {"Invalid Address"}
+                {'Invalid Address'}
                 <div className="tooltip-arrow" data-popper-arrow></div>
               </div>
             )}
@@ -262,7 +260,7 @@ const CartCheckoutForm = ({
             />
             {isInvalidPostalCode && (
               <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
-                {"Invalid Postal Code"}
+                {'Invalid Postal Code'}
                 <div class="tooltip-arrow" data-popper-arrow></div>
               </div>
             )}
@@ -274,25 +272,23 @@ const CartCheckoutForm = ({
         <select
           required
           name="shippingMethods"
-          className="form-select form-select-sm mb-3"
+          className="form-select mb-3"
+          defaultValue="" // Set the default value here
           onChange={(event) => {
             setShippingFee(event.target.value);
             setShippingId(event.target.selectedIndex);
           }}
           id="shippingMethods"
         >
-          <option disabled selected value="0">
+          <option disabled value="">
             -- Shipping Method --
           </option>
-          {shippingMethod ? (
+          {shippingMethod &&
             shippingMethod.map((method) => (
               <option key={method.shipping_id} value={method.fee}>
                 {method.shipping_method}
               </option>
-            ))
-          ) : (
-            <LoadingIndicator />
-          )}
+            ))}
         </select>
         <div className="flex flex-column text-base text-white border-t-2 border-b-2 border-white py-2">
           <div className="flex flex-row justify-between">

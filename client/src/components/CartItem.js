@@ -1,8 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage, preload } from '@cloudinary/react';
+import { fill } from '@cloudinary/base/actions/resize';
+import { format } from '@cloudinary/base/actions/delivery';
+import { auto } from '@cloudinary/base/qualifiers/format';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Link } from 'react-router-dom';
@@ -20,16 +23,14 @@ const CartItem = ({
   setTotalAmount,
   customerID,
 }) => {
+  const [cldImage, setCldImage] = useState(null);
   const plusButtonHandler = useCallback(
     (productId) => {
-      console.log(productId);
       const updatedCart = cartData.map((item) =>
         item.productId == productId
           ? { ...item, quantity: item.quantity + 1 }
           : item
       );
-      console.log(updatedCart);
-
       setCartData([...updatedCart]);
     },
     [cartData, setCartData, customerID]
@@ -42,7 +43,6 @@ const CartItem = ({
           ? { ...item, quantity: item.quantity - 1 }
           : item
       );
-      console.log(updatedCart);
       setCartData([...updatedCart]);
     },
     [cartData, setCartData, customerID]
@@ -81,9 +81,20 @@ const CartItem = ({
   );
 
   useEffect(() => {
-    // Preload the image
-    const image = new Image();
-    image.src = cartItem.image_url;
+    const myImage = cld.image(cartItem.image_url);
+    myImage.resize(fill().width(300).height(200));
+    myImage.delivery(format(auto()));
+
+    // Create a new Image instance and set its src to preload it
+    const img = new Image();
+    if (myImage) {
+      img.src = myImage.toURL();
+    }
+
+    img.onload = () => {
+      // Once the image is loaded, set the CloudinaryImage instance to state
+      setCldImage(myImage);
+    };
   }, [cartItem.image_url]);
 
   return (
@@ -92,12 +103,14 @@ const CartItem = ({
       className=" border-b-2 border-grey"
     >
       <td className="flex flew-row py-6 px-2 w-48 h-56 md:w-64 md:h-64 ">
-        <AdvancedImage
-          cldImg={cld.image(cartItem.image_url)}
-          className="rounded"
-          width="100%"
-          height="100%"
-        />
+        {cldImage && (
+          <AdvancedImage
+            cldImg={cldImage}
+            className="rounded"
+            width="100%"
+            height="100%"
+          />
+        )}
       </td>
       <td>
         <Link

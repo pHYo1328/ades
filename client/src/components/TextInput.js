@@ -1,4 +1,10 @@
-export default function TextInput({ placeholder, value, func, buttonRef, defaultValue = null }) {
+export default function TextInput({
+  placeholder,
+  value,
+  func,
+  buttonRef,
+  defaultValue = null,
+}) {
   return (
     <input
       type="text"
@@ -7,13 +13,16 @@ export default function TextInput({ placeholder, value, func, buttonRef, default
       defaultValue={defaultValue}
       value={value}
       onChange={func}
-      onKeyDown={buttonRef && ((event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          event.stopPropagation();
-          buttonRef.current.click();
-        }
-      })}
+      onKeyDown={
+        buttonRef &&
+        ((event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            buttonRef.current.click();
+          }
+        })
+      }
     />
-  )
+  );
 }

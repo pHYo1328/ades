@@ -23,6 +23,7 @@ export const CartTable = ({
     } else if (hasCartData) {
       return cartProductData.map((cartItem, index) => (
         <CartItem
+          key={index}
           cartItem={cartItem}
           index={index}
           cartData={cartData}

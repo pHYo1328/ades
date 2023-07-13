@@ -50,7 +50,7 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState(null);
   const [categoryName, setCategoryName] = useState('');
   const [category, setCategory] = useState(null);
-  const [hasCategory, setHasCategory] = useState(false);;
+  const [hasCategory, setHasCategory] = useState(false);
 
   const [activeTab, setActiveTab] = useState('home');
 
@@ -300,23 +300,26 @@ export default function AdminDashboard() {
           />
         )}
 
-                <div className="p-4 sm:ml-64 top-25 overflow-hidden">
-                    <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
-                        {activeTab === 'home' && (
-                            <div className="w-full">
-                            <Statistics statistics={statistics} />
-                            <div >
-                                <RevenueChart className="" />
-                            </div>
-                        </div>
-                        )}
-                        {activeTab === 'products' && (
-                            <div className="w-full">
-                                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
-                                    <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                                        <TextInput placeholder={"Enter search..."} value={search}
-                                            func={(e) => setSearch(e.target.value)} />
-                                    </div>
+        <div className="p-4 sm:ml-64 top-25 overflow-hidden">
+          <div className="rounded-lg dark:border-gray-700 overflow-hidden flex justify-center items-center w-full">
+            {activeTab === 'home' && (
+              <div className="w-full">
+                <Statistics statistics={statistics} />
+                <div>
+                  <RevenueChart className="" />
+                </div>
+              </div>
+            )}
+            {activeTab === 'products' && (
+              <div className="w-full">
+                <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
+                  <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
+                    <TextInput
+                      placeholder={'Enter search...'}
+                      value={search}
+                      func={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
 
                   <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
                     <LinkButton

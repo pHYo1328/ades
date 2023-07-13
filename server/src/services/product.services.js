@@ -459,7 +459,7 @@ module.exports.getStatistics = async () => {
 
 // get total revenue by year and month
 module.exports.getTotalRevenue = async () => {
-  console.log(chalk.blue('getTotalRevenue is called'))
+  console.log(chalk.blue('getTotalRevenue is called'));
   try {
     const totalQuery = `
     SELECT 
@@ -476,8 +476,7 @@ module.exports.getTotalRevenue = async () => {
     console.error(chalk.red('Error in getTotalRevenue: ', error));
     throw error;
   }
-
-}
+};
 
 // get total number of products by brand or category
 module.exports.getTotalNumberOfProducts = async (categoryID, brandID) => {

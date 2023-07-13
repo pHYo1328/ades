@@ -65,38 +65,41 @@ const SignedInHeader = () => {
               Cart
             </Link>
             <div className="relative" ref={userPanelRef}>
-  <button onClick={handleUserPanelToggle} className="text-white hover:text-gray-600">
-    User
-  </button>
-  {isUserPanelOpen && (
-    <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg origin-top-right">
-      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-        <div className="flex items-center">
-          <FaWallet className="inline-block mr-2" />
-          <span className="truncate">to pay</span>
-        </div>
-      </button>
-      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-        <div className="flex items-center">
-          <FaBox className="inline-block mr-2" />
-          <span className="truncate">to ship</span>
-        </div>
-      </button>
-      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-        <div className="flex items-center">
-          <RiTruckLine className="inline-block mr-2" />
-          <span className="truncate">to receive</span>
-        </div>
-      </button>
-      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-        <div className="flex items-center">
-          <RiCheckboxCircleLine className="inline-block mr-2" />
-          <span className="truncate">completed</span>
-        </div>
-      </button>
-    </div>
-  )}
-</div>
+              <button
+                onClick={handleUserPanelToggle}
+                className="text-white hover:text-gray-600"
+              >
+                User
+              </button>
+              {isUserPanelOpen && (
+                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg origin-top-right">
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <FaWallet className="inline-block mr-2" />
+                      <span className="truncate">to pay</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <FaBox className="inline-block mr-2" />
+                      <span className="truncate">to ship</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <RiTruckLine className="inline-block mr-2" />
+                      <span className="truncate">to receive</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <RiCheckboxCircleLine className="inline-block mr-2" />
+                      <span className="truncate">completed</span>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
 
             <button
               className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
@@ -104,7 +107,7 @@ const SignedInHeader = () => {
             >
               Log out
             </button>
-            
+
             {/* <Link to="/login-admin">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
                 Admin
