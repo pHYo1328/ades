@@ -161,14 +161,14 @@ const CartCheckoutForm = ({
         <div className="space-y-4 ">
           <div className="flex flex-row items-center">
             <label
-              htmlFor="countrySelect"
+              htmlFor="selectCountry"
               className="block text-base font-medium text-white w-28"
             >
               Country :
             </label>
             <Select
-              id="countrySelect"
-              aria-labelledby="countrySelect"
+              inputId="selectCountry"
+              aria-labelledby="selectCountry"
               options={countryOptions}
               onChange={(selectedOption) => {
                 const selectedCountry = selectedOption.value;
@@ -179,24 +179,24 @@ const CartCheckoutForm = ({
                 });
               }}
               value={{ label: selectedCountry, value: selectedCountry }}
-              name="countrySelect"
               className="w-full"
               styles={{
                 control: (provided) => ({
                   ...provided,
-                  fontSize: '18px', // Set your desired font size here
+                  fontSize: '18px',
                 }),
                 option: (provided) => ({
                   ...provided,
-                  fontSize: '18px', // Set your desired font size for the options
+                  fontSize: '18px',
                 }),
                 placeholder: (provided) => ({
                   ...provided,
-                  color: '#9CA3AF', // Set your desired color for the placeholder
+                  color: '#9CA3AF',
                 }),
               }}
             />
           </div>
+
           <div className="flex flex-row items-center relative">
             <label
               htmlFor="addressLine1"

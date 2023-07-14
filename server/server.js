@@ -36,7 +36,7 @@ app.use(fileUpload());
 
 //serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
-
+app.use(express.static('public',{maxAge:'1d'}));
 // routes
 
 // app.use('/', require('../server/src/routes/root'));
