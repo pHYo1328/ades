@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../index';
 import { useNavigate } from 'react-router-dom';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
+import ItemImage from '../ItemImage';
+import './orderList.css';
 import {
   FaEdit,
   FaClipboard,
@@ -15,11 +15,6 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'ddoajstil',
-  },
-});
 const OrderList = ({
   items,
   setItems,
@@ -32,7 +27,7 @@ const OrderList = ({
   const navigate = useNavigate();
   const handleEditClick = (index) => {
     setEditingIndex(index);
-    setEditedShippingAddress(items[index].shipping_address);
+    setEditedShippingAddress(clearedItems[index].shipping_address);
   };
   const handleSaveClick = async (orderId) => {
     // when user clicks save, update the database with modified shipping addresses
@@ -44,8 +39,6 @@ const OrderList = ({
         shippingAddr: editedShippingAddress,
       }
     );
-    console.log(result);
-
     setEditingIndex(-1);
     // re render the UI
     const updatedItemList = items.map((item) =>
@@ -65,7 +58,6 @@ const OrderList = ({
     // if order id found make it push to existing order array or make a new array
     const combinedOrders = orders.reduce((acc, order) => {
       const existingOrder = acc.find((o) => o.order_id === order.order_id);
-
       if (existingOrder) {
         existingOrder.order_items.push({
           product_name: order.product_name,
@@ -91,7 +83,6 @@ const OrderList = ({
           ],
         });
       }
-
       return acc;
     }, []);
 
@@ -137,7 +128,6 @@ const OrderList = ({
   // fetch all items according to order list and check quantity
   // if one item cannot make it, must cancel that order item
   const payButtonHandler = async (orderId) => {
-    console.log(orderId);
     let isStockAvailable = true;
     const products = items.filter((item) => item.order_id === orderId);
     const productIds = products.map((item) => item.product_id);
@@ -150,7 +140,6 @@ const OrderList = ({
     api
       .get(`/api/inventory/checkQuantity?productIDs=${productIds.join(',')}`)
       .then((response) => {
-        console.log(response.data.data);
         response.data.data.forEach((inventory) => {
           const quantityIndex = productIdsWithQuantity.findIndex(
             (item) => item.productId == inventory.product_id
@@ -191,106 +180,132 @@ const OrderList = ({
 
   return (
     <ul>
+    <h2 className='mx-4 my-6 font-breezeBold font-bold text-4xl flex flex-row'>Orders To Pay <FaWallet className="ml-3 shake text-amber-950" /></h2>
       {clearedItems.map((item, index) => (
         <li key={index}>
-          <div className="mx-4 my-3 shadow-md shadow-gray-900  p-6 rounded-lg">
-            <div className="block sm:flex flex-row justify-around text-base">
-              <p className="flex flex-row items-center">
-                <FaClipboard className="text-green-700" />
-                order ID : {item.order_id}
-              </p>
-              {editingIndex === index ? (
-                <div className="block w-full sm:flex flex-row sm:space-x-12 py-2 sm:w-1/2">
-                  <input
-                    type="text"
-                    value={editedShippingAddress}
-                    onChange={(event) =>
-                      setEditedShippingAddress(event.target.value)
-                    }
-                    className="border border-gray-300 rounded px-2 flex-grow"
-                  />
-                  <p>Shipping Method : {item.shipping_method}</p>
-                  <button
-                    onClick={() => handleSaveClick(item.order_id)}
-                    className="bg-green-700 px-4 py-2 rounded text-white"
-                  >
-                    Save
-                  </button>
-                </div>
-              ) : (
-                <div className="block sm:flex flex-row space-x-12 items-center">
-                  <div className="block sm:flex flex-row space-x-6">
-                    <p className="flex flex-row items-center space-x-1">
-                      <FaMapMarkedAlt className="text-green-700" />
-                      Address : {item.shipping_address}
-                    </p>
-                    <p className="flex flex-row items-center space-x-2">
-                      <RiTruckLine className="text-green-700" />
-                      Shipping Method : {item.shipping_method}
-                    </p>
-                  </div>
-                  <div className="flex flex-row space-x-5 py-2">
-                    <button
-                      onClick={() => handleEditClick(index)}
-                      className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center"
-                    >
-                      <FaEdit className="mr-3"></FaEdit>Edit
-                    </button>
-                    {renderButton && (
-                      <button
-                        onClick={() => {
-                          payButtonHandler(item.order_id);
-                        }}
-                        className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center"
-                      >
-                        <FaWallet />
-                        Pay
-                      </button>
+          <div className="font-breezeRegular mx-4 my-6 shadow-md shadow-gray-900 p-6 rounded-lg">
+            <div className='mx-6 px-6 bg-gray-100 rounded-md'>
+            <table className="table-auto text-base">
+              <thead>
+                <tr>
+                  <th className="w-1/6 p-2"> <p className="flex flex-row items-center">
+                  <FaClipboard className="text-green-700 mr-2" />
+                  Order ID
+                </p></th>
+                  <th className="w-1/6 p-2">
+                  <p className="flex flex-row items-center space-x-2">
+                  <RiTruckLine className="text-green-700 mr-2" />
+                  Shipping Method
+                </p>
+                    </th>
+                  <th className="w-1/3 p-2"><p className="flex flex-row items-center space-x-1">
+                      <FaMapMarkedAlt className="text-green-700 mr-2" />
+                      Shipping Address
+                    </p></th>
+                  <th className="w-1/3 p-2"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2">{item.order_id}</td>
+                  <td className="p-2">{item.shipping_method}</td>
+                  <td className="p-2">
+                    {editingIndex === index ? (
+                      <input
+                        type="text"
+                        value={editedShippingAddress}
+                        onChange={(event) =>
+                          setEditedShippingAddress(event.target.value)
+                        }
+                        className="border border-gray-300 rounded px-2 flex-grow"
+                      />
+                    ) : (
+                      <p>{item.shipping_address}</p>
                     )}
-                  </div>
-                </div>
-              )}
-            </div>
-            {item.order_items.length > 0 && (
-              <div className="text-xl">
-                {item.order_items.map((orderItem, orderIndex) => (
-                  <div key={orderIndex}>
-                    <div className="my-5 text-black rounded-lg shadow-md shadow-violet-800 border-violet-800 border-2">
-                      <div className="block sm:flex items-center justify-between px-5">
-                        <div className="py-4">
-                          <AdvancedImage
-                            cldImg={cld.image(orderItem.image_url)}
-                            className="w-48 h-48 rounded"
-                          />
-                        </div>
-                        <div>
-                          <b>{orderItem.product_name}</b>
-                          <p>${orderItem.price}</p>
-                          <p>quantity : {orderItem.quantity}</p>
-                        </div>
-                        <p>
-                          item total: $
-                          {(orderItem.price * orderItem.quantity).toFixed(2)}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col items-end px-4">
+                  </td>
+                  <td className="p-2 flex justify-evenly">
+                    {editingIndex === index ? (
+                      <button
+                        onClick={() => handleSaveClick(item.order_id)}
+                        className="bg-green-700 px-4 py-2 rounded text-white"
+                      >
+                        Save
+                      </button>
+                    ) : (
+                      <>
                         <button
-                          onClick={() =>
-                            handleDeleteItem(
-                              item.order_id,
-                              orderItem.product_id,
-                              orderItem.quantity
-                            )
-                          }
-                          className="my-3 text-white bg-red-600 px-4 py-2 rounded text-base hover:bg-red-800"
+                          onClick={() => handleEditClick(index)}
+                          className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center"
                         >
-                          cancel order
+                          <FaEdit className="mr-3"></FaEdit>Edit
                         </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                        {renderButton && (
+                          <button
+                            onClick={() => {
+                              payButtonHandler(item.order_id);
+                            }}
+                            className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center"
+                          >
+                            <FaWallet className="mr-3" />
+                            Pay
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+
+            {item.order_items.length > 0 && (
+              <div className="text-base m-12">
+                <table className="table-fixed w-full">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th></th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Total Amount</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.order_items.map((orderItem, orderIndex) => (
+                      <tr
+                        key={orderIndex}
+                        className="border-t-2 border-b-2 border-gray-300"
+                      >
+                        <td className="flex flew-row py-4 w-40 h-40">
+                          <ItemImage imageUrl={orderItem.image_url} />
+                        </td>
+                        <td>
+                          <b className="ml-3">{orderItem.product_name}</b>
+                        </td>
+                        <td>${orderItem.price}</td>
+                        <td>{orderItem.quantity}</td>
+                        <td>
+                          ${(orderItem.price * orderItem.quantity).toFixed(2)}
+                        </td>
+                        <td>
+                          <button
+                            onClick={() =>
+                              handleDeleteItem(
+                                item.order_id,
+                                orderItem.product_id,
+                                orderItem.quantity
+                              )
+                            }
+                            className="my-3 text-white bg-red-600 px-4 py-2 rounded text-base hover:bg-red-800"
+                          >
+                            cancel order
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>

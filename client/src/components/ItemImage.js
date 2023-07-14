@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage, preload } from '@cloudinary/react';
-import { fill } from '@cloudinary/base/actions/resize';
+import { thumbnail, scale, fill } from '@cloudinary/url-gen/actions/resize';
 import { format } from '@cloudinary/base/actions/delivery';
 import { auto } from '@cloudinary/base/qualifiers/format';
+import { focusOn } from '@cloudinary/url-gen/qualifiers/gravity';
+import { FocusOn } from '@cloudinary/url-gen/qualifiers/focusOn';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -15,7 +17,7 @@ const ItemImage = ({ imageUrl }) => {
 
   useEffect(() => {
     const myImage = cld.image(imageUrl);
-    myImage.resize(fill().width(300).height(200));
+    myImage.resize(scale().width(300).height(300));
     myImage.delivery(format(auto()));
 
     // Create a new Image instance and set its src to preload it

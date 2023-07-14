@@ -75,7 +75,7 @@ const CartItem = ({
       key={`${cartItem.product_ID}-${index}`}
       className="border-b-2 border-grey"
     >
-      <td className="flex flew-row py-6 px-2 w-48 h-56 md:w-64 md:h-64 ">
+      <td className="flex flew-row py-6 px-2 w-32 h-32 md:w-48 md:h-48 ">
         <ItemImage imageUrl={cartItem.image_url} />
       </td>
       <td>
@@ -94,23 +94,22 @@ const CartItem = ({
           {cartItem.brand}
         </p>
         <div className="block lg:hidden">{cartItem.price}</div>
-        <div className="justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2">
+        <div className="justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2 w-28">
           <button
-            className="flex items-center justify-center "
+            className="flex items-center justify-center w-8 "
             onClick={() => minusButtonHandler(cartItem.product_id)}
             aria-label="Decrease quantity"
           >
             <FiMinus size={16} />
           </button>
-          <p className="border-l-2 border-r-2 w-8 text-center border-gray-400">
+          <p className="text-center px-1 w-10 border-gray-500">
             {cartItem.quantity}
           </p>
           <button
-            className="flex items-center justify-center"
+            className="flex items-center justify-center w-8"
             onClick={() => plusButtonHandler(cartItem.product_id)}
             aria-label="Increase quantity"
           >
-            <span className="sr-only">Increase quantity</span>
             <FiPlus size={16} />
           </button>
         </div>
@@ -120,19 +119,19 @@ const CartItem = ({
       </td>
       <td className="hidden lg:table-cell">${cartItem.price}</td>
       <td>
-        <div className="justify-evenly hidden md:flex flex-row">
+        <div className="justify-evenly hidden md:flex flex-row rounded-md border-2 border-gray-500">
           <button
-            className="flex items-center justify-center w-8 border-2 rounded-tl-md rounded-bl-md border-gray-500"
+            className="flex items-center justify-center w-8 "
             onClick={() => minusButtonHandler(cartItem.product_id)}
             aria-label="Decrease quantity"
           >
             <FiMinus size={16} />
           </button>
-          <p className="text-center px-1 w-10 border-t-2 border-b-2 border-gray-500">
+          <p className="text-center px-1 w-10 border-gray-500">
             {cartItem.quantity}
           </p>
           <button
-            className="flex items-center justify-center w-8 border-2 border-gray-500 rounded-tr-md rounded-br-md"
+            className="flex items-center justify-center w-8"
             onClick={() => plusButtonHandler(cartItem.product_id)}
             aria-label="Increase quantity"
           >
