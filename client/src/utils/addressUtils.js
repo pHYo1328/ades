@@ -1,16 +1,22 @@
 export const validateAddress = async (address, countryCode) => {
   const apiKey = process.env.REACT_APP_GOOGLE_MAP_API;
   const encodedAddress = encodeURIComponent(address);
-  const encodedCountryCode = encodeURIComponent(countryCode);
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&components=country:${encodedCountryCode}&key=${apiKey}`;
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`;
+
+  if (countryCode) {
+    const encodedCountryCode = encodeURIComponent(countryCode);
+    url += `&components=country:${encodedCountryCode}`;
+  }
 
   try {
     const response = await fetch(url);
     const data = await response.json();
     if (data.status === 'OK' && data.results.length > 0) {
-      return data.results.every(result => {
+      return data.results.every((result) => {
         const locationType = result.geometry.location_type;
-        return !(locationType === 'ROOFTOP' || locationType === 'RANGE_INTERPOLATED');
+        return !(
+          locationType === 'ROOFTOP' || locationType === 'RANGE_INTERPOLATED'
+        );
       });
     } else {
       // Address is invalid or not found

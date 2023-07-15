@@ -15,22 +15,29 @@ const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
     postalCode: '',
   };
   useEffect(() => {
+    window.initMap = function () {
+      // Your initialization logic here
+      setScriptLoaded(true);
+    };
+
     const loadScript = () => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API}&libraries=places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API}&libraries=places&callback=initMap`;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
-      script.onload = () => {
-        setScriptLoaded(true);
-      };
     };
 
     if (!window.google) {
       loadScript();
     } else {
-      setScriptLoaded(true);
+      window.initMap();
     }
+
+    // Cleanup function
+    return () => {
+      window.initMap = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -119,10 +126,9 @@ const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
       addressLine1: event.target.value,
     });
   };
-  console.log(isInvalid);
   return (
     <input
-      type='text'
+      type="text"
       ref={inputRef}
       onChange={handleInputChange}
       value={address.addressLine1}

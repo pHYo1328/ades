@@ -44,7 +44,7 @@ export default function Statistics(props) {
           <Loading />
         </div>
       )}
-            {/* <RevenueChart /> */}
+      {/* <RevenueChart /> */}
     </div>
   );
 }

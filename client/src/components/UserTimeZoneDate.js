@@ -15,9 +15,7 @@ const UserTimezoneDate = ({ date }) => {
   const userTimeZone = getUserTimeZone();
 
   return (
-    <p className="px-3">
-      {format(utcToZonedTime(date, userTimeZone), 'MMM d, yyyy h:mma')}
-    </p>
+    <p>{format(utcToZonedTime(date, userTimeZone), 'MMM d, yyyy h:mma')}</p>
   );
 };
 

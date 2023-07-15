@@ -26,19 +26,15 @@ const Cart = () => {
   };
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
     if (!roles) {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       // alert("you're not admin");
-      console.log('Redirecting to homepage-admin');
       navigate('/login');
     } else {
       const isCustomer = roles.includes('customer');
-      console.log(isCustomer);
       if (!isCustomer) {
         // User does not have the required role(s), redirect them to the homepage or show an error message
         // alert("you're not admin");
-        console.log('Redirecting to homepage-admin');
         navigate('/login');
       }
     }

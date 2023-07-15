@@ -23,6 +23,7 @@ export const CartTable = ({
     } else if (hasCartData) {
       return cartProductData.map((cartItem, index) => (
         <CartItem
+          key={index}
           cartItem={cartItem}
           index={index}
           cartData={cartData}
@@ -43,16 +44,15 @@ export const CartTable = ({
   };
 
   return (
-    <table className="border-collapse w-full text-base md:text-lg border-t-2  border-black font-breezeRegular">
+    <table className="table-auto border-collapse w-full text-base md:text-lg border-t-2  border-black font-breezeRegular">
       <thead className=" text-base border-b-2 md:text-xl">
         <tr>
-          <th className="w-1/8">My Cart</th>
-          <th className="w-1/4">Product</th>
-          <th className="hidden lg:table-cell w-1/6">Price</th>
-          <th className="lg:w-1/12 text-center hidden sm:table-cell">
-            Quantity
-          </th>
-          <th className="lg:w-1/5 text-center hidden sm:table-cell">Total</th>
+          <th className="md:w-44 w-40">My Cart</th>
+          <th className="md:w-44 w-24">Product</th>
+          <th className="w-32 hidden lg:table-cell">Price</th>
+          <th className="lg:w-32 text-center hidden md:table-cell">Quantity</th>
+          <th className="lg:w-36 text-center hidden md:table-cell">Total</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>{renderTableContent()}</tbody>

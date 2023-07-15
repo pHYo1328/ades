@@ -574,8 +574,8 @@ exports.processGetTotalRevenue = async (req, res, next) => {
     const revenues = revenueData.map((revenue) => ({
       year: revenue.year,
       month: revenue.month,
-      total: revenue.total
-    }))
+      total: revenue.total,
+    }));
 
     console.log(chalk.green(revenues));
 
