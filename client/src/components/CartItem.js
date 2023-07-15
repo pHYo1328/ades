@@ -75,8 +75,8 @@ const CartItem = ({
       key={`${cartItem.product_ID}-${index}`}
       className="border-b-2 border-grey"
     >
-      <td className="flex flew-row py-6 px-2 w-32 h-32 md:w-48 md:h-48 ">
-        <ItemImage imageUrl={cartItem.image_url} />
+      <td className="py-6 px-2">
+        <ItemImage imageUrl={cartItem.image_url} width={32} height={32} />
       </td>
       <td>
         <Link

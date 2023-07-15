@@ -12,7 +12,7 @@ const cld = new Cloudinary({
   },
 });
 
-const ItemImage = ({ imageUrl }) => {
+const ItemImage = ({ imageUrl, width = 24, height = 24 }) => {
   const [cldImage, setCldImage] = useState(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ItemImage = ({ imageUrl }) => {
   }, [imageUrl]);
 
   return (
-    <div className="aspect-square rounded">
+    <div className={`aspect-square rounded w-${width} h-${height}`}>
       {cldImage && (
         <AdvancedImage
           cldImg={cldImage}

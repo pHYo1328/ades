@@ -1,8 +1,12 @@
 export const validateAddress = async (address, countryCode) => {
   const apiKey = process.env.REACT_APP_GOOGLE_MAP_API;
   const encodedAddress = encodeURIComponent(address);
-  const encodedCountryCode = encodeURIComponent(countryCode);
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&components=country:${encodedCountryCode}&key=${apiKey}`;
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`;
+
+  if (countryCode) {
+    const encodedCountryCode = encodeURIComponent(countryCode);
+    url += `&components=country:${encodedCountryCode}`;
+  }
 
   try {
     const response = await fetch(url);
