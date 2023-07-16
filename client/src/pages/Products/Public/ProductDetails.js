@@ -13,7 +13,6 @@ import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
 import ProductList from '../../../components/Products/Product/ProductList';
-import outOfStockImage from '../../../assets/images/out-of-stock.png';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
