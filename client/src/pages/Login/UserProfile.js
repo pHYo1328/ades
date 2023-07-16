@@ -135,11 +135,27 @@ const UserProfile = () => {
                   User Information
                 </h2>
                 <div className="space-y-6">
-                  <AdvancedImage
-                    key={image}
-                    cldImg={cld.image(user.image_url)}
-                    className="h-50 w-50"
-                  />
+                  
+                <div className="flex flex-col items-center">
+                  <div className="relative rounded-full h-48 w-48 overflow-hidden">
+                    <AdvancedImage
+                      key={image}
+                      cldImg={cld.image(user.image_url)}
+                      className="object-cover h-full w-full"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full h-full opacity-0 transition-opacity duration-300 bg-gray-500 hover:opacity-100">
+                      <ProfileWidget onImageChange={handleImageChange} />
+                    </div>
+                  </div>
+
+                  <button
+                    className="mt-5 px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
+                    onClick={updateProfileImage}
+                  >
+                    Save Profile Image
+                  </button>
+                </div>
+
                   <div className="flex items-center">
                     <span className="font-semibold w-28 text-lg">
                       Username:
@@ -216,14 +232,7 @@ const UserProfile = () => {
                   Save
                 </button>
 
-                <ProfileWidget onImageChange={handleImageChange} />
-
-                <button
-                  className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
-                  onClick={updateProfileImage}
-                >
-                  Save Profile Image
-                </button>
+                
               </div>
             )}
           </div>
