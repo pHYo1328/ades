@@ -4,8 +4,6 @@ import { AdvancedImage, preload } from '@cloudinary/react';
 import { thumbnail, scale, fill } from '@cloudinary/url-gen/actions/resize';
 import { format } from '@cloudinary/base/actions/delivery';
 import { auto } from '@cloudinary/base/qualifiers/format';
-import { focusOn } from '@cloudinary/url-gen/qualifiers/gravity';
-import { FocusOn } from '@cloudinary/url-gen/qualifiers/focusOn';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',

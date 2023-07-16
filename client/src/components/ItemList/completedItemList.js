@@ -5,7 +5,7 @@ import { AdvancedImage } from '@cloudinary/react';
 import { FaClipboard, FaWallet } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { format, utcToZonedTime } from 'date-fns-tz';
-import { RiTruckLine } from 'react-icons/ri';
+import { RiTruckLine,RiCheckboxCircleLine,RiTruckFill } from 'react-icons/ri';
 import UserTimezoneDate from '../UserTimeZoneDate';
 const cld = new Cloudinary({
   cloud: {
@@ -13,7 +13,7 @@ const cld = new Cloudinary({
   },
 });
 
-const CompletedItemList = ({ items, customerID, renderRating }) => {
+const CompletedItemList = ({ items, customerID, renderRating,orderStatus }) => {
   const [showRatingForm, setShowRatingForm] = useState([]);
   const [ratingComment, setRatingComment] = useState([]);
   const [rating, setRating] = useState([]);
@@ -84,17 +84,47 @@ const CompletedItemList = ({ items, customerID, renderRating }) => {
   };
   if (items.length === 0) {
     return (
+      <div className='p-8'>
+        <h2 className="mx-4 my-6 font-breezeBold font-bold text-3xl md:text-4xl flex flex-row">
+        {orderStatus === "delivered" ? (
+          <>
+            Orders History
+            <RiCheckboxCircleLine className="sm:ml-3 animate-bounce text-green-600" />
+          </>
+        ) : (
+          <>
+            Orders delivering
+            <RiTruckFill className="sm:ml-3 animate-car-move text-cyan-500 " />
+          </>
+        )}
+      </h2>
       <div className="flex items-center justify-center align-middle py-5">
         <h2>
           No Items {renderRating ? `delivered to you` : `is delivering to you`}
         </h2>
       </div>
+      </div>
     );
   }
 
   return (
-    <ul>
-      {items.map((item, index) => (
+    <ul className='p-8'>
+      <h2 className="mx-4 my-6 font-breezeBold font-bold text-3xl md:text-4xl flex flex-row">
+        {orderStatus === "delivered" ? (
+          <>
+            Orders History
+            <RiCheckboxCircleLine className="sm:ml-3 animate-bounce text-green-600" />
+          </>
+        ) : (
+          <>
+            Orders delivering
+            <RiTruckFill className="sm:ml-3 animate-car-move text-cyan-500 " />
+          </>
+        )}
+      </h2>
+      {items
+      .sort((a, b) => new Date(b.order_date) - new Date(a.order_date))
+      .map((item, index) => (
         <li key={index}>
           <div className="mx-4 my-3 shadow-md shadow-gray-900 text-lg p-6 rounded-lg">
             <p className="flex flex-row items-center text-sm sm:text-lg space-x-1">
