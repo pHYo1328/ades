@@ -78,7 +78,7 @@ const CartItem = ({
       <td className="py-6 px-2">
         <ItemImage imageUrl={cartItem.image_url} width={32} height={32} />
       </td>
-      <td className='py-2'>
+      <td className="py-2">
         <Link
           to={`/product/${cartItem.product_id}`}
           onClick={() => window.scrollTo(0, 0)}

@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
-import {
-  FaEdit,
-  FaClipboard,
-  FaWallet,
-  FaMapMarkedAlt,
-  FaRegCalendarAlt,
-} from 'react-icons/fa';
+import { FaClipboard, FaMapMarkedAlt, FaRegCalendarAlt } from 'react-icons/fa';
 import { RiTruckLine } from 'react-icons/ri';
-import api from '../../index';
 import { useNavigate } from 'react-router-dom';
 import UserTimezoneDate from '../UserTimeZoneDate';
-
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { validateAddress } from '../../utils/addressUtils';
+import { SaveButton, EditAddressButton, PayButton } from '../ButtonsComponents';
 const OrderListHeader = ({
   item,
   renderButton,
@@ -28,80 +18,9 @@ const OrderListHeader = ({
   const [editedShippingAddress, setEditedShippingAddress] = useState('');
   const [isInvalidAddress, setIsInvalidAddress] = useState(false);
   const navigate = useNavigate();
-  const handleEditClick = (index) => {
-    console.log(clearedItems);
-    setEditingIndex(index);
-    setEditedShippingAddress(clearedItems[index].shipping_address);
-  };
-  const handleSaveClick = (orderId) => {
-    validateAddress(editedShippingAddress).then(async (result) => {
-      setIsInvalidAddress(result);
-      console.log(result);
-      if (!result) {
-        const response = await api.put(
-          `/api/order/updateShippingDetails/${customerID}`,
-          {
-            orderId,
-            shippingAddr: editedShippingAddress,
-          }
-        );
-
-        if (response.status === 200) {
-          const updatedItemList = items.map((item) =>
-            item.order_id === orderId
-              ? { ...item, shipping_address: editedShippingAddress }
-              : item
-          );
-
-          setItems(updatedItemList);
-          setEditingIndex(-1);
-        }
-      } else {
-        return;
-      }
-    });
-  };
   // same concept with inventory checking in cart
   // fetch all items according to order list and check quantity
   // if one item cannot make it, must cancel that order item
-  const payButtonHandler = async (orderId) => {
-    let isStockAvailable = true;
-    const products = items.filter((item) => item.order_id === orderId);
-    const productIds = products.map((item) => item.product_id);
-    console.log(productIds);
-    const productIdsWithQuantity = products.map((item) => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-    }));
-    api
-      .get(`/api/inventory/checkQuantity?productIDs=${productIds.join(',')}`)
-      .then((response) => {
-        response.data.data.forEach((inventory) => {
-          const quantityIndex = productIdsWithQuantity.findIndex(
-            (item) => item.productId == inventory.product_id
-          );
-          if (
-            quantityIndex !== -1 &&
-            inventory.quantity < productIdsWithQuantity[quantityIndex].quantity
-          ) {
-            isStockAvailable = false;
-          }
-
-          if (!isStockAvailable) {
-            toast.warn(
-              'Sorry,items in your orders are no more stock. Please cancel',
-              {
-                autoClose: 3000,
-                pauseOnHover: true,
-                style: { fontSize: '16px' },
-              }
-            );
-          } else {
-            navigate(`/payment/${orderId}`);
-          }
-        });
-      });
-  };
   return (
     <div className="ml-1 mr-1 md:ml-6 md:mr-6 md:mt-6 md:mb-6 pl-2 pr-2 md:pl-6 md:pr-6 py-3 bg-gray-100 rounded-md">
       <div className="flex flex-row items-center">
@@ -179,34 +98,31 @@ const OrderListHeader = ({
             </tr>
           </tbody>
         </table>
-        <div className=" min-w-max hidden lg:flex">
+        <div className=" hidden lg:flex">
           {editingIndex === index ? (
-            <button
-              onClick={() => handleSaveClick(item.order_id)}
-              className="bg-green-700 px-4 py-2 rounded text-white"
-            >
-              Save
-            </button>
+            <SaveButton
+              item={item}
+              editedShippingAddress={editedShippingAddress}
+              setIsInvalidAddress={setIsInvalidAddress}
+              items={items}
+              setItems={setItems}
+              setEditingIndex={setEditingIndex}
+              customerID={customerID}
+            />
           ) : (
-            <>
-              <button
-                onClick={() => handleEditClick(index)}
-                className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center text-sm mr-3"
-              >
-                <FaEdit></FaEdit>Edit Address
-              </button>
-              {renderButton && (
-                <button
-                  onClick={() => {
-                    payButtonHandler(item.order_id);
-                  }}
-                  className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center text-sm"
-                >
-                  <FaWallet className="mr-3" />
-                  Pay
-                </button>
-              )}
-            </>
+            typeof item.completed_at !== 'undefined' && (
+              <>
+                <EditAddressButton
+                  index={index}
+                  setEditingIndex={setEditingIndex}
+                  clearedItems={clearedItems}
+                  setEditedShippingAddress={setEditedShippingAddress}
+                />
+                {renderButton && (
+                  <PayButton items={items} item={item} navigate={navigate} />
+                )}
+              </>
+            )
           )}
         </div>
       </div>
@@ -271,32 +187,27 @@ const OrderListHeader = ({
             <p>{item.shipping_address}</p>
           )}
         </div>
-        <div className="flex flex-row space-x-4 py-4">
+        <div className="flex flex-row py-4">
           {editingIndex === index ? (
-            <button
-              onClick={() => handleSaveClick(item.order_id)}
-              className="bg-green-700 px-4 py-2 rounded text-white w-full"
-            >
-              Save
-            </button>
+            <SaveButton
+              item={item}
+              editedShippingAddress={editedShippingAddress}
+              setIsInvalidAddress={setIsInvalidAddress}
+              items={items}
+              setItems={setItems}
+              setEditingIndex={setEditingIndex}
+            />
           ) : (
             <>
-              <button
-                onClick={() => handleEditClick(index)}
-                className="bg-gray-600 hover:bg-gray-800 h-10 px-4 rounded text-white flex flex-row items-center text-sm w-full"
-              >
-                <FaEdit></FaEdit>Edit Address
-              </button>
+              <EditAddressButton
+                index={index}
+                setEditingIndex={setEditingIndex}
+                clearedItems={clearedItems}
+                setEditedShippingAddress={setEditedShippingAddress}
+              />
+
               {renderButton && (
-                <button
-                  onClick={() => {
-                    payButtonHandler(item.order_id);
-                  }}
-                  className="bg-green-600 h-10 px-4 hover:bg-green-800 text-white rounded flex flex-row items-center text-sm w-full"
-                >
-                  <FaWallet className="mr-3" />
-                  Pay
-                </button>
+                <PayButton items={items} item={item} navigate={navigate} />
               )}
             </>
           )}

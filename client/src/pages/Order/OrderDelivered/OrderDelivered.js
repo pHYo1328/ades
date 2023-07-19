@@ -57,7 +57,7 @@ const OrderDelivered = () => {
       items={orderItems}
       customerID={userId}
       renderRating={true}
-      orderStatus={"delivered"}
+      orderStatus={'delivered'}
     ></CompletedItemList>
   );
 };

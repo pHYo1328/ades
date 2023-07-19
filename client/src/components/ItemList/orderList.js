@@ -233,8 +233,8 @@ const OrderList = ({
                           <td className="py-4">
                             <ItemImage imageUrl={orderItem.image_url} />
                           </td>
-                          <td className="text-left ">
-                            <b className="inline-block w-24 sm:w-60 overflow-auto whitespace-normal break-words ">
+                          <td className="text-left px-1">
+                            <b className="inline-block w-24 sm:w-60 overflow-auto whitespace-normal break-words">
                               {orderItem.product_name}
                             </b>
                             <p className="block md:hidden">
@@ -265,7 +265,7 @@ const OrderList = ({
                                   orderItem.quantity
                                 )
                               }
-                              className="my-3 text-white bg-red-600 px-3 py-2 rounded text-sm sm:text-base hover:bg-red-800"
+                              className="my-3 text-white bg-red-600 px-2 py-2 rounded text-sm sm:text-base hover:bg-red-800"
                             >
                               cancel
                             </button>
