@@ -109,7 +109,7 @@ exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
     console.log(
       chalk.yellow(
         'Inspect result variable from getOrderDetailsByOrderStatus service',
-        result
+        JSON.stringify(result[0])
       )
     );
     return res.status(200).send({

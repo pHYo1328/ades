@@ -94,6 +94,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     select orders.order_id,
                     product.product_id,
                     product.product_name,
+                    product.description,
                     MAX(product_image.image_url) as image_url,
                     product.price, 
                     order_items.quantity ,

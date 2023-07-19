@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Rating = ({ productID, customerID, index }) => {
-  console.log(productID);
-  const [showRatingForm, setShowRatingForm] = useState(false);
+const Rating = ({
+  productID,
+  customerID,
+  showRatingForm,
+  setShowRatingForm,
+  index,
+}) => {
   const [ratingComment, setRatingComment] = useState('');
   const [rating, setRating] = useState(0);
   const [ratingData, setRatingData] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-
-  const handleRateItemClick = () => {
-    setShowRatingForm(!showRatingForm);
-  };
-
   const handleRatingClick = (ratingValue) => {
     setRating(ratingValue);
   };
@@ -47,41 +46,48 @@ const Rating = ({ productID, customerID, index }) => {
 
   return (
     <>
-      <button
-        onClick={handleRateItemClick}
-        className="py-2 px-4 rounded border-2 border-green-600 hover:border-green-800"
-      >
-        Rate this item
-      </button>
       {showRatingForm && (
-        <div className="flex flex-col mt-2 items-center">
+        <div className="flex flex-col mt-2 items-center ">
           <div className="flex ml-2">
             {Array.from({ length: 5 }, (_, i) => (
               <span
                 key={i}
                 className={`${
                   i < rating ? 'text-yellow-500' : 'text-gray-400'
-                } mr-1`}
+                } text-2xl mr-1`}
                 onClick={() => handleRatingClick(i + 1)}
               >
                 &#9733;
               </span>
             ))}
           </div>
-          <form onSubmit={handleRatingSubmit} className="flex flex-col">
-            <input
-              type="textarea"
+          <form
+            onSubmit={handleRatingSubmit}
+            className="flex flex-col sm:w-[500px] "
+          >
+            <textarea
               value={ratingComment}
               onChange={handleRatingCommentChange}
-              placeholder="Enter rating comment"
-              className="border border-gray-300 rounded px-2 py-1 mt-2"
+              placeholder="please provide feedback comment here"
+              className="border border-gray-300 rounded px-2 py-1 mt-2 w-full h-32 sm:h-56"
             />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white rounded px-3 py-1 mt-2"
-            >
-              Submit
-            </button>
+            <div className="space-x-4 flex justify-center items-center">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white rounded px-3 py-1 mt-2"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  setRatingComment('');
+                  setShowRatingForm(false);
+                }}
+                className="bg-red-500 text-white rounded px-3 py-1 mt-2"
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       )}

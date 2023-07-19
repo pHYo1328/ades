@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CompletedItemList from '../../../components/ItemList/completedItemList';
+import CompletedItemList from '../../../components/completedItemList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
@@ -9,19 +9,16 @@ const OrderDelivered = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
+
     if (!roles) {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       // alert("you're not admin");
-      console.log('Redirecting to homepage-admin');
       navigate('/login');
     } else {
       const isCustomer = roles.includes('customer');
-      console.log(isCustomer);
       if (!isCustomer) {
         // User does not have the required role(s), redirect them to the homepage or show an error message
         // alert("you're not admin");
-        console.log('Redirecting to homepage-admin');
         navigate('/login');
       }
     }
@@ -33,7 +30,6 @@ const OrderDelivered = () => {
       const response = await api.get(
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=delivered`
       );
-      console.log(response);
       setOrderItems(response.data.data);
       setIsLoading(false);
     };
@@ -63,25 +59,3 @@ const OrderDelivered = () => {
 };
 
 export default OrderDelivered;
-
-{
-  /* <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
-      <div className="flex h-screen w-screen m-3">
-        <div className="bg-gray-800 text-white ml-10 w-64 flex-none rounded-tl-lg rounded-bl-lg">
-          <nav className="p-4">
-            <ul className="space-y-2">
-              <li className="py-2">
-                <a href="/user-profile" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Profile Page</a>
-              </li>
-              <li className="py-2">
-                <a href="#" className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700">Order History</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-        
-
-      </div>
-</div> */
-}
