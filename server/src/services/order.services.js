@@ -99,6 +99,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     order_items.quantity ,
                     orders.shipping_start_at,
                     orders.shipping_address,
+                    orders.order_date,
                     shipping.shipping_method,
                     orders.completed_at,
                     payment.payment_date
@@ -193,7 +194,7 @@ module.exports.updateOrderStatus = async (data) => {
     );
     const dataRequired = [orderStatus.key, orderIDs];
     let result;
-    // if order_status is delivering update the status and shippig time 
+    // if order_status is delivering update the status and shippig time
     if (orderStatus === OrderStatus.ORDER_DELIVERING) {
       console.log(
         chalk.blue('Executing query >>>>>>'),

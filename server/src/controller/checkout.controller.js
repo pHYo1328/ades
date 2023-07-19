@@ -444,7 +444,15 @@ exports.createWebhooks = async (req, res) => {
     data = event.data.object;
     eventType = event.type;
   } else {
-    data = req.body.data.object;
+    console.log('req.body:', req.body);
+
+    if (req.body && req.body.data) {
+      data = req.body.data.object;
+    } else {
+      console.log('Invalid request body');
+      res.status(400).send('Invalid request body');
+      return;
+    }
     eventType = req.body.type;
     console.log(chalk.yellow('Data: ', data));
     console.log(chalk.yellow('Event Type: ', eventType));

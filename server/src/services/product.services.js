@@ -16,6 +16,8 @@ module.exports.getProductByID = async (productID) => {
           p.price,
           c.category_name,
           b.brand_name,
+          c.category_id, 
+          b.brand_id, 
           COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
           COUNT(r.rating_score) AS rating_count
       FROM
@@ -176,23 +178,32 @@ module.exports.getProductsByCategoryID = async (categoryID) => {
   console.log(chalk.blue(categoryID));
   try {
     const productsDataQuery = `
-      SELECT 
-        p.product_id, 
-        p.product_name, 
-        p.description, 
-        p.price, 
-        c.category_name, 
-        b.brand_name, 
-        MAX(p_i.image_url) as image_url
-      FROM 
-        category c 
-        INNER JOIN product p ON p.category_id = c.category_id 
-        INNER JOIN brand b ON b.brand_id = p.brand_id
-        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-      WHERE
-        c.category_id = ?
-      GROUP BY
-	      p.product_id
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
+    INNER JOIN brand b ON b.brand_id = p.brand_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+    WHERE c.category_id=?
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name;
 
       `;
     const results = await pool.query(productsDataQuery, [categoryID]);
@@ -209,23 +220,32 @@ module.exports.getProductsByBrandID = async (brandID) => {
   console.log(chalk.blue('getProductsByBrandID is called'));
   try {
     const productsDataQuery = `
-      SELECT
-	p.product_id, 
-    p.product_name, 
-    p.description, 
-    p.price, 
-    c.category_name, 
-    b.brand_name, 
-	MAX(p_i.image_url) as image_url
-FROM 
-	category c 
-    INNER JOIN product p ON p.category_id = c.category_id 
+    SELECT
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name,
+    b.brand_name,
+    MAX(p_i.image_url) as image_url,
+    COALESCE(ROUND(AVG(r.rating_score), 2), 0) AS average_rating,
+    COUNT(r.rating_score) AS rating_count
+  FROM
+    product p
+    INNER JOIN category c ON c.category_id = p.category_id
     INNER JOIN brand b ON b.brand_id = p.brand_id
-    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
-WHERE
-	b.brand_id = ?
-GROUP BY
-	p.product_id
+    LEFT JOIN rating r ON r.product_id = p.product_id
+    LEFT JOIN inventory i ON i.product_id = p.product_id
+    LEFT JOIN product_image p_i ON p_i.product_id = p.product_id 
+    WHERE b.brand_id=?
+  GROUP BY
+    i.quantity,
+    p.product_id,
+    p.product_name,
+    p.description,
+    p.price,
+    c.category_name;
       `;
     const results = await pool.query(productsDataQuery, [brandID]);
     console.log(chalk.green(results[0]));
@@ -380,9 +400,8 @@ module.exports.getSearchResults = async (
     if (product_name) {
       searchResultsDataQuery += `
         AND (p.product_name RLIKE ? 
-          OR c.category_name RLIKE ? 
-          OR b.brand_name RLIKE ? 
-          OR p.description RLIKE ?)`;
+          OR c.category_name = ? 
+          OR b.brand_name = ?)`;
       queryInput.push(product_name, product_name, product_name, product_name);
     }
     if (category_id && category_id != 0) {
@@ -438,6 +457,27 @@ module.exports.getStatistics = async () => {
   }
 };
 
+// get total revenue by year and month
+module.exports.getTotalRevenue = async () => {
+  console.log(chalk.blue('getTotalRevenue is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    YEAR(payment_date) AS year,
+      MONTH(payment_date) AS month, 
+      SUM(payment_total) AS total
+    FROM payment 
+    GROUP BY YEAR(payment_date), MONTH(payment_date) 
+    ORDER BY MONTH(payment_date);`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenue: ', error));
+    throw error;
+  }
+};
+
 // get total number of products by brand or category
 module.exports.getTotalNumberOfProducts = async (categoryID, brandID) => {
   console.log(chalk.blue('getTotalNumberOfProducts is called'));
@@ -484,6 +524,43 @@ module.exports.getImagesByProductID = async (productID) => {
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getImagesByProductID: ', error));
+    throw error;
+  }
+};
+
+// get related products
+module.exports.getRelatedProducts = async (productID) => {
+  console.log(chalk.blue('getRelatedProducts is called'));
+  // console.log(chalk.blue(categoryID));
+  try {
+    const productsDataQuery = `
+      SELECT 
+        p.product_id, 
+        p.product_name, 
+        p.description, 
+        p.price, 
+        c.category_name, 
+        b.brand_name, 
+        c.category_id,
+        b.brand_id,
+        MAX(p_i.image_url) as image_url
+      FROM 
+        category c 
+        INNER JOIN product p ON p.category_id = c.category_id 
+        INNER JOIN brand b ON b.brand_id = p.brand_id
+        LEFT JOIN product_image p_i ON p_i.product_id = p.product_id
+      WHERE
+        (c.category_id = p.category_id OR b.brand_id = p.brand_id) AND p.product_id != ?
+      GROUP BY
+	      p.product_id
+      LIMIT 5
+
+      `;
+    const results = await pool.query(productsDataQuery, [productID]);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getRelatedProducts: ', error));
     throw error;
   }
 };
@@ -900,7 +977,7 @@ module.exports.createBrandOrCategory = async (name, type) => {
       error.sqlMessage.includes('Duplicate entry')
     ) {
       console.log(chalk.red('Duplicate entry error:', error.sqlMessage));
-      console.log("thinzar no rizz")
+      console.log('thinzar no rizz');
       return -1;
     }
     // throw error;

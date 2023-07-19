@@ -25,7 +25,7 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        alert("email sent");
+        alert('email sent');
       })
       .catch((error) => {
         console.error(error);
@@ -34,7 +34,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-indigo-950">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-98px)] bg-indigo-950">
       <form
         className="max-w-lg w-full space-y-8 bg-white p-8 rounded-lg shadow-md"
         onSubmit={onHandleSubmit}

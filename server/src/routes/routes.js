@@ -26,7 +26,7 @@ const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 const stripe = require('../config/stripe');
-const { handleWebhooks }  = require('../controller/checkout.controller');
+const { handleWebhooks } = require('../controller/checkout.controller');
 
 //MIDDLEWARES
 const authenticateUser = require('../middlewares/authenticateUser');
@@ -82,6 +82,11 @@ module.exports = (app, router) => {
     '/api/products/rating/:productID',
     productController.processGetAllRatingsByProductID
   );
+  router.get(
+    '/api/products/related/:productID',
+    productController.processGetRelatedProducts
+  );
+  router.get('/api/admin/revenue', productController.processGetTotalRevenue);
 
   // DELETE
   router.delete(
@@ -172,7 +177,7 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processAddCustomerOrder
   );
-  router.post('/api/bookmark', bookmarkController.processAddBookMark);
+  router.post('/api/bookmark/add', bookmarkController.processAddBookMark);
 
   // PUT
   router.put('/api/admin/order', orderController.processUpdateOrderStatus);
@@ -327,7 +332,13 @@ module.exports = (app, router) => {
   router.post('/login-admin', authAdminController.handleLogin);
   router.get('/refresh-admin', refreshTokenAdminController.handleRefreshToken);
   router.put('/logout-admin', logoutAdminController.handleLogout);
-  router.put('/forgot-admin', forgotPasswordAdminController.handleForgotPassword);
+  router.put(
+    '/forgot-admin',
+    forgotPasswordAdminController.handleForgotPassword
+  );
   router.post('/verify-otp-admin', verifyOTPAdminController.verifyOTP);
-  router.post('/verify-email-admin', verificationEmailAdmin.sendForgotPasswordEmail);
+  router.post(
+    '/verify-email-admin',
+    verificationEmailAdmin.sendForgotPasswordEmail
+  );
 };

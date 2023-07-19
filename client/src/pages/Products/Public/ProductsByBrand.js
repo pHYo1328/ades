@@ -1,38 +1,30 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import Product from '../../../components/Products/Product/Product';
-import Loading from '../../../components/Loading/Loading';
+import ProductList from '../../../components/Products/Product/ProductList';
+import Breadcrumb from '../../../components/Breadcrumb';
 
 export default function ProductsByBrand() {
   const [products, setProducts] = useState(null);
   const [brand, setBrand] = useState(null);
+  const [hasResults, setHasResults] = useState(false);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
   const { brandID } = useParams();
 
-  // get all products by brand ID
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/products/brand/${brandID}`)
-      .then((response) => {
-        console.log(response);
-        setProducts(response.data.data);
+    Promise.all([
+      axios.get(`${baseUrl}/api/products/brand/${brandID}`),
+      axios.get(`${baseUrl}/api/brand/${brandID}`),
+    ])
+      .then(([productsResponse, brandResponse]) => {
+        console.log(productsResponse);
+        setProducts(productsResponse.data.data);
+        setHasResults(true);
         console.log(products);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
-  // get the brand name
-  useEffect(() => {
-    axios
-      .get(`${baseUrl}/api/brand/${brandID}`)
-      .then((response) => {
-        console.log(response);
-        setBrand(response.data.data.brand_name);
+        console.log(brandResponse);
+        setBrand(brandResponse.data.data.brand_name);
         console.log(brand);
       })
       .catch((error) => {
@@ -44,30 +36,8 @@ export default function ProductsByBrand() {
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <Link to="/products"><h2 className="text-2xl font-bold tracking-tight text-gray-900 text-left">Products</h2></Link>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                {brand}
-              </li>
-            </ol>
-          </nav>
-
-          {/* Get the products by brand, if they exist */}
-          {products ? (
-            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-x-8">
-              {products.map((product) => (
-                <Product product={product} />
-              ))}
-            </div>
-          ) : (
-            // Loading component (full screen)
-            <div className="flex items-center justify-center h-screen">
-              <Loading />
-            </div>
-          )}
+          <Breadcrumb linkTo={`/products`} main={'Products'} value={brand} />
+          <ProductList hasResults={hasResults} products={products} />
         </div>
       </div>
     </div>

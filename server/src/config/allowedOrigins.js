@@ -9,6 +9,7 @@ const allowedOrigins = [
   'https://techzero-v1-1.onrender.com',
   'https://techzero-v2-1.onrender.com',
   'https://techzero-v2.onrender.com',
+  'https://techzerotest.onrender.com',
 ];
 
 module.exports = allowedOrigins;

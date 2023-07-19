@@ -8,7 +8,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-   useEffect(() => {
+  useEffect(() => {
     const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
     if (isUserSignedIn) {
       navigate('/');
@@ -28,31 +28,30 @@ function Login() {
       password: password,
     };
 
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setErrorMessage('');
+          alert('successful login');
 
-            setErrorMessage('');
-            alert("successful login");
-            
-            navigate('/verify-otp', { state: data });
-          } else {
-            setErrorMessage('Incorrect username or password');
-            alert('Incorrect username or password');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setErrorMessage('An error occurred. Please try again.');
-        });
-    };
+          navigate('/verify-otp', { state: data });
+        } else {
+          setErrorMessage('Incorrect username or password');
+          alert('Incorrect username or password');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorMessage('An error occurred. Please try again.');
+      });
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -62,7 +61,7 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center bg-indigo-950 min-h-screen overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-98px)] bg-indigo-950">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">

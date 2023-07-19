@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: 'BreezeSans-Regular';
+  src: url('../src/assets/fonts/BreezeSans-Regular_20150728.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'BreezeSans-Bold';
+  src: url('../src/assets/fonts/BreezeSans-Bold_20150728.ttf')
+    format('truetype');
+}
