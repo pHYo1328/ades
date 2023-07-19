@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import api from '../../index';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
@@ -34,9 +35,6 @@ function Payment() {
         setStripePromise(loadStripe(stripe_publishable_key));
         setPayments(paymentData);
         setClientSecret(clientSecret);
-
-        // Call the webhook endpoint
-        await axios.post(`${baseUrl}/webhook`, {});
       } catch (error) {
         console.error(error);
       }
