@@ -194,6 +194,56 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
+  // //Carolyn
+
+  // router.get(
+  //   '/api/payment/:orderID',
+  //   // verifyAccessToken.verifyToken,
+  //   paymentController.processGetPaymentByID
+  // );
+
+  // router.get(
+  //   '/api/paymentTotal/:orderID',
+  //   //verifyAccessToken.verifyToken,
+  //   paymentController.processGetPaymentTotal
+  // );
+
+  // router.get(
+  //   '/api/idAndAmount/:productID',
+  //   //verifyAccessToken.verifyToken,
+  //   paymentController.processGetIDAndAmount
+  // );
+
+  // router.get('/config', checkoutController.getConfig);
+
+  // router.post(
+  //   '/createPaymentIntent/:orderID',
+  //   checkoutController.createPaymentIntent
+  // );
+  
+
+  // //inserting data from stripe to back_end
+  //   router.post(
+  //   '/webhook',
+  //   bodyParser.raw({ type: 'application/json' }),
+  //   checkoutController.createWebhooks
+  // ),
+
+  
+
+  //   router.get(
+  //     '/api/paymentByStatus/:orderID',
+  //     // verifyAccessToken.verifyToken,
+  //     paymentController.processGetPaymentByStatus
+  //   );
+
+  // router.post('/processRefund/:orderID', checkoutController.processRefund);
+
+  // router.post(
+  //   '/processPartialRefund/:productID',
+  //   checkoutController.processPartialRefund
+  // );
+
   //Carolyn
 
   router.get(
@@ -220,42 +270,27 @@ module.exports = (app, router) => {
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
   );
-  
-  // router.post(
-  //   '/handleChargeSucceeded',
-  //   checkoutController.handleChargeSucceeded
-  // );  
 
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
-    bodyParser.json({ type: 'application/json' }),
-    async (req, res) => {
-      const createWebhookEndpoint = async () => {
-        const endpoint = await stripe.webhookEndpoints.create({
-          url: 'https://techzero-v3-1.onrender.com/webhook',
-          enabled_events: ['charge.refunded', 'charge.succeeded'],
-        });
-        console.log('Webhook endpoint created:', endpoint);
-      };
-  
-      await createWebhookEndpoint();
-      await handleWebhooks(req, res);
-    }
+    bodyParser.raw({ type: 'application/json' }),
+    checkoutController.createWebhooks
+  ),
+
+  router.get(
+    '/api/paymentByStatus/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByStatus
   );
 
-    router.get(
-      '/api/paymentByStatus/:orderID',
-      // verifyAccessToken.verifyToken,
-      paymentController.processGetPaymentByStatus
-    );
-
-  router.post('/processRefund/:orderID', checkoutController.processRefund);
+    router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
     checkoutController.processPartialRefund
   );
+
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
