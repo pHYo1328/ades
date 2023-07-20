@@ -425,30 +425,30 @@ let endpointSecret;
 
 //creating webhook for getting data inside inside database
 exports.createWebhooks = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+  // const sig = req.headers['stripe-signature'];
   let data;
   let eventType;
 
-  if (endpointSecret) {
-    let event;
-    console.log(chalk.yellow(sig));
-    try {
-      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-      console.log('Webhook verified');
-      res.status(200).end();
-    } catch (err) {
-      console.log(`Webhook Error: ${err.message}`);
-      res.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-    data = event.data.object;
-    eventType = event.type;
-  } else {
+  // if (endpointSecret) {
+  //   let event;
+  //   console.log(chalk.yellow(sig));
+  //   try {
+  //     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  //     console.log('Webhook verified');
+  //     res.status(200).end();
+  //   } catch (err) {
+  //     console.log(`Webhook Error: ${err.message}`);
+  //     res.status(400).send(`Webhook Error: ${err.message}`);
+  //     return;
+  //   }
+  //   data = event.data.object;
+  //   eventType = event.type;
+  // } else {
     data = req.body.data.object;
     eventType = req.body.type;
     console.log(chalk.yellow('Data: ', data));
     console.log(chalk.yellow('Event Type: ', eventType));
-  }
+  // }
 
   //handle the event
   if (eventType === 'charge.succeeded') {
