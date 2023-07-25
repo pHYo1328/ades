@@ -43,7 +43,7 @@ export default function PieChart({ labels, counts, backgroundColor, color, title
     };
 
     return (
-        <div className={`${color} rounded-lg p-5 w-25 lg:w-25 md:w-50 sm:w-100`}>
+        <div className={`${color} rounded-lg p-5 w-100`}>
             <h4 className="text-2xl font-bold mb-6 text-center">{title}</h4>
             <Pie options={options} data={data} />
         </div>

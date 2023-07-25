@@ -101,7 +101,7 @@ export default function RevenueChart() {
   };
 
   return (
-    <div className="bg-orange-100 rounded-lg p-5 w-50 lg:w-50 md:w-100 sm:w-100">
+    <div className="bg-orange-100 rounded-lg p-5 w-100">
       <h4 className="text-2xl font-bold mb-6 text-center">Revenue (By Month)</h4>
       <Line options={options} data={data} />
     </div>
