@@ -15,7 +15,7 @@ export default function ProductsByBrand() {
   useEffect(() => {
     Promise.all([
       axios.get(`${baseUrl}/api/products/brand/${brandID}`),
-      axios.get(`${baseUrl}/api/brand/${brandID}`)
+      axios.get(`${baseUrl}/api/brand/${brandID}`),
     ])
       .then(([productsResponse, brandResponse]) => {
         console.log(productsResponse);
@@ -32,12 +32,11 @@ export default function ProductsByBrand() {
       });
   }, []);
 
-
   return (
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <Breadcrumb linkTo={`/products`} main={"Products"} value={brand} />
+          <Breadcrumb linkTo={`/products`} main={'Products'} value={brand} />
           <ProductList hasResults={hasResults} products={products} />
         </div>
       </div>

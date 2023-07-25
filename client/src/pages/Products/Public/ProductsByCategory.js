@@ -15,7 +15,7 @@ export default function ProductsByCategory() {
   useEffect(() => {
     Promise.all([
       axios.get(`${baseUrl}/api/products/category/${categoryID}`),
-      axios.get(`${baseUrl}/api/category/${categoryID}`)
+      axios.get(`${baseUrl}/api/category/${categoryID}`),
     ])
       .then(([productsResponse, categoryResponse]) => {
         console.log(productsResponse);
@@ -36,7 +36,7 @@ export default function ProductsByCategory() {
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <Breadcrumb linkTo={`/products`} main={"Products"} value={category} />
+          <Breadcrumb linkTo={`/products`} main={'Products'} value={category} />
           <ProductList hasResults={hasResults} products={products} />
         </div>
       </div>

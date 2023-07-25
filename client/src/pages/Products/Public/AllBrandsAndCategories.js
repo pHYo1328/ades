@@ -15,7 +15,7 @@ export default function AllBrandsAndCategories() {
   useEffect(() => {
     Promise.all([
       axios.get(`${baseUrl}/api/brands`),
-      axios.get(`${baseUrl}/api/category`)
+      axios.get(`${baseUrl}/api/category`),
     ])
       .then(([brandsResponse, categoriesResponse]) => {
         console.log(brandsResponse);
@@ -90,7 +90,6 @@ export default function AllBrandsAndCategories() {
     <div className="bg-white w-full">
       <div className="bg-white w-11/12 mx-auto text-dark text-left">
         <div className="container mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-
           {/* Brands */}
           <div className="mb-10">
             <h2 className="text-2xl font-bold mb-6">Brands</h2>
@@ -116,7 +115,9 @@ export default function AllBrandsAndCategories() {
                           onClick={() => bookmarkClickHandler(brand.brand_id)}
                         >
                           <i
-                            className={`bi bi-bookmark${bookmarkStatus[brand.brand_id] ? '-fill' : ''}`}
+                            className={`bi bi-bookmark${
+                              bookmarkStatus[brand.brand_id] ? '-fill' : ''
+                            }`}
                           ></i>
                         </button>
                       </div>
@@ -164,10 +165,8 @@ export default function AllBrandsAndCategories() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
-
   );
 }

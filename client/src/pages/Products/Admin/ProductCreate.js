@@ -19,7 +19,6 @@ import UploadMultiple from '../../../components/cloudinary/UploadMultiple';
 import ImageCarousel from '../../../components/ImageCarousel';
 
 export default function ProductCreate() {
-
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [product, setProduct] = useState(null);
 
@@ -229,29 +228,52 @@ export default function ProductCreate() {
           </div>
           <div className="mb-3">
             <InputLabel content="Product Name" />
-            <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} />
+            <TextInput
+              placeholder={'Product Name'}
+              value={productName}
+              func={(e) => setProductName(e.target.value)}
+            />
           </div>
 
           <div className="mb-3">
             <InputLabel content="Description" />
-            <TextArea rows={3} placeholder={"Description"} value={productDescription} func={(e) => setProductDescription(e.target.value)} />
+            <TextArea
+              rows={3}
+              placeholder={'Description'}
+              value={productDescription}
+              func={(e) => setProductDescription(e.target.value)}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
               <InputLabel content="Price" />
-              <NumberInput min={0} placeholder={"Price"} value={productPrice} func={(e) => setProductPrice(e.target.value)} />
+              <NumberInput
+                min={0}
+                placeholder={'Price'}
+                value={productPrice}
+                func={(e) => setProductPrice(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <InputLabel content="Inventory" />
-              <NumberInput min={0} placeholder={"Inventory (Quantity)"} value={productQuantity} func={(e) => setProductQuantity(e.target.value)} />
+              <NumberInput
+                min={0}
+                placeholder={'Inventory (Quantity)'}
+                value={productQuantity}
+                func={(e) => setProductQuantity(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
               <InputLabel content="Category" />
-              <Categories setCategoryID={setProductCategory} all={false} key={categoryKey} />
+              <Categories
+                setCategoryID={setProductCategory}
+                all={false}
+                key={categoryKey}
+              />
             </div>
             <div className="mb-3">
               <InputLabel content="Brand" />
@@ -267,16 +289,13 @@ export default function ProductCreate() {
           {/* </div> */}
 
           <div className="w-12/12 flex justify-center">
+
             <div className="mb-3 w-6/12">
               <Button onClick={handleSubmit} content={"Submit"} />
             </div>
           </div>
 
-          <ToastContainer
-            limit={2}
-            newestOnTop={true}
-            position="top-center"
-          />
+          <ToastContainer limit={2} newestOnTop={true} position="top-center" />
         </form>
       </div >
     </div >

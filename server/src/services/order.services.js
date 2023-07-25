@@ -99,6 +99,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     order_items.quantity ,
                     orders.shipping_start_at,
                     orders.shipping_address,
+                    orders.order_date,
                     shipping.shipping_method,
                     orders.completed_at,
                     payment.payment_date

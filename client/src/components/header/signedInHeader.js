@@ -72,35 +72,31 @@ const SignedInHeader = () => {
                 User
               </button>
               {isUserPanelOpen && (
-                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
-                  <div className="flex flex-row">
-                    <Link to="/orderToPay">
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        <FaWallet className="inline-block mr-2" />
-                        to pay
-                      </button>
-                    </Link>
-                    <Link to="/orderToShip">
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        <FaBox className="inline-block mr-2" />
-                        to ship
-                      </button>
-                    </Link>
-                  </div>
-                  <div className="flex flex-row">
-                    <Link to="/orderToDeliver">
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        <RiTruckLine className="inline-block mr-2" />
-                        to receive
-                      </button>
-                    </Link>
-                    <Link to="/orderDelivered">
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        <RiCheckboxCircleLine className="inline-block mr-2" />
-                        completed
-                      </button>
-                    </Link>
-                  </div>
+                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg origin-top-right">
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <FaWallet className="inline-block mr-2" />
+                      <span className="truncate">to pay</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <FaBox className="inline-block mr-2" />
+                      <span className="truncate">to ship</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <RiTruckLine className="inline-block mr-2" />
+                      <span className="truncate">to receive</span>
+                    </div>
+                  </button>
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    <div className="flex items-center">
+                      <RiCheckboxCircleLine className="inline-block mr-2" />
+                      <span className="truncate">completed</span>
+                    </div>
+                  </button>
                 </div>
               )}
             </div>

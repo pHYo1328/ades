@@ -314,21 +314,44 @@ export default function ProductEditForm() {
 
           <div className="mb-3">
             <InputLabel content="Product Name" />
-            <TextInput placeholder={"Product Name"} value={productName} func={(e) => setProductName(e.target.value)} defaultValue={productData.product_name} />
+            <TextInput
+              placeholder={'Product Name'}
+              value={productName}
+              func={(e) => setProductName(e.target.value)}
+              defaultValue={productData.product_name}
+            />
           </div>
 
           <div className="mb-3">
             <InputLabel content="Description" />
-            <TextArea rows={3} placeholder={"Description"} value={productDescription} func={(e) => setProductDescription(e.target.value)} defaultValue={productData.description} />
+            <TextArea
+              rows={3}
+              placeholder={'Description'}
+              value={productDescription}
+              func={(e) => setProductDescription(e.target.value)}
+              defaultValue={productData.description}
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3">
               <InputLabel content="Price" />
-              <NumberInput min={0} placeholder={"Price"} value={productPrice} func={(e) => setProductPrice(e.target.value)} defaultValue={productData.price} />
+              <NumberInput
+                min={0}
+                placeholder={'Price'}
+                value={productPrice}
+                func={(e) => setProductPrice(e.target.value)}
+                defaultValue={productData.price}
+              />
             </div>
             <div className="mb-3">
               <InputLabel content="Inventory" />
-              <NumberInput min={0} placeholder={"Inventory (Quantity)"} value={productQuantity} func={(e) => setProductQuantity(e.target.value)} defaultValue={productData.quantity} />
+              <NumberInput
+                min={0}
+                placeholder={'Inventory (Quantity)'}
+                value={productQuantity}
+                func={(e) => setProductQuantity(e.target.value)}
+                defaultValue={productData.quantity}
+              />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -359,10 +382,9 @@ export default function ProductEditForm() {
         </div>
       )}
 
-
       <div className="flex justify-between mt-4 space-x-4">
         <div className="mb-3 w-6/12">
-          <Button onClick={handleSubmit} content={"Submit"} />
+          <Button onClick={handleSubmit} content={'Submit'} />
         </div>
         <div className="mb-3 w-6/12">
           <Button onClick={(event) => {
@@ -373,11 +395,7 @@ export default function ProductEditForm() {
         </div>
       </div>
 
-      <ToastContainer
-        limit={2}
-        newestOnTop={true}
-        position="top-center"
-      />
+      <ToastContainer limit={2} newestOnTop={true} position="top-center" />
     </form>
   );
 }
