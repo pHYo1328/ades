@@ -478,6 +478,176 @@ module.exports.getTotalRevenue = async () => {
   }
 };
 
+// get total number of products by category
+module.exports.getTotalNumberOfProductsByCategory = async () => {
+  console.log(chalk.blue('getTotalNumberOfProductsByCategory is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    c.category_name AS 'category',
+      COALESCE(SUM(i.quantity), 0) AS 'count'
+    FROM category c
+    LEFT JOIN product p ON p.category_id = c.category_id
+    INNER JOIN inventory i ON p.product_id = i.product_id
+    GROUP BY c.category_id
+    ORDER BY p.category_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    throw error;
+  }
+};
+
+// get total number of orders by brand
+module.exports.getTotalNumberOfOrdersByBrand = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(SUM(oi.quantity), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN product p ON p.brand_id = b.brand_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    throw error;
+  }
+};
+
+// get total number of bookmarks by brand
+module.exports.getTotalNumberOfBookmarksByBrand = async () => {
+  console.log(chalk.blue('getTotalNumberOfBookmarksByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(COUNT(bm.customer_id), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN bookmark bm ON b.brand_id = bm.brand_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    throw error;
+  }
+};
+
+// get total number of orders by shipping method
+module.exports.getTotalNumberOfOrdersByShipping = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByShipping is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    s.shipping_method AS 'shipping',
+      COALESCE(COUNT(o.shipping_id), 0) AS 'count'
+    FROM shipping s
+    LEFT JOIN orders o ON o.shipping_id = s.shipping_id
+    GROUP BY s.shipping_id
+    ORDER BY s.shipping_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error));
+    throw error;
+  }
+};
+
+// get total number of payments by payment method
+module.exports.getTotalNumberOfPaymentsByMethod = async () => {
+  console.log(chalk.blue('getTotalNumberOfPaymentsByMethod is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    p.payment_method AS 'payment',
+      COALESCE(COUNT(p.payment_id), 0) AS 'count'
+    FROM payment p
+    GROUP BY p.payment_method
+    ORDER BY p.payment_method;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error));
+    throw error;
+  }
+};
+
+// get total number of payments by payment method
+module.exports.getTotalNumberOfOrdersByStatus = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByStatus is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    o.order_status AS 'status',
+      COALESCE(COUNT(o.order_id), 0) AS 'count'
+    FROM orders o
+    GROUP BY o.order_status
+    ORDER BY o.order_status;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error));
+    throw error;
+  }
+};
+
+// get total revenue by brand
+module.exports.getTotalRevenueByBrand = async () => {
+  console.log(chalk.blue('getTotalRevenueByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(SUM(oi.quantity * p.price), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN product p ON p.brand_id = b.brand_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByBrand: ', error));
+    throw error;
+  }
+};
+
+// get total revenue by brand
+module.exports.getTotalRevenueByCategory = async () => {
+  console.log(chalk.blue('getTotalRevenueByCategory is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    c.category_name AS 'category',
+      COALESCE(SUM(oi.quantity * p.price), 0) AS 'count'
+    FROM category c
+    LEFT JOIN product p ON p.category_id = c.category_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY c.category_id
+    ORDER BY c.category_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByCategory: ', error));
+    throw error;
+  }
+};
+
 // get total number of products by brand or category
 module.exports.getTotalNumberOfProducts = async (categoryID, brandID) => {
   console.log(chalk.blue('getTotalNumberOfProducts is called'));

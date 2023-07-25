@@ -87,6 +87,15 @@ module.exports = (app, router) => {
     productController.processGetRelatedProducts
   );
   router.get('/api/admin/revenue', productController.processGetTotalRevenue);
+  router.get('/api/admin/categories/count', productController.processGetTotalNumberOfProductsByCategory)
+  router.get('/api/admin/orders/count', productController.processGetTotalNumberOfOrdersByBrand)
+  router.get('/api/admin/bookmarks/count', productController.processGetTotalNumberOfBookmarksByBrand)
+  router.get('/api/admin/shipping/count', productController.processGetTotalNumberOfOrdersByShipping)
+  router.get('/api/admin/payment/count', productController.processGetTotalNumberOfPaymentsByMethod)
+  router.get('/api/admin/orders/status/count', productController.processGetTotalNumberOfOrdersByStatus)
+  router.get('/api/admin/revenue/brand/count', productController.processGetTotalRevenueByBrand)
+  router.get('/api/admin/revenue/category/count', productController.processGetTotalRevenueByCategory)
+
 
   // DELETE
   router.delete(
@@ -225,7 +234,7 @@ module.exports = (app, router) => {
   //   '/createPaymentIntent/:orderID',
   //   checkoutController.createPaymentIntent
   // );
-  
+
 
   // //inserting data from stripe to back_end
   //   router.post(
@@ -234,7 +243,7 @@ module.exports = (app, router) => {
   //   checkoutController.createWebhooks
   // ),
 
-  
+
 
   //   router.get(
   //     '/api/paymentByStatus/:orderID',
@@ -283,13 +292,13 @@ module.exports = (app, router) => {
     checkoutController.createWebhooks
   ),
 
-  router.get(
-    '/api/paymentByStatus/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByStatus
-  );
+    router.get(
+      '/api/paymentByStatus/:orderID',
+      // verifyAccessToken.verifyToken,
+      paymentController.processGetPaymentByStatus
+    );
 
-    router.post('/processRefund/:orderID', checkoutController.processRefund);
+  router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',

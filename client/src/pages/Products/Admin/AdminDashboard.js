@@ -16,6 +16,14 @@ import Category from '../../../components/Products/Admin/Category';
 import ProductList from '../../../components/Products/Admin/ProductList';
 import Statistics from '../../../components/Products/Admin/Statistics';
 import RevenueChart from '../../../components/Products/Admin/RevenueChart';
+import InventoryByCategoryChart from '../../../components/Products/Admin/InventoryByCategoryChart';
+import OrdersByBrandsChart from '../../../components/Products/Admin/OrdersByBrandChart';
+import BookmarksByBrandChart from '../../../components/Products/Admin/BookmarksByBrandChart';
+import ShippingMethodChart from '../../../components/Products/Admin/ShippingMethodChart';
+import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
+// import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
+import RevenueByBrandChart from '../../../components/Products/Admin/RevenueByBrandChart';
+import RevenueByCategoryChart from '../../../components/Products/Admin/RevenueByCategoryChart';
 
 import OrderAdmin from '../../Order/Admin/OrderAdmin';
 import UserInfo from '../../Login/UserInfo';
@@ -305,8 +313,20 @@ export default function AdminDashboard() {
             {activeTab === 'home' && (
               <div className="w-full">
                 <Statistics statistics={statistics} />
-                <div>
-                  <RevenueChart className="" />
+                <div className='flex gap-y-3 gap-x-3 mt-3'>
+                  <ShippingMethodChart />
+                  <PaymentMethodChart />
+                  {/* <OrderStatusChart /> */}
+                  <RevenueByBrandChart />
+                  <RevenueByCategoryChart />
+                </div>
+                <div className='flex gap-y-3 gap-x-3 mt-3'>
+                  <RevenueChart />
+                  <InventoryByCategoryChart />
+                </div>
+                <div className='flex gap-y-3 gap-x-3 mt-3'>
+                  <OrdersByBrandsChart />
+                  <BookmarksByBrandChart />
                 </div>
               </div>
             )}
