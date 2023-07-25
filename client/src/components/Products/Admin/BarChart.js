@@ -62,7 +62,7 @@ export default function BarChart({ labels, counts, color, title, legend }) {
     };
 
     return (
-        <div className={`${color} rounded-lg p-5 w-50 lg:w-50 md:w-100 sm:w-100`}>
+        <div className={`${color} rounded-lg p-5 w-100`}>
             <h4 className="text-2xl font-bold mb-6 text-center">{title}</h4>
             <Bar options={options} data={data} />
         </div>
