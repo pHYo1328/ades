@@ -149,7 +149,7 @@ OrderActions.propTypes = {
   setShowRatingForm: PropTypes.func.isRequired,
 };
 
-const CompletedItemList = ({
+const CompletedOrderList = ({
   items,
   customerID,
   renderRating,
@@ -205,7 +205,12 @@ const CompletedItemList = ({
 
     setClearedItems(sortedAndCombinedItems);
   }, [items]);
-
+  CompletedOrderList.propTypes = {
+    items: PropTypes.array.isRequired,
+    customerID: PropTypes.string.isRequired,
+    renderRating: PropTypes.bool,
+    orderStatus: PropTypes.string,
+  };
   if (clearedItems.length === 0) {
     return (
       <div className="p-8">
@@ -264,11 +269,6 @@ const CompletedItemList = ({
   );
 };
 
-CompletedItemList.propTypes = {
-  items: PropTypes.array.isRequired,
-  customerID: PropTypes.string.isRequired,
-  renderRating: PropTypes.bool,
-  orderStatus: PropTypes.string,
-};
 
-export default CompletedItemList;
+
+export default CompletedOrderList;
