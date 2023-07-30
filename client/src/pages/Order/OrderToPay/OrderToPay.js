@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import OrderList from '../../../components/OrderList';
+import OrderList from '../../../components/OrderItemList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';

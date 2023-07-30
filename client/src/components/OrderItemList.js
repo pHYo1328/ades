@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import api from '../index';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-const OrderList = ({
+const OrderItemList = ({
   items,
   setItems,
   customerID,
@@ -166,7 +166,7 @@ const OrderList = ({
       </div>
     );
   }
-  OrderList.propTypes = {
+  OrderItemList.propTypes = {
     items: PropTypes.array.isRequired,
     setItems: PropTypes.func.isRequired,
     customerID: PropTypes.string.isRequired,
@@ -297,6 +297,6 @@ const OrderList = ({
     </ul>
   );
 };
-export default OrderList;
+export default OrderItemList;
 
 
