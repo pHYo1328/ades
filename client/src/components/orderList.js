@@ -166,7 +166,13 @@ const OrderList = ({
       </div>
     );
   }
-
+  OrderList.propTypes = {
+    items: PropTypes.array.isRequired,
+    setItems: PropTypes.func.isRequired,
+    customerID: PropTypes.string.isRequired,
+    renderButton: PropTypes.bool,
+    orderStatus: PropTypes.string.isRequired,
+  };
   return (
     <ul className="sm:p-8">
       <h2 className="mx-4 my-6 font-breezeBold font-bold text-3xl md:text-4xl flex flex-row">
@@ -291,12 +297,6 @@ const OrderList = ({
     </ul>
   );
 };
-
-OrderList.propTypes = {
-  items: PropTypes.array.isRequired,
-  setItems: PropTypes.func.isRequired,
-  customerID: PropTypes.string.isRequired,
-  renderButton: PropTypes.bool,
-  orderStatus: PropTypes.string.isRequired,
-};
 export default OrderList;
+
+
