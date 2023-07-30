@@ -1,6 +1,5 @@
+import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import Home from './pages/Login/Home';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/Login/ForgetPassword';
 import Register from './pages/Login/Register';

@@ -70,9 +70,11 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
   ]);
   const addCartDataQuery = `INSERT INTO cart (customer_id, product_id, quantity) VALUES ? 
                           ON DUPLICATE KEY UPDATE quantity = VALUES(quantity)`;
-  const selectCartDataQuery = `SELECT product_id,quantity FROM cart WHERE customer_id = ?`;
-  const deleteCartDataQuery = `DELETE FROM cart WHERE customer_id = ? AND product_id NOT IN ?;`;
-  const deleteAllCartDataQuery = `DELETE FROM cart WHERE customer_id =?`;
+  const selectCartDataQuery =
+    'SELECT product_id,quantity FROM cart WHERE customer_id = ?';
+  const deleteCartDataQuery =
+    'DELETE FROM cart WHERE customer_id = ? AND product_id NOT IN ?;';
+  const deleteAllCartDataQuery = 'DELETE FROM cart WHERE customer_id =?';
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query >>>', selectCartDataQuery));
@@ -119,7 +121,8 @@ module.exports.addCartDataToMySqlDB = async (userId, cartData) => {
 // fetch data from cart MYSQL
 module.exports.getCartDataFromMySqlDB = async (userId) => {
   console.log(chalk.blue('getCartDataFromMySqlDB is called'));
-  const getCartDataQuery = `SELECT product_id,quantity FROM cart WHERE customer_id =?`;
+  const getCartDataQuery =
+    'SELECT product_id,quantity FROM cart WHERE customer_id =?';
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query', getCartDataQuery));
@@ -140,7 +143,7 @@ module.exports.getCartDataFromMySqlDB = async (userId) => {
 // delete all cart items from mysql
 module.exports.deleteCartDataInMySqlDB = async (userId) => {
   console.log(chalk.blue('deleteCartDataInMySqlDB is called'));
-  const deleteCartDataQuery = `DELETE FROM cart WHERE customer_id = ?`;
+  const deleteCartDataQuery = 'DELETE FROM cart WHERE customer_id = ?';
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query', deleteCartDataQuery));

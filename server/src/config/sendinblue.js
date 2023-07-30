@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const config = require('../config/config');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 

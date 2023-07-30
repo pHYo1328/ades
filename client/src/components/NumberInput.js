@@ -1,3 +1,4 @@
+import React from 'react';
 export default function NumberInput({ placeholder, value, func, min = 0 }) {
   return (
     <input

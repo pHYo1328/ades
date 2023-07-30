@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   FaClipboard,
   FaMapMarkedAlt,
@@ -249,6 +250,22 @@ const OrderListHeader = ({
       </div>
     </div>
   );
+};
+
+OrderListHeader.propTypes = {
+  item: PropTypes.object,
+  renderButton: PropTypes.bool.isRequired,
+  clearedItems: PropTypes.array,
+  items: PropTypes.array,
+  setItems: PropTypes.func,
+  customerID: PropTypes.string,
+  index: PropTypes.number,
+  renderOrderDate: PropTypes.bool,
+};
+
+// Set default prop types for renderOrderDate
+OrderListHeader.defaultProps = {
+  renderOrderDate: true,
 };
 
 export default OrderListHeader;

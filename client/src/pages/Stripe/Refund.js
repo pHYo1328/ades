@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -99,21 +100,24 @@ function RefundPayment() {
       )}
 
       <div
-        class="row col-10"
+        className="row col-10"
         style={{ marginRight: 'auto', marginLeft: 'auto' }}
       >
-        <div class="row">
-          <div class="col-4">
+        <div className="row">
+          <div className="col-4">
             <button
-              class="btn btn-outline-success w-100"
+              className="btn btn-outline-success w-100"
               onClick={handleRefund}
             >
               Refund
             </button>
           </div>
 
-          <div class="col-4">
-            <button class="btn btn-outline-success w-100" onClick={handleBack}>
+          <div className="col-4">
+            <button
+              className="btn btn-outline-success w-100"
+              onClick={handleBack}
+            >
               Back
             </button>
           </div>

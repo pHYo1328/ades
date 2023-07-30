@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import ItemImage from './ItemImage';
-import {
-  FaEdit,
-  FaClipboard,
-  FaWallet,
-  FaMapMarkedAlt,
-  FaRegCalendarAlt,
-  FaBox,
-} from 'react-icons/fa';
+import { FaWallet, FaBox } from 'react-icons/fa';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import OrderListHeader from './OrderListHeader';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../index';
 import DatePicker from 'react-datepicker';
@@ -299,4 +292,11 @@ const OrderList = ({
   );
 };
 
+OrderList.propTypes = {
+  items: PropTypes.array.isRequired,
+  setItems: PropTypes.func.isRequired,
+  customerID: PropTypes.string.isRequired,
+  renderButton: PropTypes.bool,
+  orderStatus: PropTypes.string.isRequired,
+};
 export default OrderList;

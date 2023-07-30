@@ -96,10 +96,11 @@ exports.processGetOrderDetailsByOrderStatus = async (req, res, next) => {
       case 'delivered':
         status = OrderStatus.ORDER_DELIVERED;
         break;
-      default:
+      default: {
         const error = new Error('Invalid order status parameter');
         error.status = 400;
         throw error;
+      }
     }
     const data = { customerID: customerID, orderStatus: status };
     console.log(
@@ -165,10 +166,11 @@ exports.processUpdateOrderStatus = async (req, res, next) => {
       case 'delivered':
         status = OrderStatus.ORDER_DELIVERED;
         break;
-      default:
+      default: {
         const error = new Error('Invalid order status parameter');
         error.status = 400;
         throw error;
+      }
     }
     const data = { orderIDs, orderStatus: status };
     const result = await orderServices.updateOrderStatus(data);
@@ -274,10 +276,11 @@ exports.processCancelOrder = async (req, res, next) => {
       case 'paid':
         status = OrderStatus.ORDER_PAID;
         break;
-      default:
+      default: {
         const error = new Error('Invalid order status parameter');
         error.status = 400;
         throw error;
+      }
     }
     const data = {
       orderID: orderId,

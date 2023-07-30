@@ -1,9 +1,10 @@
+import React from 'react';
 import { PaymentElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 
-export default function CheckoutForm({ clientSecret }) {
+export default function CheckoutForm({}) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();

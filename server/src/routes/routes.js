@@ -1,4 +1,5 @@
-const bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
@@ -238,7 +239,7 @@ module.exports = (app, router) => {
   //inserting data from stripe to back_end
   router.post(
     '/webhook',
-    bodyParser.json({ type: 'application/json' }),
+    express.json({ type: 'application/json' }),
     async (req, res) => {
       const createWebhookEndpoint = async () => {
         const endpoint = await stripe.webhookEndpoints.create({

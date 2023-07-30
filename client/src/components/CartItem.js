@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import ItemImage from './ItemImage';
@@ -70,6 +71,14 @@ const CartItem = ({
     [cartData, setCartData, setTotalAmount]
   );
 
+  CartItem.propTypes = {
+    cartItem: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    cartData: PropTypes.array.isRequired,
+    setCartData: PropTypes.func.isRequired,
+    setTotalAmount: PropTypes.func.isRequired,
+    customerID: PropTypes.string.isRequired,
+  };
   return (
     <tr
       key={`${cartItem.product_ID}-${index}`}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const Rating = ({
@@ -6,11 +7,9 @@ const Rating = ({
   customerID,
   showRatingForm,
   setShowRatingForm,
-  index,
 }) => {
   const [ratingComment, setRatingComment] = useState('');
   const [rating, setRating] = useState(0);
-  const [ratingData, setRatingData] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const handleRatingClick = (ratingValue) => {
     setRating(ratingValue);
@@ -35,7 +34,7 @@ const Rating = ({
       axios
         .post(`${baseUrl}/api/products/ratings`, requestBody)
         .then((response) => {
-          setRatingData(response.data.data);
+          console.log(response);
         });
 
       // Reset the form
@@ -93,6 +92,14 @@ const Rating = ({
       )}
     </>
   );
+};
+
+Rating.propTypes = {
+  productID: PropTypes.number.isRequired,
+  customerID: PropTypes.string.isRequired,
+  showRatingForm: PropTypes.bool.isRequired,
+  setShowRatingForm: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default Rating;

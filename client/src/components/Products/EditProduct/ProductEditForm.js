@@ -1,7 +1,6 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-import React from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import Categories from '../Product/Categories';

@@ -405,26 +405,26 @@ module.exports.getSearchResults = async (
       queryInput.push(product_name, product_name, product_name, product_name);
     }
     if (category_id && category_id != 0) {
-      searchResultsDataQuery += ` AND p.category_id = ?`;
+      searchResultsDataQuery += ' AND p.category_id = ?';
       queryInput.push(category_id);
     }
     if (brand_id && brand_id != 0) {
-      searchResultsDataQuery += ` AND p.brand_id = ?`;
+      searchResultsDataQuery += ' AND p.brand_id = ?';
       queryInput.push(brand_id);
     }
     if (max_price) {
       if (min_price) {
-        searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`;
+        searchResultsDataQuery += ' AND p.price BETWEEN ? AND ?';
         queryInput.push(max_price, min_price);
       } else {
-        searchResultsDataQuery += ` AND p.price < ?`;
+        searchResultsDataQuery += ' AND p.price < ?';
         queryInput.push(max_price);
       }
     } else if (min_price) {
-      searchResultsDataQuery += ` AND p.price > ?`;
+      searchResultsDataQuery += ' AND p.price > ?';
       queryInput.push(min_price);
     }
-    searchResultsDataQuery += ` GROUP BY p.product_id;`;
+    searchResultsDataQuery += ' GROUP BY p.product_id;';
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
@@ -716,7 +716,7 @@ module.exports.deleteCategoryByID = async (categoryID) => {
 module.exports.deleteImageByID = async (imageID) => {
   console.log(chalk.blue('deleteImageByID is called'));
   try {
-    const deleteImageQuery = `DELETE FROM product_image WHERE image_id=?;`;
+    const deleteImageQuery = 'DELETE FROM product_image WHERE image_id=?;';
     const results = await pool.query(deleteImageQuery, [imageID]);
     console.log(chalk.green(results[0].affectedRows));
     return results[0].affectedRows > 0;
@@ -729,8 +729,9 @@ module.exports.deleteImageByID = async (imageID) => {
 // delete all images by product id
 module.exports.deleteImagesByProductID = async (productID) => {
   console.log(chalk.blue('deleteImagesByProductID is called'));
-  const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
-  const addDefaultImageQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  const deleteImageQuery = 'DELETE FROM product_image WHERE product_id = ?';
+  const addDefaultImageQuery =
+    'INSERT INTO product_image (product_id, image_url) VALUES ?;';
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
   console.log(
@@ -870,7 +871,8 @@ module.exports.createProduct = async (
     'INSERT into product (product_name,price, description, category_id, brand_id) values (?,?,?,?,?)';
   const inventoryCreateQuery =
     'INSERT INTO inventory (product_id, quantity) values (?, ?);';
-  let imageCreateQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  let imageCreateQuery =
+    'INSERT INTO product_image (product_id, image_url) VALUES ?;';
 
   quantity = quantity || 0;
   console.log(chalk.blue('Creating connection...'));

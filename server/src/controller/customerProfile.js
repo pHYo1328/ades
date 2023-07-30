@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const bcrypt = require('bcrypt');
 const customerService = require('../services/customer.services');
 

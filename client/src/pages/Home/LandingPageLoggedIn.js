@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -72,19 +73,19 @@ export default function LandingPage() {
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
       >
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <h3 class="text-center text-black font-weight-bold mb-3">
+          <h3 className="text-center text-black font-weight-bold mb-3">
             WELCOME TO TECHZERO
           </h3>
 
-          <div class="row">
+          <div className="row">
             <div
-              class="input-wrap first col-lg-10 col-md-8 col-sm-12"
+              className="input-wrap first col-lg-10 col-md-8 col-sm-12"
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div class="mb-3 text-dark">
+              <div className="mb-3 text-dark">
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Enter search..."
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
@@ -93,36 +94,36 @@ export default function LandingPage() {
             </div>
           </div>
           <div
-            class="row col-10"
+            className="row col-10"
             style={{ marginLeft: 'auto', marginRight: 'auto' }}
           >
             <div
-              class="input-wrap first col-lg-4 col-md-8 col-sm-12 row"
+              className="input-wrap first col-lg-4 col-md-8 col-sm-12 row"
               style={{ marginLeft: 'auto', marginRight: 'auto' }}
             >
-              <div class="mb-3 text-dark col-lg-6">
+              <div className="mb-3 text-dark col-lg-6">
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Min price"
                   value={productMinPrice}
                   onChange={(e) => setProductMinPrice(e.target.value)}
                 />
               </div>
-              <div class="mb-3 text-dark col-lg-6">
+              <div className="mb-3 text-dark col-lg-6">
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Max price"
                   value={productMaxPrice}
                   onChange={(e) => setProductMaxPrice(e.target.value)}
                 />
               </div>
             </div>
-            <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
-              <div class="input-field first w-100">
+            <div className="input-wrap first col-lg-3 col-md-8 col-sm-12">
+              <div className="input-field first w-100">
                 <select
-                  class="form-select"
+                  className="form-select"
                   id="categoryOptions"
                   onChange={(e) => setProductCategory(e.target.value)}
                 >
@@ -152,10 +153,10 @@ export default function LandingPage() {
                 </select>
               </div>
             </div>
-            <div class="input-wrap first col-lg-3 col-md-8 col-sm-12">
-              <div class="input-field first w-100">
+            <div className="input-wrap first col-lg-3 col-md-8 col-sm-12">
+              <div className="input-field first w-100">
                 <select
-                  class="form-select"
+                  className="form-select"
                   id="brandOptions"
                   onChange={(e) => setProductBrand(e.target.value)}
                 >
@@ -183,10 +184,10 @@ export default function LandingPage() {
                 </select>
               </div>
             </div>
-            <div class=" col-2 text-black">
+            <div className=" col-2 text-black">
               <button
                 type="button"
-                class="btn btn-outline-primary w-100"
+                className="btn btn-outline-primary w-100"
                 onClick={() => {
                   let url = '/search';
                   const queryParams = [];
@@ -213,13 +214,13 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div class="row mt-5">
-            <div class="col-10">
+          <div className="row mt-5">
+            <div className="col-10">
               <h2 className="text-2xl font-bold tracking-tight text-gray-900">
                 New Arrivals
               </h2>
             </div>
-            <div class="col-2">
+            <div className="col-2">
               <Dropdown style={{ width: '100%' }}>
                 <Dropdown.Toggle
                   variant="outline-primary"

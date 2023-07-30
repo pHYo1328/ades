@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-
 import React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EditImage from '../../../components/Products/EditProduct/EditImage';
 import ProductEditForm from '../../../components/Products/EditProduct/ProductEditForm';
 import Button from '../../../components/Button';

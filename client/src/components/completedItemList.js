@@ -1,5 +1,5 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
   RiCheckboxCircleLine,
@@ -10,6 +10,7 @@ import UserTimezoneDate from './UserTimeZoneDate';
 import ItemImage from './ItemImage';
 import Rating from './Rating';
 import OrderListHeader from './OrderListHeader';
+
 const OrderListItem = React.memo(
   ({
     item,
@@ -76,6 +77,15 @@ const OrderListItem = React.memo(
     </li>
   )
 );
+OrderListItem.displayName = 'OrderListItem';
+OrderListItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  customerID: PropTypes.string.isRequired,
+  renderRating: PropTypes.bool.isRequired,
+  showRatingForm: PropTypes.bool.isRequired,
+  setShowRatingForm: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+};
 
 const OrderItemDetails = ({ item }) => (
   <div className="px-4 flex flex-col w-full py-2 h-full overflow-hidden">
@@ -91,9 +101,13 @@ const OrderItemDetails = ({ item }) => (
   </div>
 );
 
+OrderItemDetails.propTypes = {
+  item: PropTypes.object.isRequired,
+};
+
 const OrderActions = ({
   item,
-  customerID,
+
   renderRating,
   showRatingForm,
   setShowRatingForm,
@@ -127,6 +141,14 @@ const OrderActions = ({
     );
   }
 };
+OrderActions.propTypes = {
+  item: PropTypes.object.isRequired,
+  customerID: PropTypes.string.isRequired,
+  renderRating: PropTypes.bool.isRequired,
+  showRatingForm: PropTypes.bool.isRequired,
+  setShowRatingForm: PropTypes.func.isRequired,
+};
+
 const CompletedItemList = ({
   items,
   customerID,
@@ -240,6 +262,13 @@ const CompletedItemList = ({
         ))}
     </ul>
   );
+};
+
+CompletedItemList.propTypes = {
+  items: PropTypes.array.isRequired,
+  customerID: PropTypes.string.isRequired,
+  renderRating: PropTypes.bool,
+  orderStatus: PropTypes.string,
 };
 
 export default CompletedItemList;

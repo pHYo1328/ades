@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FaWallet, FaEdit } from 'react-icons/fa';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import api from '../index';
 import { validateAddress } from '../utils/addressUtils';
+
 export const SaveButton = ({
   item,
   editedShippingAddress,
@@ -49,6 +51,15 @@ export const SaveButton = ({
     </button>
   );
 };
+SaveButton.propTypes = {
+  item: PropTypes.object.isRequired,
+  editedShippingAddress: PropTypes.string.isRequired,
+  setIsInvalidAddress: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
+  setItems: PropTypes.func.isRequired,
+  setEditingIndex: PropTypes.func.isRequired,
+  customerID: PropTypes.string.isRequired,
+};
 
 export const EditAddressButton = ({
   index,
@@ -70,6 +81,12 @@ export const EditAddressButton = ({
       <FaEdit></FaEdit>Edit Address
     </button>
   );
+};
+EditAddressButton.propTypes = {
+  index: PropTypes.number.isRequired,
+  setEditingIndex: PropTypes.func.isRequired,
+  clearedItems: PropTypes.array.isRequired,
+  setEditedShippingAddress: PropTypes.func.isRequired,
 };
 
 export const PayButton = ({ items, item, navigate }) => {
@@ -121,4 +138,10 @@ export const PayButton = ({ items, item, navigate }) => {
       Pay
     </button>
   );
+};
+
+PayButton.propTypes = {
+  items: PropTypes.array.isRequired,
+  item: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
