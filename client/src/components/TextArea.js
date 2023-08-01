@@ -1,3 +1,4 @@
+import React from 'react';
 export default function TextArea({ value, func, rows, placeholder }) {
   return (
     <textarea

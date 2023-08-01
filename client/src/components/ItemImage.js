@@ -1,11 +1,11 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage, preload } from '@cloudinary/react';
-import { thumbnail, scale, fill } from '@cloudinary/url-gen/actions/resize';
+import { AdvancedImage } from '@cloudinary/react';
+import { scale } from '@cloudinary/url-gen/actions/resize';
 import { format } from '@cloudinary/base/actions/delivery';
 import { auto } from '@cloudinary/base/qualifiers/format';
-import { focusOn } from '@cloudinary/url-gen/qualifiers/gravity';
-import { FocusOn } from '@cloudinary/url-gen/qualifiers/focusOn';
 const cld = new Cloudinary({
   cloud: {
     cloudName: 'ddoajstil',
@@ -45,6 +45,11 @@ const ItemImage = ({ imageUrl, width = 24, height = 24 }) => {
       )}
     </div>
   );
+};
+ItemImage.propTypes = {
+  imageUrl: PropTypes.string.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default ItemImage;

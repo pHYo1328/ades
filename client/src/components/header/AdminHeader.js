@@ -1,28 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  RiTruckLine,
-  RiCheckboxCircleLine,
-  RiCloseCircleLine,
-} from 'react-icons/ri';
-import { FaBox, FaWallet } from 'react-icons/fa';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const Header = () => {
-  const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
-  const userId = localStorage.getItem('userid');
   const userPanelRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleUserPanelToggle = () => {
-    setIsUserPanelOpen(!isUserPanelOpen);
-  };
-
-  const handleOutsideClick = (event) => {
-    if (userPanelRef.current && !userPanelRef.current.contains(event.target)) {
-      setIsUserPanelOpen(false);
-    }
-  };
+  // const handleOutsideClick = (event) => {
+  //   if (userPanelRef.current && !userPanelRef.current.contains(event.target)) {
+  //     setIsUserPanelOpen(false);
+  //   }
+  // };
 
   const onHandleLogout = async () => {
     try {
@@ -40,13 +28,13 @@ const Header = () => {
     navigate('/');
   };
 
-  useEffect(() => {
-    document.addEventListener('click', handleOutsideClick);
+  // useEffect(() => {
+  //   document.addEventListener('click', handleOutsideClick);
 
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   };
+  // }, []);
 
   return (
     <header className="bg-white shadow top-0 left-0 sticky z-2">

@@ -53,7 +53,7 @@ module.exports.updateProfileImage = async (image_url, customer_id) => {
   console.log('updateprofileimage service');
 
   try {
-    const updateQuery = `UPDATE users SET image_url = ? WHERE customer_id = ?`;
+    const updateQuery = 'UPDATE users SET image_url = ? WHERE customer_id = ?';
     const results = await pool.query(updateQuery, [image_url, customer_id]);
     console.log(chalk.green('profile image updated'));
     console.log(chalk.green(results));

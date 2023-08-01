@@ -6,7 +6,8 @@ module.exports.addBookMark = async (data) => {
   console.log(chalk.blue('addBookMark is called'));
   const { customerId, brandId } = data; // Take single brandId instead of an array of brandIds
   console.log(chalk.yellow('Inspecting data variables'), customerId, brandId);
-  const addBookmarkQuery = `INSERT IGNORE INTO bookmark(customer_id, brand_id) VALUES (?, ?)`;
+  const addBookmarkQuery =
+    'INSERT IGNORE INTO bookmark(customer_id, brand_id) VALUES (?, ?)';
 
   try {
     console.log(chalk.blue('Creating connection...'));
@@ -26,7 +27,8 @@ module.exports.removeBookMark = async (data) => {
   console.log(chalk.blue('removeBookMark is called'));
   const { customerId, brandId } = data; // Take single brandId
   console.log(chalk.yellow('Inspecting data variables'), customerId, brandId);
-  const removeBookmarkQuery = `DELETE FROM bookmark WHERE customer_id = ? AND brand_id = ?`;
+  const removeBookmarkQuery =
+    'DELETE FROM bookmark WHERE customer_id = ? AND brand_id = ?';
 
   try {
     console.log(chalk.blue('Creating connection...'));
@@ -44,7 +46,8 @@ module.exports.removeBookMark = async (data) => {
 module.exports.fetchBookmarkByCustomerID = async (data) => {
   console.log(chalk.blue('fetcherBookmarkByCustomerID is called'));
   const { customerId } = data;
-  const fetchBookmarkQuery = `SELECT brand_id FROM bookmark WHERE customer_id =?`;
+  const fetchBookmarkQuery =
+    'SELECT brand_id FROM bookmark WHERE customer_id =?';
   try {
     console.log(chalk.blue('Creating connection...'));
     console.log(chalk.blue('Executing query', fetchBookmarkQuery));

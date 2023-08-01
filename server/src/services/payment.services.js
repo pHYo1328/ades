@@ -103,7 +103,8 @@ module.exports.getPaymentIntentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentIntentByID is called'));
 
   try {
-    const getPaymentIntentByIDQuery = `SELECT transaction_id FROM payment WHERE order_id = ?;`;
+    const getPaymentIntentByIDQuery =
+      'SELECT transaction_id FROM payment WHERE order_id = ?;';
 
     const results = await pool.query(getPaymentIntentByIDQuery, [order_id]);
     console.log(chalk.green(results[0]));

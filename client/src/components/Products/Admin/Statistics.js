@@ -1,3 +1,4 @@
+import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
 

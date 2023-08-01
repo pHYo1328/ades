@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
-export default function CheckoutForm({ clientSecret }) {
+export default function CheckoutForm({}) {
   const stripe = useStripe();
   const elements = useElements();
 

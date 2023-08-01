@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import OrderList from '../../../components/ItemList/orderList';
+import OrderList from '../../../components/OrderItemList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
@@ -10,19 +10,15 @@ const OrderToShip = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
     if (!roles) {
       // User does not have the required role(s), redirect them to the homepage or show an error message
       // alert("you're not admin");
-      console.log('Redirecting to homepage-admin');
       navigate('/login');
     } else {
       const isCustomer = roles.includes('customer');
-      console.log(isCustomer);
       if (!isCustomer) {
         // User does not have the required role(s), redirect them to the homepage or show an error message
         // alert("you're not admin");
-        console.log('Redirecting to homepage-admin');
         navigate('/login');
       }
     }
@@ -34,10 +30,8 @@ const OrderToShip = () => {
       const response = await api.get(
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=paid`
       );
-      console.log(response);
       setOrderItems(response.data.data);
       const shippingMethods = await api.get(`/api/shipping`);
-      console.log(shippingMethods.data.data);
       setShippingMethods(shippingMethods.data.data);
       setIsLoading(false);
     };

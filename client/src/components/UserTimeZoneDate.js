@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { format, utcToZonedTime } from 'date-fns-tz';
 
 const UserTimezoneDate = ({ date }) => {
@@ -17,6 +18,10 @@ const UserTimezoneDate = ({ date }) => {
   return (
     <p>{format(utcToZonedTime(date, userTimeZone), 'MMM d, yyyy h:mma')}</p>
   );
+};
+
+UserTimezoneDate.propTypes = {
+  date: PropTypes.string.isRequired, // Define the prop type for 'date'
 };
 
 export default UserTimezoneDate;

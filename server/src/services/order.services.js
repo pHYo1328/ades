@@ -38,6 +38,7 @@ module.exports.addCustomerOrder = async (data) => {
     ];
     console.log(chalk.blue('Executing query >>>>>>'), addOrderQuery);
     const [orderResult] = await connection.query(addOrderQuery, [orderData]);
+    console.log(orderResult);
     // if order inserted successfully manipulate data to insert into order_item
     const orderItemsData = orderItems.map((item) => [
       uuid,
@@ -47,6 +48,7 @@ module.exports.addCustomerOrder = async (data) => {
     console.log(orderItemsData);
     //multiple insert with 2 dimensional array
     const result = await connection.query(addOrderItemsQuery, [orderItemsData]);
+    console.log(result);
     await connection.commit();
     console.log(
       chalk.green('Order and order items have been inserted successfully.')
@@ -94,6 +96,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     select orders.order_id,
                     product.product_id,
                     product.product_name,
+                    product.description,
                     MAX(product_image.image_url) as image_url,
                     product.price, 
                     order_items.quantity ,
@@ -183,8 +186,10 @@ module.exports.updateOrderStatus = async (data) => {
   console.log(chalk.blue('updateOrderStatus is called'));
   const { orderIDs, orderStatus } = data;
   console.log(orderStatus);
-  const updatePaidOrderStatusQuery = `UPDATE orders set order_status = ?,shipping_start_at = UTC_TIMESTAMP() WHERE order_id in (?)`;
-  const updateDeliveringOrderStatusQuery = `UPDATE orders set order_status = ?,completed_at = UTC_TIMESTAMP() WHERE order_id in(?)`;
+  const updatePaidOrderStatusQuery =
+    'UPDATE orders set order_status = ?,shipping_start_at = UTC_TIMESTAMP() WHERE order_id in (?)';
+  const updateDeliveringOrderStatusQuery =
+    'UPDATE orders set order_status = ?,completed_at = UTC_TIMESTAMP() WHERE order_id in(?)';
   try {
     console.log(
       chalk.blue(
@@ -201,7 +206,7 @@ module.exports.updateOrderStatus = async (data) => {
         updatePaidOrderStatusQuery
       );
       result = await pool.query(updatePaidOrderStatusQuery, dataRequired);
-      console.log(chalk.green(`updated order status`));
+      console.log(chalk.green('updated order status'));
       return result[0].affectedRows;
     }
     // or deliverd, update status and completed with UTC
@@ -211,7 +216,7 @@ module.exports.updateOrderStatus = async (data) => {
         updateDeliveringOrderStatusQuery
       );
       result = await pool.query(updateDeliveringOrderStatusQuery, dataRequired);
-      console.log(chalk.green(`updated order status`));
+      console.log(chalk.green('updated order status'));
       return result[0].affectedRows;
     }
   } catch (error) {
@@ -223,7 +228,7 @@ module.exports.updateOrderStatus = async (data) => {
 // Cancel the order
 module.exports.updateShippingDetails = async (data) => {
   console.log(chalk.blue('updateShippingDetails is called'));
-  const { customerID, orderId, shippingAddr, shippingMethod } = data;
+  const { customerID, orderId, shippingAddr } = data;
   const updateShippingDetailsQuery = `
                     UPDATE orders
                     SET shipping_address = ?
