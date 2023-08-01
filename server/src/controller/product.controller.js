@@ -595,7 +595,8 @@ exports.processGetTotalRevenue = async (req, res, next) => {
 exports.processGetTotalNumberOfProductsByCategory = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfProductsByCategory running'));
   try {
-    const categoryData = await productServices.getTotalNumberOfProductsByCategory();
+    const categoryData =
+      await productServices.getTotalNumberOfProductsByCategory();
     console.log(chalk.yellow(categoryData));
     if (!categoryData) {
       return res.status(404).json({
@@ -607,7 +608,7 @@ exports.processGetTotalNumberOfProductsByCategory = async (req, res, next) => {
     console.log(chalk.yellow('categoryData data: ', categoryData));
     const categories = categoryData.map((category) => ({
       category: category.category,
-      count: category.count
+      count: category.count,
     }));
 
     console.log(chalk.green(categories));
@@ -619,7 +620,9 @@ exports.processGetTotalNumberOfProductsByCategory = async (req, res, next) => {
       categories,
     });
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
     return next(error);
   }
 };
@@ -640,7 +643,7 @@ exports.processGetTotalNumberOfOrdersByBrand = async (req, res, next) => {
     console.log(chalk.yellow('brandData data: ', brandData));
     const brands = brandData.map((brand) => ({
       brand: brand.brand,
-      count: brand.count
+      count: brand.count,
     }));
 
     console.log(chalk.green(brands));
@@ -673,7 +676,7 @@ exports.processGetTotalNumberOfBookmarksByBrand = async (req, res, next) => {
     console.log(chalk.yellow('brandData data: ', brandData));
     const brands = brandData.map((brand) => ({
       brand: brand.brand,
-      count: brand.count
+      count: brand.count,
     }));
 
     console.log(chalk.green(brands));
@@ -685,7 +688,9 @@ exports.processGetTotalNumberOfBookmarksByBrand = async (req, res, next) => {
       brands,
     });
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfBookmarksByBrand: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfBookmarksByBrand: ', error)
+    );
     return next(error);
   }
 };
@@ -694,7 +699,8 @@ exports.processGetTotalNumberOfBookmarksByBrand = async (req, res, next) => {
 exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfOrdersByShipping running'));
   try {
-    const shippingData = await productServices.getTotalNumberOfOrdersByShipping();
+    const shippingData =
+      await productServices.getTotalNumberOfOrdersByShipping();
     console.log(chalk.yellow(shippingData));
     if (!shippingData) {
       return res.status(404).json({
@@ -706,7 +712,7 @@ exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
     console.log(chalk.yellow('shippingData data: ', shippingData));
     const methods = shippingData.map((method) => ({
       shipping: method.shipping,
-      count: method.count
+      count: method.count,
     }));
 
     console.log(chalk.green(methods));
@@ -718,7 +724,9 @@ exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
       methods,
     });
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error)
+    );
     return next(error);
   }
 };
@@ -727,7 +735,8 @@ exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
 exports.processGetTotalNumberOfPaymentsByMethod = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfPaymentsByMethod running'));
   try {
-    const paymentData = await productServices.getTotalNumberOfPaymentsByMethod();
+    const paymentData =
+      await productServices.getTotalNumberOfPaymentsByMethod();
     console.log(chalk.yellow(paymentData));
     if (!paymentData) {
       return res.status(404).json({
@@ -739,7 +748,7 @@ exports.processGetTotalNumberOfPaymentsByMethod = async (req, res, next) => {
     console.log(chalk.yellow('paymentData data: ', paymentData));
     const methods = paymentData.map((method) => ({
       payment: method.payment,
-      count: method.count
+      count: method.count,
     }));
 
     console.log(chalk.green(methods));
@@ -751,7 +760,9 @@ exports.processGetTotalNumberOfPaymentsByMethod = async (req, res, next) => {
       methods,
     });
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
+    );
     return next(error);
   }
 };
@@ -772,7 +783,7 @@ exports.processGetTotalNumberOfOrdersByStatus = async (req, res, next) => {
     console.log(chalk.yellow('orderData data: ', orderData));
     const orders = orderData.map((order) => ({
       status: order.status,
-      count: order.count
+      count: order.count,
     }));
 
     console.log(chalk.green(orders));
@@ -784,7 +795,9 @@ exports.processGetTotalNumberOfOrdersByStatus = async (req, res, next) => {
       orders,
     });
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error)
+    );
     return next(error);
   }
 };
@@ -805,7 +818,7 @@ exports.processGetTotalRevenueByBrand = async (req, res, next) => {
     console.log(chalk.yellow('orderData data: ', orderData));
     const orders = orderData.map((order) => ({
       brand: order.brand,
-      count: order.count
+      count: order.count,
     }));
 
     console.log(chalk.green(orders));
@@ -838,7 +851,7 @@ exports.processGetTotalRevenueByCategory = async (req, res, next) => {
     console.log(chalk.yellow('orderData data: ', orderData));
     const orders = orderData.map((order) => ({
       category: order.category,
-      count: order.count
+      count: order.count,
     }));
 
     console.log(chalk.green(orders));

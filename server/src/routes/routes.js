@@ -88,15 +88,38 @@ module.exports = (app, router) => {
     productController.processGetRelatedProducts
   );
   router.get('/api/admin/revenue', productController.processGetTotalRevenue);
-  router.get('/api/admin/categories/count', productController.processGetTotalNumberOfProductsByCategory)
-  router.get('/api/admin/orders/count', productController.processGetTotalNumberOfOrdersByBrand)
-  router.get('/api/admin/bookmarks/count', productController.processGetTotalNumberOfBookmarksByBrand)
-  router.get('/api/admin/shipping/count', productController.processGetTotalNumberOfOrdersByShipping)
-  router.get('/api/admin/payment/count', productController.processGetTotalNumberOfPaymentsByMethod)
-  router.get('/api/admin/orders/status/count', productController.processGetTotalNumberOfOrdersByStatus)
-  router.get('/api/admin/revenue/brand/count', productController.processGetTotalRevenueByBrand)
-  router.get('/api/admin/revenue/category/count', productController.processGetTotalRevenueByCategory)
-
+  router.get(
+    '/api/admin/categories/count',
+    productController.processGetTotalNumberOfProductsByCategory
+  );
+  router.get(
+    '/api/admin/orders/count',
+    productController.processGetTotalNumberOfOrdersByBrand
+  );
+  router.get(
+    '/api/admin/bookmarks/count',
+    productController.processGetTotalNumberOfBookmarksByBrand
+  );
+  router.get(
+    '/api/admin/shipping/count',
+    productController.processGetTotalNumberOfOrdersByShipping
+  );
+  router.get(
+    '/api/admin/payment/count',
+    productController.processGetTotalNumberOfPaymentsByMethod
+  );
+  router.get(
+    '/api/admin/orders/status/count',
+    productController.processGetTotalNumberOfOrdersByStatus
+  );
+  router.get(
+    '/api/admin/revenue/brand/count',
+    productController.processGetTotalRevenueByBrand
+  );
+  router.get(
+    '/api/admin/revenue/category/count',
+    productController.processGetTotalRevenueByCategory
+  );
 
   // DELETE
   router.delete(
