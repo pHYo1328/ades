@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   RiTruckLine,
@@ -13,6 +14,7 @@ const Header = () => {
   const userId = localStorage.getItem('userid');
   const userPanelRef = useRef(null);
   const navigate = useNavigate();
+  const { userData, setUserData } = useContext(AuthContext);
 
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
@@ -37,6 +39,13 @@ const Header = () => {
     localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
     localStorage.removeItem('isAdminSignedIn');
+    // setUserData({
+    //   ...userData,
+    //   accessToken: null,
+    //   userid: null,
+    //   roles: [],
+    //   isSignedIn: false,
+    // });
     navigate('/');
   };
 

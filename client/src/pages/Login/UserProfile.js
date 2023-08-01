@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { BiEdit } from 'react-icons/bi';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
@@ -13,6 +14,7 @@ const cld = new Cloudinary({
 });
 
 const UserProfile = () => {
+  const { userData } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [editingUsername, setEditingUsername] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
@@ -30,7 +32,7 @@ const UserProfile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Customer-Id': localStorage.getItem('userid'),
+            'Customer-Id': userData.userid,
           },
         });
 
@@ -44,6 +46,8 @@ const UserProfile = () => {
     fetchUser();
   }, []);
 
+  console.log("THIS IS USER INFO",user);
+  console.log("THIS IS userData INFO",userData);
   const updateUserProfile = async () => {
     try {
       const response = await fetch(url2, {

@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 import Home from './pages/Login/Home';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/Login/ForgetPassword';
@@ -43,6 +44,8 @@ import './input.css';
 
 function App() {
   const location = useLocation();
+  const { userData } = useContext(AuthContext);
+  console.log(userData);
   // const [isSignedIn, setIsSignedIn] = useState(false);
   const adminHeaderRoutes = [
     '/admin',
@@ -58,6 +61,9 @@ function App() {
     '/user-profile',
     '/cart',
     '/orderDelivered',
+    '/orderToShip',
+    '/orderToPay',
+    '/orderToDeliver'
   ]; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
@@ -72,7 +78,6 @@ function App() {
   //   return userId !== null;
   // };
 
-  const isSignedIn = localStorage.getItem('isSignedIn') === 'true'; // Get the isSignedIn status from localStorage
   const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
 
   const adminHeader = adminHeaderRoutes.includes(location.pathname);
@@ -83,9 +88,9 @@ function App() {
   if (hideHeader) {
     headerComponent = null;
   } else if (adminHeader) {
-    headerComponent = isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
+    headerComponent = userData.isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
   } else if (signedInHeader) {
-    headerComponent = isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
+    headerComponent = userData.isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
   } else {
     headerComponent = <Header />;
   }
@@ -100,6 +105,7 @@ function App() {
   // }
   return (
     <>
+    
       <div className="App">
         <header className="App-header">
           {/* {adminHeader ? <AdminHeader /> : <Header />} */}
