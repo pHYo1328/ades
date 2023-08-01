@@ -591,6 +591,283 @@ exports.processGetTotalRevenue = async (req, res, next) => {
   }
 };
 
+// get total number of products by category
+exports.processGetTotalNumberOfProductsByCategory = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfProductsByCategory running'));
+  try {
+    const categoryData =
+      await productServices.getTotalNumberOfProductsByCategory();
+    console.log(chalk.yellow(categoryData));
+    if (!categoryData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No categories exist',
+      });
+    }
+    console.log(chalk.yellow('categoryData data: ', categoryData));
+    const categories = categoryData.map((category) => ({
+      category: category.category,
+      count: category.count,
+    }));
+
+    console.log(chalk.green(categories));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read category details successful',
+      categories,
+    });
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
+    return next(error);
+  }
+};
+
+// get total number of orders by brand
+exports.processGetTotalNumberOfOrdersByBrand = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfOrdersByBrand running'));
+  try {
+    const brandData = await productServices.getTotalNumberOfOrdersByBrand();
+    console.log(chalk.yellow(brandData));
+    if (!brandData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No brands exist',
+      });
+    }
+    console.log(chalk.yellow('brandData data: ', brandData));
+    const brands = brandData.map((brand) => ({
+      brand: brand.brand,
+      count: brand.count,
+    }));
+
+    console.log(chalk.green(brands));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read brand details successful',
+      brands,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalNumberOfOrdersByBrand: ', error));
+    return next(error);
+  }
+};
+
+// get total number of bookmarks by brand
+exports.processGetTotalNumberOfBookmarksByBrand = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfBookmarksByBrand running'));
+  try {
+    const brandData = await productServices.getTotalNumberOfBookmarksByBrand();
+    console.log(chalk.yellow(brandData));
+    if (!brandData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No brands exist',
+      });
+    }
+    console.log(chalk.yellow('brandData data: ', brandData));
+    const brands = brandData.map((brand) => ({
+      brand: brand.brand,
+      count: brand.count,
+    }));
+
+    console.log(chalk.green(brands));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read brand details successful',
+      brands,
+    });
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfBookmarksByBrand: ', error)
+    );
+    return next(error);
+  }
+};
+
+// get total number of orders by shipping method
+exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfOrdersByShipping running'));
+  try {
+    const shippingData =
+      await productServices.getTotalNumberOfOrdersByShipping();
+    console.log(chalk.yellow(shippingData));
+    if (!shippingData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No shipping methods exist',
+      });
+    }
+    console.log(chalk.yellow('shippingData data: ', shippingData));
+    const methods = shippingData.map((method) => ({
+      shipping: method.shipping,
+      count: method.count,
+    }));
+
+    console.log(chalk.green(methods));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read shipping details successful',
+      methods,
+    });
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error)
+    );
+    return next(error);
+  }
+};
+
+// get total number of payments by payment method
+exports.processGetTotalNumberOfPaymentsByMethod = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfPaymentsByMethod running'));
+  try {
+    const paymentData =
+      await productServices.getTotalNumberOfPaymentsByMethod();
+    console.log(chalk.yellow(paymentData));
+    if (!paymentData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No payment methods exist',
+      });
+    }
+    console.log(chalk.yellow('paymentData data: ', paymentData));
+    const methods = paymentData.map((method) => ({
+      payment: method.payment,
+      count: method.count,
+    }));
+
+    console.log(chalk.green(methods));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read payment details successful',
+      methods,
+    });
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
+    );
+    return next(error);
+  }
+};
+
+// get total number of orders by status
+exports.processGetTotalNumberOfOrdersByStatus = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalNumberOfOrdersByStatus running'));
+  try {
+    const orderData = await productServices.getTotalNumberOfOrdersByStatus();
+    console.log(chalk.yellow(orderData));
+    if (!orderData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No orders methods exist',
+      });
+    }
+    console.log(chalk.yellow('orderData data: ', orderData));
+    const orders = orderData.map((order) => ({
+      status: order.status,
+      count: order.count,
+    }));
+
+    console.log(chalk.green(orders));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read order details successful',
+      orders,
+    });
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error)
+    );
+    return next(error);
+  }
+};
+
+// get total revenue by brand
+exports.processGetTotalRevenueByBrand = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalRevenueByBrand running'));
+  try {
+    const orderData = await productServices.getTotalRevenueByBrand();
+    console.log(chalk.yellow(orderData));
+    if (!orderData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No brands exist',
+      });
+    }
+    console.log(chalk.yellow('orderData data: ', orderData));
+    const orders = orderData.map((order) => ({
+      brand: order.brand,
+      count: order.count,
+    }));
+
+    console.log(chalk.green(orders));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read order details successful',
+      orders,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByBrand: ', error));
+    return next(error);
+  }
+};
+
+// get total revenue by category
+exports.processGetTotalRevenueByCategory = async (req, res, next) => {
+  console.log(chalk.blue('processGetTotalRevenueByCategory running'));
+  try {
+    const orderData = await productServices.getTotalRevenueByCategory();
+    console.log(chalk.yellow(orderData));
+    if (!orderData) {
+      return res.status(404).json({
+        statusCode: 404,
+        ok: true,
+        message: 'No categories exist',
+      });
+    }
+    console.log(chalk.yellow('orderData data: ', orderData));
+    const orders = orderData.map((order) => ({
+      category: order.category,
+      count: order.count,
+    }));
+
+    console.log(chalk.green(orders));
+
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Read order details successful',
+      orders,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByCategory: ', error));
+    return next(error);
+  }
+};
+
 // get total number of products by brand or category
 exports.processGetTotalNumberOfProducts = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfProducts running'));

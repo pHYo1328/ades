@@ -34,7 +34,6 @@ const OrderToDeliver = () => {
       const response = await api.get(
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=delivering`
       );
-      console.log(response);
       setOrderItems(response.data.data);
       setIsLoading(false);
     };

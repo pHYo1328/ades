@@ -1,3 +1,4 @@
+import React from 'react';
 import Product from './Product';
 import Loading from '../../../components/Loading/Loading';
 

@@ -405,26 +405,26 @@ module.exports.getSearchResults = async (
       queryInput.push(product_name, product_name, product_name, product_name);
     }
     if (category_id && category_id != 0) {
-      searchResultsDataQuery += ` AND p.category_id = ?`;
+      searchResultsDataQuery += ' AND p.category_id = ?';
       queryInput.push(category_id);
     }
     if (brand_id && brand_id != 0) {
-      searchResultsDataQuery += ` AND p.brand_id = ?`;
+      searchResultsDataQuery += ' AND p.brand_id = ?';
       queryInput.push(brand_id);
     }
     if (max_price) {
       if (min_price) {
-        searchResultsDataQuery += ` AND p.price BETWEEN ? AND ?`;
+        searchResultsDataQuery += ' AND p.price BETWEEN ? AND ?';
         queryInput.push(max_price, min_price);
       } else {
-        searchResultsDataQuery += ` AND p.price < ?`;
+        searchResultsDataQuery += ' AND p.price < ?';
         queryInput.push(max_price);
       }
     } else if (min_price) {
-      searchResultsDataQuery += ` AND p.price > ?`;
+      searchResultsDataQuery += ' AND p.price > ?';
       queryInput.push(min_price);
     }
-    searchResultsDataQuery += ` GROUP BY p.product_id;`;
+    searchResultsDataQuery += ' GROUP BY p.product_id;';
 
     const results = await pool.query(searchResultsDataQuery, queryInput);
     console.log(chalk.green(results[0]));
@@ -474,6 +474,188 @@ module.exports.getTotalRevenue = async () => {
     return results[0];
   } catch (error) {
     console.error(chalk.red('Error in getTotalRevenue: ', error));
+    throw error;
+  }
+};
+
+// get total number of products by category
+module.exports.getTotalNumberOfProductsByCategory = async () => {
+  console.log(chalk.blue('getTotalNumberOfProductsByCategory is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    c.category_name AS 'category',
+      COALESCE(SUM(i.quantity), 0) AS 'count'
+    FROM category c
+    LEFT JOIN product p ON p.category_id = c.category_id
+    INNER JOIN inventory i ON p.product_id = i.product_id
+    GROUP BY c.category_id
+    ORDER BY p.category_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total number of orders by brand
+module.exports.getTotalNumberOfOrdersByBrand = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(SUM(oi.quantity), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN product p ON p.brand_id = b.brand_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total number of bookmarks by brand
+module.exports.getTotalNumberOfBookmarksByBrand = async () => {
+  console.log(chalk.blue('getTotalNumberOfBookmarksByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(COUNT(bm.customer_id), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN bookmark bm ON b.brand_id = bm.brand_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total number of orders by shipping method
+module.exports.getTotalNumberOfOrdersByShipping = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByShipping is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    s.shipping_method AS 'shipping',
+      COALESCE(COUNT(o.shipping_id), 0) AS 'count'
+    FROM shipping s
+    LEFT JOIN orders o ON o.shipping_id = s.shipping_id
+    GROUP BY s.shipping_id
+    ORDER BY s.shipping_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total number of payments by payment method
+module.exports.getTotalNumberOfPaymentsByMethod = async () => {
+  console.log(chalk.blue('getTotalNumberOfPaymentsByMethod is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    p.payment_method AS 'payment',
+      COALESCE(COUNT(p.payment_id), 0) AS 'count'
+    FROM payment p
+    GROUP BY p.payment_method
+    ORDER BY p.payment_method;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total number of payments by payment method
+module.exports.getTotalNumberOfOrdersByStatus = async () => {
+  console.log(chalk.blue('getTotalNumberOfOrdersByStatus is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    o.order_status AS 'status',
+      COALESCE(COUNT(o.order_id), 0) AS 'count'
+    FROM orders o
+    GROUP BY o.order_status
+    ORDER BY o.order_status;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error)
+    );
+    throw error;
+  }
+};
+
+// get total revenue by brand
+module.exports.getTotalRevenueByBrand = async () => {
+  console.log(chalk.blue('getTotalRevenueByBrand is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    b.brand_name AS 'brand',
+      COALESCE(SUM(oi.quantity * p.price), 0) AS 'count'
+    FROM brand b
+    LEFT JOIN product p ON p.brand_id = b.brand_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY b.brand_id
+    ORDER BY b.brand_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByBrand: ', error));
+    throw error;
+  }
+};
+
+// get total revenue by brand
+module.exports.getTotalRevenueByCategory = async () => {
+  console.log(chalk.blue('getTotalRevenueByCategory is called'));
+  try {
+    const totalQuery = `
+    SELECT 
+	    c.category_name AS 'category',
+      COALESCE(SUM(oi.quantity * p.price), 0) AS 'count'
+    FROM category c
+    LEFT JOIN product p ON p.category_id = c.category_id
+    LEFT JOIN order_items oi ON oi.product_id = p.product_id
+    GROUP BY c.category_id
+    ORDER BY c.category_id;`;
+    const results = await pool.query(totalQuery);
+    console.log(chalk.green(results[0]));
+    return results[0];
+  } catch (error) {
+    console.error(chalk.red('Error in getTotalRevenueByCategory: ', error));
     throw error;
   }
 };
@@ -716,7 +898,7 @@ module.exports.deleteCategoryByID = async (categoryID) => {
 module.exports.deleteImageByID = async (imageID) => {
   console.log(chalk.blue('deleteImageByID is called'));
   try {
-    const deleteImageQuery = `DELETE FROM product_image WHERE image_id=?;`;
+    const deleteImageQuery = 'DELETE FROM product_image WHERE image_id=?;';
     const results = await pool.query(deleteImageQuery, [imageID]);
     console.log(chalk.green(results[0].affectedRows));
     return results[0].affectedRows > 0;
@@ -729,8 +911,9 @@ module.exports.deleteImageByID = async (imageID) => {
 // delete all images by product id
 module.exports.deleteImagesByProductID = async (productID) => {
   console.log(chalk.blue('deleteImagesByProductID is called'));
-  const deleteImageQuery = `DELETE FROM product_image WHERE product_id = ?`;
-  const addDefaultImageQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  const deleteImageQuery = 'DELETE FROM product_image WHERE product_id = ?';
+  const addDefaultImageQuery =
+    'INSERT INTO product_image (product_id, image_url) VALUES ?;';
   console.log(chalk.blue('Creating connection...'));
   const connection = await pool.getConnection();
   console.log(
@@ -870,7 +1053,8 @@ module.exports.createProduct = async (
     'INSERT into product (product_name,price, description, category_id, brand_id) values (?,?,?,?,?)';
   const inventoryCreateQuery =
     'INSERT INTO inventory (product_id, quantity) values (?, ?);';
-  let imageCreateQuery = `INSERT INTO product_image (product_id, image_url) VALUES ?;`;
+  let imageCreateQuery =
+    'INSERT INTO product_image (product_id, image_url) VALUES ?;';
 
   quantity = quantity || 0;
   console.log(chalk.blue('Creating connection...'));

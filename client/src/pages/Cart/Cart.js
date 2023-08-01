@@ -1,9 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+import React ,{ useEffect, useState, useRef } from 'react';
 
-import { BsArrowLeft } from 'react-icons/bs';
+import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
-
-import { FaShoppingCart } from 'react-icons/fa';
 import api from '../../index';
 import { CartTable } from '../../components/CartTable';
 import CartCheckoutForm from '../../components/CartCheckoutForm';
@@ -157,8 +155,12 @@ const Cart = () => {
           showCheckout ? 'hidden' : 'block'
         } col-span-full lg:col-span-8`}
       >
-        <h2 className="font-breezeBold py-4 flex flex-row">
-          My Shopping Cart <FaShoppingCart />
+        <h2 className="font-breezeBold py-4 flex flex-row text-5xl font-bold">
+          Shopping Cart{' '}
+          <BsCart4
+            className="ml-3 animate-shake-custom text-teal-700"
+            size={40}
+          />
         </h2>
         <CartTable
           isLoading={isLoading}
@@ -183,7 +185,7 @@ const Cart = () => {
         {!showCheckout ? (
           <div className="py-6 flex flex-row justify-around lg:justify-normal">
             <Link to="/products">
-              <button className="ml-4 lg:ml-48 text-sm md:text-xl py-2 px-2 text-white bg-green-800 hover:bg-green-900 flex flex-row  rounded items-center">
+              <button className="ml-4 text-sm md:text-xl py-2 px-2 text-white bg-green-800 hover:bg-green-900 flex flex-row  rounded items-center">
                 <BsArrowLeft size={24} className="mr-1 lg:mr-5" />
                 <p>Continue Shopping</p>
               </button>

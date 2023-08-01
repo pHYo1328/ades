@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,6 +16,14 @@ import Category from '../../../components/Products/Admin/Category';
 import ProductList from '../../../components/Products/Admin/ProductList';
 import Statistics from '../../../components/Products/Admin/Statistics';
 import RevenueChart from '../../../components/Products/Admin/RevenueChart';
+import InventoryByCategoryChart from '../../../components/Products/Admin/InventoryByCategoryChart';
+import OrdersByBrandsChart from '../../../components/Products/Admin/OrdersByBrandChart';
+import BookmarksByBrandChart from '../../../components/Products/Admin/BookmarksByBrandChart';
+import ShippingMethodChart from '../../../components/Products/Admin/ShippingMethodChart';
+import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
+// import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
+import RevenueByBrandChart from '../../../components/Products/Admin/RevenueByBrandChart';
+import RevenueByCategoryChart from '../../../components/Products/Admin/RevenueByCategoryChart';
 
 import OrderAdmin from '../../Order/Admin/OrderAdmin';
 import UserInfo from '../../Login/UserInfo';
@@ -279,12 +287,12 @@ export default function AdminDashboard() {
           }}
         >
           <span className="sr-only">Open sidebar</span>
-          <i class="bi bi-list"></i>
+          <i className="bi bi-list"></i>
         </button>
 
         <aside
           id="default-sidebar"
-          class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0"
+          className="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0"
           aria-label="Sidebar"
         >
           <SideBar
@@ -305,10 +313,63 @@ export default function AdminDashboard() {
             {activeTab === 'home' && (
               <div className="w-full">
                 <Statistics statistics={statistics} />
-                <div>
-                  <RevenueChart className="" />
+
+
+
+
+
+                <div class="container mx-auto">
+                  <div class="lg:flex lg:flex-wrap">
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <RevenueChart />
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <InventoryByCategoryChart />
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <OrdersByBrandsChart />
+
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <BookmarksByBrandChart />
+
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <ShippingMethodChart />
+
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <PaymentMethodChart />
+
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <RevenueByBrandChart />
+
+                      </div>
+                    </div>
+                    <div class="lg:w-1/2 md:w-full sm:w-full p-2">
+                      <div class="bg-white rounded shadow-md">
+                        <RevenueByCategoryChart />
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
             )}
             {activeTab === 'products' && (
               <div className="w-full">

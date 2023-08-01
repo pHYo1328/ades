@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser');
+const path = require('path');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
@@ -87,6 +88,38 @@ module.exports = (app, router) => {
     productController.processGetRelatedProducts
   );
   router.get('/api/admin/revenue', productController.processGetTotalRevenue);
+  router.get(
+    '/api/admin/categories/count',
+    productController.processGetTotalNumberOfProductsByCategory
+  );
+  router.get(
+    '/api/admin/orders/count',
+    productController.processGetTotalNumberOfOrdersByBrand
+  );
+  router.get(
+    '/api/admin/bookmarks/count',
+    productController.processGetTotalNumberOfBookmarksByBrand
+  );
+  router.get(
+    '/api/admin/shipping/count',
+    productController.processGetTotalNumberOfOrdersByShipping
+  );
+  router.get(
+    '/api/admin/payment/count',
+    productController.processGetTotalNumberOfPaymentsByMethod
+  );
+  router.get(
+    '/api/admin/orders/status/count',
+    productController.processGetTotalNumberOfOrdersByStatus
+  );
+  router.get(
+    '/api/admin/revenue/brand/count',
+    productController.processGetTotalRevenueByBrand
+  );
+  router.get(
+    '/api/admin/revenue/category/count',
+    productController.processGetTotalRevenueByCategory
+  );
 
   // DELETE
   router.delete(
@@ -198,10 +231,6 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     orderController.processCancelOrder
   );
-  router.delete(
-    '/api/bookmark/remove/:customerId/:brandId',
-    bookmarkController.processRemoveBookMark
-  );
 
   //Carolyn
 
@@ -230,34 +259,17 @@ module.exports = (app, router) => {
     checkoutController.createPaymentIntent
   );
 
-  // router.post(
-  //   '/handleChargeSucceeded',
-  //   checkoutController.handleChargeSucceeded
-  // );
-
   //inserting data from stripe to back_end
   router.post(
-    '/webhook',
-    bodyParser.json({ type: 'application/json' }),
-    async (req, res) => {
-      const createWebhookEndpoint = async () => {
-        const endpoint = await stripe.webhookEndpoints.create({
-          url: 'https://techzero-v3-1.onrender.com/webhook',
-          enabled_events: ['charge.refunded', 'charge.succeeded'],
-        });
-        console.log('Webhook endpoint created:', endpoint);
-      };
-
-      await createWebhookEndpoint();
-      await handleWebhooks(req, res);
-    }
-  );
-
-  router.get(
-    '/api/paymentByStatus/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByStatus
-  );
+    '/addPayment',
+    bodyParser.raw({ type: 'application/json' }),
+    checkoutController.storePayment
+  ),
+      router.get(
+        '/api/paymentByStatus/:orderID',
+        // verifyAccessToken.verifyToken,
+        paymentController.processGetPaymentByStatus
+      );
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 

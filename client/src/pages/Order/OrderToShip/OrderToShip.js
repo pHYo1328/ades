@@ -34,10 +34,8 @@ const OrderToShip = () => {
       const response = await api.get(
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=paid`
       );
-      console.log(response);
       setOrderItems(response.data.data);
       const shippingMethods = await api.get(`/api/shipping`);
-      console.log(shippingMethods.data.data);
       setShippingMethods(shippingMethods.data.data);
       setIsLoading(false);
     };

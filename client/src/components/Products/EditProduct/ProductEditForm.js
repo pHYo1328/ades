@@ -1,7 +1,6 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-import React from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import Categories from '../Product/Categories';
@@ -15,7 +14,9 @@ import TextInput from '../../../components/TextInput';
 import NumberInput from '../../../components/NumberInput';
 import InputLabel from '../../../components/InputLabel';
 import TextArea from '../../../components/TextArea';
-import LinkButton from '../../../components/LinkButton';
+import UploadMultiple from '../../cloudinary/UploadMultiple';
+import ImageCarousel from '../../ImageCarousel';
+import DeleteModal from '../../modal/DeleteModal';
 
 export default function ProductEditForm() {
   const { productID } = useParams();
@@ -30,6 +31,16 @@ export default function ProductEditForm() {
   const [productCategory, setProductCategory] = useState();
   const [productBrand, setProductBrand] = useState();
   const [productQuantity, setProductQuantity] = useState();
+
+  const [index, setIndex] = useState(0);
+  const [images, setImages] = useState([]);
+  const [imagePath, setImagePath] = useState('');
+  const [image, setImage] = useState('');
+  const [success, setSuccess] = useState(false)
+
+  const [imageID, setImageID] = useState(0);
+  const [deletedImages, setDeletedImages] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // gets the details of the product by productID
   const getProducts = () => {
@@ -55,12 +66,104 @@ export default function ProductEditForm() {
     getProducts();
   }, []);
 
-  // console.log("product data:", productData);
 
-  // changes the details of the product as the user clicks on submit button
-  const handleSubmit = async (event) => {
+  // sets the image path when the user uploads an image
+  const handleImageChange = (path) => {
+    console.log('Selected image path:', path);
+    setImagePath(path);
+    console.log('path[0]: ', path[0]);
+    for (let i = 0; i < path.length; i++) {
+      setImages((prevImages) => [...prevImages, { product_id: parseInt(productID), image_id: i, image_url: path[i] }]);
+    }
+    // console.log('images: ', images);
+    console.log('Selected image path after setting:', path);
+  };
+
+  useEffect(() => {
+    console.log('images: ', images);
+  }, [images]);
+
+  // gets all the images of the product
+  const getImages = () => {
+    axios
+      .get(`${baseUrl}/api/products/${productID}/images`)
+      .then((response) => {
+        console.log(response);
+        setImages(response.data.data);
+        console.log(images);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getImages();
+  }, []);
+
+  const deleteAllImages = () => {
+    console.log('delete all images for the product');
+    console.log(productID);
+    axios
+      .delete(`${baseUrl}/api/products/${productID}/images`)
+      .then((res) => {
+        console.log('deleted');
+        toast.success(`Images deleted.`, {
+          autoClose: 3000,
+          pauseOnHover: true,
+          style: { fontSize: '16px' },
+        });
+        getImages();
+        setIndex(0);
+      });
+  }
+
+  const deleteImage = (imageID) => {
+    if (images.length > 1) {
+      // Delete the image at the index by using imageID
+      // const imageID = image.image_id;
+      console.log("imageID", imageID);
+      if (imageID !== 0) {
+        console.log("imageID", imageID);
+        if (!deletedImages.includes(imageID)) {
+          setDeletedImages([...deletedImages, imageID]);
+        }
+        // setIndex(0);
+      } else {
+        console.log("imageID", imageID);
+        images.splice(imageID, 1);
+        console.log("splice", images.splice(imageID, 1));
+        // setIndex(0);
+      }
+
+
+      console.log("deletedImage", deletedImages);
+
+      for (let image = 0; image < images.length; image++) {
+        for (let i = 0; i < deletedImages.length; i++) {
+          if (images[image].image_id === deletedImages[i]) {
+            images.splice(image, 1);
+          }
+        }
+      }
+
+      console.log("index", index);
+      setIndex(0);
+      setImages([...images]);
+      console.log("images", images);
+    } else {
+      // Show an alert when trying to delete the only image
+      toast.error(`Each product should have at least one image.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { fontSize: '16px' },
+      });
+    }
+  };
+
+
+  const handleSubmit = (event) => {
     event.preventDefault();
-
     console.log(chalk.yellow('submit button is clicked!'));
 
     const requestBody = {
@@ -72,21 +175,29 @@ export default function ProductEditForm() {
       quantity: productQuantity,
     };
 
+    const imageRequestBody = {
+      product_id: productID,
+      image_url: imagePath,
+    };
+
     console.log(requestBody);
-    if (productName == '' || productDescription == '') {
+    console.log(imageRequestBody);
+
+    if (
+      !productName ||
+      !productDescription ||
+      isNaN(productQuantity) ||
+      isNaN(productPrice) ||
+      productQuantity < 0 ||
+      productPrice <= 0
+    ) {
+      toast.error(`Please fill in all the fields with valid values.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { 'font-size': '16px' },
+      });
+    } else if (!images || !productID) {
       toast.error(`Please fill in all the fields.`, {
-        autoClose: 3000,
-        pauseOnHover: true,
-        style: { 'font-size': '16px' },
-      });
-    } else if (isNaN(productQuantity) || productQuantity < 0) {
-      toast.error(`Inventory must be a value not less than 0.`, {
-        autoClose: 3000,
-        pauseOnHover: true,
-        style: { 'font-size': '16px' },
-      });
-    } else if (isNaN(productPrice) || productPrice <= 0) {
-      toast.error(`Price must be a value not less than or equal to 0.`, {
         autoClose: 3000,
         pauseOnHover: true,
         style: { 'font-size': '16px' },
@@ -107,8 +218,51 @@ export default function ProductEditForm() {
           console.log(response);
           setProduct(response.data.data);
           console.log(product);
-          // fetchProducts();
+        })
+        .catch((error) => {
+          console.error(error);
         });
+
+      axios
+        .post(`${baseUrl}/api/products/images`, imageRequestBody, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          toast.success(`Image updated.`, {
+            autoClose: 3000,
+            pauseOnHover: true,
+            style: { 'font-size': '16px' },
+          });
+          setImage(response.data.data);
+          console.log(image);
+          getImages();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      for (let image = 0; image < deletedImages.length; image++) {
+        // let imageID = image.image_id;
+        console.log("imageID", deletedImages[image])
+        axios
+          .delete(`${baseUrl}/api/products/images/${deletedImages[image]}`)
+          .then((res) => {
+            // const updatedImages = images.filter(
+            //   (i) => i.image_id !== image.image_id
+            // );
+            toast.success(`Image deleted.`, {
+              autoClose: 3000,
+              pauseOnHover: true,
+              style: { fontSize: '16px' },
+            });
+            setImages(images);
+            setIndex(0);
+          });
+      }
+
     }
   };
 
@@ -121,6 +275,42 @@ export default function ProductEditForm() {
       {/* shows the details of the product if the product exists */}
       {productData ? (
         <div>
+          <div className="mt-3 w-200 h-300 mx-auto">
+            <ImageCarousel images={images} deleteImage={deleteImage} setIndex={setIndex} index={index} />
+          </div>
+
+          <div className="flex justify-between mt-4 space-x-4">
+            <div className="mb-3 w-6/12">
+              {/* <UploadWidget onImageChange={handleImageChange} /> */}
+              <UploadMultiple length={images.length} onImageChange={handleImageChange} success={success} />
+
+            </div>
+            <div className="mb-3 w-6/12">
+              {/* <Button onClick={deleteAllImages} content={"Delete All Images"} /> */}
+              <Button
+                onClick={(event) => {
+                  event.preventDefault();
+                  setShowDeleteModal(true);
+                  console.log(showDeleteModal); // Note: This log will not show the updated state value immediately due to the asynchronous nature of state updates
+                }}
+                content={"Delete All Images"}
+              />
+              {showDeleteModal && (
+                <DeleteModal
+                  onCancel={() => {
+                    setShowDeleteModal(false);
+                    console.log("cancel button is clicked");
+                  }}
+                  onDelete={() => {
+                    console.log("delete button is clicked");
+                    setShowDeleteModal(false); // Close the modal
+                    deleteAllImages();
+                  }}
+                />
+              )}
+            </div>
+          </div>
+
           <div className="mb-3">
             <InputLabel content="Product Name" />
             <TextInput
@@ -196,7 +386,11 @@ export default function ProductEditForm() {
           <Button onClick={handleSubmit} content={'Submit'} />
         </div>
         <div className="mb-3 w-6/12">
-          <LinkButton content={'Discard Changes'} linkTo={`/admin`} />
+          <Button onClick={(event) => {
+            event.preventDefault();
+            getProducts();
+            getImages();
+          }} content={"Discard Changes"} />
         </div>
       </div>
 

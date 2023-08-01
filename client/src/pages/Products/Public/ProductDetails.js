@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -13,7 +14,6 @@ import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
 import ProductList from '../../../components/Products/Product/ProductList';
-
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -204,7 +204,7 @@ export default function ProductDetails() {
                     </p>
                   )}
 
-                  <div className="mx-auto">
+                  <div className="mx-auto relative">
                     <button
                       disabled={product.quantity <= 0}
                       onClick={() => {
@@ -219,6 +219,9 @@ export default function ProductDetails() {
                     >
                       Add to cart
                     </button>
+                    <div>
+                      {/* <img src={outOfStockImage} alt="Out of Stock" className="w-52 transform rotate-90 translate-x-64 z-10 absolute top-5" />   */}
+                    </div>
                     <ToastContainer
                       limit={2}
                       newestOnTop={true}

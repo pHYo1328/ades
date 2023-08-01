@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import LoadingIndicator from 'react-loading-indicator';
 import CartItem from './CartItem';
 
@@ -59,3 +61,15 @@ export const CartTable = ({
     </table>
   );
 };
+
+CartTable.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  cartProductData: PropTypes.array,
+  cartData: PropTypes.array.isRequired,
+  setCartData: PropTypes.func.isRequired,
+  setTotalAmount: PropTypes.func.isRequired,
+  productDetails: PropTypes.array,
+  customerID: PropTypes.string.isRequired,
+};
+
+export default CartTable;

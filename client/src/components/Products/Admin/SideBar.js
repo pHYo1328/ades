@@ -1,7 +1,8 @@
+import React from 'react';
 export default function SideBar({ activeTab, setActiveTab }) {
   return (
-    <nav class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <ul class="space-y-2 font-medium">
+    <nav className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+      <ul className="space-y-2 font-medium">
         <li>
           {[
             { label: 'Overview', value: 'home' },

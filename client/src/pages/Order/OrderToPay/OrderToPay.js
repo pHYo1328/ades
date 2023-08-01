@@ -34,18 +34,13 @@ const OrderToPay = () => {
       const response = await api.get(
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=order_received`
       );
-      console.log(response);
       setOrderItems(response.data.data);
       const shippingMethods = await api.get(`/api/shipping`);
-      console.log(shippingMethods.data.data);
       setShippingMethods(shippingMethods.data.data);
       setIsLoading(false);
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    console.log(orderItems);
-  }, [orderItems]);
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-row">
