@@ -74,12 +74,15 @@ export default function CheckoutForm({ clientSecret }) {
   };
   
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <div style={{ marginBottom: '30px', paddingTop: '20px' }}>
+    <form id="payment-form" onSubmit={handleSubmit} style={{ paddingBottom: '20px', paddingRight: '20px', 
+   
+    alignItems: 'center'}}>
+      <AddressElement options={{ mode: 'shipping' }} />
+      <div style={{ marginBottom: '15px', paddingTop: '5px' }}>
         <h1>Payment form</h1>
       </div>
       <PaymentElement id="payment-element" />
-      <AddressElement options={{ mode: 'shipping' }} />
+     
       <button
         disabled={isProcessing || !stripe || !elements}
         id="submit"
@@ -87,6 +90,8 @@ export default function CheckoutForm({ clientSecret }) {
           outline: '2px solid black',
           marginTop: '20px', // Adjust the color and size of the outline as needed
         }}
+        className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      
       >
         <span id="button-text">
           {isProcessing ? 'Processing ... ' : ' Check out '}
