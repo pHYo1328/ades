@@ -1,0 +1,14 @@
+20230730	23:09:19	1fbf4ed0-a061-439c-a99b-8d23a4442de2	GET	http://localhost:3000	/api/category
+20230730	23:09:19	c4c0a782-bc4a-4df8-a485-625f38b02e15	GET	http://localhost:3000	/api/brands
+20230730	23:09:19	b8c4b02a-41cb-4d0f-bb80-5ba2a793846d	GET	http://localhost:3000	/api/products/new
+20230730	23:09:19	77b74e33-4b35-45a0-aff4-38969603b3c7	GET	http://localhost:3000	/api/category
+20230730	23:09:19	1e36bf4f-56be-4bd5-b395-c9368f11ab6c	GET	http://localhost:3000	/api/brands
+20230730	23:09:30	9788dbea-4f05-4c3c-89ac-dd713fcc9b23	GET	http://localhost:3000	/api/cart/3
+20230730	23:09:30	4a55bb1c-81b7-4a99-981e-3d7b43388171	GET	http://localhost:3000	/api/shipping
+20230730	23:09:32	5fa3da87-78c5-4c77-abee-d67b318cb17c	OPTIONS	http://localhost:3000	/api/cart/3
+20230730	23:09:32	e5d8b626-034b-4af1-9b2a-34861f68c39f	GET	http://localhost:3000	/api/category
+20230730	23:09:32	7d4b0174-0d0f-4708-9f86-8b9c343e315e	GET	http://localhost:3000	/api/brands
+20230730	23:09:32	8e51828e-7e86-4f93-8b69-e25941a77c06	GET	http://localhost:3000	/api/products/new
+20230730	23:09:32	2cb12ab5-e00e-4436-9161-117198f923d9	POST	http://localhost:3000	/api/cart/3
+20230730	23:09:32	bb9cd6b9-fee8-4f5b-9b87-ce91999abadc	GET	http://localhost:3000	/api/category
+20230730	23:09:32	375898a1-a359-415c-9c27-5381c0bfb558	GET	http://localhost:3000	/api/brands

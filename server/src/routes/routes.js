@@ -1,4 +1,4 @@
-const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
