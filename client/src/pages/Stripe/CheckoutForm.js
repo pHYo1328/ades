@@ -1,55 +1,88 @@
-import React from 'react';
-import { PaymentElement } from '@stripe/react-stripe-js';
-import { useState, useEffect } from 'react';
+import { PaymentElement, AddressElement } from '@stripe/react-stripe-js';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
-import { useNavigate } from 'react-router-dom';
 
 export default function CheckoutForm({}) {
   const stripe = useStripe();
   const elements = useElements();
-  const navigate = useNavigate();
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { orderID } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
     setIsProcessing(true);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: window.location.origin,
-      },
+    try {
+      const result = await stripe.confirmPayment({
+        elements,
+        redirect: 'if_required',
+        
+      });
+
+      if (result.error) {
+        console.error(result.error);
+      } else if (result.paymentIntent.status === 'succeeded') {
+        console.log('Payment succeeded! PaymentIntent:', result.paymentIntent);
+        
+            // Prepare the data to be sent in the request body
+      const requestData = {
+        paymentIntent: result.paymentIntent,
+        orderID: orderID, // Include the orderID in the request body
+      };
+      console.log(requestData);
+       
+        
+          
+
+  // Make the API call to your backend endpoint
+  fetch('http://localhost:8081/addPayment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestData),
+    // body: requestData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log('Payment details sent to the backend successfully');
+      } else {
+        console.error('Failed to send payment details to the backend');
+      }
+    })
+    .catch((error) => {
+      console.error('Error occurred during API call:', error);
     });
 
-    if (error) {
-      if (error.type === 'card_error' || error.type === 'validation_error') {
-        setMessage(error.message);
-      } else {
-        setMessage('An unexpected error occurred.');
+        // Perform any further processing with the billing details if needed
+
+        window.location = 'http://localhost:3000/';
       }
-    } else {
-      // Payment succeeded, navigate to the homepage
-      navigate('/');
+    } catch (error) {
+      console.error('Unexpected error:', error);
     }
 
     setIsProcessing(false);
   };
-
+  
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <div style={{ marginBottom: '30px', paddingTop: '20px' }}>
+    <form id="payment-form" onSubmit={handleSubmit} style={{ paddingBottom: '20px', paddingRight: '20px', 
+   
+    alignItems: 'center'}}>
+      <AddressElement options={{ mode: 'shipping' }} />
+      <div style={{ marginBottom: '15px', paddingTop: '5px' }}>
         <h1>Payment form</h1>
       </div>
       <PaymentElement id="payment-element" />
+     
       <button
         disabled={isProcessing || !stripe || !elements}
         id="submit"
@@ -57,6 +90,8 @@ export default function CheckoutForm({}) {
           outline: '2px solid black',
           marginTop: '20px', // Adjust the color and size of the outline as needed
         }}
+        className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      
       >
         <span id="button-text">
           {isProcessing ? 'Processing ... ' : ' Check out '}
