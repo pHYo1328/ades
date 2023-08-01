@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   RiTruckLine,
@@ -13,6 +14,7 @@ const SignedInHeader = () => {
   const userId = localStorage.getItem('userid');
   const userPanelRef = useRef(null);
   const navigate = useNavigate();
+  const { userData, setUserData } = useContext(AuthContext);
 
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
@@ -34,9 +36,16 @@ const SignedInHeader = () => {
       console.error(error);
     }
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('userid');
-    localStorage.removeItem('roles');
-    localStorage.removeItem('isSignedIn');
+    // localStorage.removeItem('userid');
+    // localStorage.removeItem('roles');
+    // localStorage.removeItem('isSignedIn');
+    setUserData({
+      ...userData,
+      // accessToken: null,
+      userid: null,
+      roles: [],
+      isSignedIn: false,
+    });
     navigate('/');
   };
 
@@ -73,30 +82,38 @@ const SignedInHeader = () => {
               </button>
               {isUserPanelOpen && (
                 <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg origin-top-right">
+                  <Link to="/orderToPay">
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                     <div className="flex items-center">
                       <FaWallet className="inline-block mr-2" />
                       <span className="truncate">to pay</span>
                     </div>
                   </button>
+                  </Link>
+                  <Link to="/orderToShip">
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                     <div className="flex items-center">
                       <FaBox className="inline-block mr-2" />
                       <span className="truncate">to ship</span>
                     </div>
                   </button>
+                  </Link>
+                  <Link to="/orderToDeliver">
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                     <div className="flex items-center">
                       <RiTruckLine className="inline-block mr-2" />
                       <span className="truncate">to receive</span>
                     </div>
                   </button>
+                  </Link>
+                  <Link to="/orderDelivered">
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                     <div className="flex items-center">
                       <RiCheckboxCircleLine className="inline-block mr-2" />
                       <span className="truncate">completed</span>
                     </div>
                   </button>
+                  </Link>
                 </div>
               )}
             </div>

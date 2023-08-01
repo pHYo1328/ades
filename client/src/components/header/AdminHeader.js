@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const Header = () => {
   const userPanelRef = useRef(null);
   const navigate = useNavigate();
+  const { userData, setUserData } = useContext(AuthContext);
 
   // const handleOutsideClick = (event) => {
   //   if (userPanelRef.current && !userPanelRef.current.contains(event.target)) {
@@ -25,6 +27,13 @@ const Header = () => {
     localStorage.removeItem('admin_id');
     localStorage.removeItem('roles');
     localStorage.removeItem('isAdminSignedIn');
+    // setUserData({
+    //   ...userData,
+    //   accessToken: null,
+    //   userid: null,
+    //   roles: [],
+    //   isSignedIn: false,
+    // });
     navigate('/');
   };
 
