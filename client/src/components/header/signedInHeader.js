@@ -1,21 +1,33 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { AuthContext } from '../../AuthContext';
+import React, { useState, useEffect, useRef ,useContext} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   RiTruckLine,
   RiCheckboxCircleLine,
-  RiCloseCircleLine,
+  RiNotification2Fill,
 } from 'react-icons/ri';
-import { FaBox, FaWallet } from 'react-icons/fa';
+import {
+  FaBox,
+  FaWallet,
+  FaShoppingCart,
+  FaUser,
+  FaBars,
+} from 'react-icons/fa';
+import { MdComputer } from 'react-icons/md';
+import api from '../../index';
+import { AuthContext } from '../../AuthContext';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const SignedInHeader = () => {
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
   const userId = localStorage.getItem('userid');
   const userPanelRef = useRef(null);
-  const navigate = useNavigate();
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const [notificationStatus, setNotificationStatus] = useState(false);
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  const sideNavRef = useRef(null);
+  const notificationPanelRef = useRef(null);
   const { userData, setUserData } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
@@ -24,6 +36,18 @@ const SignedInHeader = () => {
     if (userPanelRef.current && !userPanelRef.current.contains(event.target)) {
       setIsUserPanelOpen(false);
     }
+
+    if (sideNavRef.current && !sideNavRef.current.contains(event.target)) {
+      setIsSideNavOpen(false);
+    }
+
+    if (notificationPanelRef.current && !notificationPanelRef.current.contains(event.target)) {
+      setIsNotificationPanelOpen(false);
+    }
+  };
+
+  const handleNotificationsPanelToggle = () => {
+    setIsNotificationPanelOpen(!isNotificationPanelOpen);
   };
 
   const onHandleLogout = async () => {
@@ -36,7 +60,7 @@ const SignedInHeader = () => {
       console.error(error);
     }
     localStorage.removeItem('accessToken');
-    // localStorage.removeItem('userid');
+    localStorage.removeItem('userid');
     // localStorage.removeItem('roles');
     // localStorage.removeItem('isSignedIn');
     setUserData({
@@ -50,12 +74,30 @@ const SignedInHeader = () => {
   };
 
   useEffect(() => {
+    api.get(`/api/notifications/${userId}`).then((response) => {
+      if (response.data.data[0][0].have_email === 1) {
+        setNotificationStatus(true);
+      }
+    });
     document.addEventListener('click', handleOutsideClick);
 
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
+
+  const handleSideNavToggle = () => {
+    setIsSideNavOpen(!isSideNavOpen);
+  };
+
+  useEffect(() => {
+    if (!isNotificationPanelOpen) {
+      api.delete(`/api/notifications/${userId}`)
+        .then((response) => {
+        })
+    }
+  }, [isNotificationPanelOpen]);
+  
 
   return (
     <header className="bg-tertiary shadow">
@@ -67,52 +109,73 @@ const SignedInHeader = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            <Link to="/products" className="text-white hover:text-gray-600">
-              Products
+          {userId && <div className="relative" ref={notificationPanelRef}>
+              <button
+                onClick={handleNotificationsPanelToggle}
+                className="text-white hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+              >
+                <RiNotification2Fill />
+                {notificationStatus && (
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                )}
+              </button>
+              {isNotificationPanelOpen && (
+                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
+                  {notificationStatus ? (
+                    <p className="w-max p-2">There are new emails for you</p>
+                  ) : (
+                    <p className="w-max p-2">There is no update for you</p>
+                  )}
+                </div>
+              )}
+            </div>}
+            <Link
+              to="/products"
+              className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+            >
+              <MdComputer />
+              <p className="text-2xl">Products</p>
             </Link>
-            <Link to="/cart" className="text-white hover:text-gray-600">
-              Cart
+            <Link
+              to="/cart"
+              className="text-white hover:text-gray-600 py-2 border-b-2 border-transparent hover:border-fuchsia-600 flex flex-row space-x-1"
+            >
+              <FaShoppingCart />
+              <p className="text-2xl">Cart</p>
             </Link>
             <div className="relative" ref={userPanelRef}>
               <button
                 onClick={handleUserPanelToggle}
-                className="text-white hover:text-gray-600"
+                className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
               >
-                User
+                <FaUser />
+                <p className="text-2xl">User</p>
               </button>
               {isUserPanelOpen && (
-                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg origin-top-right">
+                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
                   <Link to="/orderToPay">
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    <div className="flex items-center">
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                       <FaWallet className="inline-block mr-2" />
-                      <span className="truncate">to pay</span>
-                    </div>
-                  </button>
+                      to pay
+                    </button>
                   </Link>
                   <Link to="/orderToShip">
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    <div className="flex items-center">
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                       <FaBox className="inline-block mr-2" />
-                      <span className="truncate">to ship</span>
-                    </div>
-                  </button>
+                      to ship
+                    </button>
                   </Link>
                   <Link to="/orderToDeliver">
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    <div className="flex items-center">
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                       <RiTruckLine className="inline-block mr-2" />
-                      <span className="truncate">to receive</span>
-                    </div>
-                  </button>
+                      to receive
+                    </button>
                   </Link>
                   <Link to="/orderDelivered">
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    <div className="flex items-center">
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                       <RiCheckboxCircleLine className="inline-block mr-2" />
-                      <span className="truncate">completed</span>
-                    </div>
-                  </button>
+                      completed
+                    </button>
                   </Link>
                 </div>
               )}

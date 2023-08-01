@@ -11,10 +11,10 @@ const OrderToDeliver = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // const roles = JSON.parse(localStorage.getItem('roles'));
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      if (!userData.isSignedIn) {
-        console.log('Redirecting to homepage');
-        navigate('/login');
+    // User does not have the required role(s), redirect them to the homepage or show an error message
+    if (!userData.isSignedIn) {
+      console.log('Redirecting to homepage');
+      navigate('/login');
     } else {
       // const isCustomer = roles.includes('customer');
       // console.log(isCustomer);
@@ -26,7 +26,7 @@ const OrderToDeliver = () => {
       // }
     }
   }, []);
-  
+
   const userId = localStorage.getItem('userid');
   useEffect(() => {
     setIsLoading(true);
@@ -59,6 +59,5 @@ const OrderToDeliver = () => {
     ></CompletedItemList>
   );
 };
-
 
 export default OrderToDeliver;

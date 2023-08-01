@@ -173,7 +173,7 @@ export default function ProductDetails() {
                     <i className="bi bi-tags-fill"></i> ${product.price}
                   </p>
                   <div className="flex flex-row space-x-2">
-                    <p>Category: {product.brand_name}</p>
+                    <p>Brand: {product.brand_name}</p>
                     <button
                       onClick={() =>
                         bookmarkClickHandler(product.brand_id, customerId)

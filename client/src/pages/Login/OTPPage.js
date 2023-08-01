@@ -37,7 +37,7 @@ const VerifyOTP = () => {
         const data = location.state; //pass data from Login.js
 
         localStorage.setItem('accessToken', data.accessToken);
-        // localStorage.setItem('userid', data.userid);
+        localStorage.setItem('userid', data.userid);
         // localStorage.setItem('roles', JSON.stringify(data.roles));
         // localStorage.setItem('isSignedIn', 'true');
 

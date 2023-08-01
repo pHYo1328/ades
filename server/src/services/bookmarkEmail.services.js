@@ -31,7 +31,7 @@ module.exports.getLatestUpdate = async () => {
 // fetch customerDetails according to the brand id
 module.exports.getCustomerDetails = async (previousUpdate) => {
   const fetchCustomerDetailsQuery = `
-    SELECT users.email,users.username,bookmark.brand_id
+    SELECT users.customer_id,users.email,users.username,bookmark.brand_id
     FROM users
     INNER JOIN bookmark on bookmark.customer_id = users.customer_id
     WHERE bookmark.brand_id IN (

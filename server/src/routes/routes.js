@@ -26,6 +26,7 @@ const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
+const notificationController = require('../controller/notification.controller');
 const stripe = require('../config/stripe');
 const { handleWebhooks } = require('../controller/checkout.controller');
 
@@ -203,6 +204,11 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     shippingController.processFetchShippingMethod
   );
+
+  router.get(
+    '/api/notifications/:customerId',
+    notificationController.getNotifications
+  );
   // post
   router.post('/api/cart/:userID', cartController.processAddCartData);
   router.post(
@@ -235,6 +241,11 @@ module.exports = (app, router) => {
   router.delete(
     '/api/bookmark/remove/:customerId/:brandId',
     bookmarkController.processRemoveBookMark
+  );
+
+  router.delete(
+    '/api/notifications/:customerId',
+    notificationController.removeNotifications
   );
 
   //Carolyn
