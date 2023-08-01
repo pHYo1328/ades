@@ -64,7 +64,7 @@ function App() {
     '/orderDelivered',
     '/orderToShip',
     '/orderToPay',
-    '/orderToDeliver'
+    '/orderToDeliver',
   ]; // Specify the routes where the header should be signed in headers
   const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
@@ -106,7 +106,6 @@ function App() {
   // }
   return (
     <>
-    
       <div className="App">
         <header className="App-header">
           {/* {adminHeader ? <AdminHeader /> : <Header />} */}

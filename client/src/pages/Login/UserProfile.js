@@ -46,8 +46,8 @@ const UserProfile = () => {
     fetchUser();
   }, []);
 
-  console.log("THIS IS USER INFO",user);
-  console.log("THIS IS userData INFO",userData);
+  console.log('THIS IS USER INFO', user);
+  console.log('THIS IS userData INFO', userData);
   const updateUserProfile = async () => {
     try {
       const response = await fetch(url2, {

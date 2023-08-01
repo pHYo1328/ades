@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   RiTruckLine,
   RiCheckboxCircleLine,
-  RiCloseCircleLine,
+  RiNotification2Fill,
 } from 'react-icons/ri';
 import {
   FaBox,
@@ -13,14 +13,13 @@ import {
   FaBars,
 } from 'react-icons/fa';
 import { MdComputer } from 'react-icons/md';
+import api from '../../index';
 
 const Header = () => {
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
-  const userId = localStorage.getItem('userid');
   const userPanelRef = useRef(null);
-  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const sideNavRef = useRef(null);
-
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
@@ -35,7 +34,10 @@ const Header = () => {
     }
   };
 
+ 
+
   useEffect(() => {
+    
     document.addEventListener('click', handleOutsideClick);
 
     return () => {
@@ -48,7 +50,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-tertiary shadow">
+    <header className="bg-tertiary shadow font-breezeRegular">
       <div className="container mx-auto px-4 py-6">
         <nav className="hidden md:flex items-center justify-between">
           <div className="flex items-center">
@@ -57,6 +59,7 @@ const Header = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-8">
+
             <Link
               to="/products"
               className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
