@@ -22,9 +22,8 @@ function RefundPayment() {
       .catch((error) => {
         console.error(error);
       });
-      window.scrollTo(0, 0);
-    }, []);
- 
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleBack = async (event) => {
     console.log(chalk.yellow('Back button is clicked!'));

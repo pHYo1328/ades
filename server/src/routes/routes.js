@@ -232,6 +232,11 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
+  router.delete(
+    '/api/bookmark/remove/:customerId/:brandId',
+    bookmarkController.processRemoveBookMark
+  );
+
   //Carolyn
 
   router.get(
@@ -265,11 +270,11 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.storePayment
   ),
-      router.get(
-        '/api/paymentByStatus/:orderID',
-        // verifyAccessToken.verifyToken,
-        paymentController.processGetPaymentByStatus
-      );
+    router.get(
+      '/api/paymentByStatus/:orderID',
+      // verifyAccessToken.verifyToken,
+      paymentController.processGetPaymentByStatus
+    );
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 

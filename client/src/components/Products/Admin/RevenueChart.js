@@ -25,7 +25,20 @@ export default function RevenueChart() {
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [revenues, setRevenues] = useState(null);
-  let labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  let labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
   let amounts = [];
 
   useEffect(() => {
@@ -50,7 +63,10 @@ export default function RevenueChart() {
     });
 
     revenues.forEach((revenue) => {
-      const monthName = new Date(revenue.month + '-01').toLocaleString('en-US', { month: 'long' });
+      const monthName = new Date(revenue.month + '-01').toLocaleString(
+        'en-US',
+        { month: 'long' }
+      );
       revenueByMonth[monthName] = revenue.total;
     });
 
@@ -93,8 +109,8 @@ export default function RevenueChart() {
         // fill: false,
         // backgroundColor: 'rgba(75, 192, 192, 0.2)',
         // borderColor: '#213555',
-        backgroundColor: "rgba(0,0,255,1.0)",
-        borderColor: "rgba(0,0,255)",
+        backgroundColor: 'rgba(0,0,255,1.0)',
+        borderColor: 'rgba(0,0,255)',
         // borderWidth: 1,
       },
     ],
@@ -102,7 +118,9 @@ export default function RevenueChart() {
 
   return (
     <div className="bg-orange-100 rounded-lg p-5 w-100">
-      <h4 className="text-2xl font-bold mb-6 text-center">Revenue (By Month)</h4>
+      <h4 className="text-2xl font-bold mb-6 text-center">
+        Revenue (By Month)
+      </h4>
       <Line options={options} data={data} />
     </div>
   );

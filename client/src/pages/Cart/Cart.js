@@ -1,4 +1,4 @@
-import React ,{ useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';

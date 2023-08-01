@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../../AuthContext';
-import OrderList from '../../../components/ItemList/orderList';
+import OrderList from '../../../components/OrderItemList';
 import api from '../../../index';
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
