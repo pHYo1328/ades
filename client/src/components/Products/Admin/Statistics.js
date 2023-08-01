@@ -1,6 +1,5 @@
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from '../../Loading/Loading';
-import RevenueChart from './RevenueChart';
 
 export default function Statistics(props) {
   const { statistics } = props;
@@ -9,7 +8,7 @@ export default function Statistics(props) {
     <div>
       {/* shows the statistics */}
       {statistics ? (
-        <div className="flex flex-wrap justify-center my-2 mx-auto max-w-4xl text-center">
+        <div className="flex flex-wrap justify-center my-2 mx-auto text-center">
           <div className="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 p-2">
             <div className="h-full rounded bg-green-100 p-3">
               <h4 className="text-lg font-bold mb-2">Total Sold</h4>
