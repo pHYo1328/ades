@@ -444,10 +444,10 @@ exports.createWebhooks = async (req, res) => {
   //   data = event.data.object;
   //   eventType = event.type;
   // } else {
-    data = req.body.data.object;
-    eventType = req.body.type;
-    console.log(chalk.yellow('Data: ', data));
-    console.log(chalk.yellow('Event Type: ', eventType));
+  data = req.body.data.object;
+  eventType = req.body.type;
+  console.log(chalk.yellow('Data: ', data));
+  console.log(chalk.yellow('Event Type: ', eventType));
   // }
 
   //handle the event

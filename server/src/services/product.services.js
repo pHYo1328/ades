@@ -495,7 +495,9 @@ module.exports.getTotalNumberOfProductsByCategory = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
     throw error;
   }
 };
@@ -517,7 +519,9 @@ module.exports.getTotalNumberOfOrdersByBrand = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
     throw error;
   }
 };
@@ -538,7 +542,9 @@ module.exports.getTotalNumberOfBookmarksByBrand = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfProductsByCategory: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfProductsByCategory: ', error)
+    );
     throw error;
   }
 };
@@ -559,7 +565,9 @@ module.exports.getTotalNumberOfOrdersByShipping = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByShipping: ', error)
+    );
     throw error;
   }
 };
@@ -579,7 +587,9 @@ module.exports.getTotalNumberOfPaymentsByMethod = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
+    );
     throw error;
   }
 };
@@ -599,7 +609,9 @@ module.exports.getTotalNumberOfOrdersByStatus = async () => {
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error));
+    console.error(
+      chalk.red('Error in getTotalNumberOfOrdersByStatus: ', error)
+    );
     throw error;
   }
 };
