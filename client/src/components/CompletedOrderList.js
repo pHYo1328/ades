@@ -269,6 +269,4 @@ const CompletedOrderList = ({
   );
 };
 
-
-
 export default CompletedOrderList;

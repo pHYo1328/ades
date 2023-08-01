@@ -10,12 +10,10 @@ app.listen(8000, () => {
     bookmarkEmailController.updateProductsEmailSender().catch((error) => {
       console.error('Error in updateProductsEmailSender:', error);
     });
-    
   });
   cron.schedule('0 1 * * *', () => {
-    unpaidOrdersController.cleanUnpaidOrders()
-      .catch((error) => {
-        console.error('Error in scheduled task cleanUnpaidOrders:', error);
-      });
+    unpaidOrdersController.cleanUnpaidOrders().catch((error) => {
+      console.error('Error in scheduled task cleanUnpaidOrders:', error);
+    });
   });
 });
