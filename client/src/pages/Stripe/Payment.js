@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import api from '../../index';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
@@ -27,7 +26,7 @@ function Payment() {
             }),
             ,
           ]);
-        console.log(parseInt(orderID));
+       
         const { stripe_publishable_key } = configResponse.data;
         const { data: paymentData } = paymentResponse.data;
         const { clientSecret } = clientSecretResponse.data;
@@ -35,7 +34,8 @@ function Payment() {
         setStripePromise(loadStripe(stripe_publishable_key));
         setPayments(paymentData);
         setClientSecret(clientSecret);
-      } catch (error) {
+        window.scrollTo(0, 0);
+      }  catch (error) {
         console.error(error);
       }
     };
@@ -102,7 +102,7 @@ function Payment() {
         <div className="mt-4 mb-48 sm:mb-64 w-full mr-10 lg:w-2.5/5 lg:ml-20">
           {clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <AddressForm />
+              {/* <AddressForm /> */}
 
               <CheckoutForm />
             </Elements>

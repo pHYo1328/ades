@@ -199,56 +199,6 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  // //Carolyn
-
-  // router.get(
-  //   '/api/payment/:orderID',
-  //   // verifyAccessToken.verifyToken,
-  //   paymentController.processGetPaymentByID
-  // );
-
-  // router.get(
-  //   '/api/paymentTotal/:orderID',
-  //   //verifyAccessToken.verifyToken,
-  //   paymentController.processGetPaymentTotal
-  // );
-
-  // router.get(
-  //   '/api/idAndAmount/:productID',
-  //   //verifyAccessToken.verifyToken,
-  //   paymentController.processGetIDAndAmount
-  // );
-
-  // router.get('/config', checkoutController.getConfig);
-
-  // router.post(
-  //   '/createPaymentIntent/:orderID',
-  //   checkoutController.createPaymentIntent
-  // );
-  
-
-  // //inserting data from stripe to back_end
-  //   router.post(
-  //   '/webhook',
-  //   bodyParser.raw({ type: 'application/json' }),
-  //   checkoutController.createWebhooks
-  // ),
-
-  
-
-  //   router.get(
-  //     '/api/paymentByStatus/:orderID',
-  //     // verifyAccessToken.verifyToken,
-  //     paymentController.processGetPaymentByStatus
-  //   );
-
-  // router.post('/processRefund/:orderID', checkoutController.processRefund);
-
-  // router.post(
-  //   '/processPartialRefund/:productID',
-  //   checkoutController.processPartialRefund
-  // );
-
   //Carolyn
 
   router.get(
@@ -278,24 +228,22 @@ module.exports = (app, router) => {
 
   //inserting data from stripe to back_end
   router.post(
-    '/webhook',
+    '/addPayment',
     bodyParser.raw({ type: 'application/json' }),
-    checkoutController.createWebhooks
+    checkoutController.storePayment
   ),
+    router.get(
+      '/api/paymentByStatus/:orderID',
+      // verifyAccessToken.verifyToken,
+      paymentController.processGetPaymentByStatus
+    );
 
-  router.get(
-    '/api/paymentByStatus/:orderID',
-    // verifyAccessToken.verifyToken,
-    paymentController.processGetPaymentByStatus
-  );
-
-    router.post('/processRefund/:orderID', checkoutController.processRefund);
+  router.post('/processRefund/:orderID', checkoutController.processRefund);
 
   router.post(
     '/processPartialRefund/:productID',
     checkoutController.processPartialRefund
   );
-
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

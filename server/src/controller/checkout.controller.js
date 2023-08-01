@@ -301,11 +301,9 @@ exports.createPaymentIntent = async (req, res) => {
     });
 
     // Send publishable key and PaymentIntent details to client
-    res
-      .send({
-        clientSecret: paymentIntent.client_secret,
-      })
-      .end();
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+    });
   } catch (err) {
     console.log(chalk.red('Error in createPaymentIntent', err));
     return res.status(400).send({
@@ -421,112 +419,35 @@ exports.processPartialRefund = async (req, res) => {
   }
 };
 
-let endpointSecret;
+//store payment inside database
+exports.storePayment = async (req, res) => {
+  const requestData = req.body;
 
-//creating webhook for getting data inside inside database
-exports.createWebhooks = async (req, res) => {
-  // const sig = req.headers['stripe-signature'];
-  let data;
-  let eventType;
+  // Access the paymentIntent data from the requestData object
+  const paymentIntentData = requestData.paymentIntent;
+  const orderID = requestData.orderID; // Access the orderID
 
-  // if (endpointSecret) {
-  //   let event;
-  //   console.log(chalk.yellow(sig));
-  //   try {
-  //     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  //     console.log('Webhook verified');
-  //     res.status(200).end();
-  //   } catch (err) {
-  //     console.log(`Webhook Error: ${err.message}`);
-  //     res.status(400).send(`Webhook Error: ${err.message}`);
-  //     return;
-  //   }
-  //   data = event.data.object;
-  //   eventType = event.type;
-  // } else {
-    data = req.body.data.object;
-    eventType = req.body.type;
-    console.log(chalk.yellow('Data: ', data));
-    console.log(chalk.yellow('Event Type: ', eventType));
-  // }
+  console.log('PaymentIntent data:', paymentIntentData);
+  console.log('Order ID:', orderID);
 
-  //handle the event
-  if (eventType === 'charge.succeeded') {
-    const {
-      payment_intent,
-      status,
-      amount,
-      payment_method_details,
-      billing_details,
-      metadata,
-    } = data;
-    const { line1, line2, state, postal_code } = billing_details.address;
-    const shippingAddr = `${line1} ${
-      line2 ? line2 + ' ' : ''
-    }${state} ${postal_code}`;
+  const { id, status, amount, shipping } = paymentIntentData;
+  const { line1, line2, state, postal_code } = shipping.address;
+  const shippingAddr = `${line1} ${
+    line2 ? line2 + ' ' : ''
+  }${state} ${postal_code}`;
 
-    console.log('Charge succeeded. Event data:');
-    console.log('ID:', payment_intent);
-    console.log('Status:', status);
-    const total = (amount * 0.01).toFixed(2);
-    console.log('Amount:', total);
-    console.log('Payment method:', payment_method_details.type);
-    console.log('Order ID:', metadata.order_id);
-    console.log('Shipping address:', shippingAddr);
-    try {
-      await paymentServices.addPayment(
-        payment_intent,
-        status,
-        total,
-        payment_method_details.type,
-        shippingAddr,
-        metadata.order_id
-      );
+  console.log('Charge succeeded. Event data:');
+  console.log('ID:', id);
+  console.log('Status:', status);
+  const total = (amount * 0.01).toFixed(2);
+  console.log('Amount:', total);
+  console.log('Order ID:', orderID);
+  console.log('Shipping address:', shippingAddr);
+  try {
+    await paymentServices.addPayment(id, status, total, shippingAddr, orderID);
 
-      console.log('Payment details stored in the database successfully');
-    } catch (error) {
-      console.error('Error storing payment details in the database:', error);
-    }
-  } else if (eventType == 'charge.refunded') {
-    const { id, status, amount, amount_refunded, metadata } = data;
-
-    console.log('Payment refunded. Event data:');
-    console.log('ID:', id);
-    console.log('Status:', status);
-    const total = (amount * 0.01).toFixed(2);
-    const refund_total = (amount_refunded * 0.01).toFixed(2);
-    console.log('Amount:', total);
-    console.log('Order ID:', metadata.order_id);
-
-    let refundStatus;
-    if (amount_refunded < amount) {
-      refundStatus = 'partially Refunded';
-      try {
-        await paymentServices.addPartialRefund(
-          id,
-          metadata.order_id,
-          refund_total,
-          refundStatus
-        );
-        console.log('Refund details stored in the database successfully');
-      } catch (error) {
-        console.error('Error storing refund details in the database:', error);
-      }
-    } else {
-      refundStatus = 'fully Refunded';
-      try {
-        await paymentServices.addRefund(
-          id,
-          metadata.order_id,
-          total,
-          refundStatus
-        );
-        console.log('Refund details stored in the database successfully');
-      } catch (error) {
-        console.error('Error storing refund details in the database:', error);
-      }
-    }
+    console.log('Payment details stored in the database successfully');
+  } catch (error) {
+    console.error('Error storing payment details in the database:', error);
   }
-
-  res.send().end();
 };
