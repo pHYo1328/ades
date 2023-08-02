@@ -180,13 +180,14 @@ module.exports.addRefund = async (id, orderID, total, status) => {
       WHERE r.refunded_status = 'fully Refunded'
     );
   `;
-  const updateStatusQuery = `UPDATE orders
-   SET order_status = 'refunded'
-   WHERE order_id = ? AND order_id IN (
-   SELECT order_id
-   FROM refund
-   WHERE refunded_status = 'fully Refunded'
-   );`;
+  const deleteOrderQuery = `DELETE FROM order
+  WHERE order_id IN (
+    SELECT r.order_id
+    FROM refund r
+    WHERE r.order_id = ?
+      AND r.refunded_status = 'fully Refunded'
+  );`;
+
   const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
@@ -217,7 +218,7 @@ module.exports.addRefund = async (id, orderID, total, status) => {
 
     const createRefundResult = await Promise.all([
       pool.query(deletePaymentQuery, [orderID]),
-      pool.query(updateStatusQuery, [orderID]),
+      pool.query(deleteOrderQuery, [orderID]),
       pool.query(updateInventoryQuery, [orderID]),
       pool.query(deleteOrderItemQuery, [orderID]),
     ]);
@@ -267,13 +268,14 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
   )
   WHERE order_id = ?;  
   `;
-  const updateStatusQuery = `UPDATE orders
-   SET order_status = 'partially refunded'
-   WHERE order_id = ? AND order_id IN (
-   SELECT order_id
-   FROM refund
-   WHERE refunded_status = 'partially Refunded'
-   );`;
+  // const updateStatusQuery = `UPDATE orders
+  //  SET order_status = 'partially refunded'
+  //  WHERE order_id = ? AND order_id IN (
+  //  SELECT order_id
+  //  FROM refund
+  //  WHERE refunded_status = 'partially Refunded'
+  //  );`;
+
   const deleteOrderItemsQuery = `DELETE FROM order_items
   WHERE order_id = ?
     AND status = 'Unavailable'
@@ -298,7 +300,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
 
     const createRefundResult = await Promise.all([
       pool.query(updatePaymentQuery, [orderID, orderID]),
-      pool.query(updateStatusQuery, [orderID]),
+      // pool.query(updateStatusQuery, [orderID]),
       pool.query(deleteOrderItemsQuery, [orderID]),
     ]);
     await connection.commit();
