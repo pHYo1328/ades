@@ -572,29 +572,7 @@ module.exports.getTotalNumberOfOrdersByShipping = async () => {
   }
 };
 
-// get total number of payments by payment method
-module.exports.getTotalNumberOfPaymentsByMethod = async () => {
-  console.log(chalk.blue('getTotalNumberOfPaymentsByMethod is called'));
-  try {
-    const totalQuery = `
-    SELECT 
-	    p.payment_method AS 'payment',
-      COALESCE(COUNT(p.payment_id), 0) AS 'count'
-    FROM payment p
-    GROUP BY p.payment_method
-    ORDER BY p.payment_method;`;
-    const results = await pool.query(totalQuery);
-    console.log(chalk.green(results[0]));
-    return results[0];
-  } catch (error) {
-    console.error(
-      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
-    );
-    throw error;
-  }
-};
-
-// get total number of payments by payment method
+// get total number of orders by status
 module.exports.getTotalNumberOfOrdersByStatus = async () => {
   console.log(chalk.blue('getTotalNumberOfOrdersByStatus is called'));
   try {
