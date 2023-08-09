@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -37,7 +38,7 @@ export default function ProductCreate() {
   const [deletedImages, setDeletedImages] = useState([]);
   const [imagePath, setImagePath] = useState('');
   const [image, setImage] = useState('');
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
 
   // const handleImageChange = (path) => {
   //   console.log('Selected image path:', path);
@@ -50,12 +51,14 @@ export default function ProductCreate() {
     setImagePath(path);
     console.log('path[0]: ', path[0]);
     for (let i = 0; i < path.length; i++) {
-      setImages((prevImages) => [...prevImages, { image_id: i, image_url: path[i] }]);
+      setImages((prevImages) => [
+        ...prevImages,
+        { image_id: i, image_url: path[i] },
+      ]);
     }
     // console.log('images: ', images);
     console.log('Selected image path after setting:', path);
   };
-
 
   // const handleImageChange = async (resultInfo) => {
   //   setUpdateImage(resultInfo.public_id);
@@ -175,22 +178,21 @@ export default function ProductCreate() {
     if (images.length > 1) {
       // Delete the image at the index by using imageID
       // const imageID = image.image_id;
-      console.log("imageID", imageID);
+      console.log('imageID', imageID);
       if (imageID !== 0) {
-        console.log("imageID", imageID);
+        console.log('imageID', imageID);
         if (!deletedImages.includes(imageID)) {
           setDeletedImages([...deletedImages, imageID]);
         }
         // setIndex(0);
       } else {
-        console.log("imageID", imageID);
+        console.log('imageID', imageID);
         images.splice(imageID, 1);
-        console.log("splice", images.splice(imageID, 1));
+        console.log('splice', images.splice(imageID, 1));
         // setIndex(0);
       }
 
-
-      console.log("deletedImage", deletedImages);
+      console.log('deletedImage', deletedImages);
 
       for (let image = 0; image < images.length; image++) {
         for (let i = 0; i < deletedImages.length; i++) {
@@ -200,10 +202,10 @@ export default function ProductCreate() {
         }
       }
 
-      console.log("index", index);
+      console.log('index', index);
       setIndex(0);
       setImages([...images]);
-      console.log("images", images);
+      console.log('images', images);
     } else {
       // Show an alert when trying to delete the only image
       toast.error(`Each product should have at least one image.`, {
@@ -222,9 +224,16 @@ export default function ProductCreate() {
           className="sm:w-11/12 md:w-10/12 lg:w-8/12 mt-5 mx-auto bg-peach p-5 rounded-md mb-5"
           encType="multipart/form-data"
         >
-          <h3 className="text-center text-2xl font-bold mb-6">CREATE PRODUCT</h3>
+          <h3 className="text-center text-2xl font-bold mb-6">
+            CREATE PRODUCT
+          </h3>
           <div className="mt-3 w-200 h-300 mx-auto">
-            <ImageCarousel images={images} deleteImage={deleteImage} setIndex={setIndex} index={index} />
+            <ImageCarousel
+              images={images}
+              deleteImage={deleteImage}
+              setIndex={setIndex}
+              index={index}
+            />
           </div>
           <div className="mb-3">
             <InputLabel content="Product Name" />
@@ -283,22 +292,24 @@ export default function ProductCreate() {
 
           {/* <div className="flex justify-between mt-4 space-x-4">
             <div className="mb-3 w-6/12"> */}
-          <UploadMultiple length={images.length} onImageChange={handleImageChange} success={success} />
+          <UploadMultiple
+            length={images.length}
+            onImageChange={handleImageChange}
+            success={success}
+          />
           {/* </div> */}
 
           {/* </div> */}
 
           <div className="w-12/12 flex justify-center">
-
             <div className="mb-3 w-6/12">
-              <Button onClick={handleSubmit} content={"Submit"} />
+              <Button onClick={handleSubmit} content={'Submit'} />
             </div>
           </div>
 
           <ToastContainer limit={2} newestOnTop={true} position="top-center" />
         </form>
-      </div >
-    </div >
-
+      </div>
+    </div>
   );
 }

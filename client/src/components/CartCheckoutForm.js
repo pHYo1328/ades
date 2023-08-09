@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../index';
-import LoadingIndicator from 'react-loading-indicator';
 import Button from './Button';
 import Select from 'react-select';
-import { getNames, getCode, getName } from 'country-list';
+import { getNames, getCode } from 'country-list';
 import CheckoutInput from './CheckoutInput';
 import { validateAddress, validatePostalCode } from '../utils/addressUtils';
 
@@ -150,7 +151,15 @@ const CartCheckoutForm = ({
         console.log(error);
       });
   };
-
+  CartCheckoutForm.propTypes = {
+    shippingMethod: PropTypes.array,
+    setOrderId: PropTypes.func.isRequired,
+    totalAmount: PropTypes.number.isRequired,
+    setCheckoutSuccessful: PropTypes.func.isRequired,
+    showCheckout: PropTypes.bool.isRequired,
+    customerID: PropTypes.string.isRequired,
+    cartProductData: PropTypes.array,
+  };
   return (
     <div
       className={`col-span-full lg:col-span-4 sm:ml-24 sm:mr-24 lg:ml-0 lg:mr-0 ${
@@ -261,7 +270,7 @@ const CartCheckoutForm = ({
             {isInvalidPostalCode && (
               <div className="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 p-2 mt-1 rounded-md bg-red-500 text-white text-sm">
                 {'Invalid Postal Code'}
-                <div class="tooltip-arrow" data-popper-arrow></div>
+                <div className="tooltip-arrow" data-popper-arrow></div>
               </div>
             )}
           </div>

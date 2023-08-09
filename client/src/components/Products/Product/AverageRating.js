@@ -1,3 +1,4 @@
+import React from 'react';
 export default function AverageRating(props) {
   const { averageRating, ratingCount } = props;
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import api from '../../index';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +9,7 @@ const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
+  const { userData, setUserData } = useContext(AuthContext);
 
   useEffect(() => {
     const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
@@ -36,8 +38,18 @@ const VerifyOTP = () => {
 
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('userid', data.userid);
-        localStorage.setItem('roles', JSON.stringify(data.roles));
-        localStorage.setItem('isSignedIn', 'true');
+        // localStorage.setItem('roles', JSON.stringify(data.roles));
+        // localStorage.setItem('isSignedIn', 'true');
+
+        // Use the setUserData function to update the context
+        setUserData({
+          ...userData,
+          // accessToken: data.accessToken,
+          userid: data.userid,
+          roles: data.roles,
+          isSignedIn: true,
+        });
+
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/');
       } else {

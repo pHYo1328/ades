@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -287,12 +287,12 @@ export default function AdminDashboard() {
           }}
         >
           <span className="sr-only">Open sidebar</span>
-          <i class="bi bi-list"></i>
+          <i className="bi bi-list"></i>
         </button>
 
         <aside
           id="default-sidebar"
-          class="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0"
+          className="fixed top-25 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 md:translate-x-0"
           aria-label="Sidebar"
         >
           <SideBar
@@ -314,10 +314,6 @@ export default function AdminDashboard() {
               <div className="w-full">
                 <Statistics statistics={statistics} />
 
-
-
-
-
                 <div class="container mx-auto">
                   <div class="lg:flex lg:flex-wrap">
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
@@ -333,43 +329,36 @@ export default function AdminDashboard() {
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <OrdersByBrandsChart />
-
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <BookmarksByBrandChart />
-
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <ShippingMethodChart />
-
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <PaymentMethodChart />
-
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <RevenueByBrandChart />
-
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
                         <RevenueByCategoryChart />
-
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
             )}
             {activeTab === 'products' && (
               <div className="w-full">

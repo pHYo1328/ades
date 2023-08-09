@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../../../AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -6,6 +7,7 @@ const VerifyOTP = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [otp, setOTP] = useState('');
+  const { userData, setUserData } = useContext(AuthContext);
 
   useEffect(() => {
     const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true';
@@ -31,10 +33,18 @@ const VerifyOTP = () => {
         alert('successful OTP');
         const data = location.state; //pass data from AdminLogin.js
 
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('admin_id', data.userid);
-        localStorage.setItem('roles', JSON.stringify(data.roles));
-        localStorage.setItem('isAdminSignedIn', 'true');
+        // localStorage.setItem('accessToken', data.accessToken);
+        // localStorage.setItem('admin_id', data.userid);
+        // localStorage.setItem('roles', JSON.stringify(data.roles));
+        // localStorage.setItem('isAdminSignedIn', 'true');
+
+        setUserData({
+          ...userData,
+          accessToken: data.accessToken,
+          admin_id: data.admin_id,
+          roles: data.roles,
+          isAdminSignedIn: true,
+        });
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/homepage-admin');
       } else {

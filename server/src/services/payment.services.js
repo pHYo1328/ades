@@ -44,13 +44,12 @@ module.exports.addPayment = async (
   payment_intent,
   status,
   total,
-  paymentMethod,
   shippingAddr,
   orderID
 ) => {
   console.log(chalk.blue('addPayment is called'));
   const createPaymentQuery =
-    'INSERT INTO payment (transaction_id, status, payment_total, payment_method, billing_address, order_id) VALUES (?, ?, ?, ?, ?, ?);';
+    'INSERT INTO payment (transaction_id, status, payment_total, billing_address, order_id) VALUES (?, ?, ?, ?, ?);';
   const updateStatusQuery = `UPDATE orders
    SET order_status = 'paid'
    WHERE order_id = ? AND order_id IN (
@@ -80,7 +79,6 @@ module.exports.addPayment = async (
       payment_intent,
       status,
       total,
-      paymentMethod,
       shippingAddr,
       orderID,
     ]);
@@ -105,7 +103,8 @@ module.exports.getPaymentIntentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentIntentByID is called'));
 
   try {
-    const getPaymentIntentByIDQuery = `SELECT transaction_id FROM payment WHERE order_id = ?;`;
+    const getPaymentIntentByIDQuery =
+      'SELECT transaction_id FROM payment WHERE order_id = ?;';
 
     const results = await pool.query(getPaymentIntentByIDQuery, [order_id]);
     console.log(chalk.green(results[0]));
@@ -135,6 +134,37 @@ module.exports.getPaymentByStatus = async (order_id) => {
     throw error;
   }
 };
+
+// fetch all payment with payment status
+module.exports.getOrderDetailsForAdmin = async () => {
+  console.log(chalk.blue('getOrderDetailsForAdmin is called'));
+  const orderQuery = `SELECT orders.order_id,
+                      orders.order_status,
+                      payment.payment_date,
+                      orders.shipping_address,
+                      orders.shipping_start_at
+                      FROM orders
+                      inner join payment on payment.order_id=orders.order_id 
+                      WHERE order_status in ("paid","delivering")
+                      ORDER BY payment.payment_date
+                      ;`;
+  try {
+    console.log(
+      chalk.blue(
+        'Creating connection...\n',
+        'database is connected in order.services.js getOrderDetailsForAdmin function'
+      )
+    );
+    console.log(chalk.blue('Executing query >>>>>>'), orderQuery);
+    const result = await pool.query(orderQuery);
+    console.log(chalk.green('result: '), result[0]);
+    return result[0];
+  } catch (error) {
+    console.error(chalk.red('Errors in getOrderDetailsForAdmin', error));
+    throw error;
+  }
+};
+
 //Creating refund data into database
 
 module.exports.addRefund = async (id, orderID, total, status) => {
@@ -150,13 +180,14 @@ module.exports.addRefund = async (id, orderID, total, status) => {
       WHERE r.refunded_status = 'fully Refunded'
     );
   `;
-  const updateStatusQuery = `UPDATE orders
-   SET order_status = 'refunded'
-   WHERE order_id = ? AND order_id IN (
-   SELECT order_id
-   FROM refund
-   WHERE refunded_status = 'fully Refunded'
-   );`;
+  const deleteOrderQuery = `DELETE FROM order
+  WHERE order_id IN (
+    SELECT r.order_id
+    FROM refund r
+    WHERE r.order_id = ?
+      AND r.refunded_status = 'fully Refunded'
+  );`;
+
   const updateInventoryQuery = `UPDATE inventory
   JOIN order_items ON inventory.product_id = order_items.product_id
   JOIN orders ON order_items.order_id = orders.order_id
@@ -187,7 +218,7 @@ module.exports.addRefund = async (id, orderID, total, status) => {
 
     const createRefundResult = await Promise.all([
       pool.query(deletePaymentQuery, [orderID]),
-      pool.query(updateStatusQuery, [orderID]),
+      pool.query(deleteOrderQuery, [orderID]),
       pool.query(updateInventoryQuery, [orderID]),
       pool.query(deleteOrderItemQuery, [orderID]),
     ]);
@@ -237,13 +268,14 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
   )
   WHERE order_id = ?;  
   `;
-  const updateStatusQuery = `UPDATE orders
-   SET order_status = 'partially refunded'
-   WHERE order_id = ? AND order_id IN (
-   SELECT order_id
-   FROM refund
-   WHERE refunded_status = 'partially Refunded'
-   );`;
+  // const updateStatusQuery = `UPDATE orders
+  //  SET order_status = 'partially refunded'
+  //  WHERE order_id = ? AND order_id IN (
+  //  SELECT order_id
+  //  FROM refund
+  //  WHERE refunded_status = 'partially Refunded'
+  //  );`;
+
   const deleteOrderItemsQuery = `DELETE FROM order_items
   WHERE order_id = ?
     AND status = 'Unavailable'
@@ -268,7 +300,7 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
 
     const createRefundResult = await Promise.all([
       pool.query(updatePaymentQuery, [orderID, orderID]),
-      pool.query(updateStatusQuery, [orderID]),
+      // pool.query(updateStatusQuery, [orderID]),
       pool.query(deleteOrderItemsQuery, [orderID]),
     ]);
     await connection.commit();

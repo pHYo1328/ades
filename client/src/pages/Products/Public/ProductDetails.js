@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -13,7 +14,7 @@ import Rating from '../../../components/Products/Product/Rating';
 import ProductDescription from '../../../components/Products/Product/ProductDescription';
 import AverageRating from '../../../components/Products/Product/AverageRating';
 import ProductList from '../../../components/Products/Product/ProductList';
-
+import { element } from 'prop-types';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const cld = new Cloudinary({
   cloud: {
@@ -26,6 +27,7 @@ export default function ProductDetails() {
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [hasRelatedProducts, setHasRelatedProducts] = useState(false);
   let [cartQuantity, setCartQuantity] = useState(0);
+  const [bookmarkStatus, setBookmarkStatus] = useState();
   const { productID } = useParams();
   const navigate = useNavigate();
   const customerId = localStorage.getItem('userid');
@@ -81,11 +83,17 @@ export default function ProductDetails() {
     Promise.all([
       axios.get(`${baseUrl}/api/product/${productID}`),
       axios.get(`${baseUrl}/api/products/related/${productID}`),
+      api.get(`/api/bookmark/${customerId}`),
     ])
-      .then(([productResponse, relatedProductsResponse]) => {
+      .then(([productResponse, relatedProductsResponse, bookmarkRes]) => {
         console.log(productResponse);
         console.log(relatedProductsResponse);
-
+        const brandId = productResponse?.data?.data?.brand_id;
+        bookmarkRes.data.data.forEach((element) => {
+          if (element.brand_id == brandId) {
+            setBookmarkStatus(true);
+          }
+        });
         setProduct(productResponse.data.data);
         setHasRelatedProducts(true);
         setRelatedProducts(relatedProductsResponse.data.data);
@@ -94,6 +102,32 @@ export default function ProductDetails() {
         console.error(error);
       });
   }, [productID]);
+
+  const bookmarkClickHandler = (brandId, customerId) => {
+    if (bookmarkStatus) {
+      handleRemoveBookmarkClick(brandId, customerId);
+    } else {
+      handleBookmarkClick(brandId, customerId);
+    }
+  };
+
+  const handleBookmarkClick = (brandId, customerId) => {
+    const bookmarkData = { customerId, brandId };
+    api
+      .post(`/api/bookmark/add`, bookmarkData) // modify this with your actual API route
+      .then((response) => {
+        setBookmarkStatus(true);
+      });
+  };
+
+  const handleRemoveBookmarkClick = (brandId, customerId) => {
+    const bookmarkData = { customerId, brandId };
+    api
+      .delete(`/api/bookmark/remove/${customerId}/${brandId}`) // modify this with your actual API route
+      .then((response) => {
+        setBookmarkStatus(false);
+      });
+  };
 
   return (
     <div className="bg-white w-full">
@@ -131,13 +165,27 @@ export default function ProductDetails() {
               </div>
 
               <div className="mx-auto text-center w-full">
-                <div className="flex items-center justify-center">
+                <div className="flex flex-column items-center justify-center">
                   <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl mr-4">
                     {product.product_name}
                   </h1>
                   <p className="text-3xl tracking-tight text-gray-900">
                     <i className="bi bi-tags-fill"></i> ${product.price}
                   </p>
+                  <div className="flex flex-row space-x-2">
+                    <p>Brand: {product.brand_name}</p>
+                    <button
+                      onClick={() =>
+                        bookmarkClickHandler(product.brand_id, customerId)
+                      }
+                    >
+                      <i
+                        className={`bi bi-bookmark${
+                          bookmarkStatus ? '-fill' : ''
+                        }`}
+                      ></i>
+                    </button>
+                  </div>
                 </div>
 
                 <AverageRating
@@ -204,7 +252,7 @@ export default function ProductDetails() {
                     </p>
                   )}
 
-                  <div className="mx-auto">
+                  <div className="mx-auto relative">
                     <button
                       disabled={product.quantity <= 0}
                       onClick={() => {
@@ -219,6 +267,9 @@ export default function ProductDetails() {
                     >
                       Add to cart
                     </button>
+                    <div>
+                      {/* <img src={outOfStockImage} alt="Out of Stock" className="w-52 transform rotate-90 translate-x-64 z-10 absolute top-5" />   */}
+                    </div>
                     <ToastContainer
                       limit={2}
                       newestOnTop={true}

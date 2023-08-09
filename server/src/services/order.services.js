@@ -2,6 +2,8 @@ const chalk = require('chalk');
 const pool = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 const { OrderStatus } = require('../config/orderStatus.enum');
+const format = require('date-fns/format');
+const sendInBlue = require('../config/sendinblue');
 module.exports.addCustomerOrder = async (data) => {
   console.log(chalk.blue('addCustomOrder is called'));
   // order data
@@ -38,6 +40,7 @@ module.exports.addCustomerOrder = async (data) => {
     ];
     console.log(chalk.blue('Executing query >>>>>>'), addOrderQuery);
     const [orderResult] = await connection.query(addOrderQuery, [orderData]);
+    console.log(orderResult);
     // if order inserted successfully manipulate data to insert into order_item
     const orderItemsData = orderItems.map((item) => [
       uuid,
@@ -47,6 +50,7 @@ module.exports.addCustomerOrder = async (data) => {
     console.log(orderItemsData);
     //multiple insert with 2 dimensional array
     const result = await connection.query(addOrderItemsQuery, [orderItemsData]);
+    console.log(result);
     await connection.commit();
     console.log(
       chalk.green('Order and order items have been inserted successfully.')
@@ -94,6 +98,7 @@ module.exports.getOrderDetailsByOrderStatus = async (data) => {
                     select orders.order_id,
                     product.product_id,
                     product.product_name,
+                    product.description,
                     MAX(product_image.image_url) as image_url,
                     product.price, 
                     order_items.quantity ,
@@ -183,8 +188,10 @@ module.exports.updateOrderStatus = async (data) => {
   console.log(chalk.blue('updateOrderStatus is called'));
   const { orderIDs, orderStatus } = data;
   console.log(orderStatus);
-  const updatePaidOrderStatusQuery = `UPDATE orders set order_status = ?,shipping_start_at = UTC_TIMESTAMP() WHERE order_id in (?)`;
-  const updateDeliveringOrderStatusQuery = `UPDATE orders set order_status = ?,completed_at = UTC_TIMESTAMP() WHERE order_id in(?)`;
+  const updatePaidOrderStatusQuery =
+    'UPDATE orders set order_status = ?,shipping_start_at = UTC_TIMESTAMP() WHERE order_id in (?)';
+  const updateDeliveringOrderStatusQuery =
+    'UPDATE orders set order_status = ?,completed_at = UTC_TIMESTAMP() WHERE order_id in(?)';
   try {
     console.log(
       chalk.blue(
@@ -201,7 +208,7 @@ module.exports.updateOrderStatus = async (data) => {
         updatePaidOrderStatusQuery
       );
       result = await pool.query(updatePaidOrderStatusQuery, dataRequired);
-      console.log(chalk.green(`updated order status`));
+      console.log(chalk.green('updated order status'));
       return result[0].affectedRows;
     }
     // or deliverd, update status and completed with UTC
@@ -211,7 +218,7 @@ module.exports.updateOrderStatus = async (data) => {
         updateDeliveringOrderStatusQuery
       );
       result = await pool.query(updateDeliveringOrderStatusQuery, dataRequired);
-      console.log(chalk.green(`updated order status`));
+      console.log(chalk.green('updated order status'));
       return result[0].affectedRows;
     }
   } catch (error) {
@@ -223,7 +230,7 @@ module.exports.updateOrderStatus = async (data) => {
 // Cancel the order
 module.exports.updateShippingDetails = async (data) => {
   console.log(chalk.blue('updateShippingDetails is called'));
-  const { customerID, orderId, shippingAddr, shippingMethod } = data;
+  const { customerID, orderId, shippingAddr } = data;
   const updateShippingDetailsQuery = `
                     UPDATE orders
                     SET shipping_address = ?
@@ -314,6 +321,99 @@ module.exports.cancelOrder = async (data) => {
     return result[0].affectedRows;
   } catch (error) {
     console.error(chalk.red('Errors in deleting order', error));
+    throw error;
+  }
+};
+
+// fetch unpaid orders
+module.exports.getUnpaidOrders = async (daysAgo) => {
+  console.log(chalk.blue('getUnpaidOrders is called'));
+
+  const date = format(
+    new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
+    'yyyy-MM-dd'
+  );
+  const sqlStr = `SELECT o.order_id,u.customer_id,u.username, u.email FROM orders o
+                  INNER JOIN users u ON u.customer_id = o.customer_id
+                  WHERE Date(order_date) >= ? 
+                  AND order_status = "order_received"`;
+
+  try {
+    const [orders] = await pool.query(sqlStr, [date]);
+    return orders;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+module.exports.getOrdersToClean = async (daysAgo) => {
+  console.log(chalk.blue('getUnpaidOrders is called'));
+
+  const date = format(
+    new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000),
+    'yyyy-MM-dd'
+  );
+  const sqlStr = `SELECT o.order_id,u.customer_id,u.username, u.email FROM orders o
+                  INNER JOIN users u ON u.customer_id = o.customer_id
+                  WHERE Date(order_date) <= ? 
+                  AND order_status = "order_received"`;
+
+  try {
+    const [orders] = await pool.query(sqlStr, [date]);
+    return orders;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+module.exports.deleteOrder = async (orderId) => {
+  console.log(chalk.blue('deleteOrder is called'));
+
+  const deleteOrderSqlStr = 'DELETE FROM orders WHERE order_id = ?';
+  const deleteOrderItemsQueryStr = 'DELETE FROM order_items WHERE order_id = ?';
+
+  try {
+    await Promise.all([
+      pool.query(deleteOrderSqlStr, [orderId]),
+      pool.query(deleteOrderItemsQueryStr, [orderId]),
+    ]);
+    console.log(
+      chalk.green(
+        `Order and its items with ID ${orderId} deleted successfully.`
+      )
+    );
+  } catch (error) {
+    console.error(chalk.red('Error in deleting order and its items: '), error);
+    throw error;
+  }
+};
+
+module.exports.sendReminderEmail = async (orders, customerEmail) => {
+  console.log(chalk.blue('sendReminderEmail is called'));
+
+  // Generate the list of order IDs
+  const orderIdsString = orders.join('<br>');
+  const emailSubject = 'Warning for Payment';
+  const additionalParams = {
+    bodyMessage: `<p>Dear customer,</p><p>Your orders with IDs:<br> ${orderIdsString}<br> are still pending. Please complete the payment within 24 hours or the orders will be cancelled.</p>`,
+  };
+  try {
+    await sendInBlue.sendTransacEmail({
+      subject: emailSubject,
+      sender: { email: 'techZero@gmail.com', name: 'techZero' },
+      replyTo: { email: 'techZero@gmail.com', name: 'techZero' },
+      to: [
+        {
+          email: customerEmail, // Here, you are using customerEmail which is passed as a parameter
+        },
+      ],
+      htmlContent: additionalParams.bodyMessage,
+    });
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

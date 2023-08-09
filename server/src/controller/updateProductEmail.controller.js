@@ -6,7 +6,7 @@ const {
   getUpdatedProductsByBrandID,
 } = require('../services/bookmarkEmail.services');
 const { sendEmail } = require('../services/email.service');
-
+const { addNotification } = require('../services/notification.service');
 // store default time to check
 let previousUpdate = format(
   new Date('2023-05-15 05:49:40'),
@@ -36,12 +36,26 @@ module.exports.updateProductsEmailSender = async () => {
       if (customers[0].length > 0 && products[0].length > 0) {
         // create email promise array by finding related brand id
         const emailPromises = customers[0].map((customer) => {
+          console.log(customer);
           let customerProducts = products[0].filter(
             (product) => product.brand_id === customer.brand_id
           );
           if (customerProducts.length > 0) {
-            // use sendInBlue email sevice function
-            return sendEmail(customer, customerProducts);
+            return sendEmail(customer, customerProducts)
+              .then((response) => {
+                if (response.status == 200) {
+                  console.log(
+                    `Adding notification for customer with ID: ${customer.customer_id}`
+                  );
+                  return addNotification(customer.customer_id);
+                }
+              })
+              .catch((error) => {
+                console.error(
+                  `Error sending email for customer with ID: ${customer.customer_id}: `,
+                  error
+                );
+              });
           }
         });
 

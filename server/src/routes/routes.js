@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser');
+const path = require('path');
 const productController = require('../controller/product.controller');
 const cartController = require('../controller/cart.controller');
 const orderController = require('../controller/order.controller');
@@ -25,6 +26,7 @@ const deleteUser = require('../controller/deleteUserController');
 const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
+const notificationController = require('../controller/notification.controller');
 const stripe = require('../config/stripe');
 const { handleWebhooks } = require('../controller/checkout.controller');
 
@@ -87,15 +89,38 @@ module.exports = (app, router) => {
     productController.processGetRelatedProducts
   );
   router.get('/api/admin/revenue', productController.processGetTotalRevenue);
-  router.get('/api/admin/categories/count', productController.processGetTotalNumberOfProductsByCategory)
-  router.get('/api/admin/orders/count', productController.processGetTotalNumberOfOrdersByBrand)
-  router.get('/api/admin/bookmarks/count', productController.processGetTotalNumberOfBookmarksByBrand)
-  router.get('/api/admin/shipping/count', productController.processGetTotalNumberOfOrdersByShipping)
-  router.get('/api/admin/payment/count', productController.processGetTotalNumberOfPaymentsByMethod)
-  router.get('/api/admin/orders/status/count', productController.processGetTotalNumberOfOrdersByStatus)
-  router.get('/api/admin/revenue/brand/count', productController.processGetTotalRevenueByBrand)
-  router.get('/api/admin/revenue/category/count', productController.processGetTotalRevenueByCategory)
-
+  router.get(
+    '/api/admin/categories/count',
+    productController.processGetTotalNumberOfProductsByCategory
+  );
+  router.get(
+    '/api/admin/orders/count',
+    productController.processGetTotalNumberOfOrdersByBrand
+  );
+  router.get(
+    '/api/admin/bookmarks/count',
+    productController.processGetTotalNumberOfBookmarksByBrand
+  );
+  router.get(
+    '/api/admin/shipping/count',
+    productController.processGetTotalNumberOfOrdersByShipping
+  );
+  router.get(
+    '/api/admin/payment/count',
+    productController.processGetTotalNumberOfPaymentsByMethod
+  );
+  router.get(
+    '/api/admin/orders/status/count',
+    productController.processGetTotalNumberOfOrdersByStatus
+  );
+  router.get(
+    '/api/admin/revenue/brand/count',
+    productController.processGetTotalRevenueByBrand
+  );
+  router.get(
+    '/api/admin/revenue/category/count',
+    productController.processGetTotalRevenueByCategory
+  );
 
   // DELETE
   router.delete(
@@ -179,6 +204,11 @@ module.exports = (app, router) => {
     //verifyAccessToken.verifyToken,
     shippingController.processFetchShippingMethod
   );
+
+  router.get(
+    '/api/notifications/:customerId',
+    notificationController.getNotifications
+  );
   // post
   router.post('/api/cart/:userID', cartController.processAddCartData);
   router.post(
@@ -208,55 +238,15 @@ module.exports = (app, router) => {
     orderController.processCancelOrder
   );
 
-  // //Carolyn
+  router.delete(
+    '/api/bookmark/remove/:customerId/:brandId',
+    bookmarkController.processRemoveBookMark
+  );
 
-  // router.get(
-  //   '/api/payment/:orderID',
-  //   // verifyAccessToken.verifyToken,
-  //   paymentController.processGetPaymentByID
-  // );
-
-  // router.get(
-  //   '/api/paymentTotal/:orderID',
-  //   //verifyAccessToken.verifyToken,
-  //   paymentController.processGetPaymentTotal
-  // );
-
-  // router.get(
-  //   '/api/idAndAmount/:productID',
-  //   //verifyAccessToken.verifyToken,
-  //   paymentController.processGetIDAndAmount
-  // );
-
-  // router.get('/config', checkoutController.getConfig);
-
-  // router.post(
-  //   '/createPaymentIntent/:orderID',
-  //   checkoutController.createPaymentIntent
-  // );
-
-
-  // //inserting data from stripe to back_end
-  //   router.post(
-  //   '/webhook',
-  //   bodyParser.raw({ type: 'application/json' }),
-  //   checkoutController.createWebhooks
-  // ),
-
-
-
-  //   router.get(
-  //     '/api/paymentByStatus/:orderID',
-  //     // verifyAccessToken.verifyToken,
-  //     paymentController.processGetPaymentByStatus
-  //   );
-
-  // router.post('/processRefund/:orderID', checkoutController.processRefund);
-
-  // router.post(
-  //   '/processPartialRefund/:productID',
-  //   checkoutController.processPartialRefund
-  // );
+  router.delete(
+    '/api/notifications/:customerId',
+    notificationController.removeNotifications
+  );
 
   //Carolyn
 
@@ -287,11 +277,10 @@ module.exports = (app, router) => {
 
   //inserting data from stripe to back_end
   router.post(
-    '/webhook',
+    '/addPayment',
     bodyParser.raw({ type: 'application/json' }),
-    checkoutController.createWebhooks
+    checkoutController.storePayment
   ),
-
     router.get(
       '/api/paymentByStatus/:orderID',
       // verifyAccessToken.verifyToken,
@@ -304,7 +293,6 @@ module.exports = (app, router) => {
     '/processPartialRefund/:productID',
     checkoutController.processPartialRefund
   );
-
 
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));

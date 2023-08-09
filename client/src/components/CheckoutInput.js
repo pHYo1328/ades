@@ -1,5 +1,5 @@
-import { isValid } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -141,4 +141,14 @@ const CheckoutInput = ({ countryCode, address, setAddress, id, isInvalid }) => {
   );
 };
 
+CheckoutInput.propTypes = {
+  countryCode: PropTypes.string.isRequired,
+  address: PropTypes.shape({
+    addressLine1: PropTypes.string.isRequired,
+    // Add other address properties if needed
+  }).isRequired,
+  setAddress: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+  isInvalid: PropTypes.bool.isRequired,
+};
 export default CheckoutInput;

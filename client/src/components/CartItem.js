@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { AiFillDelete } from 'react-icons/ai';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import ItemImage from './ItemImage';
@@ -70,6 +71,14 @@ const CartItem = ({
     [cartData, setCartData, setTotalAmount]
   );
 
+  CartItem.propTypes = {
+    cartItem: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    cartData: PropTypes.array.isRequired,
+    setCartData: PropTypes.func.isRequired,
+    setTotalAmount: PropTypes.func.isRequired,
+    customerID: PropTypes.string.isRequired,
+  };
   return (
     <tr
       key={`${cartItem.product_ID}-${index}`}
@@ -78,14 +87,18 @@ const CartItem = ({
       <td className="py-6 px-2">
         <ItemImage imageUrl={cartItem.image_url} width={32} height={32} />
       </td>
-      <td>
+      <td className="py-2">
         <Link
           to={`/product/${cartItem.product_id}`}
           onClick={() => window.scrollTo(0, 0)}
         >
-          <b>{cartItem.product_name}</b>
+          <b className="md:inline-block w-44 overflow-auto whitespace-normal break-words hidden  ">
+            {cartItem.product_name}
+          </b>
         </Link>
-        <p className="block md:hidden">{cartItem.product_name}</p>
+        <p className="inline-block w-24 md:hidden overflow-auto whitespace-normal break-words py-2">
+          {cartItem.product_name}
+        </p>
         <p className="hidden md:flex flex-row">
           <b className="hidden lg:block">category:</b> {cartItem.category}
         </p>
@@ -94,7 +107,7 @@ const CartItem = ({
           {cartItem.brand}
         </p>
         <div className="block lg:hidden">{cartItem.price}</div>
-        <div className="justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2 w-28">
+        <div className="justify-evenly border-2 border-gray-400 rounded flex flex-row md:hidden my-2 w-28 ">
           <button
             className="flex items-center justify-center w-8 "
             onClick={() => minusButtonHandler(cartItem.product_id)}
@@ -113,7 +126,7 @@ const CartItem = ({
             <FiPlus size={16} />
           </button>
         </div>
-        <div className="w-20 text-center block md:hidden">
+        <div className="w-20 block md:hidden py-2">
           <b>${cartItem.totalAmount}</b>
         </div>
       </td>
@@ -144,7 +157,7 @@ const CartItem = ({
       </td>
       <td className="pl-4">
         <button
-          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full"
+          className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-full hover:animate-shake-custom"
           onClick={() => deleteButtonHandler(cartItem.product_id)}
           aria-label="Delete item"
         >

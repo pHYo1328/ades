@@ -41,13 +41,14 @@ exports.processAddBookMark = async (req, res, next) => {
 exports.processRemoveBookMark = async (req, res, next) => {
   // New controller function for removing bookmarks
   console.log(chalk.blue('processRemoveBookMark is running'));
-  const { customerId, brandId } = req.params; // Take single brandId
+  const { customerId, brandId } = req.params; // Take single brandId instead of an array of brandIds
   console.log(
     chalk.yellow('Inspecting req body variables'),
     customerId,
     brandId
   );
   try {
+    // if customerId and brandId are nulls return as invalid IDs
     if (isNaN(parseInt(customerId)) || isNaN(parseInt(brandId))) {
       // Check if brandId is a number
       const error = new Error('Invalid ID parameters');

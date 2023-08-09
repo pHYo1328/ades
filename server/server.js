@@ -60,7 +60,7 @@ app.use(express.static('public', { maxAge: '1d' }));
 //     }
 // });
 
-app.use(errorHandler);
+//app.use(errorHandler);
 
 app.use(bodyParser.json());
 app.use(

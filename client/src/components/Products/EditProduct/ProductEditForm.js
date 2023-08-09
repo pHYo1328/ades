@@ -1,7 +1,6 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
-import React from 'react';
 import axios from 'axios';
 import chalk from 'chalk';
 import Categories from '../Product/Categories';
@@ -37,7 +36,7 @@ export default function ProductEditForm() {
   const [images, setImages] = useState([]);
   const [imagePath, setImagePath] = useState('');
   const [image, setImage] = useState('');
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
 
   const [imageID, setImageID] = useState(0);
   const [deletedImages, setDeletedImages] = useState([]);
@@ -67,14 +66,16 @@ export default function ProductEditForm() {
     getProducts();
   }, []);
 
-
   // sets the image path when the user uploads an image
   const handleImageChange = (path) => {
     console.log('Selected image path:', path);
     setImagePath(path);
     console.log('path[0]: ', path[0]);
     for (let i = 0; i < path.length; i++) {
-      setImages((prevImages) => [...prevImages, { product_id: parseInt(productID), image_id: i, image_url: path[i] }]);
+      setImages((prevImages) => [
+        ...prevImages,
+        { product_id: parseInt(productID), image_id: i, image_url: path[i] },
+      ]);
     }
     // console.log('images: ', images);
     console.log('Selected image path after setting:', path);
@@ -105,40 +106,37 @@ export default function ProductEditForm() {
   const deleteAllImages = () => {
     console.log('delete all images for the product');
     console.log(productID);
-    axios
-      .delete(`${baseUrl}/api/products/${productID}/images`)
-      .then((res) => {
-        console.log('deleted');
-        toast.success(`Images deleted.`, {
-          autoClose: 3000,
-          pauseOnHover: true,
-          style: { fontSize: '16px' },
-        });
-        getImages();
-        setIndex(0);
+    axios.delete(`${baseUrl}/api/products/${productID}/images`).then((res) => {
+      console.log('deleted');
+      toast.success(`Images deleted.`, {
+        autoClose: 3000,
+        pauseOnHover: true,
+        style: { fontSize: '16px' },
       });
-  }
+      getImages();
+      setIndex(0);
+    });
+  };
 
   const deleteImage = (imageID) => {
     if (images.length > 1) {
       // Delete the image at the index by using imageID
       // const imageID = image.image_id;
-      console.log("imageID", imageID);
+      console.log('imageID', imageID);
       if (imageID !== 0) {
-        console.log("imageID", imageID);
+        console.log('imageID', imageID);
         if (!deletedImages.includes(imageID)) {
           setDeletedImages([...deletedImages, imageID]);
         }
         // setIndex(0);
       } else {
-        console.log("imageID", imageID);
+        console.log('imageID', imageID);
         images.splice(imageID, 1);
-        console.log("splice", images.splice(imageID, 1));
+        console.log('splice', images.splice(imageID, 1));
         // setIndex(0);
       }
 
-
-      console.log("deletedImage", deletedImages);
+      console.log('deletedImage', deletedImages);
 
       for (let image = 0; image < images.length; image++) {
         for (let i = 0; i < deletedImages.length; i++) {
@@ -148,10 +146,10 @@ export default function ProductEditForm() {
         }
       }
 
-      console.log("index", index);
+      console.log('index', index);
       setIndex(0);
       setImages([...images]);
-      console.log("images", images);
+      console.log('images', images);
     } else {
       // Show an alert when trying to delete the only image
       toast.error(`Each product should have at least one image.`, {
@@ -161,7 +159,6 @@ export default function ProductEditForm() {
       });
     }
   };
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -247,7 +244,7 @@ export default function ProductEditForm() {
 
       for (let image = 0; image < deletedImages.length; image++) {
         // let imageID = image.image_id;
-        console.log("imageID", deletedImages[image])
+        console.log('imageID', deletedImages[image]);
         axios
           .delete(`${baseUrl}/api/products/images/${deletedImages[image]}`)
           .then((res) => {
@@ -263,7 +260,6 @@ export default function ProductEditForm() {
             setIndex(0);
           });
       }
-
     }
   };
 
@@ -277,14 +273,22 @@ export default function ProductEditForm() {
       {productData ? (
         <div>
           <div className="mt-3 w-200 h-300 mx-auto">
-            <ImageCarousel images={images} deleteImage={deleteImage} setIndex={setIndex} index={index} />
+            <ImageCarousel
+              images={images}
+              deleteImage={deleteImage}
+              setIndex={setIndex}
+              index={index}
+            />
           </div>
 
           <div className="flex justify-between mt-4 space-x-4">
             <div className="mb-3 w-6/12">
               {/* <UploadWidget onImageChange={handleImageChange} /> */}
-              <UploadMultiple length={images.length} onImageChange={handleImageChange} success={success} />
-
+              <UploadMultiple
+                length={images.length}
+                onImageChange={handleImageChange}
+                success={success}
+              />
             </div>
             <div className="mb-3 w-6/12">
               {/* <Button onClick={deleteAllImages} content={"Delete All Images"} /> */}
@@ -294,16 +298,16 @@ export default function ProductEditForm() {
                   setShowDeleteModal(true);
                   console.log(showDeleteModal); // Note: This log will not show the updated state value immediately due to the asynchronous nature of state updates
                 }}
-                content={"Delete All Images"}
+                content={'Delete All Images'}
               />
               {showDeleteModal && (
                 <DeleteModal
                   onCancel={() => {
                     setShowDeleteModal(false);
-                    console.log("cancel button is clicked");
+                    console.log('cancel button is clicked');
                   }}
                   onDelete={() => {
-                    console.log("delete button is clicked");
+                    console.log('delete button is clicked');
                     setShowDeleteModal(false); // Close the modal
                     deleteAllImages();
                   }}
@@ -387,11 +391,14 @@ export default function ProductEditForm() {
           <Button onClick={handleSubmit} content={'Submit'} />
         </div>
         <div className="mb-3 w-6/12">
-          <Button onClick={(event) => {
-            event.preventDefault();
-            getProducts();
-            getImages();
-          }} content={"Discard Changes"} />
+          <Button
+            onClick={(event) => {
+              event.preventDefault();
+              getProducts();
+              getImages();
+            }}
+            content={'Discard Changes'}
+          />
         </div>
       </div>
 
