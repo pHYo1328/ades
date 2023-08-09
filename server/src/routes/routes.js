@@ -106,10 +106,6 @@ module.exports = (app, router) => {
     productController.processGetTotalNumberOfOrdersByShipping
   );
   router.get(
-    '/api/admin/payment/count',
-    productController.processGetTotalNumberOfPaymentsByMethod
-  );
-  router.get(
     '/api/admin/orders/status/count',
     productController.processGetTotalNumberOfOrdersByStatus
   );
