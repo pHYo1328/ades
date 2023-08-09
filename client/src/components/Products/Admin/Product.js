@@ -63,7 +63,7 @@ export default function Product({
       });
   };
 
-  const deleteProduct = (productID) => {
+  const deleteProduct = () => {
     axios
       .delete(`${baseUrl}/api/products/${product.product_id}`)
       .then((res) => {
@@ -104,7 +104,7 @@ export default function Product({
           cldImg={cld.image(product.image_url)}
         />
       </td>
-      <td className="px-6 py-4 font-semibold text-gray-900">
+      <td className="px-6 py-4 font-semibold text-gray-900 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">
         {product.product_name}
       </td>
       <td className="px-6 py-4 font-semibold text-gray-900">

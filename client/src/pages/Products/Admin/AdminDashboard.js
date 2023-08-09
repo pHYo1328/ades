@@ -20,8 +20,8 @@ import InventoryByCategoryChart from '../../../components/Products/Admin/Invento
 import OrdersByBrandsChart from '../../../components/Products/Admin/OrdersByBrandChart';
 import BookmarksByBrandChart from '../../../components/Products/Admin/BookmarksByBrandChart';
 import ShippingMethodChart from '../../../components/Products/Admin/ShippingMethodChart';
-import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
-// import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
+// import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
+import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
 import RevenueByBrandChart from '../../../components/Products/Admin/RevenueByBrandChart';
 import RevenueByCategoryChart from '../../../components/Products/Admin/RevenueByCategoryChart';
 
@@ -343,7 +343,7 @@ export default function AdminDashboard() {
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
-                        <PaymentMethodChart />
+                        <OrderStatusChart />
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
