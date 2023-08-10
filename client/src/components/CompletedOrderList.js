@@ -115,8 +115,8 @@ const OrderActions = ({
   if (!renderRating) {
     return (
       <a
-        href="mailto:235756ksp@gmail.com?subject=Hello&body=I%20wanted%20to%20say%20hi!"
-        className="text-xl bg-red-600 hover:bg-red-800 text-white w-40 rounded text-center py-2 px-4 items-end"
+        href="mailto:235756ksp@gmail.com?subject=Hello&body=I%20wanted%20to%20say"
+        className="text-xl bg-red-600 hover:bg-red-800 text-white w-40 rounded text-center py-2 px-4 items-end mt-2"
       >
         Contact us
       </a>

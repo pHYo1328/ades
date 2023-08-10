@@ -18,7 +18,7 @@ import api from '../../index';
 const Header = () => {
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
   const userPanelRef = useRef(null);
-  const [isSideNavOpen, setIsSideNavOpen] = useState(false)
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const sideNavRef = useRef(null);
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
@@ -34,10 +34,7 @@ const Header = () => {
     }
   };
 
- 
-
   useEffect(() => {
-    
     document.addEventListener('click', handleOutsideClick);
 
     return () => {
@@ -59,7 +56,6 @@ const Header = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-8">
-
             <Link
               to="/products"
               className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"

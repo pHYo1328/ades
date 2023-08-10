@@ -61,11 +61,11 @@ module.exports.getUpdatedProductsByBrandID = async (previousUpdate) => {
     and created_at > ?
     GROUP BY product.product_name, product.description, product.brand_id
     ;`;
+
   try {
-    const updatedProducts = await queryWithRetry(
+    const updatedProducts = await pool.query(
       fetchUpdatedProductsByBrandIDQuery,
-      [previousUpdate, previousUpdate],
-      3
+      [previousUpdate, previousUpdate]
     );
     return updatedProducts;
   } catch (error) {

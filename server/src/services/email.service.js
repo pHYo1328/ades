@@ -31,6 +31,7 @@ module.exports.sendEmail = (customer, customerProducts) => {
       params: { bodyMessage: 'Made just for YOU!' }, // just testing
     })
     .then((data) => {
+      console.log(data);
       return {
         status: 200,
         message: 'Email sent successfully',

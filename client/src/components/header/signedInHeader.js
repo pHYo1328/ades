@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef ,useContext} from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   RiTruckLine,
@@ -18,12 +18,12 @@ import { AuthContext } from '../../AuthContext';
 import io from 'socket.io-client';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-const socket = io('http://localhost:8000'); 
+const socket = io('http://localhost:8000');
 
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
-      ref.current = value;
+    ref.current = value;
   });
   return ref.current;
 }
@@ -42,7 +42,6 @@ const SignedInHeader = () => {
   const prevNotificationStatus = usePrevious(isNotificationPanelOpen);
   const [messages, setMessages] = useState([]);
 
-
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
@@ -56,7 +55,10 @@ const SignedInHeader = () => {
       setIsSideNavOpen(false);
     }
 
-    if (notificationPanelRef.current && !notificationPanelRef.current.contains(event.target)) {
+    if (
+      notificationPanelRef.current &&
+      !notificationPanelRef.current.contains(event.target)
+    ) {
       setIsNotificationPanelOpen(false);
     }
   };
@@ -90,9 +92,14 @@ const SignedInHeader = () => {
 
   useEffect(() => {
     api.get(`/api/notifications/${userId}`).then((response) => {
-      if (response.data.data[0][0].have_email === 1) {
-        setNotificationStatus(true);
-        setMessages(...messages, response.data.data.message);
+      console.log(response);
+      if (response.data.data && response.data.data[0].length > 0) {
+        const newMessages = response.data.data[0]
+          .filter((item) => item.have_email === 1)
+          .map((item) => item.message);
+        console.log(newMessages);
+        setNotificationStatus(newMessages.length > 0);
+        setMessages([...messages, ...newMessages]);
       }
     });
     document.addEventListener('click', handleOutsideClick);
@@ -108,41 +115,35 @@ const SignedInHeader = () => {
 
   useEffect(() => {
     if (prevNotificationStatus === true && isNotificationPanelOpen === false) {
-        api.delete(`/api/notifications/${userId}`)
-            .catch((error) => {
-                console.error("Error deleting notifications:", error);
-            });
-            setMessages([]);
-            setNotificationStatus(false);
+      api.delete(`/api/notifications/${userId}`).catch((error) => {
+        console.error('Error deleting notifications:', error);
+      });
+      setMessages([]);
+      setNotificationStatus(false);
     }
-}, [isNotificationPanelOpen, prevNotificationStatus]);
+  }, [isNotificationPanelOpen, prevNotificationStatus]);
 
-useEffect(() => {
-  console.log('i m here');
-  socket.on('connect', () => {
-    console.log('Connected to the server'); // Socket connected
-    socket.emit('register', { userId }); // Assuming you want to register the user for specific notifications
-  });
+  useEffect(() => {
+    socket.on('connect', () => {
+      socket.emit('register', { userId }); // Assuming you want to register the user for specific notifications
+    });
 
-  socket.on('connect_error', (error) => {
-    console.log('Connection Error:', error); // Error connecting to server
-  });
+    socket.on('connect_error', (error) => {
+      console.log('Connection Error:', error); // Error connecting to server
+    });
 
-  socket.on('productUpdate', (message) => {
-    setNotificationStatus(true);
-    setMessages((prevMessages) => [...prevMessages, message]);
-    console.log(message);
-  });
+    socket.on('message', (message) => {
+      setNotificationStatus(true);
+      setMessages((prevMessages) => [...prevMessages, message.message]);
+      console.log(message.message);
+    });
 
-  return () => {
-    socket.off('connect');
-    socket.off('connect_error');
-    socket.off('productUpdate');
-  };
-}, []);
-
-
-  
+    return () => {
+      socket.off('connect');
+      socket.off('connect_error');
+      socket.off('productUpdate');
+    };
+  }, []);
 
   return (
     <header className="bg-tertiary shadow">
@@ -154,29 +155,39 @@ useEffect(() => {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-          {userId && <div className="relative" ref={notificationPanelRef}>
-              <button
-                onClick={handleNotificationsPanelToggle}
-                className="text-white hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
-              >
-                <RiNotification2Fill />
-                {notificationStatus && (
-                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-                )}
-              </button>
-              {isNotificationPanelOpen && (
-                <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
-                  {notificationStatus ? (
-                    messages.map((message) => {
-                      console.log(message);
-                      <p className='w-max p-2'>${message}</p>
-                    })
-                  ) : (
-                    <p className="w-max p-2">There is no update for you</p>
+            {userId && (
+              <div className="relative" ref={notificationPanelRef}>
+                <button
+                  onClick={handleNotificationsPanelToggle}
+                  className="text-white hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+                >
+                  <RiNotification2Fill />
+                  {notificationStatus && (
+                    <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
                   )}
-                </div>
-              )}
-            </div>}
+                </button>
+                {isNotificationPanelOpen && (
+                  <div
+                    className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg overflow-y-auto h-40 w-72" // Added fixed height and scroll overflow
+                  >
+                    {messages.length ? (
+                      messages.map((message, index) => (
+                        <p
+                          key={index}
+                          className="w-72 p-2 font-breezeRegular text-base border-b-2"
+                        >
+                          {message}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="p-2 font-breezeRegular text-base ">
+                        There is no update for you
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             <Link
               to="/products"
               className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"

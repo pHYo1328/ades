@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const { format } = require('date-fns');
+const fs = require('fs');
 const {
   getLatestUpdate,
   getCustomerDetails,
@@ -8,17 +9,23 @@ const {
 const { sendEmail } = require('../services/email.service');
 const { addNotification } = require('../services/notification.service');
 // store default time to check
-let previousUpdate = format(
-  new Date('2023-05-15 05:49:40'),
-  'yyyy-MM-dd HH:mm:ss'
-);
-
+try {
+  previousUpdateTime = JSON.parse(
+    fs.readFileSync('previousUpdate.json')
+  ).previousUpdateTime;
+} catch (error) {
+  previousUpdateTime = '2023-05-15T05:49:40.000Z';
+}
 module.exports.updateProductsEmailSender = async (io, userSockets) => {
   console.log(chalk.blue('Cron schedule Started'));
   try {
     const latestUpdateTime = await getLatestUpdate();
     const latestUpdate = format(
       new Date(latestUpdateTime[0][0].latest_update),
+      'yyyy-MM-dd HH:mm:ss'
+    );
+    const previousUpdate = format(
+      new Date(previousUpdateTime),
       'yyyy-MM-dd HH:mm:ss'
     );
     console.log(chalk.blue('Latest Update Time: ', latestUpdate));
@@ -28,8 +35,8 @@ module.exports.updateProductsEmailSender = async (io, userSockets) => {
     if (new Date(latestUpdate).getTime() > new Date(previousUpdate).getTime()) {
       // if there is latest update, fetch all data of related customers and products
       const [customers, products] = await Promise.all([
-        getCustomerDetails(previousUpdate),
-        getUpdatedProductsByBrandID(previousUpdate),
+        getCustomerDetails(previousUpdateTime),
+        getUpdatedProductsByBrandID(previousUpdateTime),
       ]);
 
       // if there is customers to send and products data to be send then
@@ -50,7 +57,7 @@ module.exports.updateProductsEmailSender = async (io, userSockets) => {
                     customer.brand_name
                   } are Updated !!! Go and Grab Some ${customer.username}`;
                   if (socket) {
-                    socket.emit('productUpdate', {
+                    socket.emit('message', {
                       message: message,
                     });
                   } else {
@@ -79,7 +86,11 @@ module.exports.updateProductsEmailSender = async (io, userSockets) => {
       }
     }
     // update the previous time to latest time update
-    previousUpdate = latestUpdate;
+    previousUpdateTime = latestUpdateTime[0][0].latest_update;
+    fs.writeFileSync(
+      'previousUpdate.json',
+      JSON.stringify({ previousUpdateTime })
+    );
   } catch (error) {
     console.log(chalk.red(error));
     throw error;

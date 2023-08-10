@@ -12,12 +12,12 @@ const OrderToShip = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (!userData.isSignedIn) {
-        console.log('Redirecting to homepage');
-        navigate('/login');
-      } else {
-        // add whatever else validation
-      }
-    }, []);
+      console.log('Redirecting to homepage');
+      navigate('/login');
+    } else {
+      // add whatever else validation
+    }
+  }, []);
   const userId = localStorage.getItem('userid');
   useEffect(() => {
     setIsLoading(true);

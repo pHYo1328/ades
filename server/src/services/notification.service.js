@@ -31,7 +31,8 @@ module.exports.removeNotification = async (customerID) => {
 
 module.exports.getNotification = async (customerID) => {
   console.log(chalk.blue('getNotification function is called'));
-  const sqlStr = 'SELECT have_email,message FROM notifications WHERE customer_id = ? ';
+  const sqlStr =
+    'SELECT have_email,message FROM notifications WHERE customer_id = ? ';
   try {
     const result = await pool.query(sqlStr, [customerID]);
     console.log(chalk.green('fetch notification successfully'));

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef,useContext } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,15 +23,15 @@ const Cart = () => {
   const handleContinueToCheckout = () => {
     setShowCheckout(!showCheckout);
   };
-  
+
   useEffect(() => {
     if (!userData.isSignedIn) {
-        console.log('Redirecting to homepage');
-        navigate('/login');
-      } else {
-        // add whatever else validation
-      }
-    }, []);
+      console.log('Redirecting to homepage');
+      navigate('/login');
+    } else {
+      // add whatever else validation
+    }
+  }, []);
   const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
     // cart data:{productId: , quantity: }
