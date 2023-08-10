@@ -153,3 +153,116 @@ exports.processGetIDAndAmount = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.processCreateRefund = async (req, res, next) => {
+  console.log(chalk.blue('processCreateRefund running'));
+  const { order_id, customer_id, total } = req.body;
+  if (
+    order_id == '' ||
+    !order_id ||
+    customer_id == '' ||
+    !customer_id ||
+    total == '' ||
+    !total
+  ) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Refund Req data is missing',
+    });
+  }
+
+  console.log(req.body);
+
+  try {
+    const createdRefundReqData = await paymentServices.addRefund(
+      order_id,
+      customer_id,
+      total,
+      'pending'
+    );
+    console.log(chalk.yellow(createdRefundReqData));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Create payment req successful',
+    });
+  } catch (error) {
+    console.error(chalk.red(error.code));
+    console.error(chalk.red('Error in createRefund: ', error));
+    return next(error);
+  }
+};
+
+exports.processGetOrderForRefund = async (req, res, next) => {
+  console.log(chalk.blue('processGetOrderForRefund is running'));
+  try {
+    const result = await paymentServices.getOrderForRefund();
+    console.log(
+      chalk.yellow(
+        'Inspect result variable from getOrderForRefund service',
+        result
+      )
+    );
+    return res.status(200).send({
+      message: 'refund req found',
+      data: result,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in processGetOrderForRefund: ', error));
+    next(error);
+  }
+};
+
+exports.processGetRefundStatusByID = async (req, res, next) => {
+  console.log(chalk.blue('processGetRefundStatusByID is running'));
+  try {
+    const {orderID}  = req.params; // Assuming the order_id is part of the URL
+    const result = await paymentServices.getRefundStatusByID(orderID); // Pass the order_id to the function
+    console.log(
+      chalk.yellow(
+        'Inspect result variable from getRefundStatusByID service',
+        result
+      )
+    );
+    return res.status(200).send({
+      message: 'status found',
+      data: result,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in processGetRefundStatusByID: ', error));
+    next(error);
+  }
+};
+
+
+// controller to update order status
+exports.processUpdateRefundStatus = async (req, res, next) => {
+  console.log(chalk.blue('ProcessUpdateRefundStatus is running'));
+  const { orderIDs, refundStatus } = req.body;
+  try {
+    if (!orderIDs || !refundStatus) {
+      const error = new Error('Invalid Information parameters');
+      error.status = 400;
+      throw error;
+    }
+
+    const data = { orderIDs, refundStatus };
+    const result = await paymentServices.updateRefundStatus(data);
+    console.log(
+      chalk.yellow(
+        'Inspect result variable from updateRefundStatus service',
+        result
+      )
+    );
+    return res.status(200).send({
+      message: 'Refund Status updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.error(chalk.red('Error in processUpdateOrderStatus: ', error));
+    next(error);
+  }
+};
+
+
