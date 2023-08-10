@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose port 8080 (or whatever port your app runs on) to the Docker host, so we can access it
-EXPOSE 8080
+EXPOSE 8000
 
 # Define the command that should be executed when the Docker image is run
-CMD [ "node", "-r", "dotenv/config", "server.js" ]
+CMD [ "node", "-r", "dotenv/config", "cronScheduleServer.js" ]

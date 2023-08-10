@@ -126,75 +126,6 @@ const OrderListItem = React.memo(
               />
             </div>
           ))}
-          
-        {/* { renderRating && ( <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
-          <button
-    className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''}`}
-    onClick={() => {
-      handleRefund(item.order_id, item.totalAmount, customerID);
-      setRefundClicked(true);
-    }}
-    disabled={refundClicked}
-  >
-    {refundClicked ? 'Refund Pending' : 'Refund'}
-  </button>
-
-          </div>)} */}
-
-{/* {renderRating && (
-        <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
-          <button
-            className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={() => {
-              if (!refundClicked) {
-                handleRefund(item.order_id, item.totalAmount, customerID);
-                setRefundClicked(true);
-
-                window.location.reload();
-              }
-            }}
-            disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
-          >
-             {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
-          </button>
-        </div>
-      )} */}
-
-{/* {renderRating && (
-  <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
-    <button
-      className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''} ${refundStatus === 'pending' || refundStatus === 'refunded' ? 'pointer-events-none' : ''}`}
-      onClick={() => {
-        if (!refundClicked) {
-          handleRefund(item.order_id, item.totalAmount, customerID);
-          setRefundClicked(true);
-          window.location.reload();
-        }
-      }}
-      disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
-    >
-      {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
-    </button>
-  </div>
-)} */}
-
-{/* {renderRating && (
-  <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
-    <button
-      className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''} ${refundStatus === 'pending' || refundStatus === 'refunded' ? 'pointer-events-none bg-gray-400' : ''}`}
-      onClick={() => {
-        if (!refundClicked) {
-          handleRefund(item.order_id, item.totalAmount, customerID);
-          setRefundClicked(true);
-          window.location.reload();
-        }
-      }}
-      disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
-    >
-      {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
-    </button>
-  </div>
-)} */}
 
 {renderRating && (
   <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
@@ -210,8 +141,8 @@ const OrderListItem = React.memo(
         if (!refundClicked && refundStatus !== 'pending' && refundStatus !== 'refunded') {
           handleRefund(item.order_id, item.totalAmount, customerID);
           setRefundClicked(true);
-          // You might not need to reload the page here
-          // window.location.reload();
+
+          window.location.reload();
         }
       }}
       disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
@@ -220,9 +151,6 @@ const OrderListItem = React.memo(
     </button>
   </div>
 )}
-
-
-
       </div>
     </li>
     );
@@ -313,7 +241,9 @@ const CompletedOrderList = ({
     const combineOrders = (orders) => { 
       const combinedOrders = orders.reduce((acc, order) => {
         const existingOrder = acc.find((o) => o.order_id === order.order_id);
+        const orderTotal = parseFloat(order.price) * parseFloat(order.quantity);
         if (existingOrder) {
+          existingOrder.totalAmount = (parseFloat(existingOrder.totalAmount) + orderTotal).toFixed(2);
           existingOrder.order_items.push({
             product_name: order.product_name,
             product_id: order.product_id,
@@ -331,7 +261,7 @@ const CompletedOrderList = ({
             payment_date: order.payment_date || null,
             shipping_start_at: order.shipping_start_at || null,
             completed_at: order.completed_at || null,
-            totalAmount: (0 + order.price * order.quantity).toFixed(2),
+            totalAmount: orderTotal.toFixed(2),
             order_items: [
               {
                 product_name: order.product_name,
@@ -349,12 +279,13 @@ const CompletedOrderList = ({
 
       return combinedOrders;
     };
-
+    console.log(items);
     const sortedAndCombinedItems = combineOrders(items).sort(
       (a, b) => new Date(b.order_date) - new Date(a.order_date)
     );
 
     setClearedItems(sortedAndCombinedItems);
+    console.log(sortedAndCombinedItems);
   }, [items]);
   CompletedOrderList.propTypes = {
     items: PropTypes.array.isRequired,
