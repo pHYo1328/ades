@@ -139,8 +139,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // fetchProducts();
-    if (search && search.trim() !== '') {
+    if (search && search !== '') {
+      console.log(search);
       fetchSearchResults();
+      console.log("products ", products);
     } else {
       fetchProducts();
     }
@@ -364,11 +366,8 @@ export default function AdminDashboard() {
               <div className="w-full">
                 <div className="w-full flex flex-row items-center justify-between mb-3 mt-3">
                   <div className="w-12/12 sm:w-12/12 md:w-9/12 lg:w-9/12 text-sm pr-4">
-                    <TextInput
-                      placeholder={'Enter search...'}
-                      value={search}
-                      func={(e) => setSearch(e.target.value)}
-                    />
+                    <TextInput placeholder={"Enter search..."} value={search}
+                      func={(e) => setSearch(e.target.value)} />
                   </div>
 
                   <div className="w-12/12 sm:w-12/12 md:w-3/12 lg:w-3/12">
@@ -382,8 +381,8 @@ export default function AdminDashboard() {
                     />
                   </div>
                 </div>
-
                 <ProductList
+                  key={products}
                   products={products}
                   hasProducts={hasProducts}
                   refunds={refunds}
