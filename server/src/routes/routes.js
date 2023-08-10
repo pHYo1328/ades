@@ -308,6 +308,8 @@ module.exports = (app, router) => {
 
   router.get('/users', getUserInfo.retrieveUsersInformation);
 
+  router.get('/order-history', customerProfile.retrieveOrderHistory);
+
   router.put('/updateUser', updateUser.updateUser);
 
   router.delete('/deleteUser', deleteUser.deleteUser);
@@ -319,6 +321,8 @@ module.exports = (app, router) => {
   router.put('/update-userProfile', customerProfile.updateUserProfile);
 
   router.put('/update-userProfileImage', customerProfile.updateProfileImage);
+
+
 
   // ADMIN ROUTES
   router.post('/register-admin', registerAdminController.handleNewAdmin);

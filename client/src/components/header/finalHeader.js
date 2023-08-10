@@ -275,13 +275,21 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                                 </button>
                                 </Link> */}
 
-                <Link to="/user-profile">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
-                    User Profile
-                  </button>
-                </Link>
-              </div>
-            </nav>
+                              <Link to="/user-profile" className="flex items-center space-x-2">
+                                <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg flex items-center">
+                                  <FaUser className="mr-2 mb-1" />
+                                  Profile
+                                </button>
+                              </Link>
+
+                              <button
+                                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
+                                onClick={onHandleLogout}
+                                >
+                                Log out
+                                </button>
+                            </div>
+                        </nav>
           </>
         )}
 
