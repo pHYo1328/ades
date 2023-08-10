@@ -8,7 +8,7 @@ import {
 import {
   FaBox,
   FaWallet,
-  FaShoppingCart,
+  FaShoppingCart, 
   FaUser,
   FaBars,
 } from 'react-icons/fa';
