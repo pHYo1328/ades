@@ -38,6 +38,7 @@ const OrderToDeliver = () => {
         `/api/order/getOrderDetailByOrderStatus?customerID=${userId}&orderStatus=delivering`
       );
       setOrderItems(response.data.data);
+      console.log(response.data.data);  
       setIsLoading(false);
     };
     fetchData();
@@ -67,16 +68,16 @@ const OrderToDeliver = () => {
                     {expandedSection === 'orders' && (
                     <ul className="pl-4 text-lg space-y-1">
                         <li className="hover:bg-gray-700 rounded-md">
-                        <a href="/OrderToPay" className="block px-2 py-1">To Pay</a>
+                        <a href="/orderToPay" className="block px-2 py-1">To Pay</a>
                         </li>
                         <li className="hover:bg-gray-700 rounded-md">
-                        <a href="/OrderToShip" className="block px-2 py-1">To Ship</a>
+                        <a href="/orderToShip" className="block px-2 py-1">To Ship</a>
                         </li>
                         <li className="hover:bg-gray-700 rounded-md">
-                        <a href="/OrderToDeliver" className="block px-2 py-1">To Receive</a>
+                        <a href="/orderToDeliver" className="block px-2 py-1">To Receive</a>
                         </li>
                         <li className="hover:bg-gray-700 rounded-md">
-                        <a href="/OrderDelivered" className="block px-2 py-1">Completed</a>
+                        <a href="/orderDelivered" className="block px-2 py-1">Completed</a>
                         </li>
                     </ul>
                     )}

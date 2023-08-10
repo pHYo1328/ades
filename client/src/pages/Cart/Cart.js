@@ -28,14 +28,14 @@ const Cart = () => {
     setShowCheckout(!showCheckout);
   };
 
-  useEffect(() => {
-    if (!userData.isSignedIn) {
-      console.log('Redirecting to homepage');
-      navigate('/login');
-    } else {
-      // add whatever else validation
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!userData.isSignedIn) {
+  //     console.log('Redirecting to homepage');
+  //     navigate('/login');
+  //   } else {
+  //     // add whatever else validation
+  //   }
+  // }, []);
   const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
     // cart data:{productId: , quantity: }

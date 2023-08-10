@@ -164,7 +164,9 @@ const CompletedOrderList = ({
     const combineOrders = (orders) => {
       const combinedOrders = orders.reduce((acc, order) => {
         const existingOrder = acc.find((o) => o.order_id === order.order_id);
+        const orderTotal = parseFloat(order.price) * parseFloat(order.quantity);
         if (existingOrder) {
+          existingOrder.totalAmount = (parseFloat(existingOrder.totalAmount) + orderTotal).toFixed(2);
           existingOrder.order_items.push({
             product_name: order.product_name,
             product_id: order.product_id,
@@ -182,7 +184,7 @@ const CompletedOrderList = ({
             payment_date: order.payment_date || null,
             shipping_start_at: order.shipping_start_at || null,
             completed_at: order.completed_at || null,
-            totalAmount: (0 + order.price * order.quantity).toFixed(2),
+            totalAmount: orderTotal.toFixed(2),
             order_items: [
               {
                 product_name: order.product_name,
@@ -200,12 +202,13 @@ const CompletedOrderList = ({
 
       return combinedOrders;
     };
-
+    console.log(items);
     const sortedAndCombinedItems = combineOrders(items).sort(
       (a, b) => new Date(b.order_date) - new Date(a.order_date)
     );
 
     setClearedItems(sortedAndCombinedItems);
+    console.log(sortedAndCombinedItems);
   }, [items]);
   CompletedOrderList.propTypes = {
     items: PropTypes.array.isRequired,

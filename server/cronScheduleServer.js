@@ -40,7 +40,7 @@ server.listen(8000, () => {
       });
   });
 
-  cron.schedule('0 1 * * *', () => {
+  cron.schedule('0 1 * * *', () => {8
     unpaidOrdersController.cleanUnpaidOrders(io, userSockets).catch((error) => {
       console.error('Error in scheduled task cleanUnpaidOrders:', error);
     });
