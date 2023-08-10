@@ -301,6 +301,11 @@ module.exports = (app, router) => {
     checkoutController.processPartialRefund
   );
 
+  router.get(
+    '/processPartialRefund/:productID',
+    checkoutController.processPartialRefund
+  );
+
   router.get('^/$|/index(.html)?', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
   });
