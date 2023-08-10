@@ -1,12 +1,14 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Home() {
   const navigate = useNavigate();
+  const { userData } = useContext(AuthContext);
 
   //call handleResponserError function when fetching anything to run refreshAccessToken
   const refreshAccessToken = async () => {
@@ -31,7 +33,7 @@ function Home() {
   };
 
   useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
+    const roles = userData.roles;
     console.log(roles);
     if (!roles) {
       // User does not have the required role(s), redirect them to the homepage or show an error message
@@ -43,7 +45,7 @@ function Home() {
       if (!isAdmin) {
         // User does not have the required role(s), redirect them to the homepage or show an error message
         // alert("you're not admin");
-        console.log('Redirecting to homepage');
+        console.log('Not admin, redirecting to homepage');
         navigate('/homepage');
       }
     }
