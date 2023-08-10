@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
+import { BsEyeFill } from "react-icons/bs";
+import { BsEyeSlashFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -8,6 +10,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true';
@@ -64,6 +67,10 @@ function Login() {
       onHandleSubmit();
     }
   };
+ 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-98px)] bg-indigo-950">
@@ -88,17 +95,24 @@ function Login() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
+            <label className="text-sm font-medium text-gray-700">Password</label>
+            <div className="relative mt-2">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 text-black"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <button
+                type="button"
+                className="absolute top-2 right-2 text-gray-500 focus:outline-none"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <BsEyeSlashFill className="mr-3" /> : <BsEyeFill className="mr-3" />}
+              </button>
+            </div>
           </div>
           {/* <div className="flex justify-end">
             <a href="/" className="text-sm text-gray-500 hover:text-gray-700">

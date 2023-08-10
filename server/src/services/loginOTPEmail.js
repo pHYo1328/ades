@@ -27,10 +27,12 @@ module.exports.OTPEmailSender = async (username) => {
           const username = users.username;
           const email = users.email;
           const otp = generateOTP(); // Generate random OTP
-
-          // Save the OTP in the database for the user
-          await pool.query('UPDATE users SET otp = ? WHERE username = ?', [
+          const currentTimestamp = Date.now();
+            console.log(currentTimestamp + "this my time rn ");
+          // Save the OTP and its timestamp in the database for the user
+          await pool.query('UPDATE users SET otp = ?, otp_created_at = ? WHERE username = ?', [
             otp,
+            new Date(currentTimestamp),
             username,
           ]);
 

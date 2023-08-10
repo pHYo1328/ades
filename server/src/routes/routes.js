@@ -27,6 +27,7 @@ const verificationEmail = require('../controller/emailVerificationController');
 const verificationEmailAdmin = require('../controller/admin/emailVerificationAdminController');
 const customerProfile = require('../controller/customerProfile');
 const notificationController = require('../controller/notification.controller');
+const resentOTPEmailController = require('../controller/resendOTPEmailController');
 const stripe = require('../config/stripe');
 const { handleWebhooks } = require('../controller/checkout.controller');
 
@@ -326,6 +327,8 @@ module.exports = (app, router) => {
   router.delete('/deleteUser', deleteUser.deleteUser);
 
   router.post('/verify-email', verificationEmail.sendForgotPasswordEmail);
+
+  router.post('/send-otp-email', resentOTPEmailController.loginOTPEmail);
 
   router.get('/user-profile', customerProfile.userProfileInformation);
 

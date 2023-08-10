@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UpdateModal from '../../components/modal/updateModal';
-
+import { BsPencilSquare } from "react-icons/bs";
+import { BsFillTrashFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -112,33 +113,28 @@ const UserInfo = () => {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">User Information</h1>
-      <div className="max-w-screen-2xl py-12 mx-auto">
-        <div>
-          <table className="table w-full text-base">
-            <thead>
-              <tr>
-                <th className="py-2 border-b-2 border-gray-700">Username</th>
-                <th className="py-2 border-b-2 border-gray-700">Email</th>
-                <th className="py-2 border-b-2 border-gray-700">Password</th>
-                <th className="py-2 border-b-2 border-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsers.map(
-                (
-                  user //loop through all the users
-                ) => (
-                  <User
-                    key={user.customer_id}
-                    user={user}
-                    handleUpdateClick={handleUpdateClick}
-                    handleDeleteClick={handleDeleteClick}
-                  />
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div className="max-w-screen-2xl py-6 mx-auto">
+      <div className="overflow-x-auto rounded-lg border">
+        <table className="table-auto w-full bg-white">
+          <thead>
+            <tr className="bg-gray-700">
+              <th className="py-2 px-4 text-base font-bold text-gray-300">Username</th>
+              <th className="py-2 px-4 text-base font-bold text-gray-300">Email</th>
+              <th className="py-2 px-4 text-base font-bold text-gray-300">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentUsers.map((user, index) => (
+              <User
+                key={user.customer_id}
+                user={user}
+                handleUpdateClick={handleUpdateClick}
+                handleDeleteClick={handleDeleteClick}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
 
         {showModal && (
           <UpdateModal
@@ -171,23 +167,23 @@ const UserInfo = () => {
 
 const User = ({ user, handleUpdateClick, handleDeleteClick }) => {
   return (
-    <tr>
-      <td className="py-2">{user.username}</td>
-      <td className="py-2">{user.email}</td>
-      <td className="py-2">{user.password}</td>
-      <td className="py-2">
+    <tr className="transition-colors hover:bg-blue-100">
+      <td className="pl-6 py-2 text-base font-semibold">{user.username}</td>
+      <td className="pl-6 py-2 text-base font-semibold">{user.email}</td>
+      <td className="pl-6 py-2 text-base font-semibold">
         <div className="flex gap-2">
           <button
-            className="update-button text-blue-500 hover:text-blue-700"
+            className="update-button text-gray-900 hover:text-gray-500"
             onClick={() => handleUpdateClick(user.customer_id)}
           >
-            Update
+            <BsPencilSquare className="inline-block mr-1" />
+ 
           </button>
           <button
-            className="update-button text-blue-500 hover:text-blue-700"
+            className="update-button text-gray-900 hover:text-gray-500 pl-2"
             onClick={() => handleDeleteClick(user.customer_id)}
           >
-            Delete
+            <BsFillTrashFill className="inline-block mr-1" />
           </button>
         </div>
       </td>

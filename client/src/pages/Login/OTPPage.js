@@ -9,7 +9,9 @@ const VerifyOTP = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [otp, setOTP] = useState('');
+  const [remainingTime, setRemainingTime] = useState(60);
   const { userData, setUserData } = useContext(AuthContext);
+
 
   useEffect(() => {
     const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
@@ -17,24 +19,27 @@ const VerifyOTP = () => {
       navigate('/');
     }
   }, []);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      const data = location.state; //pass data from Login.js
+      console.log(data);
       const response = await fetch(`${baseUrl}/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ otp }),
+        body: JSON.stringify({ otp, username: data.username }),
       });
+      console.log("username in otp is " + data.username);
       console.log(response);
       if (response.ok) {
         console.log('Successful OTP verification');
         alert('successful OTP');
 
-        const data = location.state; //pass data from Login.js
+        
 
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('userid', data.userid);
@@ -53,13 +58,62 @@ const VerifyOTP = () => {
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/');
       } else {
-        alert('Invalid OTP');
+        alert('Invalid OTP or OTP expired');
         console.log('Invalid OTP');
       }
     } catch (error) {
       console.error(error);
     }
   };
+
+
+  const handleVerifyOTPEmailClick = async () => {
+    setRemainingTime(60); // Reset the timer to 60 seconds
+    try {
+      const data = location.state; //pass data from Login.js
+      const response = await fetch(`${baseUrl}/send-otp-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: data.username }),
+      });
+      if (response.ok) {
+        // Handle success
+        console.log("OTP Email verification request successful");
+      } else {
+        // Handle error
+        console.log("OTP Email verification request failed");
+      }
+    } catch (error) {
+      // Handle fetch error
+      console.error("Error fetching OTP Email verification:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    if (remainingTime === 0) {
+      return; // Don't start a new interval when timer is already at 0
+    }
+
+    const interval = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime > 0) {
+          return prevTime - 1;
+        } else {
+          clearInterval(interval); // Clear the interval when time reaches 0
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [remainingTime]);
+
+
 
   return (
     <div className="max-w-md mx-auto mt-8">
@@ -83,13 +137,25 @@ const VerifyOTP = () => {
         </div>
 
         <div className="mt-4">
+
+        
+
           <button
             type="submit"
             className="bg-blue-500 text-white rounded-md px-4 py-2"
           >
             Verify
           </button>
+
+          <button
+            type="button"
+            className="bg-gray-300 text-gray-700 rounded-md ml-4 px-4 py-2"
+            onClick={handleVerifyOTPEmailClick}
+          >
+            Resend OTP Email
+          </button>
         </div>
+        <p>Time remaining: {remainingTime} seconds</p>
       </form>
     </div>
   );
