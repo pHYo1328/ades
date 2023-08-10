@@ -224,7 +224,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                   <FaShoppingCart />
                   <p className="text-2xl">Cart</p>
                 </Link>
-                <div className="relative" ref={userPanelRef}>
+                {/* <div className="relative" ref={userPanelRef}>
                   <button
                     onClick={handleUserPanelToggle}
                     className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
@@ -260,14 +260,14 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                       </Link>
                     </div>
                   )}
-                </div>
+                </div> */}
 
-                <button
+                {/* <button
                   className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
                   onClick={onHandleLogout}
                 >
                   Log out
-                </button>
+                </button> */}
 
                 {/* <Link to="/login-admin">
                                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
