@@ -38,7 +38,7 @@ export default function Product(props) {
               </div>
             </Link>
           </h3>
-          <p className="mt-1 text-sm text-gray-500">{product.brand_name}</p>
+          <p className="mt-1 text-sm text-gray-500 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">{product.brand_name}</p>
         </div>
         <p className="text-sm font-medium text-gray-900 justify-start">
           ${product.price}
