@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
-
+import React, { useEffect, useState, useRef, useContext, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../index';

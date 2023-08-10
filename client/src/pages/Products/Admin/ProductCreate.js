@@ -158,7 +158,7 @@ export default function ProductCreate() {
           setProduct(response.data.data);
           console.log(product);
           // window.location.reload();
-          setSuccess(true);
+          // setSuccess(true);
           setProductName('');
           setProductDescription('');
           setProductPrice('');
@@ -171,6 +171,8 @@ export default function ProductCreate() {
           setImages([]);
           setImagePath(null);
         });
+
+      setSuccess(true);
     }
   };
 
@@ -293,6 +295,7 @@ export default function ProductCreate() {
           {/* <div className="flex justify-between mt-4 space-x-4">
             <div className="mb-3 w-6/12"> */}
           <UploadMultiple
+            key={success}
             length={images.length}
             onImageChange={handleImageChange}
             success={success}

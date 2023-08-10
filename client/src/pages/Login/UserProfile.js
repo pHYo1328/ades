@@ -32,7 +32,7 @@ const UserProfile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Customer-Id': userData.userid,
+            'Customer-Id': localStorage.getItem('userid'),
           },
         });
 
@@ -122,7 +122,7 @@ const UserProfile = () => {
               </li>
               <li className="py-2">
                 <a
-                  href="#"
+                  href="/order-history"
                   className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700"
                 >
                   Order History

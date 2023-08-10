@@ -260,6 +260,9 @@ export default function ProductEditForm() {
             setIndex(0);
           });
       }
+      setSuccess(true);
+
+      console.log('success ', success);
     }
   };
 
@@ -285,6 +288,7 @@ export default function ProductEditForm() {
             <div className="mb-3 w-6/12">
               {/* <UploadWidget onImageChange={handleImageChange} /> */}
               <UploadMultiple
+                key={success}
                 length={images.length}
                 onImageChange={handleImageChange}
                 success={success}

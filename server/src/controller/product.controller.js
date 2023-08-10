@@ -731,42 +731,6 @@ exports.processGetTotalNumberOfOrdersByShipping = async (req, res, next) => {
   }
 };
 
-// get total number of payments by payment method
-exports.processGetTotalNumberOfPaymentsByMethod = async (req, res, next) => {
-  console.log(chalk.blue('processGetTotalNumberOfPaymentsByMethod running'));
-  try {
-    const paymentData =
-      await productServices.getTotalNumberOfPaymentsByMethod();
-    console.log(chalk.yellow(paymentData));
-    if (!paymentData) {
-      return res.status(404).json({
-        statusCode: 404,
-        ok: true,
-        message: 'No payment methods exist',
-      });
-    }
-    console.log(chalk.yellow('paymentData data: ', paymentData));
-    const methods = paymentData.map((method) => ({
-      payment: method.payment,
-      count: method.count,
-    }));
-
-    console.log(chalk.green(methods));
-
-    return res.status(200).json({
-      statusCode: 200,
-      ok: true,
-      message: 'Read payment details successful',
-      methods,
-    });
-  } catch (error) {
-    console.error(
-      chalk.red('Error in getTotalNumberOfPaymentsByMethod: ', error)
-    );
-    return next(error);
-  }
-};
-
 // get total number of orders by status
 exports.processGetTotalNumberOfOrdersByStatus = async (req, res, next) => {
   console.log(chalk.blue('processGetTotalNumberOfOrdersByStatus running'));

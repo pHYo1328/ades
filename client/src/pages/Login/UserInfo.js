@@ -43,21 +43,21 @@ const UserInfo = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
-    if (!roles) {
-      console.log('No role, going to login');
-      navigate('/login');
-    } else {
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        console.log('Redirecting to homepage');
-        navigate('/homepage');
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const roles = JSON.parse(localStorage.getItem('roles'));
+  //   console.log(roles);
+  //   if (!roles) {
+  //     console.log('No role, going to login');
+  //     navigate('/login');
+  //   } else {
+  //     const isAdmin = roles.includes('admin');
+  //     console.log(isAdmin);
+  //     if (!isAdmin) {
+  //       console.log('Redirecting to homepage');
+  //       navigate('/homepage');
+  //     }
+  //   }
+  // }, []);
 
   const updateUser = async () => {
     try {
