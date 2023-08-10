@@ -46,7 +46,7 @@ const VerifyOTP = () => {
           isAdminSignedIn: true,
         });
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
-        navigate('/homepage-admin');
+        navigate('/admin');
       } else {
         // Invalid OTP
         alert('Invalid OTP');

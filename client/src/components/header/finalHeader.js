@@ -166,6 +166,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
     };
   }, []);
   return (
+    <div className={isAdminSignedIn ? "sticky top-0 z-50" : ""}>
     <header className="bg-tertiary shadow font-breezeRegular">
       <div className="container mx-auto px-4 py-6">
         {isUserSignedIn && (
@@ -294,10 +295,11 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
         )}
 
         {isAdminSignedIn && (
-          <>
+          <> 
             <nav className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Link to="/" className="text-lg font-bold text-white">
+              
+              <div className="relative flex items-center">
+                <Link to="/admin" className="text-lg font-bold text-white">
                   TECHZERO
                 </Link>
               </div>
@@ -480,6 +482,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
         )}
       </div>
     </header>
+    </div>
   );
 };
 
