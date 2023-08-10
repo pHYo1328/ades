@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const notificationService = require('../services/notification.service');
 
-exports.getNotifications = async (req, res,next) => {
+exports.getNotifications = async (req, res, next) => {
   const { customerId } = req.params; // Take single brandId instead of an array of brandIds
   console.log(chalk.yellow('Inspecting req body variables'), customerId);
   try {
@@ -29,7 +29,7 @@ exports.getNotifications = async (req, res,next) => {
   }
 };
 
-exports.removeNotifications = async (req, res,next) => {
+exports.removeNotifications = async (req, res, next) => {
   const { customerId } = req.params; // Take single brandId instead of an array of brandIds
   console.log(chalk.yellow('Inspecting req body variables'), customerId);
   try {

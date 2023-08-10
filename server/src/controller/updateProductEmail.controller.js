@@ -13,7 +13,7 @@ let previousUpdate = format(
   'yyyy-MM-dd HH:mm:ss'
 );
 
-module.exports.updateProductsEmailSender = async () => {
+module.exports.updateProductsEmailSender = async (io, userSockets) => {
   console.log(chalk.blue('Cron schedule Started'));
   try {
     const latestUpdateTime = await getLatestUpdate();
@@ -36,7 +36,6 @@ module.exports.updateProductsEmailSender = async () => {
       if (customers[0].length > 0 && products[0].length > 0) {
         // create email promise array by finding related brand id
         const emailPromises = customers[0].map((customer) => {
-          console.log(customer);
           let customerProducts = products[0].filter(
             (product) => product.brand_id === customer.brand_id
           );
@@ -44,10 +43,26 @@ module.exports.updateProductsEmailSender = async () => {
             return sendEmail(customer, customerProducts)
               .then((response) => {
                 if (response.status == 200) {
-                  console.log(
-                    `Adding notification for customer with ID: ${customer.customer_id}`
-                  );
-                  return addNotification(customer.customer_id);
+                  const socket = userSockets[customer.customer_id];
+                  const message = `New products :${customerProducts.map(
+                    (product) => product.product_name
+                  )} from Brand ${
+                    customer.brand_name
+                  } are Updated !!! Go and Grab Some ${customer.username}`;
+                  if (socket) {
+                    socket.emit('productUpdate', {
+                      message: message,
+                    });
+                  } else {
+                    console.log(
+                      `Adding notification for customer with ID: ${customer.customer_id}`
+                    );
+                    return addNotification(
+                      customer.customer_id,
+                      message,
+                      customer.brand_id
+                    );
+                  }
                 }
               })
               .catch((error) => {

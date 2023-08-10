@@ -15,7 +15,18 @@ import {
 import { MdComputer } from 'react-icons/md';
 import api from '../../index';
 import { AuthContext } from '../../AuthContext';
+import io from 'socket.io-client';
+
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+const socket = io('http://localhost:8000'); 
+
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+      ref.current = value;
+  });
+  return ref.current;
+}
 
 const SignedInHeader = () => {
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
@@ -28,6 +39,10 @@ const SignedInHeader = () => {
   const notificationPanelRef = useRef(null);
   const { userData, setUserData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const prevNotificationStatus = usePrevious(isNotificationPanelOpen);
+  const [messages, setMessages] = useState([]);
+
+
   const handleUserPanelToggle = () => {
     setIsUserPanelOpen(!isUserPanelOpen);
   };
@@ -77,6 +92,7 @@ const SignedInHeader = () => {
     api.get(`/api/notifications/${userId}`).then((response) => {
       if (response.data.data[0][0].have_email === 1) {
         setNotificationStatus(true);
+        setMessages(...messages, response.data.data.message);
       }
     });
     document.addEventListener('click', handleOutsideClick);
@@ -91,12 +107,41 @@ const SignedInHeader = () => {
   };
 
   useEffect(() => {
-    if (!isNotificationPanelOpen) {
-      api.delete(`/api/notifications/${userId}`)
-        .then((response) => {
-        })
+    if (prevNotificationStatus === true && isNotificationPanelOpen === false) {
+        api.delete(`/api/notifications/${userId}`)
+            .catch((error) => {
+                console.error("Error deleting notifications:", error);
+            });
+            setMessages([]);
+            setNotificationStatus(false);
     }
-  }, [isNotificationPanelOpen]);
+}, [isNotificationPanelOpen, prevNotificationStatus]);
+
+useEffect(() => {
+  console.log('i m here');
+  socket.on('connect', () => {
+    console.log('Connected to the server'); // Socket connected
+    socket.emit('register', { userId }); // Assuming you want to register the user for specific notifications
+  });
+
+  socket.on('connect_error', (error) => {
+    console.log('Connection Error:', error); // Error connecting to server
+  });
+
+  socket.on('productUpdate', (message) => {
+    setNotificationStatus(true);
+    setMessages((prevMessages) => [...prevMessages, message]);
+    console.log(message);
+  });
+
+  return () => {
+    socket.off('connect');
+    socket.off('connect_error');
+    socket.off('productUpdate');
+  };
+}, []);
+
+
   
 
   return (
@@ -122,7 +167,10 @@ const SignedInHeader = () => {
               {isNotificationPanelOpen && (
                 <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
                   {notificationStatus ? (
-                    <p className="w-max p-2">There are new emails for you</p>
+                    messages.map((message) => {
+                      console.log(message);
+                      <p className='w-max p-2'>${message}</p>
+                    })
                   ) : (
                     <p className="w-max p-2">There is no update for you</p>
                   )}
