@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://techzero.onrender.com',
     methods: ['GET', 'POST'],
   },
 });
@@ -40,7 +40,7 @@ server.listen(8000, () => {
       });
   });
 
-  cron.schedule('0 1 * * *', () => {8
+  cron.schedule('0 * * * *', () => {8
     unpaidOrdersController.cleanUnpaidOrders(io, userSockets).catch((error) => {
       console.error('Error in scheduled task cleanUnpaidOrders:', error);
     });
