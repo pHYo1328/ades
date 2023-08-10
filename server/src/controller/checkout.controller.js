@@ -362,9 +362,11 @@ exports.processPartialRefund = async (req, res) => {
     // Retrieve transaction IDs and refund amounts for orders with the given productID
     const idAndAmount = await paymentServices.getIdAndAmount(productID);
 
+    console.log(idAndAmount)
     // Process partial refunds for each order
     const refundPromises = idAndAmount.map(async (row) => {
       const transactionID = row.transaction_id;
+      const orderID = row.order_id;
       const refundAmount = parseInt(Math.round(row.refund_total * 100));
 
       try {
@@ -376,6 +378,15 @@ exports.processPartialRefund = async (req, res) => {
             order_id: row.order_id,
           },
         });
+
+        // Log the refund details
+    console.log('Refund details:', {
+      orderId: orderID,
+      refundId: refund.id,
+      amountRefunded: refund.amount,
+      currency: refund.currency,
+      status: refund.status,
+    });
 
         // Return the refund details
         return {

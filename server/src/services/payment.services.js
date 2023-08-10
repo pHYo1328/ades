@@ -199,19 +199,19 @@ module.exports.updateRefundStatus = async (data) => {
     const result = await pool.query(updateRefundedStatusQuery, dataRequired);
     console.log(chalk.green('updated refund status'));
 
-    // Perform after-refund operations
     const deletePaymentQuery = `
-      DELETE FROM payment WHERE order_id = ? 
-        AND order_id IN (SELECT r.order_id FROM refund r WHERE r.refunded_status = 'refunded')
-    `;
+  DELETE FROM payment WHERE order_id IN (?) 
+    AND order_id IN (SELECT r.order_id FROM refund r WHERE r.refunded_status = 'refunded')
+`;
+
     const updateInventoryQuery = `
-      UPDATE inventory
-      JOIN order_items ON inventory.product_id = order_items.product_id
-      JOIN orders ON order_items.order_id = orders.order_id
-      JOIN refund ON orders.order_id = refund.order_id
-      SET inventory.quantity = inventory.quantity + order_items.quantity
-      WHERE refund.order_id = ? AND refund.refunded_status = 'refunded' AND inventory.inventory_id > 0
-    `;
+  UPDATE inventory
+  JOIN order_items ON inventory.product_id = order_items.product_id
+  JOIN orders ON order_items.order_id = orders.order_id
+  JOIN refund ON orders.order_id = refund.order_id
+  SET inventory.quantity = inventory.quantity + order_items.quantity
+  WHERE refund.order_id IN (?) AND refund.refunded_status = 'refunded' AND inventory.inventory_id > 0
+`;
 
     const connection = await pool.getConnection();
     console.log(chalk.blue('Creating connection...'));
@@ -439,17 +439,20 @@ module.exports.getIdAndAmount = async (productID) => {
   console.log(chalk.blue('getIdAndAmount is called'));
 
   try {
-    const partialRefundQuery = `SELECT payment.transaction_id, (order_items.quantity * product.price) as refund_total
+    const partialRefundQuery = `SELECT payment.transaction_id, payment.order_id, (order_items.quantity * product.price) as refund_total
     FROM payment
     JOIN order_items ON payment.order_id = order_items.order_id
     JOIN product ON order_items.product_id = product.product_id
-    WHERE order_items.product_id = ?;`;
+    JOIN orders ON payment.order_id = orders.order_id
+    WHERE order_items.product_id = ?
+    AND orders.order_status IN ('paid', 'delivering');`;
 
     const results = await pool.query(partialRefundQuery, [productID]);
     console.log(chalk.green(results[0]));
     return results[0];
   } catch (error) {
-    console.error(chalk.red('Error in getIdAndAmount: ', error));
+    console.error(chalk.red('Error in getIdAndAmount: ', error.message)); // Print the error message
+    console.error(chalk.red('Error stack trace: ', error.stack)); // Print the error stack trace
     throw error;
   }
 };
