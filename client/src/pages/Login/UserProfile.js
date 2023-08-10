@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../AuthContext';
 import { BiEdit } from 'react-icons/bi';
 import { Cloudinary } from '@cloudinary/url-gen';
@@ -16,7 +17,7 @@ const cld = new Cloudinary({
 });
 
 const UserProfile = () => {
-  const { userData } = useContext(AuthContext);
+  const { userData, setUserData} = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [editingUsername, setEditingUsername] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
@@ -24,9 +25,11 @@ const UserProfile = () => {
   const [editingAddress, setEditingAddress] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
   const [image, setImage] = useState(null);
+  const navigate = useNavigate();
   const url = `${baseUrl}/user-profile`;
   const url2 = `${baseUrl}/update-userProfile`;
   const url3 = `${baseUrl}/update-userProfileImage`;
+  const deleteURL = `${baseUrl}/deleteUserCustomer`;
 
 
   const toggleSection = (section) => {
@@ -115,6 +118,42 @@ const UserProfile = () => {
       window.location.reload();
     } catch (error) {
       console.error('Error updating user profile image:', error);
+    }
+  };
+  const handleDeleteUser = async () => {
+    try {
+      const response = await fetch(deleteURL, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: user.customer_id,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('User deleted successfully');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userid');
+        // localStorage.removeItem('roles');
+        localStorage.removeItem('isSignedIn');
+        setUserData({
+          ...userData,
+          // accessToken: null,
+          userid: null,
+          roles: [],
+          isSignedIn: false,
+        });
+        console.log("navigating to homepage...");
+        navigate('/');
+      } else {
+        console.error('Failed to delete user:', data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -258,11 +297,18 @@ const UserProfile = () => {
                   </div>
                 </div>
                 <button
-                  className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
-                  onClick={updateUserProfile}
-                >
-                  Save
-                </button>
+                      className="text-base text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4 mt-5"
+                      onClick={updateUserProfile}
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      className="text-base bg-red-500 hover:bg-red-600 text-white rounded-lg py-2 px-4 mt-4 ml-8"
+                      onClick={handleDeleteUser}
+                    >
+                      Delete User
+                    </button>
               </div>
             )}
           </div>
