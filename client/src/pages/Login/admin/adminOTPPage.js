@@ -33,10 +33,10 @@ const VerifyOTP = () => {
         alert('successful OTP');
         const data = location.state; //pass data from AdminLogin.js
 
-        // localStorage.setItem('accessToken', data.accessToken);
-        // localStorage.setItem('admin_id', data.userid);
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('admin_id', data.userid);
         // localStorage.setItem('roles', JSON.stringify(data.roles));
-        // localStorage.setItem('isAdminSignedIn', 'true');
+        localStorage.setItem('isAdminSignedIn', 'true');
 
         setUserData({
           ...userData,

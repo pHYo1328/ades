@@ -20,8 +20,8 @@ import InventoryByCategoryChart from '../../../components/Products/Admin/Invento
 import OrdersByBrandsChart from '../../../components/Products/Admin/OrdersByBrandChart';
 import BookmarksByBrandChart from '../../../components/Products/Admin/BookmarksByBrandChart';
 import ShippingMethodChart from '../../../components/Products/Admin/ShippingMethodChart';
-import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
-// import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
+// import PaymentMethodChart from '../../../components/Products/Admin/PaymentMethodChart';
+import OrderStatusChart from '../../../components/Products/Admin/OrderStatusChart';
 import RevenueByBrandChart from '../../../components/Products/Admin/RevenueByBrandChart';
 import RevenueByCategoryChart from '../../../components/Products/Admin/RevenueByCategoryChart';
 
@@ -80,24 +80,24 @@ export default function AdminDashboard() {
     };
   }, []);
 
-  useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
-    if (!roles) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      console.log('Redirecting to login');
-      navigate('/login');
-    } else {
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        // alert("you're not admin");
-        console.log('Redirecting to homepage');
-        navigate('/homepage');
-      }
-    }
-  });
+  // useEffect(() => {
+  //   const roles = JSON.parse(localStorage.getItem('roles'));
+  //   console.log(roles);
+  //   if (!roles) {
+  //     // User does not have the required role(s), redirect them to the homepage or show an error message
+  //     console.log('Redirecting to login');
+  //     navigate('/login');
+  //   } else {
+  //     const isAdmin = roles.includes('admin');
+  //     console.log(isAdmin);
+  //     if (!isAdmin) {
+  //       // User does not have the required role(s), redirect them to the homepage or show an error message
+  //       // alert("you're not admin");
+  //       console.log('Redirecting to homepage');
+  //       navigate('/homepage');
+  //     }
+  //   }
+  // });
 
   const fetchData = (endpoint, setData, setHasData) => {
     axios
@@ -140,8 +140,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // fetchProducts();
-    if (search && search.trim() !== '') {
+    if (search && search !== '') {
+      console.log(search);
       fetchSearchResults();
+      console.log('products ', products);
     } else {
       fetchProducts();
     }
@@ -344,7 +346,7 @@ export default function AdminDashboard() {
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
                       <div class="bg-white rounded shadow-md">
-                        <PaymentMethodChart />
+                        <OrderStatusChart />
                       </div>
                     </div>
                     <div class="lg:w-1/2 md:w-full sm:w-full p-2">
@@ -383,8 +385,8 @@ export default function AdminDashboard() {
                     />
                   </div>
                 </div>
-
                 <ProductList
+                  key={products}
                   products={products}
                   hasProducts={hasProducts}
                   refunds={refunds}

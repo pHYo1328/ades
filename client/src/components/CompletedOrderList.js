@@ -82,7 +82,7 @@ const OrderListItem = React.memo(
           item.order_items.map((orderItem, orderIndex) => (
             <div
               key={orderIndex}
-              className="ml-1 mr-1 sm:ml-12 sm:mr-12 my-3 border-t-2 border-b-2 border-gray-300 py-2"
+              className=" border-t-2 border-gray-300 py-2"
             >
               <div className="flex mx-2 p-2">
                 <ItemImage
@@ -93,11 +93,13 @@ const OrderListItem = React.memo(
                 <OrderItemDetails item={orderItem} />
               </div>
               <div className="md:flex flex-row justify-between items-center">
-                {!item.completed_at && item.shipping_at && (
-                  <div className="flex flex-row items-center py-2 space-x-2">
-                    <RiTruckFill className="sm:ml-3 animate-car-move text-cyan-500 " />
+                {!item.completed_at && item.shipping_start_at && (
+                  <div className="flex flex-row items-center py-2 space-x-4">
+                    <RiTruckFill className="sm:ml-3 animate-car-move text-cyan-500" />
+                    <div className='flex flex-row space-x-2'>
                     <p>Shipped On</p>
-                    <UserTimezoneDate date={item.shipping_at} />
+                    <UserTimezoneDate date={item.shipping_start_at} />
+                    </div>
                   </div>
                 )}
                 {item.completed_at && (
@@ -108,7 +110,7 @@ const OrderListItem = React.memo(
                   </div>
                 )}
                 <OrderActions
-                  item={orderItem}
+                    item={orderItem}
                   customerID={customerID}
                   renderRating={renderRating}
                   showRatingForm={showRatingForm}
@@ -230,7 +232,7 @@ OrderListItem.displayName = 'OrderListItem';
 OrderListItem.propTypes = {
   item: PropTypes.object.isRequired,
   customerID: PropTypes.string.isRequired,
-  renderRating: PropTypes.bool.isRequired,
+  renderRating: PropTypes.bool,
   showRatingForm: PropTypes.bool.isRequired,
   setShowRatingForm: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
@@ -264,8 +266,8 @@ const OrderActions = ({
   if (!renderRating) {
     return (
       <a
-        href="mailto:235756ksp@gmail.com?subject=Hello&body=I%20wanted%20to%20say%20hi!"
-        className="text-xl bg-red-600 hover:bg-red-800 text-white w-40 rounded text-center py-2 px-4 items-end"
+        href="mailto:235756ksp@gmail.com?subject=Hello&body=I%20wanted%20to%20say%20this%20item%20is"
+        className="text-lg bg-red-600 hover:bg-red-800 text-white w-40 rounded text-center py-2 px-4 items-end mt-2"
       >
         Contact us
       </a>
@@ -293,7 +295,7 @@ const OrderActions = ({
 OrderActions.propTypes = {
   item: PropTypes.object.isRequired,
   customerID: PropTypes.string.isRequired,
-  renderRating: PropTypes.bool.isRequired,
+  renderRating: PropTypes.bool,
   showRatingForm: PropTypes.bool.isRequired,
   setShowRatingForm: PropTypes.func.isRequired,
 };

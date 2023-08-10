@@ -36,10 +36,9 @@ import Payment from './pages/Stripe/Payment';
 import RefundPayment from './pages/Stripe/Refund';
 import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategories';
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
-import Header from './components/header/header';
-import SignedInHeader from './components/header/signedInHeader';
-import AdminHeader from './components/header/AdminHeader';
+import Header from './components/header/finalHeader';
 import UserProfile from './pages/Login/UserProfile';
+import OrderHistory from './pages/Login/OrderHistory';
 import './App.css';
 import './input.css';
 
@@ -47,26 +46,27 @@ function App() {
   const location = useLocation();
   const { userData } = useContext(AuthContext);
   console.log(userData);
-  // const [isSignedIn, setIsSignedIn] = useState(false);
-  const adminHeaderRoutes = [
-    '/admin',
-    '/products/edit/:productID:productID',
-    '/products/create',
-    '/homepage-admin',
-    '/users',
-  ]; // Specify the routes where the header should be admin headers
-  const SignedInHeaderRoutes = [
-    '/',
-    '/homepage',
-    '/products',
-    '/user-profile',
-    '/cart',
-    '/orderDelivered',
-    '/orderToShip',
-    '/orderToPay',
-    '/orderToDeliver',
-  ]; // Specify the routes where the header should be signed in headers
-  const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isAdminSignedIn, setIsAdminSignedIn] = useState(false);
+  // const adminHeaderRoutes = [
+  //   '/admin',
+  //   '/products/edit/:productID:productID',
+  //   '/products/create',
+  //   '/homepage-admin',
+  //   '/users',
+  // ]; // Specify the routes where the header should be admin headers
+  // const SignedInHeaderRoutes = [
+  //   '/',
+  //   '/homepage',
+  //   '/products',
+  //   '/user-profile',
+  //   '/cart',
+  //   '/orderDelivered',
+  //   '/orderToShip',
+  //   '/orderToPay',
+  //   '/orderToDeliver',
+  // ]; // Specify the routes where the header should be signed in headers
+  // const hiddenHeaderRoutes = []; //Specify the routes where the headers should be hidden
 
   // useEffect(() => {
   //   const userIsSignedIn = checkUserIsSignedIn();
@@ -79,22 +79,30 @@ function App() {
   //   return userId !== null;
   // };
 
-  const isAdminSignedIn = localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
+  const isAdminSignedInCheck =
+    localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
+  const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
 
-  const adminHeader = adminHeaderRoutes.includes(location.pathname);
-  const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
-  const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
-  let headerComponent = null;
+  useEffect(() => {
+    setIsSignedIn(isUserSignedIn);
+    setIsAdminSignedIn(isAdminSignedInCheck);
+  }, []);
 
-  if (hideHeader) {
-    headerComponent = null;
-  } else if (adminHeader) {
-    headerComponent = userData.isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
-  } else if (signedInHeader) {
-    headerComponent = userData.isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
-  } else {
-    headerComponent = <Header />;
-  }
+  // const adminHeader = adminHeaderRoutes.includes(location.pathname);
+  // const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
+  // const hideHeader = hiddenHeaderRoutes.includes(location.pathname);
+  // let headerComponent = null;
+
+  // if (hideHeader) {
+  //   headerComponent = null;
+  // } else if (adminHeader) {
+  //   headerComponent = userData.isAdminSignedIn ? <AdminHeader /> : <Header />; // Use AdminHeader if adminHeader is true and isSignedIn is true, otherwise use Header
+  // } else if (signedInHeader) {
+  //   headerComponent = userData.isSignedIn ? <SignedInHeader /> : <Header />; // Use SignedInHeader if signedInHeader is true and isSignedIn is true, otherwise use Header
+  // } else {
+  //   headerComponent = <Header />;
+  // }
+
   // if (hideHeader) {
   //   headerComponent = null; // Hide the header
   // } else if (adminHeader) {
@@ -110,8 +118,11 @@ function App() {
         <header className="App-header">
           {/* {adminHeader ? <AdminHeader /> : <Header />} */}
           {/* {hideHeader ? null : (adminHeader ? <AdminHeader /> : <Header />)}          */}
-          {headerComponent}
-
+          {/* {headerComponent} */}
+          <Header
+            isUserSignedIn={isUserSignedIn}
+            isAdminSignedIn={isAdminSignedInCheck}
+          />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             {/* <Route path="/userLanding" element={<UserLandingPage />} /> */}
@@ -124,6 +135,7 @@ function App() {
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/users" element={<UserInfo />} />
             <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/order-history" element={<OrderHistory />} />
 
             <Route path="/homepage-admin" element={<AdminHomepage />} />
             <Route path="/register-admin" element={<AdminRegister />} />

@@ -27,12 +27,15 @@ const UploadMultiple = ({ onImageChange, success = false, length }) => {
 
     onImageChange(uploadedData);
 
+    console.log('success ', success);
     // Clear the selected files
     if (success) {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
+
+    console.log('file input value: ', fileInputRef.current.value);
   };
 
   // const handleFileChange = (event) => {

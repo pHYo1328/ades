@@ -4,6 +4,8 @@ import { BiEdit } from 'react-icons/bi';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { AdvancedImage } from '@cloudinary/react';
 import ProfileWidget from '../../components/cloudinary/ProfileWidget';
+import { BsCaretUpFill } from "react-icons/bs";
+import { BsCaretDownFill} from "react-icons/bs";
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -20,10 +22,20 @@ const UserProfile = () => {
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false);
   const [editingAddress, setEditingAddress] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
   const [image, setImage] = useState(null);
   const url = `${baseUrl}/user-profile`;
   const url2 = `${baseUrl}/update-userProfile`;
   const url3 = `${baseUrl}/update-userProfileImage`;
+
+
+  const toggleSection = (section) => {
+    if (expandedSection === section) {
+      setExpandedSection(null);
+    } else {
+      setExpandedSection(section);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,7 +44,7 @@ const UserProfile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Customer-Id': userData.userid,
+            'Customer-Id': localStorage.getItem('userid'),
           },
         });
 
@@ -109,25 +121,42 @@ const UserProfile = () => {
   return (
     <div className="h-xl w-xl bg-gray-100 flex items-center justify-center">
       <div className="flex h-screen w-screen m-3">
-        <div className="bg-gray-800 text-white ml-10 w-64 flex-none rounded-tl-lg rounded-bl-lg">
+      <div className="bg-gray-800 text-white ml-10 w-64 flex-none rounded-tl-lg rounded-bl-lg">
           <nav className="p-4">
             <ul className="space-y-2">
               <li className="py-2">
                 <a
                   href="/user-profile"
-                  className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700"
+                  className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700 font-bold"
                 >
                   Profile Page
                 </a>
               </li>
               <li className="py-2">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-lg rounded-md hover:bg-gray-700"
-                >
-                  Order History
-                </a>
-              </li>
+                    <button
+                    onClick={() => toggleSection('orders')}
+                    className="flex items-center justify-between px-4 py-2 text-lg rounded-md hover:bg-gray-700 cursor-pointer"
+                    >
+                    <span className="mr-20 font-bold">Orders</span>
+                    {expandedSection === 'orders' ? <BsCaretUpFill /> : <BsCaretDownFill />}
+                    </button>
+                    {expandedSection === 'orders' && (
+                    <ul className="pl-4 text-lg space-y-1">
+                        <li className="hover:bg-gray-700 rounded-md">
+                        <a href="/OrderToPay" className="block px-2 py-1">To Pay</a>
+                        </li>
+                        <li className="hover:bg-gray-700 rounded-md">
+                        <a href="/OrderToShip" className="block px-2 py-1">To Ship</a>
+                        </li>
+                        <li className="hover:bg-gray-700 rounded-md">
+                        <a href="/OrderToReceive" className="block px-2 py-1">To Receive</a>
+                        </li>
+                        <li className="hover:bg-gray-700 rounded-md">
+                        <a href="/OrderDelivered" className="block px-2 py-1">Completed</a>
+                        </li>
+                    </ul>
+                    )}
+                </li>
             </ul>
           </nav>
         </div>

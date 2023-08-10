@@ -81,24 +81,24 @@ export default function ProductCreate() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
-    if (!roles) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      console.log('Redirecting to login');
-      navigate('/login');
-    } else {
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        // alert("you're not admin");
-        console.log('Redirecting to homepage');
-        navigate('/homepage');
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   const roles = JSON.parse(localStorage.getItem('roles'));
+  //   console.log(roles);
+  //   if (!roles) {
+  //     // User does not have the required role(s), redirect them to the homepage or show an error message
+  //     console.log('Redirecting to login');
+  //     navigate('/login');
+  //   } else {
+  //     const isAdmin = roles.includes('admin');
+  //     console.log(isAdmin);
+  //     if (!isAdmin) {
+  //       // User does not have the required role(s), redirect them to the homepage or show an error message
+  //       // alert("you're not admin");
+  //       console.log('Redirecting to homepage');
+  //       navigate('/homepage');
+  //     }
+  //   }
+  // }, []);
 
   // creates a new product when the admin clicks on submit
   const handleSubmit = async (event) => {
@@ -158,7 +158,7 @@ export default function ProductCreate() {
           setProduct(response.data.data);
           console.log(product);
           // window.location.reload();
-          setSuccess(true);
+          // setSuccess(true);
           setProductName('');
           setProductDescription('');
           setProductPrice('');
@@ -171,6 +171,8 @@ export default function ProductCreate() {
           setImages([]);
           setImagePath(null);
         });
+
+      setSuccess(true);
     }
   };
 
@@ -293,6 +295,7 @@ export default function ProductCreate() {
           {/* <div className="flex justify-between mt-4 space-x-4">
             <div className="mb-3 w-6/12"> */}
           <UploadMultiple
+            key={success}
             length={images.length}
             onImageChange={handleImageChange}
             success={success}
