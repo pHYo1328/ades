@@ -107,10 +107,10 @@ export default function Product({
       <td className="px-6 py-4 font-semibold text-gray-900 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">
         {product.product_name}
       </td>
-      <td className="px-6 py-4 font-semibold text-gray-900 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">
+      <td className="px-6 py-4 font-semibold text-gray-900">
         {product.category_name}
       </td>
-      <td className="px-6 py-4 font-semibold text-gray-900 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">
+      <td className="px-6 py-4 font-semibold text-gray-900">
         {product.brand_name}
       </td>
       <td className="px-6 py-4 font-semibold text-gray-900">
