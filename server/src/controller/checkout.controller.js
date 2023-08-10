@@ -420,7 +420,7 @@ exports.processPartialRefund = async (req, res) => {
 };
 
 //store payment inside database
-exports.storePayment = async (req, res) => {
+exports.storePayment = async (req, res, next) => {
   const requestData = req.body;
 
   // Access the paymentIntent data from the requestData object
@@ -435,19 +435,56 @@ exports.storePayment = async (req, res) => {
   const shippingAddr = `${line1} ${
     line2 ? line2 + ' ' : ''
   }${state} ${postal_code}`;
+  const total = (amount * 0.01).toFixed(2);
+  if (
+    id == '' ||
+    !id ||
+    status == '' ||
+    !status ||
+    amount == '' ||
+    !amount ||
+    total == '' ||
+    !total ||
+    orderID == '' ||
+    !orderID ||
+    shippingAddr == '' ||
+    !shippingAddr
+  ) {
+    return res.status(400).json({
+      statusCode: 400,
+      ok: true,
+      message: 'Payment data is missing',
+    });
+  }
 
   console.log('Charge succeeded. Event data:');
   console.log('ID:', id);
   console.log('Status:', status);
-  const total = (amount * 0.01).toFixed(2);
+ 
   console.log('Amount:', total);
   console.log('Order ID:', orderID);
   console.log('Shipping address:', shippingAddr);
-  try {
-    await paymentServices.addPayment(id, status, total, shippingAddr, orderID);
 
-    console.log('Payment details stored in the database successfully');
+  try {
+    const createPaymentData = await paymentServices.addPayment(
+      id,
+      status,
+      total,
+      shippingAddr,
+      orderID
+    );
+
+    console.log(chalk.yellow(createPaymentData));
+    return res.status(200).json({
+      statusCode: 200,
+      ok: true,
+      message: 'Storing payment details is successful',
+    });
   } catch (error) {
-    console.error('Error storing payment details in the database:', error);
+    console.error(chalk.red(error.code));
+    console.error(
+      chalk.red('Error storing payment details in the database: ', error)
+    );
+    return next(error);
   }
 };

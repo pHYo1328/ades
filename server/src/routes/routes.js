@@ -270,6 +270,10 @@ module.exports = (app, router) => {
 
   router.get('/config', checkoutController.getConfig);
 
+  router.get('/api/admin/refund', paymentController.processGetOrderForRefund);
+
+  router.put('/api/admin/refund', paymentController.processUpdateRefundStatus);
+
   router.post(
     '/createPaymentIntent/:orderID',
     checkoutController.createPaymentIntent
@@ -281,11 +285,18 @@ module.exports = (app, router) => {
     bodyParser.raw({ type: 'application/json' }),
     checkoutController.storePayment
   ),
-    router.get(
-      '/api/paymentByStatus/:orderID',
-      // verifyAccessToken.verifyToken,
-      paymentController.processGetPaymentByStatus
-    );
+  router.post('/addRefund', paymentController.processCreateRefund);
+  router.get(
+    '/api/paymentByStatus/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetPaymentByStatus
+  );
+
+  router.get(
+    '/api/refundStatusByID/:orderID',
+    // verifyAccessToken.verifyToken,
+    paymentController.processGetRefundStatusByID
+  );
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 

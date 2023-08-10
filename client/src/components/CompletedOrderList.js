@@ -10,6 +10,31 @@ import UserTimezoneDate from './UserTimeZoneDate';
 import ItemImage from './ItemImage';
 import Rating from './Rating';
 import OrderListHeader from './OrderListHeader';
+import axios from 'axios';
+
+
+const handleRefund = async (order_id, total, customerID) => {
+  
+  try {
+    // Create an object with the data to send
+
+    const refundData = {
+      order_id,
+      customer_id: customerID,
+      total,
+    };
+   
+    console.log(refundData);
+    // Send the refund request to the backend
+    await axios.post('http://localhost:8081/addRefund', refundData);
+    window.alert('Refund request has been sent.');
+   
+  } catch (error) {
+    // Handle errors here
+    console.error('Error sending refund request:', error);
+    window.alert('Error occurred while processing refund.');
+  }
+};
 
 const OrderListItem = React.memo(
   ({
@@ -19,7 +44,33 @@ const OrderListItem = React.memo(
     showRatingForm,
     setShowRatingForm,
     index,
-  }) => (
+  }) => {
+    const [refundClicked, setRefundClicked] = useState(false);
+    const [refundStatus, setRefundStatus] = useState('pending'); // Default status
+
+    useEffect(() => {
+      // Fetch refund status here
+      fetchRefundStatus(item.order_id);
+    }, [item.order_id]);
+
+    const fetchRefundStatus = async (order_id) => {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/refundStatusByID/${order_id}`);
+        const data = response.data.data;
+        if (data.length > 0) {
+          const refunded_status = data[0].refunded_status;
+          setRefundStatus(refunded_status);
+        }else {
+          setRefundStatus(''); // No data, set to empty status
+        }
+      } catch (error) {
+        console.error('Error fetching refund status:', error);
+      }
+    }
+
+
+    return (
+
     <li>
       <div className="p-2 font-breezeRegular sm:mx-4 my-3 shadow-lg text-lg sm:p-6 sm:rounded-lg">
         <OrderListHeader
@@ -73,9 +124,107 @@ const OrderListItem = React.memo(
               />
             </div>
           ))}
+          
+        {/* { renderRating && ( <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
+          <button
+    className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''}`}
+    onClick={() => {
+      handleRefund(item.order_id, item.totalAmount, customerID);
+      setRefundClicked(true);
+    }}
+    disabled={refundClicked}
+  >
+    {refundClicked ? 'Refund Pending' : 'Refund'}
+  </button>
+
+          </div>)} */}
+
+{/* {renderRating && (
+        <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
+          <button
+            className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => {
+              if (!refundClicked) {
+                handleRefund(item.order_id, item.totalAmount, customerID);
+                setRefundClicked(true);
+
+                window.location.reload();
+              }
+            }}
+            disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
+          >
+             {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
+          </button>
+        </div>
+      )} */}
+
+{/* {renderRating && (
+  <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
+    <button
+      className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''} ${refundStatus === 'pending' || refundStatus === 'refunded' ? 'pointer-events-none' : ''}`}
+      onClick={() => {
+        if (!refundClicked) {
+          handleRefund(item.order_id, item.totalAmount, customerID);
+          setRefundClicked(true);
+          window.location.reload();
+        }
+      }}
+      disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
+    >
+      {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
+    </button>
+  </div>
+)} */}
+
+{/* {renderRating && (
+  <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
+    <button
+      className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${refundClicked ? 'opacity-50 cursor-not-allowed' : ''} ${refundStatus === 'pending' || refundStatus === 'refunded' ? 'pointer-events-none bg-gray-400' : ''}`}
+      onClick={() => {
+        if (!refundClicked) {
+          handleRefund(item.order_id, item.totalAmount, customerID);
+          setRefundClicked(true);
+          window.location.reload();
+        }
+      }}
+      disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
+    >
+      {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : refundStatus ? refundStatus : 'Refund'}
+    </button>
+  </div>
+)} */}
+
+{renderRating && (
+  <div className="flex flex-row space-x-2 mb-2 md:item-center md:justify-center">
+    <button
+      className={`bg-red-700 hover:bg-green-900 rounded text-white w-40 h-10 ${
+        refundClicked ? 'opacity-50 cursor-not-allowed' : ''
+      } ${
+        refundStatus === 'pending' || refundStatus === 'refunded'
+          ? 'pointer-events-none bg-gray-400'
+          : ''
+      }`}
+      onClick={() => {
+        if (!refundClicked && refundStatus !== 'pending' && refundStatus !== 'refunded') {
+          handleRefund(item.order_id, item.totalAmount, customerID);
+          setRefundClicked(true);
+          // You might not need to reload the page here
+          // window.location.reload();
+        }
+      }}
+      disabled={refundClicked || refundStatus === 'pending' || refundStatus === 'refunded'}
+    >
+      {refundStatus === 'pending' ? 'Refund Pending' : refundStatus === 'refunded' ? 'Refunded' : 'Refund'}
+    </button>
+  </div>
+)}
+
+
+
       </div>
     </li>
-  )
+    );
+  }
 );
 OrderListItem.displayName = 'OrderListItem';
 OrderListItem.propTypes = {
@@ -159,7 +308,7 @@ const CompletedOrderList = ({
 
   const [showRatingForm, setShowRatingForm] = useState(false);
   useEffect(() => {
-    const combineOrders = (orders) => {
+    const combineOrders = (orders) => { 
       const combinedOrders = orders.reduce((acc, order) => {
         const existingOrder = acc.find((o) => o.order_id === order.order_id);
         if (existingOrder) {
@@ -263,6 +412,7 @@ const CompletedOrderList = ({
             showRatingForm={showRatingForm}
             setShowRatingForm={setShowRatingForm}
             index={index}
+            handleRefund={handleRefund} 
           />
         ))}
     </ul>
