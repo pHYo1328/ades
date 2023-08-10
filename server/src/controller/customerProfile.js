@@ -52,3 +52,16 @@ exports.updateProfileImage = async (req, res) => {
     res.status(500).json({ message: 'Error updating user image information' });
   }
 };
+
+
+exports.retrieveOrderHistory = async (req, res) => {
+  try {
+    const customer_id = req.headers['customer-id'];
+    const orders = await customerService.retrieveOrderInfo(customer_id);
+    console.log('got user order history for', customer_id);
+    res.json(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error retrieving user information');
+  }
+};

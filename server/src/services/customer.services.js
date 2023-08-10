@@ -64,12 +64,11 @@ module.exports.updateProfileImage = async (image_url, customer_id) => {
   }
 };
 
-
-
 // Retrieve Order Info
 module.exports.retrieveOrderInfo = async (customer_id) => {
   const query = 'SELECT * FROM orders WHERE customer_id = ?';
-  const users = await pool.query(query, [customer_id]);
+  console.log("am i here in retrieveOrder");
+  const [rows] = await pool.query(query, [customer_id]);
   console.log(chalk.blue('Order info retrieved by customer_id!'));
-  return users;
+  return rows; // Return rows, not users
 };
