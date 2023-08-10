@@ -37,9 +37,8 @@ import RefundPayment from './pages/Stripe/Refund';
 import AllBrandsAndCategories from './pages/Products/Public/AllBrandsAndCategories';
 import AdminDashboard from './pages/Products/Admin/AdminDashboard';
 import Header from './components/header/finalHeader';
-import SignedInHeader from './components/header/signedInHeader';
-import AdminHeader from './components/header/AdminHeader';
 import UserProfile from './pages/Login/UserProfile';
+import OrderHistory from './pages/Login/OrderHistory';
 import './App.css';
 import './input.css';
 
@@ -132,6 +131,7 @@ function App() {
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/users" element={<UserInfo />} />
             <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/order-history" element={<OrderHistory />} />
 
             <Route path="/homepage-admin" element={<AdminHomepage />} />
             <Route path="/register-admin" element={<AdminRegister />} />
