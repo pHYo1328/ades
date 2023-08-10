@@ -185,7 +185,6 @@ module.exports.forgotPassword = async (email, newPassword) => {
 // Verify OTP
 module.exports.verifyOTP = async (otp) => {
   try {
-    console.log('am i here');
     const result = await pool.query('SELECT otp FROM users WHERE otp = ?', [
       otp,
     ]);
@@ -210,6 +209,39 @@ module.exports.verifyOTP = async (otp) => {
     }
   } catch (error) {
     // Handle any error that occurred during the database query
+    throw error;
+  }
+};
+
+module.exports.verifyOTPWithExpiry = async (username, givenOtp) => {
+  try {
+    // Retrieve the OTP and its creation timestamp from the database
+    const otpQuery = 'SELECT otp, otp_created_at FROM users WHERE username = ?';
+    const otpResult = await pool.query(otpQuery, [username]);
+    const otpData = otpResult[0][0];
+    
+    console.log("username inside verifyOTP service " + username);
+    const storedOtp = otpData.otp;
+    const otpCreatedAt = otpData.otp_created_at.getTime(); // Convert Date object to Unix timestamp
+    console.log("OTP time IS " + otpResult[0][0].otp_created_at.getTime());
+    const expirationInterval = 1 * 60 * 1000; // 1 minutes in milliseconds
+    const expirationTimestamp = otpCreatedAt + expirationInterval;
+    const currentTimestamp = Date.now();
+    console.log("verifyotp serv time " + currentTimestamp );
+
+      console.log("is this true ? " , currentTimestamp <= expirationTimestamp);
+      console.log("is otp comparison true? " , storedOtp === givenOtp);
+    // Verify if the OTP is correct and not expired
+    if (storedOtp === givenOtp && currentTimestamp <= expirationTimestamp) {
+      // OTP is valid and not expired
+      // Perform verification logic
+      return true;
+    } else {
+      // OTP is invalid or expired
+      console.log("otp expired!!");
+      return false;
+    }
+  } catch (error) {
     throw error;
   }
 };
