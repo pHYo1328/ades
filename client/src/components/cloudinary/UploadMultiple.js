@@ -34,6 +34,8 @@ const UploadMultiple = ({ onImageChange, success = false, length }) => {
         fileInputRef.current.value = '';
       }
     }
+
+    console.log('file input value: ', fileInputRef.current.value);
   };
 
   // const handleFileChange = (event) => {

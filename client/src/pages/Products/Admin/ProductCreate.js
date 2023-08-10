@@ -295,6 +295,7 @@ export default function ProductCreate() {
           {/* <div className="flex justify-between mt-4 space-x-4">
             <div className="mb-3 w-6/12"> */}
           <UploadMultiple
+            key={success}
             length={images.length}
             onImageChange={handleImageChange}
             success={success}
