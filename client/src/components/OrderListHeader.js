@@ -29,7 +29,7 @@ const OrderListHeader = ({
   // fetch all items according to order list and check quantity
   // if one item cannot make it, must cancel that order item
   return (
-    <div className="ml-1 mr-1 md:ml-6 md:mr-6 md:mt-6 md:mb-6 pl-2 pr-2 md:pl-6 md:pr-6 py-2 bg-gray-100 rounded-md">
+    <div className="md:mt-6 md:mb-6 px-2 py-2 bg-gray-100 rounded-md">
       <div className="flex flex-row items-center">
         <table className="table-auto text-base flex-grow hidden lg:block">
           <thead>
@@ -64,13 +64,13 @@ const OrderListHeader = ({
                   </p>
                 </th>
               )}
-              <th className="w-1/6 p-2">
+              <th className="w-1/5 p-2">
                 <p className="flex flex-row items-center space-x-2">
                   <RiTruckLine className="text-green-700 mr-2" />
                   Shipping Method
                 </p>
               </th>
-              <th className="w-1/3 p-2">
+              <th className="w-1/4 p-2">
                 <p className="flex flex-row items-center space-x-1">
                   <FaMapMarkedAlt className="text-green-700 mr-2" />
                   Shipping Address
@@ -254,7 +254,7 @@ const OrderListHeader = ({
 
 OrderListHeader.propTypes = {
   item: PropTypes.object,
-  renderButton: PropTypes.bool.isRequired,
+  renderButton: PropTypes.bool,
   clearedItems: PropTypes.array,
   items: PropTypes.array,
   setItems: PropTypes.func,

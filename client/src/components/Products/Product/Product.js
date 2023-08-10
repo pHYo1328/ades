@@ -32,13 +32,15 @@ export default function Product(props) {
               <span aria-hidden="true" className="absolute inset-0" />
               <div
                 className="md:inline-block w-44 overflow-auto whitespace-normal break-words hidden"
-              // style={{ maxWidth: '150px' }} // Allow maximum available width
+                // style={{ maxWidth: '150px' }} // Allow maximum available width
               >
                 {product.product_name}
               </div>
             </Link>
           </h3>
-          <p className="mt-1 text-sm text-gray-500 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">{product.brand_name}</p>
+          <p className="mt-1 text-sm text-gray-500 md:inline-block w-44 overflow-auto whitespace-normal break-words hidden">
+            {product.brand_name}
+          </p>
         </div>
         <p className="text-sm font-medium text-gray-900 justify-start">
           ${product.price}

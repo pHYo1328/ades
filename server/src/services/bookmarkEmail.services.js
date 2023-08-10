@@ -31,9 +31,10 @@ module.exports.getLatestUpdate = async () => {
 // fetch customerDetails according to the brand id
 module.exports.getCustomerDetails = async (previousUpdate) => {
   const fetchCustomerDetailsQuery = `
-    SELECT users.customer_id,users.email,users.username,bookmark.brand_id
+    SELECT users.customer_id,users.email,users.username,bookmark.brand_id, brand.brand_name
     FROM users
     INNER JOIN bookmark on bookmark.customer_id = users.customer_id
+    INNER JOIN brand on brand.brand_id = bookmark.brand_id
     WHERE bookmark.brand_id IN (
     SELECT DISTINCT product.brand_id
     FROM product 
@@ -60,11 +61,11 @@ module.exports.getUpdatedProductsByBrandID = async (previousUpdate) => {
     and created_at > ?
     GROUP BY product.product_name, product.description, product.brand_id
     ;`;
+
   try {
-    const updatedProducts = await queryWithRetry(
+    const updatedProducts = await pool.query(
       fetchUpdatedProductsByBrandIDQuery,
-      [previousUpdate, previousUpdate],
-      3
+      [previousUpdate, previousUpdate]
     );
     return updatedProducts;
   } catch (error) {

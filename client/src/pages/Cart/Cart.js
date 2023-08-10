@@ -1,4 +1,9 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from 'react';
 import { AuthContext } from '../../AuthContext';
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,37 +27,13 @@ const Cart = () => {
   const handleContinueToCheckout = () => {
     setShowCheckout(!showCheckout);
   };
-  // useEffect(() => {
-  //   const roles = JSON.parse(localStorage.getItem('roles'));
-  //   if (!roles) {
-  //     // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     // alert("you're not admin");
-  //     navigate('/login');
-  //   } else {
-  //     const isCustomer = roles.includes('customer');
-  //     if (!isCustomer) {
-  //       // User does not have the required role(s), redirect them to the homepage or show an error message
-  //       // alert("you're not admin");
-  //       navigate('/login');
-  //     }
-  //   }
-  // }, []);
 
   useEffect(() => {
-    // const roles = JSON.parse(localStorage.getItem('roles'));
-    // console.log(roles);
     if (!userData.isSignedIn) {
       console.log('Redirecting to homepage');
       navigate('/login');
     } else {
-      // const isCustomer = roles.includes('customer');
-      // console.log(isCustomer);
-      // if (!isCustomer) {
-      //   // User does not have the required role(s), redirect them to the homepage or show an error message
-      //   // alert("you're not admin");
-      //   console.log('Redirecting to homepage-admin');
-      //   navigate('/login');
-      // }
+      // add whatever else validation
     }
   }, []);
   const customerID = localStorage.getItem('userid');

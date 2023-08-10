@@ -221,7 +221,7 @@ const OrderItemList = ({
               />
 
               {item.order_items.length > 0 && (
-                <div className="text-base ml-1 mr-1 mt-4 mb-4 sm:ml-12 sm:mr-12 sm:mt-12 sm:mb-12">
+                <div className="text-base ml-1 mr-1 mt-4 mb-4 sm:ml-6 sm:mr-6 sm:mt-12 sm:mb-12">
                   <table className="table-auto w-full">
                     <thead>
                       <tr className="hidden md:table-row">
