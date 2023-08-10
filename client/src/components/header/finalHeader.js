@@ -16,7 +16,6 @@ import { MdComputer } from 'react-icons/md';
 import api from '../../index';
 import { AuthContext } from '../../AuthContext';
 import io from 'socket.io-client';
-
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const socket = io(`${process.env.REACT_APP_CRON_SERVER_URL}`);
 function usePrevious(value) {
@@ -172,86 +171,104 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
       <div className="container mx-auto px-4 py-6">
         {isUserSignedIn && (
           <>
-                        <nav className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <Link to="/" className="text-lg font-bold text-white">
-                                TECHZERO
-                                </Link>
-                            </div>
-                            <div className="flex items-center space-x-4">
-                            {userId && <div className="relative" ref={notificationPanelRef}>
-                                <button
-                                    onClick={handleNotificationsPanelToggle}
-                                    className="text-white hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
-                                >
-                                    <RiNotification2Fill />
-                                    {notificationStatus && (
-                                    <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-                                    )}
-                                </button>
-                                {isNotificationPanelOpen && (
-                                    <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
-                                    {notificationStatus ? (
-                                        <p className="w-max p-2">There are new emails for you</p>
-                                    ) : (
-                                        <p className="w-max p-2">There is no update for you</p>
-                                    )}
-                                    </div>
-                                )}
-                                </div>}
-                                <Link
-                                to="/products"
-                                className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
-                                >
-                                <MdComputer />
-                                <p className="text-2xl">Products</p>
-                                </Link>
-                                <Link
-                                to="/cart"
-                                className="text-white hover:text-gray-600 py-2 border-b-2 border-transparent hover:border-fuchsia-600 flex flex-row space-x-1"
-                                >
-                                <FaShoppingCart />
-                                <p className="text-2xl">Cart</p>
-                                </Link>
-                                {/* <div className="relative" ref={userPanelRef}>
-                                <button
-                                    onClick={handleUserPanelToggle}
-                                    className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
-                                >
-                                    <FaUser />
-                                    <p className="text-2xl">User</p>
-                                </button>
-                                {isUserPanelOpen && (
-                                    <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
-                                    <Link to="/orderToPay">
-                                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                                        <FaWallet className="inline-block mr-2" />
-                                        to pay
-                                        </button>
-                                    </Link>
-                                    <Link to="/orderToShip">
-                                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                                        <FaBox className="inline-block mr-2" />
-                                        to ship
-                                        </button>
-                                    </Link>
-                                    <Link to="/orderToDeliver">
-                                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                                        <RiTruckLine className="inline-block mr-2" />
-                                        to receive
-                                        </button>
-                                    </Link>
-                                    <Link to="/orderDelivered">
-                                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                                        <RiCheckboxCircleLine className="inline-block mr-2" />
-                                        completed
-                                        </button>
-                                    </Link>
-                                    </div>
-                                )}
-                                </div> */}
+            <nav className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Link to="/" className="text-lg font-bold text-white">
+                  TECHZERO
+                </Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                {userId && (
+                  <div className="relative" ref={notificationPanelRef}>
+                    <button
+                      onClick={handleNotificationsPanelToggle}
+                      className="text-white hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+                    >
+                      <RiNotification2Fill />
+                      {notificationStatus && (
+                        <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                      )}
+                    </button>
+                    {isNotificationPanelOpen && (
+                  <div
+                  className={`z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg overflow-y-auto ${messages.length ? 'h-48 w-72' : 'h-16 w-52'} `}
+                  >
+                    {messages.length ? (
+                      messages.map((message, index) => (
+                        <p
+                          key={index}
+                          className="p-2 font-breezeRegular text-base border-b-2"
+                        >
+                          {message}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="p-2 font-breezeRegular text-base ">
+                        There is no update for you
+                      </p>
+                    )}
+                  </div>
+                )}
+                  </div>
+                )}
+                <Link
+                  to="/products"
+                  className="text-white hover:text-gray-600 flex flex-row space-x-1 items-center py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+                >
+                  <MdComputer />
+                  <p className="text-2xl">Products</p>
+                </Link>
+                <Link
+                  to="/cart"
+                  className="text-white hover:text-gray-600 py-2 border-b-2 border-transparent hover:border-fuchsia-600 flex flex-row space-x-1"
+                >
+                  <FaShoppingCart />
+                  <p className="text-2xl">Cart</p>
+                </Link>
+                {/* <div className="relative" ref={userPanelRef}>
+                  <button
+                    onClick={handleUserPanelToggle}
+                    className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
+                  >
+                    <FaUser />
+                    <p className="text-2xl">User</p>
+                  </button>
+                  {isUserPanelOpen && (
+                    <div className="z-10 absolute top-10 right-0 bg-white text-gray-800 border border-gray-300 rounded-md py-2 shadow-lg">
+                      <Link to="/orderToPay">
+                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                          <FaWallet className="inline-block mr-2" />
+                          to pay
+                        </button>
+                      </Link>
+                      <Link to="/orderToShip">
+                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                          <FaBox className="inline-block mr-2" />
+                          to ship
+                        </button>
+                      </Link>
+                      <Link to="/orderToDeliver">
+                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                          <RiTruckLine className="inline-block mr-2" />
+                          to receive
+                        </button>
+                      </Link>
+                      <Link to="/orderDelivered">
+                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                          <RiCheckboxCircleLine className="inline-block mr-2" />
+                          completed
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                </div> */}
 
-                                
+                {/* <button
+                  className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
+                  onClick={onHandleLogout}
+                >
+                  Log out
+                </button> */}
 
                 {/* <Link to="/login-admin">
                                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-lg">
