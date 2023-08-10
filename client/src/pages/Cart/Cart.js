@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef,useContext } from 'react';
 
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../index';
 import { CartTable } from '../../components/CartTable';
 import CartCheckoutForm from '../../components/CartCheckoutForm';
+import { AuthContext } from '../../AuthContext';
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [cartProductData, setCartProductData] = useState(null);
@@ -14,7 +15,7 @@ const Cart = () => {
   const [orderId, setOrderId] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0.0);
   const [shippingMethod, setShippingMethod] = useState(null);
-
+  const { userData } = useContext(AuthContext);
   const [checkoutSuccessful, setCheckoutSuccessful] = useState(false);
   const checkoutSuccessfulRef = useRef(checkoutSuccessful);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -22,21 +23,15 @@ const Cart = () => {
   const handleContinueToCheckout = () => {
     setShowCheckout(!showCheckout);
   };
+  
   useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    if (!roles) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      // alert("you're not admin");
-      navigate('/login');
-    } else {
-      const isCustomer = roles.includes('customer');
-      if (!isCustomer) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        // alert("you're not admin");
+    if (!userData.isSignedIn) {
+        console.log('Redirecting to homepage');
         navigate('/login');
+      } else {
+        // add whatever else validation
       }
-    }
-  }, []);
+    }, []);
   const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
     // cart data:{productId: , quantity: }

@@ -144,7 +144,7 @@ const OrderActions = ({
 OrderActions.propTypes = {
   item: PropTypes.object.isRequired,
   customerID: PropTypes.string.isRequired,
-  renderRating: PropTypes.bool.isRequired,
+  renderRating: PropTypes.bool,
   showRatingForm: PropTypes.bool.isRequired,
   setShowRatingForm: PropTypes.func.isRequired,
 };

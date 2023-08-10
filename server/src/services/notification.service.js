@@ -1,11 +1,15 @@
 const pool = require('../config/database');
 const chalk = require('chalk');
 
-module.exports.addNotification = async (customerID) => {
+module.exports.addNotification = async (customerID, message, brand_id) => {
   console.log(chalk.blue('addNotification function is called'));
-  const sqlStr = 'INSERT IGNORE INTO notifications VALUES (?,true)';
+  const sqlStr = `
+  INSERT INTO notifications (customer_id, message, have_email, brand_id)
+  VALUES (?, ?, true, ?)
+  ON DUPLICATE KEY UPDATE message = VALUES(message);
+`;
   try {
-    await pool.query(sqlStr, [customerID]);
+    await pool.query(sqlStr, [customerID, message, brand_id]);
     console.log(chalk.green('added notification successfully'));
   } catch (error) {
     console.error(error);
@@ -27,7 +31,7 @@ module.exports.removeNotification = async (customerID) => {
 
 module.exports.getNotification = async (customerID) => {
   console.log(chalk.blue('getNotification function is called'));
-  const sqlStr = 'SELECT have_email FROM notifications WHERE customer_id = ? ';
+  const sqlStr = 'SELECT have_email,message FROM notifications WHERE customer_id = ? ';
   try {
     const result = await pool.query(sqlStr, [customerID]);
     console.log(chalk.green('fetch notification successfully'));
