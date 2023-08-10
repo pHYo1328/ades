@@ -158,7 +158,7 @@ export default function ProductCreate() {
           setProduct(response.data.data);
           console.log(product);
           // window.location.reload();
-          setSuccess(true);
+          // setSuccess(true);
           setProductName('');
           setProductDescription('');
           setProductPrice('');
@@ -171,6 +171,8 @@ export default function ProductCreate() {
           setImages([]);
           setImagePath(null);
         });
+
+      setSuccess(true);
     }
   };
 
