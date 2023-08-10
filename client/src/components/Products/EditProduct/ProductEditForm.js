@@ -260,6 +260,9 @@ export default function ProductEditForm() {
             setIndex(0);
           });
       }
+      setSuccess(true);
+
+      console.log('success ', success);
     }
   };
 
