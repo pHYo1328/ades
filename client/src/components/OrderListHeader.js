@@ -254,7 +254,7 @@ const OrderListHeader = ({
 
 OrderListHeader.propTypes = {
   item: PropTypes.object,
-  renderButton: PropTypes.bool.isRequired,
+  renderButton: PropTypes.bool,
   clearedItems: PropTypes.array,
   items: PropTypes.array,
   setItems: PropTypes.func,

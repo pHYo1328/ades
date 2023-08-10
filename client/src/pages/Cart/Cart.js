@@ -1,11 +1,15 @@
-import React, { useEffect, useState, useRef, useContext, useContext } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from 'react';
 import { AuthContext } from '../../AuthContext';
 import { BsArrowLeft, BsCart4 } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../index';
 import { CartTable } from '../../components/CartTable';
 import CartCheckoutForm from '../../components/CartCheckoutForm';
-import { AuthContext } from '../../AuthContext';
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [cartProductData, setCartProductData] = useState(null);

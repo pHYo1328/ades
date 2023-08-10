@@ -79,13 +79,14 @@ function App() {
   //   return userId !== null;
   // };
 
-  const isAdminSignedInCheck = localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
+  const isAdminSignedInCheck =
+    localStorage.getItem('isAdminSignedIn') === 'true'; //Get the isAdminSignedIn status from localstorage
   const isUserSignedIn = localStorage.getItem('isSignedIn') === 'true';
 
   useEffect(() => {
     setIsSignedIn(isUserSignedIn);
     setIsAdminSignedIn(isAdminSignedInCheck);
-  }, []); 
+  }, []);
 
   // const adminHeader = adminHeaderRoutes.includes(location.pathname);
   // const signedInHeader = SignedInHeaderRoutes.includes(location.pathname);
@@ -118,7 +119,10 @@ function App() {
           {/* {adminHeader ? <AdminHeader /> : <Header />} */}
           {/* {hideHeader ? null : (adminHeader ? <AdminHeader /> : <Header />)}          */}
           {/* {headerComponent} */}
-          <Header isUserSignedIn={isUserSignedIn} isAdminSignedIn={isAdminSignedInCheck} />
+          <Header
+            isUserSignedIn={isUserSignedIn}
+            isAdminSignedIn={isAdminSignedInCheck}
+          />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             {/* <Route path="/userLanding" element={<UserLandingPage />} /> */}

@@ -60,6 +60,7 @@ module.exports.updateProductsEmailSender = async (io, userSockets) => {
                     socket.emit('message', {
                       message: message,
                     });
+                    console.log("notification is emitted");
                   } else {
                     console.log(
                       `Adding notification for customer with ID: ${customer.customer_id}`

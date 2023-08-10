@@ -20,6 +20,7 @@ io.on('connection', (socket) => {
   console.log('A user connected');
   socket.on('register', (userId) => {
     userSockets[userId.userId] = socket;
+    console.log(userId.userId);
   });
 
   socket.on('disconnect', () => {
@@ -31,7 +32,7 @@ server.listen(8000, () => {
   // Use server.listen instead of app.listen
   console.log(`Server is running on port 8000`);
 
-  cron.schedule('* * * * * *', () => {
+  cron.schedule('* * * * *', () => {
     bookmarkEmailController
       .updateProductsEmailSender(io, userSockets)
       .catch((error) => {

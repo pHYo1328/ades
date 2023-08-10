@@ -26,7 +26,7 @@ module.exports.cleanUnpaidOrders = async (io, userSockets) => {
         socket.emit('message', {
           message: message,
         });
-      } 
+      }
     }),
 
     //Delete 4-day-old orders

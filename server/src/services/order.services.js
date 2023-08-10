@@ -164,7 +164,7 @@ module.exports.getOrderDetailsForAdmin = async () => {
                       FROM orders
                       inner join payment on payment.order_id=orders.order_id 
                       WHERE order_status in ("paid","delivering")
-                      ORDER BY payment.payment_date
+                      ORDER BY payment.payment_date DESC
                       ;`;
   try {
     console.log(
