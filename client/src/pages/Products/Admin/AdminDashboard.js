@@ -26,6 +26,7 @@ import RevenueByBrandChart from '../../../components/Products/Admin/RevenueByBra
 import RevenueByCategoryChart from '../../../components/Products/Admin/RevenueByCategoryChart';
 
 import OrderAdmin from '../../Order/Admin/OrderAdmin';
+import OrderRefund from '../../Stripe/Admin/OrderRefund';
 import UserInfo from '../../Login/UserInfo';
 
 import Brand from '../../../components/Products/Admin/Brand';
@@ -459,34 +460,7 @@ export default function AdminDashboard() {
             )}
             {activeTab === 'users' && <UserInfo />}
             {activeTab === 'orders' && <OrderAdmin />}
-            {activeTab === 'refunds' && (
-              <div className="col-span-12 mx-auto h-300 overflow-y-scroll bg-peach rounded-md mt-4 mb-4">
-                <div className="flex items-center justify-between mb-3 mt-3 ">
-                  <div className="w-9/12 text-left ml-10 text-xl font-bold">
-                    Fully Refund
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center justify-between mt-3 py-2">
-                  <div className="flex items-center w-full sm:w-full md:w-3/4 lg:w-3/4 text-left text-xl px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
-                    <TextInput
-                      placeholder={'Enter Order ID'}
-                      value={orderID}
-                      func={(e) => setOrderID(e.target.value)}
-                      buttonRef={searchOrderButtonRef}
-                    />
-                  </div>
-
-                  <div className="flex items-center w-full sm:w-full md:w-1/4 lg:w-1/4 px-3 pb-3 pb:mb-3 pb:mb-0 pb:mb-0">
-                    <Button
-                      buttonRef={searchOrderButtonRef}
-                      onClick={handleSearchOrder}
-                      content={<i className="bi bi-search"></i>}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+            {activeTab === 'refunds' && <OrderRefund/>}
           </div>
         </div>
       </div>
