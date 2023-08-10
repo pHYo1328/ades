@@ -46,7 +46,7 @@ import './input.css';
 function App() {
   const location = useLocation();
   const { userData } = useContext(AuthContext);
-  console.log(userData);
+  console.log(userData.isSignedIn);
   // const [isSignedIn, setIsSignedIn] = useState(false);
   const adminHeaderRoutes = [
     '/admin',

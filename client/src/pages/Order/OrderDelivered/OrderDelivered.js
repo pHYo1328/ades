@@ -10,23 +10,13 @@ const OrderDelivered = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    // const roles = JSON.parse(localStorage.getItem('roles'));
-    // console.log(userData.isSignedIn);
     if (!userData.isSignedIn) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      console.log('Redirecting to homepage');
-      navigate('/login');
-    } else {
-      // const isCustomer = roles.includes('customer');
-      // console.log(isCustomer);
-      // if (!isCustomer) {
-      //   // User does not have the required role(s), redirect them to the homepage or show an error message
-      //   // alert("you're not admin");
-      //   console.log('Redirecting to homepage-admin');
-      //   navigate('/login');
-      // }
-    }
-  }, []);
+        console.log('Redirecting to homepage');
+        navigate('/login');
+      } else {
+        // add whatever else validation
+      }
+    }, []);
   const userId = localStorage.getItem('userid');
   useEffect(() => {
     setIsLoading(true);
