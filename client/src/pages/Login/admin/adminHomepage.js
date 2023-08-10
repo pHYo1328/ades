@@ -6,6 +6,10 @@ import { AuthContext } from '../../../AuthContext';
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
+
+// TO BE DELETED 
+
+
 function Home() {
   const navigate = useNavigate();
   const { userData } = useContext(AuthContext);
