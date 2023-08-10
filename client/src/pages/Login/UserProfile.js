@@ -32,7 +32,7 @@ const UserProfile = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Customer-Id': userData.userid,
+            'Customer-Id': localStorage.getItem('userid'),
           },
         });
 
