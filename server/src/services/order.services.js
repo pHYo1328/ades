@@ -164,7 +164,7 @@ module.exports.getOrderDetailsForAdmin = async () => {
                       FROM orders
                       inner join payment on payment.order_id=orders.order_id 
                       WHERE order_status in ("paid","delivering")
-                      ORDER BY payment.payment_date
+                      ORDER BY payment.payment_date DESC
                       ;`;
   try {
     console.log(
@@ -397,7 +397,7 @@ module.exports.sendReminderEmail = async (orders, customerEmail) => {
   const orderIdsString = orders.join('<br>');
   const emailSubject = 'Warning for Payment';
   const additionalParams = {
-    bodyMessage: `<p>Dear customer,</p><p>Your orders with IDs:<br> ${orderIdsString}<br> are still pending. Please complete the payment within 24 hours or the orders will be cancelled.</p>`,
+    bodyMessage: `<p>Dear customer,</p><p>Your orders with IDs:<br> ${orderIdsString}<br> are still pending. Please complete the payment or the orders will be cancelled.</p>`,
   };
   try {
     await sendInBlue.sendTransacEmail({
