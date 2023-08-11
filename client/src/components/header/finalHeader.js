@@ -15,7 +15,7 @@ import {
 import { MdComputer } from 'react-icons/md';
 import api from '../../index';
 import { AuthContext } from '../../AuthContext';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 //const socket = io(`${process.env.REACT_APP_CRON_SERVER_URL}`);
 function usePrevious(value) {
@@ -144,28 +144,28 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
     }
   }, [isNotificationPanelOpen, prevNotificationStatus]);
 
-  useEffect(() => {
-    socket.on('connect', () => {
-      socket.emit('register', { userId }); // Assuming you want to register the user for specific notifications
-    });
+  // useEffect(() => {
+  //   socket.on('connect', () => {
+  //     socket.emit('register', { userId }); // Assuming you want to register the user for specific notifications
+  //   });
 
-    socket.on('connect_error', (error) => {
-      console.log('Connection Error:', error); // Error connecting to server
-    });
+  //   socket.on('connect_error', (error) => {
+  //     console.log('Connection Error:', error); // Error connecting to server
+  //   });
 
-    socket.on('message', (message) => {
-      setNotificationStatus(true);
-      setMessages((prevMessages) => [...prevMessages, message.message]);
-      console.log(message.message);
-    });
+  //   socket.on('message', (message) => {
+  //     setNotificationStatus(true);
+  //     setMessages((prevMessages) => [...prevMessages, message.message]);
+  //     console.log(message.message);
+  //   });
     
 
-    return () => {
-      socket.off('connect');
-      socket.off('connect_error');
-      socket.off('productUpdate');
-    };
-  }, []);
+  //   return () => {
+  //     socket.off('connect');
+  //     socket.off('connect_error');
+  //     socket.off('productUpdate');
+  //   };
+  // }, []);
   return (
     <div className={isAdminSignedIn ? "sticky top-0 z-50" : ""}>
     <header className="bg-tertiary shadow font-breezeRegular">
