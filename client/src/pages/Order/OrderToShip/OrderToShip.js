@@ -7,30 +7,29 @@ import { BsCaretDownFill} from "react-icons/bs";
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
 const OrderToShip = () => {
-  const { userData } = useContext(AuthContext);
+  const { userData, userDataLoaded } = useContext(AuthContext);
   const [orderItems, setOrderItems] = useState(null);
   const [shippingMethods, setShippingMethods] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // const roles = JSON.parse(localStorage.getItem('roles'));
-  //   // console.log(roles);
-  //   if (!userData.isSignedIn) {
-  //     console.log('Redirecting to homepage');
-  //     navigate('/login');
-  //   } else {
-  //     // const isCustomer = roles.includes('customer');
-  //     // console.log(isCustomer);
-  //     // if (!isCustomer) {
-  //     //   // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     //   // alert("you're not admin");
-  //     //   console.log('Redirecting to homepage-admin');
-  //     //   navigate('/login');
-  //     // }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
+
 
   const toggleSection = (section) => {
     if (expandedSection === section) {

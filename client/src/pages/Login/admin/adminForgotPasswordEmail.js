@@ -1,13 +1,33 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 //To be done, email verification password change.
 function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const { userData, userDataLoaded} = useContext(AuthContext);
 
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
+
+  
   const onHandleSubmit = (e) => {
     e.preventDefault();
     const url = `${baseUrl}/verify-email-admin`;

@@ -36,6 +36,13 @@ const VerifyOTP = () => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('admin_id', data.userid);
         // localStorage.setItem('roles', JSON.stringify(data.roles));
+        localStorage.setItem('userData', JSON.stringify({
+          userid: data.userid,
+          roles: data.roles,
+          isSignedIn: data.isSignedIn,
+          admin_id: data.admin_id,
+          isAdminSignedIn: true
+        }));
         localStorage.setItem('isAdminSignedIn', 'true');
 
         setUserData({

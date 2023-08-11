@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { BsFillPersonPlusFill } from "react-icons/bs";
 import {
   RiTruckLine,
   RiCheckboxCircleLine,
@@ -315,6 +316,14 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                 </Link>
 
                 <button
+  className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg flex items-center"
+  onClick={() => navigate('/register-admin')}
+>
+  <BsFillPersonPlusFill className="mr-2 mb-1 text-xl" />
+  New Admin
+</button>
+       
+                <button
                   className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg"
                   onClick={onHandleAdminLogout}
                 >
@@ -348,7 +357,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                   <FaShoppingCart />
                   <p className="text-2xl">Cart</p>
                 </Link>
-                <div className="relative" ref={userPanelRef}>
+                {/* <div className="relative" ref={userPanelRef}>
                   <button
                     onClick={handleUserPanelToggle}
                     className="text-white  hover:text-gray-600 flex flex-row space-x-1 py-2 border-b-2 border-transparent hover:border-fuchsia-600"
@@ -384,7 +393,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                       </Link>
                     </div>
                   )}
-                </div>
+                </div> */}
                 <Link to="/login">
                   <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-lg">
                     Sign In
@@ -421,7 +430,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                       <FaShoppingCart className="inline-block mr-2" />
                       Cart
                     </Link>
-                    <div className="relative" ref={userPanelRef}>
+                    {/* <div className="relative" ref={userPanelRef}>
                       <button
                         onClick={handleUserPanelToggle}
                         className="block text-left px-4 py-2 hover:bg-gray-100"
@@ -461,7 +470,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
                           </Link>
                         </div>
                       )}
-                    </div>
+                    </div> */}
                     <div className="flex flex-col space-y-2 px-2">
                       <Link to="/login">
                         <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md text-base">

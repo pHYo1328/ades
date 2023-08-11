@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
+//TO BE REMVOED
 function Home() {
   return (
     <div className="bg-gray-100">

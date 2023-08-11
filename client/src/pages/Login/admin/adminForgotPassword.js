@@ -1,13 +1,31 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function ForgetPassword() {
   const navigate = useNavigate();
+  const { userData, userDataLoaded } = useContext(AuthContext);
   const [password, setPassword] = useState('');
   const [cfmPassword, setCfmPassword] = useState('');
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
