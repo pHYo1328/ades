@@ -44,7 +44,7 @@ exports.processGetPaymentByID = async (req, res, next) => {
   }
 };
 
-//get payment by status
+//get payment by status(idt i need)
 
 exports.processGetPaymentByStatus = async (req, res, next) => {
   console.log(chalk.blue('processGetPaymentByStatus running'));
@@ -121,7 +121,7 @@ exports.processGetPaymentTotal = async (req, res, next) => {
     return next(error);
   }
 };
-
+//for partial refund
 exports.processGetIDAndAmount = async (req, res, next) => {
   console.log(chalk.blue('processGetIDAndAmount running'));
   const { productID } = req.params;
@@ -153,7 +153,7 @@ exports.processGetIDAndAmount = async (req, res, next) => {
     return next(error);
   }
 };
-
+//add refund
 exports.processCreateRefund = async (req, res, next) => {
   console.log(chalk.blue('processCreateRefund running'));
   const { order_id, customer_id, total } = req.body;
@@ -213,7 +213,7 @@ exports.processGetOrderForRefund = async (req, res, next) => {
     next(error);
   }
 };
-
+//getting status for customer profile
 exports.processGetRefundStatusByID = async (req, res, next) => {
   console.log(chalk.blue('processGetRefundStatusByID is running'));
   try {
@@ -236,7 +236,7 @@ exports.processGetRefundStatusByID = async (req, res, next) => {
 };
 
 
-// controller to update order status
+// update refund after click "click to refund"
 exports.processUpdateRefundStatus = async (req, res, next) => {
   console.log(chalk.blue('ProcessUpdateRefundStatus is running'));
   const { orderIDs, refundStatus } = req.body;
