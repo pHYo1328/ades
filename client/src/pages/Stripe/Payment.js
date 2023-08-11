@@ -1,7 +1,9 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
@@ -14,6 +16,24 @@ function Payment() {
   const [stripePromise, setStripePromise] = useState(null);
   const [payments, setPayments] = useState(null);
   const [clientSecret, setClientSecret] = useState('');
+  const { userData, userDataLoaded} = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
 
   useEffect(() => {
     const fetchData = async () => {

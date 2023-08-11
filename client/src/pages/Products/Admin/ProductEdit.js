@@ -1,29 +1,29 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 import ProductEditForm from '../../../components/Products/EditProduct/ProductEditForm';
 
 export default function ProductEdit() {
+  const { userData, userDataLoaded} = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const roles = JSON.parse(localStorage.getItem('roles'));
-    console.log(roles);
-    if (!roles) {
-      // User does not have the required role(s), redirect them to the homepage or show an error message
-      console.log('Redirecting to login');
-      navigate('/login');
-    } else {
-      const isAdmin = roles.includes('admin');
-      console.log(isAdmin);
-      if (!isAdmin) {
-        // User does not have the required role(s), redirect them to the homepage or show an error message
-        // alert("you're not admin");
-        console.log('Redirecting to homepage');
-        navigate('/homepage');
-      }
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
     }
-  }, []);
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
+
 
   return (
     <div className="bg-white w-full h-auto">

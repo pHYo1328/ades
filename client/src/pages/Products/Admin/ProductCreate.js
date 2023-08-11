@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
 import axios from 'axios';
 import chalk from 'chalk';
 import UploadWidget from '../../../components/cloudinary/UploadWidget';
@@ -29,6 +30,7 @@ export default function ProductCreate() {
   const [productCategory, setProductCategory] = useState(null);
   const [productBrand, setProductBrand] = useState(null);
   const [productQuantity, setProductQuantity] = useState(null);
+  const { userData, userDataLoaded} = useContext(AuthContext);
 
   const [categoryKey, setCategoryKey] = useState(0);
   const [brandKey, setBrandKey] = useState(0);
@@ -81,24 +83,22 @@ export default function ProductCreate() {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const roles = JSON.parse(localStorage.getItem('roles'));
-  //   console.log(roles);
-  //   if (!roles) {
-  //     // User does not have the required role(s), redirect them to the homepage or show an error message
-  //     console.log('Redirecting to login');
-  //     navigate('/login');
-  //   } else {
-  //     const isAdmin = roles.includes('admin');
-  //     console.log(isAdmin);
-  //     if (!isAdmin) {
-  //       // User does not have the required role(s), redirect them to the homepage or show an error message
-  //       // alert("you're not admin");
-  //       console.log('Redirecting to homepage');
-  //       navigate('/homepage');
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
+
 
   // creates a new product when the admin clicks on submit
   const handleSubmit = async (event) => {

@@ -1,5 +1,7 @@
 import { PaymentElement, AddressElement } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { AuthContext } from '../../AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
@@ -9,11 +11,27 @@ const url = process.env.REACT_APP_DOMAIN_BASE_URL;
 export default function CheckoutForm({}) {
   const stripe = useStripe();
   const elements = useElements();
-
+  const navigate = useNavigate();
+  const { userData, userDataLoaded} = useContext(AuthContext);
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { orderID } = useParams();
 
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

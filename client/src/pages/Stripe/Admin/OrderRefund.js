@@ -1,8 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import api from '../../../index';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../AuthContext';
+
 const OrderRefund = () => {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
+  const { userData, userDataLoaded} = useContext(AuthContext);
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await api.get('/api/admin/refund');
