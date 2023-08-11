@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
-import AddressForm from './AddressForm';
+
 
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -110,7 +110,7 @@ function Payment() {
         <div className="mt-4 mb-4 sm:mb-0 sm:ml-10 sm:mr-10 sm:w-1/2 max-h-96 lg:w-2.5/5 mx-auto">
           {clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              {/* <AddressForm /> */}
+         
 
               <CheckoutForm />
             </Elements>

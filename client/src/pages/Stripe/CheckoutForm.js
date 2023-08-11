@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+const url = process.env.REACT_APP_DOMAIN_BASE_URL;
+
 export default function CheckoutForm({}) {
   const stripe = useStripe();
   const elements = useElements();
@@ -10,6 +13,7 @@ export default function CheckoutForm({}) {
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { orderID } = useParams();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +43,7 @@ export default function CheckoutForm({}) {
         console.log(requestData);
 
         // Make the API call to your backend endpoint
-        fetch('http://localhost:8081/addPayment', {
+        fetch(`${baseUrl}/addPayment`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -60,7 +64,7 @@ export default function CheckoutForm({}) {
 
         // Perform any further processing with the billing details if needed
 
-        window.location = 'http://localhost:3000/';
+        window.location = `${url}/`;
       }
     } catch (error) {
       console.error('Unexpected error:', error);

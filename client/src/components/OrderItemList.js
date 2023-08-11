@@ -77,7 +77,13 @@ const OrderItemList = ({
           label: 'Yes',
           onClick: async () => {
             try {
-              const result = await api.delete(
+
+              const result = await api.post(
+                `/processCancelOrder/${orderId}`,
+                { customerID: customerID } 
+              );
+  
+               await api.delete(
                 `/api/order?orderId=${orderId}&productID=${productId}&quantity=${quantity}&orderStatus=${orderStatus}`
               );
               console.log('Deleted Item:', orderId, productId);
