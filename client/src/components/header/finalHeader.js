@@ -16,7 +16,7 @@ import {
 import { MdComputer } from 'react-icons/md';
 import api from '../../index';
 import { AuthContext } from '../../AuthContext';
-//import io from 'socket.io-client';
+import io from 'socket.io-client';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 //const socket = io(`${process.env.REACT_APP_CRON_SERVER_URL}`);
 function usePrevious(value) {
@@ -113,17 +113,20 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
   };
 
   useEffect(() => {
-    api.get(`/api/notifications/${userId}`).then((response) => {
-      console.log(response);
-      if (response.data.data && response.data.data[0].length > 0) {
-        const newMessages = response.data.data[0]
-          .filter((item) => item.have_email === 1)
-          .map((item) => item.message);
-        console.log(newMessages);
-        setNotificationStatus(newMessages.length > 0);
-        setMessages([...messages, ...newMessages]);
-      }
-    });
+    console.log('userId: ' + userId);
+    if(!userId){
+      api.get(`/api/notifications/${userId}`).then((response) => {
+        console.log(response);
+        if (response.data.data && response.data.data[0].length > 0) {
+          const newMessages = response.data.data[0]
+            .filter((item) => item.have_email === 1)
+            .map((item) => item.message);
+          console.log(newMessages);
+          setNotificationStatus(newMessages.length > 0);
+          setMessages([...messages, ...newMessages]);
+        }
+      });
+    }
     document.addEventListener('click', handleOutsideClick);
 
     return () => {
