@@ -54,8 +54,12 @@ export default function CheckoutForm({}) {
           .then((response) => {
             if (response.ok) {
               console.log('Payment details sent to the backend successfully');
+
+              window.alert('Payment successful! Thank you for your purchase.');
             } else {
               console.error('Failed to send payment details to the backend');
+
+              window.alert('Payment Failed! Reorder again.');
             }
           })
           .catch((error) => {
@@ -63,8 +67,9 @@ export default function CheckoutForm({}) {
           });
 
         // Perform any further processing with the billing details if needed
-
-        window.location = `${url}/`;
+        window.history.replaceState(null, null,`${url}/`);
+        window.history.replaceState(null, null, `${url}/`);
+        window.location.href =`${url}/`;
       }
     } catch (error) {
       console.error('Unexpected error:', error);
