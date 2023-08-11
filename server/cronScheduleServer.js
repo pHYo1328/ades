@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://techzero.onrender.com',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
   },
 });
@@ -19,12 +19,17 @@ app.use(cors({ origin: allowedOrigins }));
 io.on('connection', (socket) => {
   console.log('A user connected');
   socket.on('register', (userId) => {
+    socket.userId = userId.userId;
     userSockets[userId.userId] = socket;
     console.log(userId.userId);
   });
-
+  
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    if (userSockets.hasOwnProperty(socket.userId)) {
+      const disconnectedUserId = socket.userId;
+      console.log('A user disconnected:', disconnectedUserId);
+      delete userSockets[disconnectedUserId];
+    }
   });
 });
 
