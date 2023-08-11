@@ -67,9 +67,9 @@ export default function CheckoutForm({}) {
           });
 
         // Perform any further processing with the billing details if needed
-        window.history.replaceState(null, null,`${url}/`);
-        window.history.replaceState(null, null, `${url}/`);
-        window.location.href =`${url}/`;
+        window.history.replaceState(null, null,`/`);
+        window.history.replaceState(null, null, `/`);
+        window.location.href = `/`;
       }
     } catch (error) {
       console.error('Unexpected error:', error);
