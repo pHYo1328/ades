@@ -139,12 +139,14 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
   };
 
   useEffect(() => {
-    if (prevNotificationStatus === true && isNotificationPanelOpen === false) {
-      api.delete(`/api/notifications/${userId}`).catch((error) => {
-        console.error('Error deleting notifications:', error);
-      });
-      setMessages([]);
-      setNotificationStatus(false);
+    if(!userId){
+      if (prevNotificationStatus === true && isNotificationPanelOpen === false) {
+        api.delete(`/api/notifications/${userId}`).catch((error) => {
+          console.error('Error deleting notifications:', error);
+        });
+        setMessages([]);
+        setNotificationStatus(false);
+      }
     }
   }, [isNotificationPanelOpen, prevNotificationStatus]);
 
