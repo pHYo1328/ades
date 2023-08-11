@@ -20,7 +20,7 @@ module.exports.getPaymentByID = async (order_id) => {
   }
 };
 
-//paymentTotal
+//paymentTotal(putting total inside stripe)
 module.exports.getPaymentTotal = async (order_id) => {
   console.log(chalk.blue('getPaymentTotal is called'));
 
@@ -98,7 +98,7 @@ module.exports.addPayment = async (
   }
 };
 
-//payment_intent
+//payment_intent(for refund)
 module.exports.getPaymentIntentByID = async (order_id) => {
   console.log(chalk.blue('getPaymentIntentByID is called'));
 
@@ -114,7 +114,7 @@ module.exports.getPaymentIntentByID = async (order_id) => {
     throw error;
   }
 };
-//get payment for fully refund
+//get payment for fully refund(idh full refund page anymore so idt i need this)
 module.exports.getPaymentByStatus = async (order_id) => {
   console.log(chalk.blue('getPaymentByStatus is called'));
   try {
@@ -135,7 +135,7 @@ module.exports.getPaymentByStatus = async (order_id) => {
   }
 };
 
-//fetch all payment which need to give refund
+//fetch all payment which need to give refund(admin page)
 module.exports.getOrderForRefund = async () => {
   console.log(chalk.blue('getOrderForRefund is called'));
   const refundDataQuery = `SELECT order_id, customer_id, refunded_amount, refunded_status
@@ -159,6 +159,7 @@ module.exports.getOrderForRefund = async () => {
   }
 };
 
+//refunded status for button name changing 
 module.exports.getRefundStatusByID = async (order_id) => {
   console.log(chalk.blue('getRefundStatusByID is called'));
 
@@ -175,7 +176,7 @@ module.exports.getRefundStatusByID = async (order_id) => {
   }
 };
 
-// update orders by Admin
+// update orders by Admin(after click update to refund inside admin)
 module.exports.updateRefundStatus = async (data) => {
   console.log(chalk.blue('updateRefundStatus is called'));
   const { orderIDs, refundStatus } = data;
@@ -244,136 +245,7 @@ module.exports.updateRefundStatus = async (data) => {
   }
 };
 
-// // update orders by Admin
-// module.exports.updateRefundStatus = async (data) => {
-//   console.log(chalk.blue('updateRefundStatus is called'));
-//   const { orderIDs, refundStatus } = data;
-//   console.log(refundStatus);
-//   const updateRefundedStatusQuery =
-//     'UPDATE refund set refunded_status = ? WHERE order_id in (?)';
-
-//   try {
-//     console.log(
-//       chalk.blue(
-//         'Creating connection...\n',
-//         'database is connected in payment.services.js updateRefundStatus function'
-//       )
-//     );
-//     const dataRequired = [refundStatus, orderIDs];
-//     let result;
-
-//     console.log(
-//       chalk.blue('Executing query >>>>>>'),
-//       updateRefundedStatusQuery
-//     );
-//     result = await pool.query(updateRefundedStatusQuery, dataRequired);
-//     console.log(chalk.green('updated refund status'));
-
-//     return result[0].affectedRows;
-//   } catch (error) {
-//     console.error(chalk.red('Errors in updateOrderStatus', error));
-//     throw error;
-//   }
-// };
-
-// fetch all payment with payment status
-// module.exports.getOrderDetailsForAdmin = async () => {
-//   console.log(chalk.blue('getOrderDetailsForAdmin is called'));
-//   const orderQuery = `SELECT orders.order_id,
-//                       orders.order_status,
-//                       payment.payment_date,
-//                       orders.shipping_address,
-//                       orders.shipping_start_at
-//                       FROM orders
-//                       inner join payment on payment.order_id=orders.order_id
-//                       WHERE order_status in ("paid","delivering")
-//                       ORDER BY payment.payment_date
-//                       ;`;
-//   try {
-//     console.log(
-//       chalk.blue(
-//         'Creating connection...\n',
-//         'database is connected in order.services.js getOrderDetailsForAdmin function'
-//       )
-//     );
-//     console.log(chalk.blue('Executing query >>>>>>'), orderQuery);
-//     const result = await pool.query(orderQuery);
-//     console.log(chalk.green('result: '), result[0]);
-//     return result[0];
-//   } catch (error) {
-//     console.error(chalk.red('Errors in getOrderDetailsForAdmin', error));
-//     throw error;
-//   }
-// };
-
-//Creating refund data into database
-
-// module.exports.addRefund = async (id, orderID, total, status) => {
-//   console.log(chalk.blue('addRefund is called'));
-//   const createRefundQuery =
-//     'INSERT INTO refund (refund_id, order_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
-
-//   const deletePaymentQuery = `DELETE FROM payment
-//   WHERE order_id = ?
-//     AND order_id IN (
-//       SELECT r.order_id
-//       FROM refund r
-//       WHERE r.refunded_status = 'fully Refunded'
-//     );
-//   `;
-//   const deleteOrderQuery = `DELETE FROM order
-//   WHERE order_id IN (
-//     SELECT r.order_id
-//     FROM refund r
-//     WHERE r.order_id = ?
-//       AND r.refunded_status = 'fully Refunded'
-//   );`;
-
-//   const updateInventoryQuery = `UPDATE inventory
-//   JOIN order_items ON inventory.product_id = order_items.product_id
-//   JOIN orders ON order_items.order_id = orders.order_id
-//   JOIN refund ON orders.order_id = refund.order_id
-//   SET inventory.quantity = inventory.quantity + order_items.quantity
-//   WHERE refund.order_id = ? AND refund.refunded_status = 'fully Refunded' AND inventory.inventory_id > 0;
-//   `;
-//   const deleteOrderItemQuery = `DELETE FROM order_items
-//   WHERE order_id IN (
-//     SELECT r.order_id
-//     FROM refund r
-//     WHERE r.order_id = ?
-//       AND r.refunded_status = 'fully Refunded'
-//   );`;
-
-//   console.log(chalk.blue('Creating connection...'));
-//   const connection = await pool.getConnection();
-//   console.log(
-//     chalk.blue(
-//       'database is connected to payment.services.js addRefund function'
-//     )
-//   );
-//   try {
-//     console.log(chalk.blue('Starting transaction'));
-//     await connection.beginTransaction();
-
-//     await pool.query(createRefundQuery, [id, orderID, total, status]);
-
-//     const createRefundResult = await Promise.all([
-//       pool.query(deletePaymentQuery, [orderID]),
-//       pool.query(deleteOrderQuery, [orderID]),
-//       pool.query(updateInventoryQuery, [orderID]),
-//       pool.query(deleteOrderItemQuery, [orderID]),
-//     ]);
-//     await connection.commit();
-//     console.log(chalk.green(createRefundResult));
-
-//     return createRefundResult[0].affectedRows > 0;
-//   } catch (error) {
-//     await connection.rollback();
-//     console.error(chalk.red('Error in addPayment:', error));
-//     throw error;
-//   }
-// };
-
+//adding refund inside database
 module.exports.addRefund = async (orderID, customerID, total, status) => {
   console.log(chalk.blue('addRefund is called'));
   try {
@@ -394,6 +266,7 @@ module.exports.addRefund = async (orderID, customerID, total, status) => {
   }
 };
 
+//idt i need this
 module.exports.afterRefund = async (orderID) => {
   console.log(chalk.blue('afterRefund is called'));
 
@@ -521,6 +394,7 @@ module.exports.addPartialRefund = async (
   }
 };
 
+//cancel order inside OrderToShip
 module.exports.cancelOrder = async (
   orderID,
   customerID,
