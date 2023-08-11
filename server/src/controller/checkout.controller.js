@@ -362,11 +362,12 @@ exports.processPartialRefund = async (req, res) => {
     // Retrieve transaction IDs and refund amounts for orders with the given productID
     const idAndAmount = await paymentServices.getIdAndAmount(productID);
 
-    console.log(idAndAmount)
+    console.log(idAndAmount);
     // Process partial refunds for each order
     const refundPromises = idAndAmount.map(async (row) => {
       const transactionID = row.transaction_id;
       const orderID = row.order_id;
+      const customerID = row.customer_id;
       const refundAmount = parseInt(Math.round(row.refund_total * 100));
 
       try {
@@ -380,14 +381,23 @@ exports.processPartialRefund = async (req, res) => {
         });
 
         // Log the refund details
-    console.log('Refund details:', {
-      orderId: orderID,
-      refundId: refund.id,
-      amountRefunded: refund.amount,
-      currency: refund.currency,
-      status: refund.status,
-    });
+        console.log('Refund details:', {
+          orderId: orderID,
+          refundId: refund.id,
+          amountRefunded: refund.amount,
+          currency: refund.currency,
+          status: refund.status,
+        });
 
+        if (refund.status === 'succeeded') {
+          // Call addPartialRefund for the current order
+          await paymentServices.addPartialRefund(
+            orderID,
+            customerID,
+            refund.amount / 100,
+            'refunded'
+          );
+        }
         // Return the refund details
         return {
           orderID: row.order_id,
@@ -426,6 +436,57 @@ exports.processPartialRefund = async (req, res) => {
       ok: false,
       message: 'An error occurred during partial refunds',
       error: error.message,
+    });
+  }
+};
+
+exports.cancelRefund = async (req, res) => {
+  console.log(chalk.blue('cancel refund'));
+  try {
+    const customerID = req.body.customerID; // Access the customerID from the request body
+
+    const orderID = req.params.orderID;
+    const transactionID = await paymentServices.getPaymentIntentByID(orderID);
+    console.log(chalk.yellow('Transaction_id:', transactionID));
+
+    // Extract the payment intent ID from the transactionID object
+    const paymentIntentID = transactionID[0].transaction_id;
+
+    const createdPaymentTotal = await paymentServices.getPaymentTotal(orderID);
+    console.log(chalk.yellow('createdPaymentTotal:', createdPaymentTotal));
+    const refundAmount = parseInt(createdPaymentTotal[0].payment_total * 100);
+    console.log(chalk.yellow('refundTotal:', refundAmount));
+
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentID, // Use the extracted payment intent ID
+      amount: refundAmount,
+      metadata: {
+        order_id: orderID,
+      },
+    });
+
+    if (refund.status === 'succeeded') {
+      // Call addPartialRefund for the current order
+      await paymentServices.cancelOrder(
+        orderID,
+        customerID,
+        refund.amount / 100,
+        'refunded'
+      );
+    }
+
+    res.send({
+      refundId: refund.id,
+      amountRefunded: refund.amount,
+      currency: refund.currency,
+      status: refund.status,
+    });
+  } catch (error) {
+    console.error('Error processing refund:', error);
+    return res.status(500).send({
+      error: {
+        message: 'An error occurred while processing the refund.',
+      },
     });
   }
 };
@@ -471,7 +532,7 @@ exports.storePayment = async (req, res, next) => {
   console.log('Charge succeeded. Event data:');
   console.log('ID:', id);
   console.log('Status:', status);
- 
+
   console.log('Amount:', total);
   console.log('Order ID:', orderID);
   console.log('Shipping address:', shippingAddr);

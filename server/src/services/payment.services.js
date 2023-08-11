@@ -439,7 +439,7 @@ module.exports.getIdAndAmount = async (productID) => {
   console.log(chalk.blue('getIdAndAmount is called'));
 
   try {
-    const partialRefundQuery = `SELECT payment.transaction_id, payment.order_id, (order_items.quantity * product.price) as refund_total
+    const partialRefundQuery = `SELECT payment.transaction_id, payment.order_id, orders.customer_id, (order_items.quantity * product.price) as refund_total
     FROM payment
     JOIN order_items ON payment.order_id = order_items.order_id
     JOIN product ON order_items.product_id = product.product_id
@@ -458,27 +458,26 @@ module.exports.getIdAndAmount = async (productID) => {
 };
 
 //partial refund
-module.exports.addPartialRefund = async (id, orderID, total, status) => {
+module.exports.addPartialRefund = async (
+  orderID,
+  customerID,
+  amount,
+  status
+) => {
   console.log(chalk.blue('addPartialRefund is called'));
   const createPartialRefundQuery =
-    'INSERT INTO refund (refund_id, order_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
+    'INSERT INTO refund (order_id, customer_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
 
   const updatePaymentQuery = `UPDATE payment
-  SET payment_total = payment_total - (
+  SET payment_total = payment_total  - (
     SELECT refunded_amount
     FROM refund
-    WHERE refunded_status = 'partially Refunded'
+    WHERE refunded_status = 'refunded'
       AND order_id = ?
-  )
+  ),
+  status = 'partially_refunded'
   WHERE order_id = ?;  
   `;
-  // const updateStatusQuery = `UPDATE orders
-  //  SET order_status = 'partially refunded'
-  //  WHERE order_id = ? AND order_id IN (
-  //  SELECT order_id
-  //  FROM refund
-  //  WHERE refunded_status = 'partially Refunded'
-  //  );`;
 
   const deleteOrderItemsQuery = `DELETE FROM order_items
   WHERE order_id = ?
@@ -500,11 +499,15 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
     console.log(chalk.blue('Starting transaction'));
     await connection.beginTransaction();
 
-    await pool.query(createPartialRefundQuery, [id, orderID, total, status]);
+    await pool.query(createPartialRefundQuery, [
+      orderID,
+      customerID,
+      amount,
+      status,
+    ]);
 
     const createRefundResult = await Promise.all([
       pool.query(updatePaymentQuery, [orderID, orderID]),
-      // pool.query(updateStatusQuery, [orderID]),
       pool.query(deleteOrderItemsQuery, [orderID]),
     ]);
     await connection.commit();
@@ -513,7 +516,82 @@ module.exports.addPartialRefund = async (id, orderID, total, status) => {
     return createRefundResult[0].affectedRows > 0;
   } catch (error) {
     await connection.rollback();
-    console.error(chalk.red('Error in addPayment:', error));
+    console.error(chalk.red('Error in addPartialRefund:', error));
+    throw error;
+  }
+};
+
+module.exports.cancelOrder = async (
+  orderID,
+  customerID,
+  amount,
+  status
+) => {
+  console.log(chalk.blue('addRefundByCanceling is called'));
+  const createRefundQuery =
+    'INSERT INTO refund (order_id, customer_id, refunded_amount, refunded_status) VALUES (?, ?, ?, ?);';
+
+    const deletePaymentQuery = `
+  DELETE FROM payment WHERE order_id = ?
+    AND order_id IN (SELECT r.order_id FROM refund r WHERE r.refunded_status = 'refunded')
+`;
+
+    const updateInventoryQuery = `
+  UPDATE inventory
+  JOIN order_items ON inventory.product_id = order_items.product_id
+  JOIN orders ON order_items.order_id = orders.order_id
+  JOIN refund ON orders.order_id = refund.order_id
+  SET inventory.quantity = inventory.quantity + order_items.quantity
+  WHERE refund.order_id = ? AND refund.refunded_status = 'refunded' AND inventory.inventory_id > 0
+`;
+
+const deleteOrderQuery = `DELETE FROM orders
+  WHERE order_id IN (
+    SELECT r.order_id
+    FROM refund r
+    WHERE r.order_id = ?
+      AND r.refunded_status = 'refunded'
+  );`;
+    const deleteOrderItemQuery = `DELETE FROM order_items
+  WHERE order_id IN (
+    SELECT r.order_id
+    FROM refund r
+    WHERE r.order_id = ?
+      AND r.refunded_status = 'refunded'
+  );`;
+
+
+  console.log(chalk.blue('Creating connection...'));
+  const connection = await pool.getConnection();
+  console.log(
+    chalk.blue(
+      'database is connected to payment.services.js addPartialRefund function'
+    )
+  );
+  try {
+    console.log(chalk.blue('Starting transaction'));
+    await connection.beginTransaction();
+
+    await pool.query(createRefundQuery, [
+      orderID,
+      customerID,
+      amount,
+      status,
+    ]);
+
+    const createRefundResult = await Promise.all([
+      pool.query(deletePaymentQuery, [orderID]),
+      pool.query(updateInventoryQuery, [orderID]),
+      pool.query(deleteOrderQuery, [orderID]),
+      pool.query(deleteOrderItemQuery, [orderID]),
+    ]);
+    await connection.commit();
+    console.log(chalk.green(createRefundResult));
+
+    return createRefundResult[0].affectedRows > 0;
+  } catch (error) {
+    await connection.rollback();
+    console.error(chalk.red('Error in addPartialRefund:', error));
     throw error;
   }
 };
