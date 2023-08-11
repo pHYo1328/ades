@@ -296,6 +296,8 @@ module.exports = (app, router) => {
 
   router.post('/processRefund/:orderID', checkoutController.processRefund);
 
+  router.post('/processCancelOrder/:orderID', checkoutController.cancelRefund);
+
   router.post(
     '/processPartialRefund/:productID',
     checkoutController.processPartialRefund
