@@ -17,7 +17,7 @@ import api from '../../index';
 import { AuthContext } from '../../AuthContext';
 import io from 'socket.io-client';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
-const socket = io(`${process.env.REACT_APP_CRON_SERVER_URL}`);
+//const socket = io(`${process.env.REACT_APP_CRON_SERVER_URL}`);
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
@@ -158,6 +158,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
       setMessages((prevMessages) => [...prevMessages, message.message]);
       console.log(message.message);
     });
+    
 
     return () => {
       socket.off('connect');
