@@ -12,6 +12,7 @@ import Rating from './Rating';
 import OrderListHeader from './OrderListHeader';
 import axios from 'axios';
 
+const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const handleRefund = async (order_id, total, customerID) => {
   
@@ -26,7 +27,7 @@ const handleRefund = async (order_id, total, customerID) => {
    
     console.log(refundData);
     // Send the refund request to the backend
-    await axios.post('http://localhost:8081/addRefund', refundData);
+    await axios.post(`${baseUrl}/addRefund`, refundData);
     window.alert('Refund request has been sent.');
    
   } catch (error) {
@@ -55,7 +56,7 @@ const OrderListItem = React.memo(
 
     const fetchRefundStatus = async (order_id) => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/refundStatusByID/${order_id}`);
+        const response = await axios.get(`${baseUrl}/api/refundStatusByID/${order_id}`);
         const data = response.data.data;
         if (data.length > 0) {
           const refunded_status = data[0].refunded_status;
