@@ -1,14 +1,33 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import React from 'react';
+import { AuthContext } from '../../../AuthContext';
 import { useNavigate } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 function Register() {
   const navigate = useNavigate();
+  const { userData, userDataLoaded} = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [cfmPassword, setCfmPassword] = useState('');
   const [email, setEmail] = useState('');
+
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
@@ -33,7 +52,8 @@ function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        navigate('/login-admin');
+        navigate('/admin');
+        alert("admin created");
       })
       .catch((error) => {
         console.error(error);
@@ -50,7 +70,7 @@ function Register() {
         <div className="flex items-center mb-8">
           <button
             className="text-gray-600 rounded-full p-2 mr-4"
-            onClick={() => navigate('/login-admin')}
+            onClick={() => navigate('/admin')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

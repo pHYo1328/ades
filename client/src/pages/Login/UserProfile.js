@@ -17,7 +17,7 @@ const cld = new Cloudinary({
 });
 
 const UserProfile = () => {
-  const { userData, setUserData} = useContext(AuthContext);
+  const { userData, setUserData, userDataLoaded} = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [editingUsername, setEditingUsername] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
@@ -30,6 +30,22 @@ const UserProfile = () => {
   const url2 = `${baseUrl}/update-userProfile`;
   const url3 = `${baseUrl}/update-userProfileImage`;
   const deleteURL = `${baseUrl}/deleteUserCustomer`;
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
 
 
   const toggleSection = (section) => {
@@ -61,8 +77,7 @@ const UserProfile = () => {
     fetchUser();
   }, []);
 
-  console.log('THIS IS USER INFO', user);
-  console.log('THIS IS userData INFO', userData);
+  console.log("this is my current role", userData.roles);
   const updateUserProfile = async () => {
     try {
       const response = await fetch(url2, {

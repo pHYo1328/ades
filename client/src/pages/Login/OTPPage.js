@@ -44,9 +44,14 @@ const VerifyOTP = () => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('userid', data.userid);
         // localStorage.setItem('roles', JSON.stringify(data.roles));
+        localStorage.setItem('userData', JSON.stringify({
+          userid: data.userid,
+          roles: data.roles,
+          isSignedIn: true,
+          admin_id: data.admin_id,
+          isAdminSignedIn: data.isAdminSignedIn
+        }));
         localStorage.setItem('isSignedIn', 'true');
-
-        // Use the setUserData function to update the context
         setUserData({
           ...userData,
           // accessToken: data.accessToken,
@@ -54,7 +59,7 @@ const VerifyOTP = () => {
           roles: data.roles,
           isSignedIn: true,
         });
-
+        console.log("this is whats inside authContext", userData);
         document.cookie = `refreshToken=${data.newRefreshToken}; SameSite=None; Secure`;
         navigate('/');
       } else {
@@ -79,14 +84,11 @@ const VerifyOTP = () => {
         body: JSON.stringify({ username: data.username }),
       });
       if (response.ok) {
-        // Handle success
         console.log("OTP Email verification request successful");
       } else {
-        // Handle error
         console.log("OTP Email verification request failed");
       }
     } catch (error) {
-      // Handle fetch error
       console.error("Error fetching OTP Email verification:", error);
     }
   };
@@ -148,12 +150,13 @@ const VerifyOTP = () => {
           </button>
 
           <button
-            type="button"
-            className="bg-gray-300 text-gray-700 rounded-md ml-4 px-4 py-2"
-            onClick={handleVerifyOTPEmailClick}
-          >
-            Resend OTP Email
-          </button>
+          type="button"
+          className={`bg-gray-300 text-gray-700 rounded-md ml-4 px-4 py-2 ${remainingTime > 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+          onClick={handleVerifyOTPEmailClick}
+          disabled={remainingTime > 0}
+        >
+          Resend OTP Email
+        </button>
         </div>
         <p>Time remaining: {remainingTime} seconds</p>
       </form>

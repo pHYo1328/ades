@@ -138,17 +138,7 @@ function Login() {
             </button>
           </div>
         </form>
-        <div className="flex justify-center items-center mt-4">
-          <span className="text-sm text-gray-600 mr-2">
-            Don't have an account?
-          </span>
-          <button
-            className="text-sm text-indigo-500 hover:text-indigo-600 focus:outline-none focus:underline"
-            onClick={() => navigate('/register-admin')}
-          >
-            Sign up new admin
-          </button>
-        </div>
+        
       </div>
     </div>
   );

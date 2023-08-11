@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import UpdateModal from '../../components/modal/updateModal';
 import { BsPencilSquare } from "react-icons/bs";
 import { BsFillTrashFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext';
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 const UserInfo = () => {
   const [users, setUsers] = useState([]);
+  const { userData, userDataLoaded } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +17,24 @@ const UserInfo = () => {
 
   const url = `${baseUrl}/users`;
 
+
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('customer')) {
+      console.log('Redirecting to customer');
+      navigate('/');
+    }
+  }, [userData, userDataLoaded]);
+
+  
   const handleUpdateClick = (userid) => {
     setShowModal(true);
     setSelectedUserId(userid);

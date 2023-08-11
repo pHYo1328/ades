@@ -7,20 +7,28 @@ import { BsCaretDownFill} from "react-icons/bs";
 import { FadeLoader } from 'react-spinners';
 import { useNavigate } from 'react-router-dom';
 const OrderToDeliver = () => {
-  const { userData } = useContext(AuthContext);
+  const { userData, userDataLoaded } = useContext(AuthContext);
   const [orderItems, setOrderItems] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedSection, setExpandedSection] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-    // if (!userData.isSignedIn) {
-  //     console.log('Redirecting to homepage');
-  //     navigate('/login');
-  //   } else {
-  //     // add whatever else validation
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
+
 
   const toggleSection = (section) => {
     if (expandedSection === section) {

@@ -19,7 +19,7 @@ const Cart = () => {
   const [orderId, setOrderId] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0.0);
   const [shippingMethod, setShippingMethod] = useState(null);
-  const { userData } = useContext(AuthContext);
+  const { userData, userDataLoaded } = useContext(AuthContext);
   const [checkoutSuccessful, setCheckoutSuccessful] = useState(false);
   const checkoutSuccessfulRef = useRef(checkoutSuccessful);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -28,14 +28,22 @@ const Cart = () => {
     setShowCheckout(!showCheckout);
   };
 
-  // useEffect(() => {
-  //   if (!userData.isSignedIn) {
-  //     console.log('Redirecting to homepage');
-  //     navigate('/login');
-  //   } else {
-  //     // add whatever else validation
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!userDataLoaded) {
+      // User data is not yet loaded, you might want to show a loading indicator
+      console.log("user data not loaded yet");
+      return;
+    }
+  
+    if (!userData.roles || userData.roles === '') {
+      console.log('Redirecting to login page');
+      navigate('/login');
+    } else if (userData.roles.includes('admin')) {
+      console.log('Redirecting to admin');
+      navigate('/admin');
+    }
+  }, [userData, userDataLoaded]);
+
   const customerID = localStorage.getItem('userid');
   const combineCartDataAndProductDetails = () => {
     // cart data:{productId: , quantity: }
