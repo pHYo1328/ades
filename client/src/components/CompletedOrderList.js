@@ -72,8 +72,8 @@ const OrderListItem = React.memo(
 
     return (
 
-    <li>
-      <div className="p-2 font-breezeRegular sm:mx-4 my-3 shadow-lg text-lg sm:p-6 sm:rounded-lg">
+    <li className='p-2 font-breezeRegular sm:mx-4 my-3 shadow-lg text-lg sm:p-6 sm:rounded-lg'>
+      <div className="border-b-2 border-gray-300 my-3">
         <OrderListHeader
           item={item}
           renderButton={false}
@@ -93,7 +93,7 @@ const OrderListItem = React.memo(
                 />
                 <OrderItemDetails item={orderItem} />
               </div>
-              <div className="md:flex flex-row justify-between items-center">
+                <div className="md:flex flex-row justify-between items-center">
                 {!item.completed_at && item.shipping_start_at && (
                   <div className="flex flex-row items-center py-2 space-x-4">
                     <RiTruckFill className="sm:ml-3 animate-car-move text-cyan-500" />

@@ -114,7 +114,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
 
   useEffect(() => {
     console.log('userId: ' + userId);
-    if(!userId){
+    if(userId){
       api.get(`/api/notifications/${userId}`).then((response) => {
         console.log(response);
         if (response.data.data && response.data.data[0].length > 0) {
@@ -139,7 +139,7 @@ const Header = ({ isUserSignedIn, isAdminSignedIn }) => {
   };
 
   useEffect(() => {
-    if(!userId){
+    if(userId){
       if (prevNotificationStatus === true && isNotificationPanelOpen === false) {
         api.delete(`/api/notifications/${userId}`).catch((error) => {
           console.error('Error deleting notifications:', error);
